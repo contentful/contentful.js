@@ -1,0 +1,11 @@
+{
+  "browser": true,
+  "globalstrict": true,
+  "node": true,
+  "predef": ["assert", "refute", "angular"],
+  "proto": true,
+  "quotmark": "single",
+  "strict": true,
+  "trailing": true,
+  "unused": true
+}
