@@ -12,6 +12,7 @@ var Client = redefine.Class({
     enforcep(options, 'space');
 
     this.options = _.defaults({}, options, {
+      host: 'cdn.contentful.com',
       secure: true
     });
   },
