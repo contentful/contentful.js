@@ -51,9 +51,10 @@ var Client = redefine.Class({
     return promise;
   },
 
-  contentTypes: function() {
+  contentTypes: function(object) {
+    var query = Query.parse(object);
     var promise = new Promise();
-    var request = this.request('/content_types');
+    var request = this.request('/content_types' + (object ? '?' + query.toQueryString() : ''));
     request.map(_.partial(SearchResult.parse, ContentType))
            .map(_.bound(promise, 'resolve'));
     request.onRejected(_.bound(promise, 'reject'));
