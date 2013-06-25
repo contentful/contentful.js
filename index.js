@@ -152,7 +152,7 @@ var Query = redefine.Class({
 
   statics: {
     parse: function(object) {
-      return _.extend(new Query(), object);
+      return _.extend(new Query(), stringifyArrayValues(object));
     },
   }
 });
@@ -217,4 +217,11 @@ function enforcep(object, property) {
 
 function parseJSONBody(response) {
   return JSON.parse(response.responseText);
+}
+
+function stringifyArrayValues(object) {
+  return _.reduce(object, function(object, value, key) {
+    object[key] = _.isArray(value) ? value.join(',') : value;
+    return object;
+  }, {});
 }
