@@ -29,7 +29,8 @@ var Client = redefine.Class({
 
     var options = {
       headers: {
-        Authorization: 'Bearer ' + this.options.accessToken
+        Authorization: 'Bearer ' + this.options.accessToken,
+        'Content-Type': 'application/vnd.contentful.v1+json'
       }
     };
 
