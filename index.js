@@ -22,6 +22,8 @@ var Client = redefine.Class({
       this.options.secure ? 'https' : 'http',
       '://',
       this.options.host,
+      ':',
+      this.options.secure ? '443' : '80',
       '/spaces/',
       this.options.space,
       path
