@@ -38,11 +38,13 @@ var client = contentful.createClient({
   secure: true
 });
 
+var log = console.log.bind(console); // wat
+
 // Get Space
-client.space().then(console.log, console.log);
+client.space().then(log, log);
 
 // Get all Entries
-client.entries().then(console.log, console.log);
+client.entries().then(log, log);
 ```
 
 For now, please check out the
