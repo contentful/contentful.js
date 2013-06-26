@@ -27,7 +27,7 @@ var Client = redefine.Class({
     var uri = [
       this.options.secure ? 'https' : 'http',
       '://',
-      this.options.host,
+      _.first(this.options.host.split(':')),
       ':',
       this.options.secure ? '443' : '80',
       '/spaces/',
