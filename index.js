@@ -17,7 +17,13 @@ var Client = redefine.Class({
     });
   },
 
-  request: function(path) {
+  request: function(path, options) {
+    if (!options) options = {};
+    if (!options.headers) options.headers = {};
+    if (!options.query) options.query = {};
+    options.headers['Content-Type'] = 'application/vnd.contentful.v1+json';
+    options.query.access_token = this.options.accessToken;
+
     var uri = [
       this.options.secure ? 'https' : 'http',
       '://',
@@ -26,15 +32,10 @@ var Client = redefine.Class({
       this.options.secure ? '443' : '80',
       '/spaces/',
       this.options.space,
-      path
+      path,
+      '?',
+      querystring.stringify(options.query)
     ].join('');
-
-    var options = {
-      headers: {
-        Authorization: 'Bearer ' + this.options.accessToken,
-        'Content-Type': 'application/vnd.contentful.v1+json'
-      }
-    };
 
     var promise = new Promise();
     var request = questor(uri, options);
@@ -57,7 +58,7 @@ var Client = redefine.Class({
   contentTypes: function(object) {
     var query = Query.parse(object);
     var promise = new Promise();
-    var request = this.request('/content_types' + (object ? '?' + query.toQueryString() : ''));
+    var request = this.request('/content_types', {query: query});
     request.map(_.partial(SearchResult.parse, ContentType))
            .map(_.bound(promise, 'resolve'));
     request.onRejected(_.bound(promise, 'reject'));
@@ -75,7 +76,7 @@ var Client = redefine.Class({
   entries: function(object) {
     var query = Query.parse(object);
     var promise = new Promise();
-    var request = this.request('/entries' + (object ? '?' + query.toQueryString() : ''));
+    var request = this.request('/entries', {query: query});
     request.map(_.partial(SearchResult.parse, Entry))
            .map(_.bound(promise, 'resolve'));
     request.onRejected(_.bound(promise, 'reject'));
