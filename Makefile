@@ -6,4 +6,10 @@ build:
 clean:
 	rm dist/*
 
+sync-pages: clean build
+	git checkout gh-pages
+	rm -rf dist example
+	git checkout master dist example
+	git commit dist example -m 'Sync dist & example with gh-pages'
+
 .PHONY: build clean
