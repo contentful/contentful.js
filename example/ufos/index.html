@@ -1,0 +1,52 @@
+<!doctype html>
+<html ng-app="ufos">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.js'></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
+    <script src="../../dist/contentful.min.js"></script>
+    <link href="style.css" rel="stylesheet" />
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.css' rel='stylesheet' />
+    <!--[if lte IE 8]>
+      <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.ie.css' rel='stylesheet' >
+    <![endif]-->
+    <style>
+    </style>
+    <title>UFO Sightings</title>
+  </head>
+  <body>
+    <div ufo>
+      <div id="map"></div>
+      <div id="details">
+        <form ng-submit="update()">
+          <input placeholder="Search w/ return, ↑ & ↓" id="q"
+                 type="text"
+                 ng-model="query.term"></input>
+        </form>
+        <div id="result-count">
+          {{ufos.state()}}
+          <span ng-hide="ufos">
+            Loading...
+            <span ng-show="ufos.length == 0">
+              No results ʕಠᴥಠʔ
+            </span>
+          </span>
+          <span ng-show="ufos">
+            {{position+1}} of {{ufos.length}} sightings
+          </span>
+        </div>
+      </div>
+      <div id="description"
+         ng-if="ufo.fields.description"
+         ng-animate="{enter: 'animate-enter'}">
+        <h1>{{ufo.fields.locationName}}</h1>
+        <date id="sighted-at">{{ufo.fields.sightedAt | date:'MMMM yyyy'}}</date>
+        <div ng-bind-html-unsafe="ufo.fields.description"></div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
