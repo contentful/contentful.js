@@ -48,9 +48,10 @@ input:focus {
     background-repeat: no-repeat;
     background-size: 22px 22px;
     color: #888;
-    cursor: pointer;
+    display: block;
     padding-left: 25px;
     font-size: 1.4rem;
+    text-decoration: none;
     position: absolute;
     top: 4rem;
     right: 5rem;

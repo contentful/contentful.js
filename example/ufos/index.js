@@ -78,10 +78,6 @@ function UfoController($scope, $timeout, enQ) {
   });
 
   update();
-
-  $scope.openWebsite = function() {
-    window.open('https://contentful.com');
-  };
 }
 
 function ufoToGeoJson(ufo) {
