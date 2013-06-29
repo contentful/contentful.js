@@ -110,10 +110,11 @@ function ufo() {
         var position;
 
         switch (e.which) {
-        case 38: // UP
+        case 38: // up arrow
           position = scope.position - 1;
           break;
-        case 40: // DOWN
+        case 32: // space
+        case 40: // down arrow
           position = scope.position + 1;
           break;
         default:
