@@ -96,7 +96,7 @@ function ufoToGeoJson(ufo) {
     },
     properties: {
       title: ufo.fields.locationName,
-      'marker-color': '#97c0c0',
+      'marker-color': '#fc3159',
       ufo: ufo
     }
   };
