@@ -13,11 +13,15 @@ var client = contentful.createClient({
 });
 
 var mapId = 'stephanseidt.map-hhhrrit1';
+var retinaMapId = 'stephanseidt.map-j9eqvtbq';
 var roswellLatLng = [33.38830000000001, -104.5191];
 
 var map = L.mapbox.map('map')
     .setView(roswellLatLng, 12)
-    .addLayer(L.mapbox.tileLayer(mapId));
+    .addLayer(L.mapbox.tileLayer(mapId, {
+      detectRetina: true,
+      retinaVersion: retinaMapId
+    }));
 
 function UfoController($scope, $timeout, enQ) {
   var query = $scope.query = {
