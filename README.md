@@ -3,9 +3,7 @@
 Javascript client for [Contentful's](https://www.contentful.com) Content Delivery API:
 
 - [Documentation](https://www.contentful.com/developers/documentation/content-delivery-api)
-- Examples
-  - [browser](http://contentful.github.io/contentful.js/example/browser/): Simple data browser (Angular app)
-  - [ufos](http://contentful.github.io/contentful.js/example/ufos/):  Map of UFO sightings (Angular app)
+- [Example Apps](http://contentful.github.io/contentful.js/example/))
 
 ## Install
 
