@@ -3,7 +3,7 @@
 Javascript client for [Contentful's](https://www.contentful.com) Content Delivery API:
 
 - [Documentation](https://www.contentful.com/developers/documentation/content-delivery-api)
-- [Example Apps](http://contentful.github.io/contentful.js/example/))
+- [Example Apps](http://contentful.github.io/contentful.js/example/)
 
 ## Install
 
