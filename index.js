@@ -164,8 +164,10 @@ var SearchResult = redefine.Class({
 
   statics: {
     parse: function(ItemType, object) {
+      walkMutate(object, isParseableResource, parseResource);
+      var items = resolveLinks(object);
       return redefine(
-        _.map(object.items, ItemType.parse), {
+        items, {
           limit: object.limit,
           skip: object.skip,
           total: object.total
@@ -249,6 +251,22 @@ function enforcep(object, property) {
     throw new TypeError('Expected property ' + property);
 }
 
+var parseableResourceTypes =  {
+  Asset: Asset,
+  ContentType: ContentType,
+  Entry: Entry,
+  Space: Space
+};
+
+function isParseableResource(object) {
+  return _.getPath(object, ['sys', 'type']) in parseableResourceTypes;
+}
+
+function parseResource(resource) {
+  var Type = parseableResourceTypes[resource.sys.type];
+  return Type.parse(resource);
+}
+
 function parseJSONBody(response) {
   return JSON.parse(response.responseText);
 }
@@ -258,4 +276,38 @@ function stringifyArrayValues(object) {
     object[key] = _.isArray(value) ? value.join(',') : value;
     return object;
   }, {});
+}
+
+function resolveLinks(response) {
+  walkMutate(response, isLink, function(link) {
+    return getLink(response, link) || link;
+  });
+  return response.items;
+}
+
+function isLink(object) {
+  return _.getPath(object, ['sys', 'type']) === 'Link';
+}
+
+function getLink(response, link) {
+  var type = link.sys.linkType;
+  var id = link.sys.id;
+  var pred = function(resource) {
+    return resource.sys.type === type && resource.sys.id === id;
+  };
+  return _.find(response.items, pred) || _.find(response.includes[type], pred);
+}
+
+function walkMutate(input, pred, mutator) {
+  if (pred(input))
+    return mutator(input);
+
+  if (_.isArray(input) || _.isObject(input)) {
+    _.each(input, function(item, key) {
+      input[key] = walkMutate(item, pred, mutator);
+    });
+    return input;
+  }
+
+  return input;
 }
