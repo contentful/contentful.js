@@ -47,6 +47,24 @@ var Client = redefine.Class({
     return promise;
   },
 
+  asset: function(id) {
+    var promise = new Promise();
+    var request = this.request('/assets/' + id);
+    request.map(Asset.parse).map(_.bound(promise, 'resolve'));
+    request.onRejected(_.bound(promise, 'reject'));
+    return promise;
+  },
+
+  assets: function(object) {
+    var query = Query.parse(object);
+    var promise = new Promise();
+    var request = this.request('/assets', {query: query});
+    request.map(_.partial(SearchResult.parse, Asset))
+           .map(_.bound(promise, 'resolve'));
+    request.onRejected(_.bound(promise, 'reject'));
+    return promise;
+  },
+
   contentType: function(id) {
     var promise = new Promise();
     var request = this.request('/content_types/' + id);
@@ -89,6 +107,19 @@ var Client = redefine.Class({
     request.map(_.bound(promise, 'resolve'));
     request.onRejected(_.bound(promise, 'reject'));
     return promise;
+  }
+});
+
+var Asset = redefine.Class({
+  constructor: function Asset() {},
+
+  statics: {
+    parse: function(object) {
+      return _.extend(new Asset(), {
+        sys: Sys.parse(object.sys),
+        fields: object.fields
+      });
+    }
   }
 });
 
