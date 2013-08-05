@@ -295,7 +295,8 @@ function getLink(response, link) {
   var pred = function(resource) {
     return resource.sys.type === type && resource.sys.id === id;
   };
-  return _.find(response.items, pred) || _.find(response.includes[type], pred);
+  return _.find(response.items, pred) ||
+    response.includes && _.find(response.includes[type], pred);
 }
 
 function walkMutate(input, pred, mutator) {
