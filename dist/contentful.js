@@ -348,7 +348,7 @@ var Client = redefine.Class({
     var uri = [
       this.options.secure ? 'https' : 'http',
       '://',
-      this.options.host,
+      _.first(this.options.host.split(':')),
       ':',
       this.options.secure ? '443' : '80',
       '/spaces/',
@@ -365,6 +365,24 @@ var Client = redefine.Class({
       return parseJSONBody(reason);
     }).map(_.bound(promise, 'reject'));
     request.map(parseJSONBody).map(_.bound(promise, 'resolve'));
+    return promise;
+  },
+
+  asset: function(id) {
+    var promise = new Promise();
+    var request = this.request('/assets/' + id);
+    request.map(Asset.parse).map(_.bound(promise, 'resolve'));
+    request.onRejected(_.bound(promise, 'reject'));
+    return promise;
+  },
+
+  assets: function(object) {
+    var query = Query.parse(object);
+    var promise = new Promise();
+    var request = this.request('/assets', {query: query});
+    request.map(_.partial(SearchResult.parse, Asset))
+           .map(_.bound(promise, 'resolve'));
+    request.onRejected(_.bound(promise, 'reject'));
     return promise;
   },
 
@@ -413,6 +431,19 @@ var Client = redefine.Class({
   }
 });
 
+var Asset = redefine.Class({
+  constructor: function Asset() {},
+
+  statics: {
+    parse: function(object) {
+      return _.extend(new Asset(), {
+        sys: Sys.parse(object.sys),
+        fields: object.fields
+      });
+    }
+  }
+});
+
 var Entry = redefine.Class({
   constructor: function Entry() {},
 
@@ -454,8 +485,10 @@ var SearchResult = redefine.Class({
 
   statics: {
     parse: function(ItemType, object) {
+      walkMutate(object, isParseableResource, parseResource);
+      var items = resolveLinks(object);
       return redefine(
-        _.map(object.items, ItemType.parse), {
+        items, {
           limit: object.limit,
           skip: object.skip,
           total: object.total
@@ -539,6 +572,22 @@ function enforcep(object, property) {
     throw new TypeError('Expected property ' + property);
 }
 
+var parseableResourceTypes =  {
+  Asset: Asset,
+  ContentType: ContentType,
+  Entry: Entry,
+  Space: Space
+};
+
+function isParseableResource(object) {
+  return _.getPath(object, ['sys', 'type']) in parseableResourceTypes;
+}
+
+function parseResource(resource) {
+  var Type = parseableResourceTypes[resource.sys.type];
+  return Type.parse(resource);
+}
+
 function parseJSONBody(response) {
   return JSON.parse(response.responseText);
 }
@@ -550,7 +599,44 @@ function stringifyArrayValues(object) {
   }, {});
 }
 
-},{"querystring":1,"underscore-contrib":3,"questor":4,"pacta":5,"redefine":6}],7:[function(require,module,exports){
+function resolveLinks(response) {
+  walkMutate(response, isLink, function(link) {
+    return getLink(response, link) || link;
+  });
+  return response.items;
+}
+
+function isLink(object) {
+  return _.getPath(object, ['sys', 'type']) === 'Link';
+}
+
+function getLink(response, link) {
+  var type = link.sys.linkType;
+  var id = link.sys.id;
+  var pred = function(resource) {
+    return resource.sys.type === type && resource.sys.id === id;
+  };
+  return _.find(response.items, pred) || _.find(response.includes[type], pred);
+}
+
+function walkMutate(input, pred, mutator) {
+  if (pred(input))
+    return mutator(input);
+
+  if (_.isArray(input) || _.isObject(input)) {
+    _.each(input, function(item, key) {
+      input[key] = walkMutate(item, pred, mutator);
+    });
+    return input;
+  }
+
+  return input;
+}
+
+},{"querystring":1,"underscore-contrib":3,"pacta":4,"redefine":5,"questor":6}],5:[function(require,module,exports){
+/*! (C) WebReflection Mit Style License */
+var _=this._=function(e,t,n){function q(e,t){for(var n={},r=T(e),i=0,s=r.length,o;i<s;i++)o=r[i],n[o]=x(e,o);return k(t===undefined?N(e):t,n)}function R(e,t,n,r){j(n||Z.defaults||{},_),j(r,_);if(S.call(r,a)||S.call(r,p))delete _[g],delete _[m];E(e,t,_),A(_)}function U(e,t,n,r){R(e,t,r,n instanceof V?n:n instanceof G?X(e,t,n):(P[m]=n,P)),delete P[m]}function z(e,t,n){for(var r in t)S.call(t,r)&&U(e,r,t[r],n)}function W(e,t){for(var n=0,r,i;n<t.length;n++)r=t[n],Q(r)&&(r=(r.type||r.name)==="mixin"?r.call(r)||r:r[h]),C(e,r)}function X(e,t,n){var r=n._,s=S.call(n,i)?!!n[i]:!0,u=S.call(n,o)&&n[o],f=S.call(n,g)&&n[g],l;return n[a]=function(){return H&&(n=x(e,t),delete e[t]),_[m]=r.call(l=this),_[i]=s,_[o]=u,_[g]=f,E(l,t,_),A(_),H&&(j(n,_),E(e,t,_),A(_)),l[t]},H&&(n[i]=!0),n}function V(e){j(e,this)}function $(e){return new V(e)}function J(e){return k(Q(e)?e[h]:e)}function K(e,t,n){var r=J(e);return t?Z(r,t,n):r}function Q(e){return typeof e=="function"}function G(e){this._=Q(e)?e:j(e,this)||e[m]}function Y(e){return new G(e)}function Z(e,t,n,r){return(typeof t=="string"?U(e,t,n,r):z(e,t,n))||e}function et(e){return function(n,r,i){return(typeof r=="string"?U(n,r,i,e):z(n,r,e))||n}}function tt(e,t){var n,r,i,s;while(t=N(t)){i=T(t),n=i.length;while(n--)if(t[r=i[n]]===e){do s=N(t),t=s;while(s[r]===e);return s[r]}}}function nt(){return tt(nt.caller,this).apply(this,arguments)}function rt(e,t){return typeof e=="string"?rt(this,e):e[l+t]||it(e,t)}function it(e,t){return O[m]=b.call(e[t],e),E(e,l+t,O),O[m]=rt,e[l+t]}function st(e,t){var n=S.call(e,s)?e[s]:function(){},i=S.call(e,d)&&e[d],o=S.call(e,u)&&e[u],a;t||(t={},t[g]=!0),delete e[s];if(o){delete e[u],Z(n[h]=J(o),"constructor",n);if(Q(o))for(a in o)S.call(o,a)&&a!=="name"&&a!=="length"&&R(n,a,_,x(o,a))}return i&&(delete e[d],z(n,i,D)),S.call(e,f)&&(W(n[h],[].concat(e[f])),delete e[f]),z(n[h],e,t),ot(n[h]),r in n[h]||E(n[h],r,O),n}function ot(e){return S.call(e,v)?object:E(e,v,M)}var r="bound",i="configurable",s="constructor",o="enumerable",u="extend",a="get",f="mixin",l="__@",c="__proto__",h="prototype",p="set",d="statics",v="super",m="value",g="writable",y=t,b=t.bind||function(t){var n=this;return function(){return n.apply(t,arguments)}},w=function(t,r){return e[t]||n[t]||r},E=w("defineProperty"),S=w("hasOwnProperty"),x=w("getOwnPropertyDescriptor"),T=w("getOwnPropertyNames",n.keys),N=w("getPrototypeOf",function(t){return t[c]}),C=n.mixin||function(t,n){for(var r=T(n),i=r.length;i--;R(t,r[i],_,x(n,r[i])));return t},k=e.create||e.inherit||n.create,L=[i,o,a,p,m,g],A=y("o","delete o."+L.join(";delete o.")),O=k(null),M=k(null),_=k(null),D={},P={},H=!1,B,j,F,I;D[g]=!0,D[o]=!0;for(B=0;B<L.length;B++)L[B]=['if(h.call(a,"','"))b.',"=a.",";"].join(L[B]);j=y("h","return function(a,b){"+L.join("")+"}")(S),M[m]=function at(e){return b.apply(tt(at.caller,e),arguments)},M[i]=M[o]=M[g]=!1,E(nt,"bind",M),M[m]=nt,O[o]=!1,O[i]=O[g]=!0,O[m]=rt,Z.from=K,Z.Class=st,Z[v]=ot,Z.mixin=C,Z.bound=rt,Z.clone=q,Z.as=$,Z.later=Y,Z.using=et,Z.defaults={},"undefined"!=typeof module&&module.exports&&((module.exports=Z).redefine=Z),e.mixin?e.mixin({redefine:Z}):e.redefine=Z;try{I=k(Z({},{_:Y(n)}))._}catch(ut){A(_),H=!0}return e}(_||this,Function,Object);
+},{}],7:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -604,7 +690,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function(process){'use strict';
 
 var events = require('events');
@@ -852,10 +938,7 @@ String.empty = function () {
 exports.Promise = Promise;
 
 })(require("__browserify_process"))
-},{"events":8,"__browserify_process":7}],6:[function(require,module,exports){
-/*! (C) WebReflection Mit Style License */
-var _=this._=function(e,t,n){function q(e,t){for(var n={},r=T(e),i=0,s=r.length,o;i<s;i++)o=r[i],n[o]=x(e,o);return k(t===undefined?N(e):t,n)}function R(e,t,n,r){j(n||Z.defaults||{},_),j(r,_);if(S.call(r,a)||S.call(r,p))delete _[g],delete _[m];E(e,t,_),A(_)}function U(e,t,n,r){R(e,t,r,n instanceof V?n:n instanceof G?X(e,t,n):(P[m]=n,P)),delete P[m]}function z(e,t,n){for(var r in t)S.call(t,r)&&U(e,r,t[r],n)}function W(e,t){for(var n=0,r,i;n<t.length;n++)r=t[n],Q(r)&&(r=(r.type||r.name)==="mixin"?r.call(r)||r:r[h]),C(e,r)}function X(e,t,n){var r=n._,s=S.call(n,i)?!!n[i]:!0,u=S.call(n,o)&&n[o],f=S.call(n,g)&&n[g],l;return n[a]=function(){return H&&(n=x(e,t),delete e[t]),_[m]=r.call(l=this),_[i]=s,_[o]=u,_[g]=f,E(l,t,_),A(_),H&&(j(n,_),E(e,t,_),A(_)),l[t]},H&&(n[i]=!0),n}function V(e){j(e,this)}function $(e){return new V(e)}function J(e){return k(Q(e)?e[h]:e)}function K(e,t,n){var r=J(e);return t?Z(r,t,n):r}function Q(e){return typeof e=="function"}function G(e){this._=Q(e)?e:j(e,this)||e[m]}function Y(e){return new G(e)}function Z(e,t,n,r){return(typeof t=="string"?U(e,t,n,r):z(e,t,n))||e}function et(e){return function(n,r,i){return(typeof r=="string"?U(n,r,i,e):z(n,r,e))||n}}function tt(e,t){var n,r,i,s;while(t=N(t)){i=T(t),n=i.length;while(n--)if(t[r=i[n]]===e){do s=N(t),t=s;while(s[r]===e);return s[r]}}}function nt(){return tt(nt.caller,this).apply(this,arguments)}function rt(e,t){return typeof e=="string"?rt(this,e):e[l+t]||it(e,t)}function it(e,t){return O[m]=b.call(e[t],e),E(e,l+t,O),O[m]=rt,e[l+t]}function st(e,t){var n=S.call(e,s)?e[s]:function(){},i=S.call(e,d)&&e[d],o=S.call(e,u)&&e[u],a;t||(t={},t[g]=!0),delete e[s];if(o){delete e[u],Z(n[h]=J(o),"constructor",n);if(Q(o))for(a in o)S.call(o,a)&&a!=="name"&&a!=="length"&&R(n,a,_,x(o,a))}return i&&(delete e[d],z(n,i,D)),S.call(e,f)&&(W(n[h],[].concat(e[f])),delete e[f]),z(n[h],e,t),ot(n[h]),r in n[h]||E(n[h],r,O),n}function ot(e){return S.call(e,v)?object:E(e,v,M)}var r="bound",i="configurable",s="constructor",o="enumerable",u="extend",a="get",f="mixin",l="__@",c="__proto__",h="prototype",p="set",d="statics",v="super",m="value",g="writable",y=t,b=t.bind||function(t){var n=this;return function(){return n.apply(t,arguments)}},w=function(t,r){return e[t]||n[t]||r},E=w("defineProperty"),S=w("hasOwnProperty"),x=w("getOwnPropertyDescriptor"),T=w("getOwnPropertyNames",n.keys),N=w("getPrototypeOf",function(t){return t[c]}),C=n.mixin||function(t,n){for(var r=T(n),i=r.length;i--;R(t,r[i],_,x(n,r[i])));return t},k=e.create||e.inherit||n.create,L=[i,o,a,p,m,g],A=y("o","delete o."+L.join(";delete o.")),O=k(null),M=k(null),_=k(null),D={},P={},H=!1,B,j,F,I;D[g]=!0,D[o]=!0;for(B=0;B<L.length;B++)L[B]=['if(h.call(a,"','"))b.',"=a.",";"].join(L[B]);j=y("h","return function(a,b){"+L.join("")+"}")(S),M[m]=function at(e){return b.apply(tt(at.caller,e),arguments)},M[i]=M[o]=M[g]=!1,E(nt,"bind",M),M[m]=nt,O[o]=!1,O[i]=O[g]=!0,O[m]=rt,Z.from=K,Z.Class=st,Z[v]=ot,Z.mixin=C,Z.bound=rt,Z.clone=q,Z.as=$,Z.later=Y,Z.using=et,Z.defaults={},"undefined"!=typeof module&&module.exports&&((module.exports=Z).redefine=Z),e.mixin?e.mixin({redefine:Z}):e.redefine=Z;try{I=k(Z({},{_:Y(n)}))._}catch(ut){A(_),H=!0}return e}(_||this,Function,Object);
-},{}],8:[function(require,module,exports){
+},{"events":8,"__browserify_process":7}],8:[function(require,module,exports){
 (function(process){if (!process.EventEmitter) process.EventEmitter = function () {};
 
 var EventEmitter = exports.EventEmitter = process.EventEmitter;
@@ -1058,7 +1141,7 @@ require('./underscore.util.trampolines');
 
 module.exports = require('underscore');
 
-},{"./underscore.array.builders":9,"./underscore.array.selectors":10,"./underscore.collections.walk":11,"./underscore.function.arity":12,"./underscore.function.combinators":13,"./underscore.function.iterators":14,"./underscore.object.selectors":15,"./underscore.object.builders":16,"./underscore.function.predicates":17,"./underscore.util.existential":18,"./underscore.util.operators":19,"./underscore.util.strings":20,"./underscore.util.trampolines":21,"underscore":22}],22:[function(require,module,exports){
+},{"./underscore.array.builders":9,"./underscore.array.selectors":10,"./underscore.collections.walk":11,"./underscore.function.arity":12,"./underscore.function.combinators":13,"./underscore.function.iterators":14,"./underscore.function.predicates":15,"./underscore.object.builders":16,"./underscore.object.selectors":17,"./underscore.util.existential":18,"./underscore.util.operators":19,"./underscore.util.strings":20,"./underscore.util.trampolines":21,"underscore":22}],22:[function(require,module,exports){
 (function(){//     Underscore.js 1.4.4
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
@@ -2287,7 +2370,7 @@ module.exports = require('underscore');
 }).call(this);
 
 })()
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _ = require('underscore-contrib');
@@ -2327,7 +2410,1686 @@ function questor(uri, options) {
   return promise;
 }
 
-},{"bl":23,"hyperquest":24,"underscore-contrib":3,"pacta":5}],25:[function(require,module,exports){
+},{"bl":23,"hyperquest":24,"underscore-contrib":3,"pacta":4}],10:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.array.selectors.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  // Create quick reference variables for speed access to core prototypes.
+  var slice   = Array.prototype.slice,
+      concat  = Array.prototype.concat;
+
+  var existy = function(x) { return x != null; };
+  var truthy = function(x) { return (x !== false) && existy(x); };
+  var isSeq = function(x) { return (_.isArray(x)) || (_.isArguments(x)); };
+
+  // Mixing in the array selectors
+  // ----------------------------
+
+  _.mixin({
+    // Returns the second element of an array. Passing **n** will return all but
+    // the first of the head N values in the array.  The **guard** check allows it
+    // to work with `_.map`.
+    second: function(array, n, guard) {
+      if (array == null) return void 0;
+      return (n != null) && !guard ? slice.call(array, 1, n) : array[1];
+    },
+
+    // A function to get at an index into an array
+    nth: function(array, index) {
+      if ((index < 0) || (index > array.length - 1)) throw Error("Attempting to index outside the bounds of the array.");
+
+      return array[index];
+    },
+
+    // Takes all items in an array while a given predicate returns truthy.
+    takeWhile: function(array, pred) {
+      if (!isSeq(array)) throw new TypeError;
+
+      var sz = _.size(array);
+
+      for (var index = 0; index < sz; index++) {
+        if(!truthy(pred(array[index]))) {
+          break;
+        }
+      }
+
+      return _.take(array, index);
+    },
+
+    // Drops all items from an array while a given predicate returns truthy.
+    dropWhile: function(array, pred) {
+      if (!isSeq(array)) throw new TypeError;
+
+      var sz = _.size(array);
+
+      for (var index = 0; index < sz; index++) {
+        if(!truthy(pred(array[index])))
+          break;
+      }
+
+      return _.drop(array, index);
+    },
+
+    // Returns an array with two internal arrays built from
+    // taking an original array and spliting it at the index
+    // where a given function goes falsey.
+    splitWith: function(array, pred) {
+      return [_.takeWhile(pred, array), _.dropWhile(pred, array)];
+    },
+
+    // Takes an array and partitions it as the given predicate changes
+    // truth sense.
+    partitionBy: function(array, fun){
+      if (_.isEmpty(array) || !existy(array)) return [];
+
+      var fst    = _.first(array);
+      var fstVal = fun(fst);
+      var run    = concat.call([fst], _.takeWhile(_.rest(array), function(e) {
+        return _.isEqual(fstVal, fun(e));
+      }));
+
+      return concat.call([run], _.partitionBy(_.drop(array, _.size(run)), fun));
+    },
+
+    // Returns the 'best' value in an array based on the result of a
+    // given function.
+    best: function(array, fun) {
+      return _.reduce(array, function(x, y) {
+        return fun(x, y) ? x : y;
+      });
+    },
+
+    // Returns an array of existy results of a function over an source array.
+    keep: function(array, fun) {
+      if (!isSeq(array)) throw new TypeError("expected an array as the first argument");
+
+      return _.filter(_.map(array, function(e) {
+        return fun(e);
+      }), existy);
+    }
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],12:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.function.arity.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  function enforcesUnary (fn) {
+    return function mustBeUnary () {
+      if (arguments.length === 1) {
+        return fn.apply(this, arguments);
+      }
+      else throw new RangeError('Only a single argument may be accepted.');
+
+    }
+  }
+
+  // Curry
+  // -------
+  var curry = (function () {
+    function collectArgs(func, that, argCount, args, newArg, reverse) {
+      if (reverse == true) {
+          args.unshift(newArg);
+      } else {
+          args.push(newArg);
+      }
+      if (args.length == argCount) {
+        return func.apply(that, args);
+      } else {
+        return enforcesUnary(function () {
+          return collectArgs(func, that, argCount, args.slice(0), arguments[0], reverse);
+        });
+      }
+    }
+    return function curry (func, reverse) {
+      var that = this;
+      return enforcesUnary(function () {
+        return collectArgs(func, that, func.length, [], arguments[0], reverse);
+      });
+    };
+  }());
+
+  // Enforce Arity
+  // --------------------
+  var enforce = (function () {
+    var CACHE = [];
+    return function enforce (func) {
+      if (typeof func !== 'function') {
+        throw new Error('Argument 1 must be a function.');
+      }
+      var funcLength = func.length;
+      if (CACHE[funcLength] === undefined) {
+        CACHE[funcLength] = function (enforceFunc) {
+          return function () {
+            if (arguments.length !== funcLength) {
+              throw new RangeError(funcLength + ' arguments must be applied.');
+            }
+            return enforceFunc.apply(this, arguments);
+          };
+        };
+      }
+      return CACHE[funcLength](func);
+    };
+  }());
+
+  // Mixing in the arity functions
+  // -----------------------------
+
+  _.mixin({
+    // ### Fixed arguments
+
+    // Fixes the arguments to a function based on the parameter template defined by
+    // the presence of values and the `_` placeholder.
+    fix: function(fun) {
+      var args = _.rest(arguments);
+
+      var f = function() {
+        var arg = 0;
+
+        for ( var i = 0; i < args.length && arg < arguments.length; i++ ) {
+          if ( args[i] === _ ) {
+            args[i] = arguments[arg++];
+          }
+        }
+
+        return fun.apply(null, args);
+      };
+
+      f._original = fun;
+
+      return f;
+    },
+
+    unary: function (fun) {
+      return function unary (a) {
+        return fun.call(this, a);
+      };
+    },
+
+    binary: function (fun) {
+      return function binary (a, b) {
+        return fun.call(this, a, b);
+      };
+    },
+
+    ternary: function (fun) {
+      return function ternary (a, b, c) {
+        return fun.call(this, a, b, c);
+      };
+    },
+
+    quaternary: function (fun) {
+      return function quaternary (a, b, c, d) {
+        return fun.call(this, a, b, c, d);
+      };
+    },
+
+    // Flexible curry function with strict arity.
+    // Argument application left to right.
+    // source: https://github.com/eborden/js-curry
+    curry: curry,
+
+    // Flexible right to left curry with strict arity.
+    rCurry: function (func) {
+        return curry.call(this, func, true);
+    },
+
+
+    curry2: function (fun) {
+      return enforcesUnary(function curried (first) {
+        return enforcesUnary(function (last) {
+          return fun.call(this, first, last);
+        });
+      })
+    },
+
+    curry3: function (fun) {
+      return enforcesUnary(function (first) {
+        return enforcesUnary(function (second) {
+          return enforcesUnary(function (last) {
+            return fun.call(this, first, second, last);
+          })
+        })
+      })
+    },
+
+      // reverse currying for functions taking two arguments.
+    rcurry2: function (fun) {
+      return enforcesUnary(function (last) {
+        return enforcesUnary(function (first) {
+          return fun.call(this, first, last);
+        })
+      })
+    },
+
+    rcurry3: function (fun) {
+      return enforcesUnary(function (last) {
+        return enforcesUnary(function (second) {
+          return enforcesUnary(function (first) {
+            return fun.call(this, first, second, last);
+          })
+        })
+      })
+    },
+    // Dynamic decorator to enforce function arity and defeat varargs.
+    enforce: enforce
+  });
+
+  _.arity = (function () {
+    var FUNCTIONS = {};
+    return function arity (numberOfArgs, fun) {
+      if (FUNCTIONS[numberOfArgs] == null) {
+        var parameters = new Array(numberOfArgs);
+        for (var i = 0; i < numberOfArgs; ++i) {
+          parameters[i] = "__" + i;
+        }
+        var pstr = parameters.join();
+        var code = "return function ("+pstr+") { return fun.apply(this, arguments); };";
+        FUNCTIONS[numberOfArgs] = new Function(['fun'], code);
+      }
+      if (fun == null) {
+        return function (fun) { return arity(numberOfArgs, fun); };
+      }
+      else return FUNCTIONS[numberOfArgs](fun);
+    };
+  })();
+
+})(this);
+
+})()
+},{"underscore":22}],9:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.array.builders.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+  
+  // Create quick reference variables for speed access to core prototypes.
+  var slice   = Array.prototype.slice,
+      concat  = Array.prototype.concat;
+
+  var existy = function(x) { return x != null; };
+
+  // Mixing in the array builders
+  // ----------------------------
+
+  _.mixin({
+    // Concatenates one or more arrays given as arguments.  If given objects and
+    // scalars as arguments `cat` will plop them down in place in the result 
+    // array.  If given an `arguments` object, `cat` will treat it like an array
+    // and concatenate it likewise.
+    cat: function() {
+      return _.reduce(arguments, function(acc, elem) {
+        if (_.isArguments(elem)) {
+          return concat.call(acc, slice.call(elem));
+        }
+        else {
+          return concat.call(acc, elem);
+        }
+      }, []);
+    },
+
+    // 'Constructs' an array by putting an element at its front
+    cons: function(head, tail) {
+      return _.cat([head], tail);
+    },
+
+    // Takes an array and parititions it some number of times into
+    // sub-arrays of size n.  Allows and optional padding array as
+    // the third argument to fill in the tail partition when n is
+    // not sufficient to build paritions of the same size.
+    partition: function(array, n, pad) {
+      var p = function(array) {
+        if (array == null) return [];
+
+        var part = _.take(array, n);
+
+        if (n === _.size(part)) {
+          return _.cons(part, p(_.drop(array, n)));
+        }
+        else {
+          return pad ? [_.take(_.cat(part, pad), n)] : [];
+        }
+      };
+
+      return p(array);
+    },
+
+    // Takes an array and parititions it some number of times into
+    // sub-arrays of size n.  If the array given cannot fill the size
+    // needs of the final partition then a smaller partition is used
+    // for the last.
+    partitionAll: function(array, n, step) {
+      step = (step != null) ? step : n;
+
+      var p = function(array, n, step) {
+        if (_.isEmpty(array)) return [];
+
+        return _.cons(_.take(array, n),
+                      p(_.drop(array, step), n, step));
+      };
+
+      return p(array, n, step);
+    },
+
+    // Maps a function over an array and concatenates all of the results.
+    mapcat: function(array, fun) {
+      return _.cat.apply(null, _.map(array, fun));
+    },
+
+    // Returns an array with some item between each element
+    // of a given array.
+    interpose: function(array, inter) {
+      if (!_.isArray(array)) throw new TypeError;
+      var sz = _.size(array);
+      if (sz === 0) return array;
+      if (sz === 1) return array;
+
+      return slice.call(_.mapcat(array, function(elem) { 
+        return _.cons(elem, [inter]);
+      }), 0, -1);
+    },
+
+    // Weaves two or more arrays together
+    weave: function(/* args */) {
+      if (!_.some(arguments)) return [];
+
+      return _.filter(_.flatten(_.zip.apply(null, arguments), true), function(elem) {
+        return elem != null;
+      });
+    },
+    interleave: _.weave,
+
+    // Returns an array of a value repeated a certain number of
+    // times.
+    repeat: function(t, elem) {
+      return _.times(t, function() { return elem; });
+    },
+
+    // Returns an array built from the contents of a given array repeated
+    // a certain number of times.
+    cycle: function(t, elems) {
+      return _.flatten(_.times(t, function() { return elems; }), true);
+    },
+
+    // Returns an array with two internal arrays built from
+    // taking an original array and spliting it at an index.
+    splitAt: function(array, index) {
+      return [_.take(array, index), _.drop(array, index)];
+    },
+
+    // Call a function recursively f(f(f(args))) until a second
+    // given function goes falsey.  Expects a seed value to start.
+    iterateUntil: function(doit, checkit, seed) {
+      var ret = [];
+      var result = doit(seed);
+
+      while (checkit(result)) {
+        ret.push(result);
+        result = doit(result);
+      }
+
+      return ret;
+    },
+
+    // Takes every nth item from an array, returning an array of
+    // the results.
+    takeSkipping: function(array, n) {
+      var ret = [];
+      var sz = _.size(array);
+
+      if (n <= 0) return [];
+      if (n === 1) return array;
+
+      for(var index = 0; index < sz; index += n) {
+        ret.push(array[index]);
+      }
+
+      return ret;
+    },
+
+    // Returns an array of each intermediate stage of a call to
+    // a `reduce`-like function.
+    reductions: function(array, fun, init) {
+      var ret = [];
+      var acc = init;
+
+      _.each(array, function(v,k) {
+        acc = fun(acc, array[k]);
+        ret.push(acc);
+      });
+
+      return ret;
+    },
+
+    // Runs its given function on the index of the elements rather than 
+    // the elements themselves, keeping all of the truthy values in the end.
+    keepIndexed: function(array, pred) {
+      return _.filter(_.map(_.range(_.size(array)), function(i) {
+        return pred(i, array[i]);
+      }),
+      existy);
+    }
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],11:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.collections.walk.js 0.0.1)
+// (c) 2013 Patrick Dubroy
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  // An internal object that can be returned from a visitor function to
+  // prevent a top-down walk from walking subtrees of a node.
+  var breaker = {};
+
+  var notTreeError = 'Not a tree: same object found in two different branches';
+
+  // Walk the tree recursively beginning with `root`, calling `beforeFunc`
+  // before visiting an objects descendents, and `afterFunc` afterwards.
+  function walk(root, beforeFunc, afterFunc, context) {
+    var visited = [];
+    (function _walk(value, key, parent) {
+      if (beforeFunc && beforeFunc.call(context, value, key, parent) === breaker)
+        return;
+
+      if (_.isObject(value) || _.isArray(value)) {
+        // Keep track of objects that have been visited, and throw an exception
+        // when trying to visit the same object twice.
+        if (visited.indexOf(value) >= 0) throw new TypeError(notTreeError);
+        visited.push(value);
+
+        // Recursively walk this object's descendents. If it's a DOM node, walk
+        // its DOM children.
+        _.each(_.isElement(value) ? value.children : value, _walk, context);
+      }
+
+      if (afterFunc) afterFunc.call(context, value, key, parent);
+    })(root);
+  }
+
+  function pluck(obj, propertyName, recursive) {
+    var results = [];
+    _.walk.preorder(obj, function(value, key) {
+      if (key === propertyName) {
+        results[results.length] = value;
+        if (!recursive) return breaker;
+      }
+    });
+    return results;
+  }
+
+  // Add the `walk` namespace
+  // ------------------------
+
+  _.walk = walk;
+  _.extend(walk, {
+    // Recursively traverses `obj` in a depth-first fashion, invoking the
+    // `visitor` function for each object only after traversing its children.
+    postorder: function(obj, visitor, context) {
+      walk(obj, null, visitor, context);
+    },
+
+    // Recursively traverses `obj` in a depth-first fashion, invoking the
+    // `visitor` function for each object before traversing its children.
+    preorder: function(obj, visitor, context) {
+      walk(obj, visitor, null, context)
+    },
+
+    // Produces a new array of values by recursively traversing `obj` and
+    // mapping each value through the transformation function `visitor`.
+    // `strategy` is the traversal function to use, e.g. `preorder` or
+    // `postorder`.
+    map: function(obj, strategy, visitor, context) {
+      var results = [];
+      strategy.call(null, obj, function(value, key, parent) {
+        results[results.length] = visitor.call(context, value, key, parent);
+      });
+      return results;
+    },
+
+    // Return the value of properties named `propertyName` reachable from the
+    // tree rooted at `obj`. Results are not recursively searched; use
+    // `pluckRec` for that.
+    pluck: function(obj, propertyName) {
+      return pluck(obj, propertyName, false);
+    },
+
+    // Version of `pluck` which recursively searches results for nested objects
+    // with a property named `propertyName`.
+    pluckRec: function(obj, propertyName) {
+      return pluck(obj, propertyName, true);
+    }
+  });
+  _.walk.collect = _.walk.map;  // Alias `map` as `collect`.
+})(this);
+
+})()
+},{"underscore":22}],13:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.function.combinators.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  var existy = function(x) { return x != null; };
+  var truthy = function(x) { return (x !== false) && existy(x); };
+  var __reverse = [].reverse;
+  var __slice = [].slice;
+  var __map = [].map;
+  var curry2 = function (fun) {
+    return function curried (first, optionalLast) {
+      if (arguments.length === 1) {
+        return function (last) {
+          return fun(first, last);
+        };
+      }
+      else return fun(first, optionalLast);
+    };
+  };
+  
+  // n.b. depends on underscore.function.arity.js
+    
+  // Takes a target function and a mapping function. Returns a function
+  // that applies the mapper to its arguments before evaluating the body.
+  function baseMapArgs (fun, mapFun) {
+    return _.arity(fun.length, function () {
+      return fun.apply(this, __map.call(arguments, mapFun));
+    });
+  };
+  
+  // Mixing in the combinator functions
+  // ----------------------------------
+
+  _.mixin({
+    // Takes a value and returns a function that always returns
+    // said value.
+    always: function(value) {
+      return function() { return value; };
+    },
+
+    // Takes some number of functions, either as an array or variadically
+    // and returns a function that takes some value as its first argument 
+    // and runs it through a pipeline of the original functions given.
+    pipeline: function(/*, funs */){
+      var funs = (_.isArray(arguments[0])) ? arguments[0] : arguments;
+
+      return function(seed) {
+        return _.reduce(funs,
+                        function(l,r) { return r(l); },
+                        seed);
+      };
+    },
+
+    // Composes a bunch of predicates into a single predicate that
+    // checks all elements of an array for conformance to all of the
+    // original predicates.
+    conjoin: function(/* preds */) {
+      var preds = arguments;
+
+      return function(array) {
+        return _.every(array, function(e) {
+          return _.every(preds, function(p) {
+            return p(e);
+          });
+        });
+      };
+    },
+
+    // Composes a bunch of predicates into a single predicate that
+    // checks all elements of an array for conformance to any of the
+    // original predicates.
+    disjoin: function(/* preds */) {
+      var preds = arguments;
+
+      return function(array) {
+        return _.some(array, function(e) {
+          return _.some(preds, function(p) {
+            return p(e);
+          });
+        });
+      };
+    },
+
+    // Takes a predicate-like and returns a comparator (-1,0,1).
+    comparator: function(fun) {
+      return function(x, y) {
+        if (truthy(fun(x, y)))
+          return -1;
+        else if (truthy(fun(y, x)))
+          return 1;
+        else
+          return 0;
+      };
+    },
+
+    // Returns a function that reverses the sense of a given predicate-like.
+    complement: function(pred) {
+      return function() {
+        return !pred.apply(null, arguments);
+      };
+    },
+
+    // Takes a function expecting varargs and
+    // returns a function that takes an array and
+    // uses its elements as the args to  the original
+    // function
+    splat: function(fun) {
+      return function(array) {
+        return fun.apply(null, array);
+      };
+    },
+
+    // Takes a function expecting an array and returns
+    // a function that takes varargs and wraps all
+    // in an array that is passed to the original function.
+    unsplat: function(fun) {
+      var funLength = fun.length;
+
+      if (funLength < 1) {
+        return fun;
+      }
+      else if (funLength === 1)  {
+        return function () {
+          return fun.call(this, __slice.call(arguments, 0));
+        };
+      }
+      else {
+        return function () {
+          var numberOfArgs = arguments.length,
+              namedArgs = __slice.call(arguments, 0, funLength - 1),
+              numberOfMissingNamedArgs = Math.max(funLength - numberOfArgs - 1, 0),
+              argPadding = new Array(numberOfMissingNamedArgs),
+              variadicArgs = __slice.call(arguments, fun.length - 1);
+
+          return fun.apply(this, namedArgs.concat(argPadding).concat([variadicArgs]));
+        };
+      }
+    },
+
+    // Same as unsplat, but the rest of the arguments are collected in the
+    // first parameter, e.g. unsplatl( function (args, callback) { ... ]})
+    unsplatl: function(fun) {
+      var funLength = fun.length;
+
+      if (funLength < 1) {
+        return fun;
+      }
+      else if (funLength === 1)  {
+        return function () {
+          return fun.call(this, __slice.call(arguments, 0))
+        };
+      }
+      else {
+        return function () {
+          var numberOfArgs = arguments.length,
+              namedArgs = __slice.call(arguments, Math.max(numberOfArgs - funLength + 1, 0)),
+              variadicArgs = __slice.call(arguments, 0, Math.max(numberOfArgs - funLength + 1, 0));
+
+          return fun.apply(this, [variadicArgs].concat(namedArgs));
+        };
+      }
+    },
+    
+    // map the arguments of a function
+    mapArgs: curry2(baseMapArgs),
+
+    // Returns a function that returns an array of the calls to each
+    // given function for some arguments.
+    juxt: function(/* funs */) {
+      var funs = arguments;
+
+      return function(/* args */) {
+        var args = arguments;
+        return _.map(funs, function(f) {
+          return f.apply(null, args);
+        });
+      };
+    },
+
+    // Returns a function that protects a given function from receiving
+    // non-existy values.  Each subsequent value provided to `fnull` acts
+    // as the default to the original function should a call receive non-existy
+    // values in the defaulted arg slots.
+    fnull: function(fun /*, defaults */) {
+      var defaults = _.rest(arguments);
+
+      return function(/*args*/) {
+        var args = _.toArray(arguments);
+        var sz = _.size(defaults);
+
+        for(var i = 0; i < sz; i++) {
+          if (!existy(args[i]))
+            args[i] = defaults[i];
+        }
+
+        return fun.apply(null, args);
+      };
+    },
+
+    // Flips the first two args of a function
+    flip2: function(fun) {
+      return function(/* args */) {
+        var tmp = arguments[0];
+        arguments[0] = arguments[1];
+        arguments[1] = tmp;
+
+        return fun.apply(null, arguments);
+      };
+    },
+
+    // Flips an arbitrary number of args of a function
+    flip: function(fun) {
+      return function(/* args */) {
+        var reversed = __reverse.call(arguments);
+
+        return fun.apply(null, reversed);
+      };
+    },
+    
+    k: _.always,
+    t: _.pipeline
+  });
+  
+  _.unsplatr = _.unsplat;
+    
+  // map the arguments of a function, takes the mapping function
+  // first so it can be used as a combinator
+  _.mapArgsWith = curry2(_.flip(baseMapArgs));
+  
+  // Returns function property of object by name, bound to object
+  _.bound = function(obj, fname) {
+    var fn = obj[fname];
+    if (!_.isFunction(fn))
+      throw new TypeError("Expected property to be a function");
+    return _.bind(fn, obj);
+  };
+
+})(this);
+
+})()
+},{"underscore":22}],15:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.function.predicates.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+
+  // Mixing in the predicate functions
+  // ---------------------------------
+
+  _.mixin({
+    // A wrapper around instanceof
+    isInstanceOf: function(x, t) { return (x instanceof t); },
+
+    // An associative object is one where its elements are
+    // accessed via a key or index. (i.e. array and object)
+    isAssociative: function(x) { return _.isArray(x) || _.isObject(x) || _.isArguments(x); },
+
+    // An indexed object is anything that allows numerical index for
+    // accessing its elements (e.g. arrays and strings). NOTE: Underscore
+    // does not support cross-browser consistent use of strings as array-like
+    // objects, so be wary in IE 8 when using  String objects and IE<8.
+    // on string literals & objects.
+    isIndexed: function(x) { return _.isArray(x) || _.isString(x) || _.isArguments(x); },
+
+    // A seq is something considered a sequential composite type (i.e. arrays and `arguments`).
+    isSequential: function(x) { return (_.isArray(x)) || (_.isArguments(x)); },
+
+    // These do what you think that they do
+    isZero: function(x) { return 0 === x; },
+    isEven: function(x) { return _.isFinite(x) && (x & 1) === 0; },
+    isOdd: function(x) { return _.isFinite(x) && !_.isEven(x); },
+    isPositive: function(x) { return x > 0; },
+    isNegative: function(x) { return x < 0; },
+    isValidDate: function(x) { return _.isDate(x) && !_.isNaN(x.getTime()); },
+
+    // A numeric is a variable that contains a numeric value, regardless its type
+    // It can be a String containing a numeric value, exponential notation, or a Number object
+    // See here for more discussion: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
+    isNumeric: function(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    },
+
+    // An integer contains an optional minus sign to begin and only the digits 0-9
+    // Objects that can be parsed that way are also considered ints, e.g. "123"
+    // Floats that are mathematically equal to integers are considered integers, e.g. 1.0
+    // See here for more discussion: http://stackoverflow.com/questions/1019515/javascript-test-for-an-integer
+    isInteger: function(i) {
+      return _.isNumeric(i) && i % 1 === 0;
+    },
+
+    // A float is a numbr that is not an integer.
+    isFloat: function(n) {
+      return _.isNumeric(n) && !_.isInteger(n);
+    },
+
+    // Returns true if its arguments are monotonically
+    // increaing values; false otherwise.
+    isIncreasing: function() {
+      var count = _.size(arguments);
+      if (count === 1) return true;
+      if (count === 2) return arguments[0] < arguments[1];
+
+      for (var i = 1; i < count; i++) {
+        if (arguments[i-1] >= arguments[i]) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+
+    // Returns true if its arguments are monotonically
+    // decreaing values; false otherwise.
+    isDecreasing: function() {
+      var count = _.size(arguments);
+      if (count === 1) return true;
+      if (count === 2) return arguments[0] > arguments[1];
+
+      for (var i = 1; i < count; i++) {
+        if (arguments[i-1] <= arguments[i]) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],14:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.function.iterators.js 0.0.1)
+// (c) 2013 Michael Fogus and DocumentCloud Inc.
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+  
+  var HASNTBEENRUN = {};
+  
+  function unary (fun) {
+    return function (first) {
+      return fun.call(this, first);
+    };
+  }
+  
+  function binary (fun) {
+    return function (first, second) {
+      return fun.call(this, first, second);
+    };
+  }
+  
+  var undefined = void 0;
+
+  
+  // Mixing in the iterator functions
+  // --------------------------------
+
+     function foldl (iter, binaryFn, seed) {
+      var state, element;
+      if (seed !== void 0) {
+        state = seed;
+      }
+      else {
+        state = iter();
+      }
+      element = iter();
+      while (element != null) {
+        state = binaryFn.call(element, state, element);
+        element = iter();
+      }
+      return state;
+    };
+  
+    function unfold (seed, unaryFn) {
+      var state = HASNTBEENRUN;
+      return function () {
+        if (state === HASNTBEENRUN) {
+          return (state = seed);
+        }
+        else if (state != null) {
+          return (state = unaryFn.call(state, state));
+        }
+        else return state;
+      };
+    };
+  
+    // note that the unfoldWithReturn behaves differently than
+    // unfold with respect to the first value returned
+    function unfoldWithReturn (seed, unaryFn) {
+      var state = seed,
+          pair,
+          value;
+      return function () {
+        if (state != null) {
+          pair = unaryFn.call(state, state);
+          value = pair[1];
+          state = value != null
+                  ? pair[0]
+                  : void 0;
+          return value;
+        }
+        else return void 0;
+      };
+    };
+
+    function accumulate (iter, binaryFn, initial) {
+      var state = initial;
+      return function () {
+        element = iter();
+        if (element == null) {
+          return element;
+        }
+        else {
+          if (state === void 0) {
+            return (state = element);
+          }
+          else return (state = binaryFn.call(element, state, element));
+        }
+      };
+    };
+  
+    function accumulateWithReturn (iter, binaryFn, initial) {
+      var state = initial,
+          stateAndReturnValue;
+      return function () {
+        element = iter();
+        if (element == null) {
+          return element;
+        }
+        else {
+          if (state === void 0) {
+            return (state = element);
+          }
+          else {
+            stateAndReturnValue = binaryFn.call(element, state, element);
+            state = stateAndReturnValue[0];
+            return stateAndReturnValue[1];
+          }
+        }
+      };
+    };
+  
+    function map (iter, unaryFn) {
+      return function() {
+        var element;
+        element = iter();
+        if (element != null) {
+          return unaryFn.call(element, element);
+        } else {
+          return void 0;
+        }
+      };
+    };
+
+    function select (iter, unaryPredicateFn) {
+      return function() {
+        var element;
+        element = iter();
+        while (element != null) {
+          if (unaryPredicateFn.call(element, element)) {
+            return element;
+          }
+          element = iter();
+        }
+        return void 0;
+      };
+    };
+  
+    function reject (iter, unaryPredicateFn) {
+      return select(iter, function (something) {
+        return !unaryPredicateFn(something);
+      });
+    };
+  
+    function find (iter, unaryPredicateFn) {
+      return select(iter, unaryPredicateFn)();
+    }
+
+    function slice (iter, numberToDrop, numberToTake) {
+      var count = 0;
+      while (numberToDrop-- > 0) {
+        iter();
+      }
+      if (numberToTake != null) {
+        return function() {
+          if (++count <= numberToTake) {
+            return iter();
+          } else {
+            return void 0;
+          }
+        };
+      }
+      else return iter;
+    };
+  
+    function drop (iter, numberToDrop) {
+      return slice(iter, numberToDrop == null ? 1 : numberToDrop);
+    }
+  
+    function take (iter, numberToTake) {
+      return slice(iter, 0, numberToTake == null ? 1 : numberToTake);
+    }
+
+    function List (array) {
+      var index = 0;
+      return function() {
+        return array[index++];
+      };
+    };
+  
+    function Tree (array) {
+      var index, myself, state;
+      index = 0;
+      state = [];
+      myself = function() {
+        var element, tempState;
+        element = array[index++];
+        if (element instanceof Array) {
+          state.push({
+            array: array,
+            index: index
+          });
+          array = element;
+          index = 0;
+          return myself();
+        } else if (element === void 0) {
+          if (state.length > 0) {
+            tempState = state.pop(), array = tempState.array, index = tempState.index;
+            return myself();
+          } else {
+            return void 0;
+          }
+        } else {
+          return element;
+        }
+      };
+      return myself;
+    };
+  
+    function K (value) {
+      return function () {
+        return value;
+      };
+    };
+
+    function upRange (from, to, by) {
+      return function () {
+        var was;
+      
+        if (from > to) {
+          return void 0;
+        }
+        else {
+          was = from;
+          from = from + by;
+          return was;
+        }
+      }
+    };
+
+    function downRange (from, to, by) {
+      return function () {
+        var was;
+      
+        if (from < to) {
+          return void 0;
+        }
+        else {
+          was = from;
+          from = from - by;
+          return was;
+        }
+      };
+    };
+  
+    function range (from, to, by) {
+      if (from == null) {
+        return upRange(1, Infinity, 1);
+      }
+      else if (to == null) {
+        return upRange(from, Infinity, 1);
+      }
+      else if (by == null) {
+        if (from <= to) {
+          return upRange(from, to, 1);
+        }
+        else return downRange(from, to, 1)
+      }
+      else if (by > 0) {
+        return upRange(from, to, by);
+      }
+      else if (by < 0) {
+        return downRange(from, to, Math.abs(by))
+      }
+      else return k(from);
+    };
+  
+    var numbers = unary(range);
+
+    _.iterators = {
+      accumulate: accumulate,
+      accumulateWithReturn: accumulateWithReturn,
+      foldl: foldl,
+      reduce: foldl,
+      unfold: unfold,
+      unfoldWithReturn: unfoldWithReturn,
+      map: map,
+      select: select,
+      reject: reject,
+      filter: select,
+      find: find,
+      slice: slice,
+      drop: drop,
+      take: take,
+      List: List,
+      Tree: Tree,
+      constant: K,
+      K: K,
+      numbers: numbers,
+      range: range
+    };
+
+})(this);
+
+})()
+},{"underscore":22}],16:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.object.builders.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  // Create quick reference variables for speed access to core prototypes.
+  var slice   = Array.prototype.slice,
+      concat  = Array.prototype.concat;
+
+  var existy = function(x) { return x != null; };
+  var truthy = function(x) { return (x !== false) && existy(x); };
+  var isAssociative = function(x) { return _.isArray(x) || _.isObject(x); };
+  var curry2 = function(fun) {
+    return function(last) {
+      return function(first) {
+        return fun(first, last);
+      };
+    };
+  };
+  
+  // Mixing in the object builders
+  // ----------------------------
+
+  _.mixin({
+    // Merges two or more objects starting with the left-most and
+    // applying the keys right-word
+    // {any:any}* -> {any:any}
+    merge: function(/* objs */){
+      var dest = _.some(arguments) ? {} : null;
+
+      if (truthy(dest)) {
+        _.extend.apply(null, concat.call([dest], _.toArray(arguments)));
+      }
+
+      return dest;
+    },
+
+    // Takes an object and another object of strings to strings where the second
+    // object describes the key renaming to occur in the first object.
+    renameKeys: function(obj, kobj) {
+      return _.reduce(kobj, function(o, nu, old) {
+        if (existy(obj[old])) {
+          o[nu] = obj[old];
+          return o;
+        }
+        else
+          return o;
+      },
+      _.omit.apply(null, concat.call([obj], _.keys(kobj))));
+    },
+
+    // Snapshots an object deeply. Based on the version by
+    // [Keith Devens](http://keithdevens.com/weblog/archive/2007/Jun/07/javascript.clone)
+    // until we can find a more efficient and robust way to do it.
+    snapshot: function(obj) {
+      if(obj == null || typeof(obj) != 'object') {
+        return obj;
+      }
+
+      var temp = new obj.constructor();
+
+      for(var key in obj) {
+        temp[key] = _.snapshot(obj[key]);
+      }
+
+      return temp;
+    },
+
+    // Updates the value at any depth in a nested object based on the
+    // path described by the keys given.  The function provided is supplied
+    // the current value and is expected to return a value for use as the
+    // new value.  If no keys are provided, then the object itself is presented
+    // to the given function.
+    updatePath: function(obj, fun, ks) {
+      if (!isAssociative(obj)) throw new TypeError("Attempted to update a non-associative object.");
+      if (!existy(ks)) return fun(obj);
+
+      var deepness = _.isArray(ks);
+      var keys     = deepness ? ks : [ks];
+      var ret      = deepness ? _.snapshot(obj) : _.clone(obj);
+      var lastKey  = _.last(keys);
+      var target   = ret;
+
+      _.each(_.initial(keys), function(key) {
+        target = target[key];
+      });
+
+      target[lastKey] = fun(target[lastKey]);
+      return ret;
+    },
+
+    // Sets the value at any depth in a nested object based on the
+    // path described by the keys given.
+    setPath: function(obj, value, ks) {
+      if (!existy(ks)) throw new TypeError("Attempted to set a property at a null path.");
+
+      return _.updatePath(obj, function() { return value; }, ks);
+    },
+
+    // Returns an object where each element of an array is keyed to
+    // the number of times that it occurred in said array.
+    frequencies: curry2(_.countBy)(_.identity)
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],17:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.object.selectors.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  // Create quick reference variables for speed access to core prototypes.
+  var concat  = Array.prototype.concat;
+
+  // Mixing in the object selectors
+  // ------------------------------
+
+  _.mixin({
+    // Returns a function that will attempt to look up a named field
+    // in any object that it's given.
+    accessor: function(field) {
+      return function(obj) {
+        return (obj && obj[field]);
+      };
+    },
+
+    // Given an object, returns a function that will attempt to look up a field
+    // that it's given.
+    dictionary: function (obj) {
+      return function(field) {
+        return (obj && field && obj[field]);
+      };
+    },
+
+    // Like `_.pick` except that it takes an array of keys to pick.
+    selectKeys: function (obj, ks) {
+      return _.pick.apply(null, concat.call([obj], ks));
+    },
+
+    // Returns the key/value pair for a given property in an object, undefined if not found.
+    kv: function(obj, key) {
+      if (_.has(obj, key)) {
+        return [key, obj[key]];
+      }
+
+      return void 0;
+    },
+
+    // Gets the value at any depth in a nested object based on the
+    // path described by the keys given.
+    getPath: function getPath (obj, ks) {
+      // If we have reached an undefined property
+      // then stop executing and return undefined
+      if (obj === undefined) return void 0;
+
+      // If the path array has no more elements, we've reached
+      // the intended property and return its value
+      if (ks.length === 0) return obj;
+
+      // If we still have elements in the path array and the current
+      // value is null, stop executing and return undefined
+      if (obj === null) return void 0;
+
+      return getPath(obj[_.first(ks)], _.rest(ks));
+    },
+
+    // Returns a boolean indicating whether there is a property
+    // at the path described by the keys given
+    hasPath: function hasPath (obj, ks) {
+      var numKeys = ks.length;
+
+      if (obj == null && numKeys > 0) return false;
+
+      if (!(ks[0] in obj)) return false;
+
+      if (numKeys === 1) return true;
+
+      return hasPath(obj[_.first(ks)], _.rest(ks));
+    }
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],19:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.function.arity.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+  
+  // Mixing in the operator functions
+  // -----------------------------
+
+  _.mixin({
+    add: function(x, y) {
+      return x + y;
+    },
+    sub: function(x, y) {
+      return x - y;
+    },
+    mul: function(x, y) {
+      return x * y;
+    },
+    div: function(x, y) {
+      return x / y;
+    },
+    mod: function(x, y) {
+      return x % y;
+    },
+    inc: function(x) {
+      return ++x;
+    },
+    dec: function(x) {
+      return --x;
+    },
+    neg: function(x) {
+      return -x;
+    },
+    eq: function(x, y) {
+      return x == y;
+    },
+    seq: function(x, y) {
+      return x === y;
+    },
+    neq: function(x, y) {
+      return x != y;
+    },
+    sneq: function(x, y) {
+      return x !== y;
+    },
+    not: function(x) {
+      return !x;
+    },
+    gt: function(x, y) {
+      return x > y;
+    },
+    lt: function(x, y) {
+      return x < y;
+    },
+    gte: function(x, y) {
+      return x >= y;
+    },
+    lte: function(x, y) {
+      return x <= y;
+    },
+    bitwiseAnd: function(x, y) {
+      return x & y;
+    },
+    bitwiseOr: function(x, y) {
+      return x | y;
+    },
+    bitwiseXor: function(x, y) {
+      return x ^ y;
+    },
+    bitwiseNot: function(x) {
+      return ~x;
+    },
+    bitwiseLeft: function(x, y) {
+      return x << y;
+    },
+    bitwiseRight: function(x, y) {
+      return x >> y;
+    },
+    bitwiseZ: function(x, y) {
+      return x >>> y;
+    }
+  });
+})(this);
+
+})()
+},{"underscore":22}],18:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.util.existential.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  
+  // Mixing in the truthiness
+  // ------------------------
+
+  _.mixin({
+    exists: function(x) { return x != null; },
+    truthy: function(x) { return (x !== false) && _.exists(x); },
+    falsey: function(x) { return !_.truthy(x); },
+    not:    function(b) { return !b; }
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],20:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.util.strings.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  // Mixing in the string utils
+  // ----------------------------
+
+  _.mixin({
+    // Explodes a string into an array of chars
+    explode: function(s) {
+      return s.split('');
+    },
+
+    // Implodes and array of chars into a string
+    implode: function(a) {
+      return a.join('');
+    }
+  });
+})(this);
+
+})()
+},{"underscore":22}],21:[function(require,module,exports){
+(function(){// Underscore-contrib (underscore.util.trampolines.js 0.0.1)
+// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
+// Underscore-contrib may be freely distributed under the MIT license.
+
+(function(root) {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `global` on the server.
+  var _ = root._ || require('underscore');
+
+  // Helpers
+  // -------
+
+  
+  // Mixing in the truthiness
+  // ------------------------
+
+  _.mixin({
+    done: function(value) {
+      var ret = _(value);
+      ret.stopTrampoline = true;
+      return ret;
+    },
+
+    trampoline: function(fun /*, args */) {
+      var result = fun.apply(fun, _.rest(arguments));
+
+      while (_.isFunction(result)) {
+        result = result();
+        if ((result instanceof _) && (result.stopTrampoline)) break;
+      }
+
+      return result.value();
+    }
+  });
+
+})(this);
+
+})()
+},{"underscore":22}],25:[function(require,module,exports){
+var http = require('http');
+
+var https = module.exports;
+
+for (var key in http) {
+    if (http.hasOwnProperty(key)) https[key] = http[key];
+};
+
+https.request = function (params, cb) {
+    if (!params) params = {};
+    params.scheme = 'https';
+    return http.request.call(this, params, cb);
+}
+},{"http":26}],27:[function(require,module,exports){
 var events = require('events');
 
 exports.isArray = isArray;
@@ -2680,308 +4442,7 @@ exports.format = function(f) {
   return str;
 };
 
-},{"events":8}],10:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.array.selectors.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  // Create quick reference variables for speed access to core prototypes.
-  var slice   = Array.prototype.slice,
-      concat  = Array.prototype.concat;
-
-  var existy = function(x) { return x != null; };
-  var truthy = function(x) { return (x !== false) && existy(x); };
-  var isSeq = function(x) { return (_.isArray(x)) || (_.isArguments(x)); };
-
-  // Mixing in the array selectors
-  // ----------------------------
-
-  _.mixin({
-    // Returns the second element of an array. Passing **n** will return all but
-    // the first of the head N values in the array.  The **guard** check allows it
-    // to work with `_.map`.
-    second: function(array, n, guard) {
-      if (array == null) return void 0;
-      return (n != null) && !guard ? slice.call(array, 1, n) : array[1];
-    },
-
-    // A function to get at an index into an array
-    nth: function(array, index) {
-      if ((index < 0) || (index > array.length - 1)) throw Error("Attempting to index outside the bounds of the array.");
-
-      return array[index];
-    },
-
-    // Takes all items in an array while a given predicate returns truthy.
-    takeWhile: function(array, pred) {
-      if (!isSeq(array)) throw new TypeError;
-
-      var sz = _.size(array);
-
-      for (var index = 0; index < sz; index++) {
-        if(!truthy(pred(array[index]))) {
-          break;
-        }
-      }
-
-      return _.take(array, index);
-    },
-
-    // Drops all items from an array while a given predicate returns truthy.
-    dropWhile: function(array, pred) {
-      if (!isSeq(array)) throw new TypeError;
-
-      var sz = _.size(array);
-
-      for (var index = 0; index < sz; index++) {
-        if(!truthy(pred(array[index])))
-          break;
-      }
-
-      return _.drop(array, index);
-    },
-
-    // Returns an array with two internal arrays built from
-    // taking an original array and spliting it at the index
-    // where a given function goes falsey.
-    splitWith: function(array, pred) {
-      return [_.takeWhile(pred, array), _.dropWhile(pred, array)];
-    },
-
-    // Takes an array and partitions it as the given predicate changes
-    // truth sense.
-    partitionBy: function(array, fun){
-      if (_.isEmpty(array) || !existy(array)) return [];
-
-      var fst    = _.first(array);
-      var fstVal = fun(fst);
-      var run    = concat.call([fst], _.takeWhile(_.rest(array), function(e) {
-        return _.isEqual(fstVal, fun(e));
-      }));
-
-      return concat.call([run], _.partitionBy(_.drop(array, _.size(run)), fun));
-    },
-
-    // Returns the 'best' value in an array based on the result of a
-    // given function.
-    best: function(array, fun) {
-      return _.reduce(array, function(x, y) {
-        return fun(x, y) ? x : y;
-      });
-    },
-
-    // Returns an array of existy results of a function over an source array.
-    keep: function(array, fun) {
-      if (!isSeq(array)) throw new TypeError("expected an array as the first argument");
-
-      return _.filter(_.map(array, function(e) {
-        return fun(e);
-      }), existy);
-    }
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],9:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.array.builders.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-  
-  // Create quick reference variables for speed access to core prototypes.
-  var slice   = Array.prototype.slice,
-      concat  = Array.prototype.concat;
-
-  var existy = function(x) { return x != null; };
-
-  // Mixing in the array builders
-  // ----------------------------
-
-  _.mixin({
-    // Concatenates one or more arrays given as arguments.  If given objects and
-    // scalars as arguments `cat` will plop them down in place in the result 
-    // array.  If given an `arguments` object, `cat` will treat it like an array
-    // and concatenate it likewise.
-    cat: function() {
-      return _.reduce(arguments, function(acc, elem) {
-        if (_.isArguments(elem)) {
-          return concat.call(acc, slice.call(elem));
-        }
-        else {
-          return concat.call(acc, elem);
-        }
-      }, []);
-    },
-
-    // 'Constructs' an array by putting an element at its front
-    cons: function(head, tail) {
-      return _.cat([head], tail);
-    },
-
-    // Takes an array and parititions it some number of times into
-    // sub-arrays of size n.  Allows and optional padding array as
-    // the third argument to fill in the tail partition when n is
-    // not sufficient to build paritions of the same size.
-    partition: function(array, n, pad) {
-      var p = function(array) {
-        if (array == null) return [];
-
-        var part = _.take(array, n);
-
-        if (n === _.size(part)) {
-          return _.cons(part, p(_.drop(array, n)));
-        }
-        else {
-          return pad ? [_.take(_.cat(part, pad), n)] : [];
-        }
-      };
-
-      return p(array);
-    },
-
-    // Takes an array and parititions it some number of times into
-    // sub-arrays of size n.  If the array given cannot fill the size
-    // needs of the final partition then a smaller partition is used
-    // for the last.
-    partitionAll: function(array, n, step) {
-      step = (step != null) ? step : n;
-
-      var p = function(array, n, step) {
-        if (_.isEmpty(array)) return [];
-
-        return _.cons(_.take(array, n),
-                      p(_.drop(array, step), n, step));
-      };
-
-      return p(array, n, step);
-    },
-
-    // Maps a function over an array and concatenates all of the results.
-    mapcat: function(array, fun) {
-      return _.cat.apply(null, _.map(array, fun));
-    },
-
-    // Returns an array with some item between each element
-    // of a given array.
-    interpose: function(array, inter) {
-      if (!_.isArray(array)) throw new TypeError;
-      var sz = _.size(array);
-      if (sz === 0) return array;
-      if (sz === 1) return array;
-
-      return slice.call(_.mapcat(array, function(elem) { 
-        return _.cons(elem, [inter]);
-      }), 0, -1);
-    },
-
-    // Weaves two or more arrays together
-    weave: function(/* args */) {
-      if (!_.some(arguments)) return [];
-
-      return _.filter(_.flatten(_.zip.apply(null, arguments), true), function(elem) {
-        return elem != null;
-      });
-    },
-    interleave: _.weave,
-
-    // Returns an array of a value repeated a certain number of
-    // times.
-    repeat: function(t, elem) {
-      return _.times(t, function() { return elem; });
-    },
-
-    // Returns an array built from the contents of a given array repeated
-    // a certain number of times.
-    cycle: function(t, elems) {
-      return _.flatten(_.times(t, function() { return elems; }), true);
-    },
-
-    // Returns an array with two internal arrays built from
-    // taking an original array and spliting it at an index.
-    splitAt: function(array, index) {
-      return [_.take(array, index), _.drop(array, index)];
-    },
-
-    // Call a function recursively f(f(f(args))) until a second
-    // given function goes falsey.  Expects a seed value to start.
-    iterateUntil: function(doit, checkit, seed) {
-      var ret = [];
-      var result = doit(seed);
-
-      while (checkit(result)) {
-        ret.push(result);
-        result = doit(result);
-      }
-
-      return ret;
-    },
-
-    // Takes every nth item from an array, returning an array of
-    // the results.
-    takeSkipping: function(array, n) {
-      var ret = [];
-      var sz = _.size(array);
-
-      if (n <= 0) return [];
-      if (n === 1) return array;
-
-      for(var index = 0; index < sz; index += n) {
-        ret.push(array[index]);
-      }
-
-      return ret;
-    },
-
-    // Returns an array of each intermediate stage of a call to
-    // a `reduce`-like function.
-    reductions: function(array, fun, init) {
-      var ret = [];
-      var acc = init;
-
-      _.each(array, function(v,k) {
-        acc = fun(acc, array[k]);
-        ret.push(acc);
-      });
-
-      return ret;
-    },
-
-    // Runs its given function on the index of the elements rather than 
-    // the elements themselves, keeping all of the truthy values in the end.
-    keepIndexed: function(array, pred) {
-      return _.filter(_.map(_.range(_.size(array)), function(i) {
-        return pred(i, array[i]);
-      }),
-      existy);
-    }
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],26:[function(require,module,exports){
+},{"events":8}],28:[function(require,module,exports){
 var punycode = { encode : function (s) { return s } };
 
 exports.parse = urlParse;
@@ -3587,21 +5048,7 @@ function parseHost(host) {
   return out;
 }
 
-},{"querystring":1}],27:[function(require,module,exports){
-var http = require('http');
-
-var https = module.exports;
-
-for (var key in http) {
-    if (http.hasOwnProperty(key)) https[key] = http[key];
-};
-
-https.request = function (params, cb) {
-    if (!params) params = {};
-    params.scheme = 'https';
-    return http.request.call(this, params, cb);
-}
-},{"http":28}],29:[function(require,module,exports){
+},{"querystring":1}],29:[function(require,module,exports){
 var events = require('events');
 var util = require('util');
 
@@ -3722,1371 +5169,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":8,"util":25}],12:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.function.arity.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  function enforcesUnary (fn) {
-    return function mustBeUnary () {
-      if (arguments.length === 1) {
-        return fn.apply(this, arguments);
-      }
-      else throw new RangeError('Only a single argument may be accepted.');
-
-    }
-  }
-
-  // Curry
-  // -------
-  var curry = (function () {
-    function collectArgs(func, that, argCount, args, newArg, reverse) {
-      if (reverse == true) {
-          args.unshift(newArg);
-      } else {
-          args.push(newArg);
-      }
-      if (args.length == argCount) {
-        return func.apply(that, args);
-      } else {
-        return enforcesUnary(function () {
-          return collectArgs(func, that, argCount, args.slice(0), arguments[0], reverse);
-        });
-      }
-    }
-    return function curry (func, reverse) {
-      var that = this;
-      return enforcesUnary(function () {
-        return collectArgs(func, that, func.length, [], arguments[0], reverse);
-      });
-    };
-  }());
-
-  // Enforce Arity
-  // --------------------
-  var enforce = (function () {
-    var CACHE = [];
-    return function enforce (func) {
-      if (typeof func !== 'function') {
-        throw new Error('Argument 1 must be a function.');
-      }
-      var funcLength = func.length;
-      if (CACHE[funcLength] === undefined) {
-        CACHE[funcLength] = function (enforceFunc) {
-          return function () {
-            if (arguments.length !== funcLength) {
-              throw new RangeError(funcLength + ' arguments must be applied.');
-            }
-            return enforceFunc.apply(this, arguments);
-          };
-        };
-      }
-      return CACHE[funcLength](func);
-    };
-  }());
-
-  // Mixing in the arity functions
-  // -----------------------------
-
-  _.mixin({
-    // ### Fixed arguments
-
-    // Fixes the arguments to a function based on the parameter template defined by
-    // the presence of values and the `_` placeholder.
-    fix: function(fun) {
-      var args = _.rest(arguments);
-
-      var f = function() {
-        var arg = 0;
-
-        for ( var i = 0; i < args.length && arg < arguments.length; i++ ) {
-          if ( args[i] === _ ) {
-            args[i] = arguments[arg++];
-          }
-        }
-
-        return fun.apply(null, args);
-      };
-
-      f._original = fun;
-
-      return f;
-    },
-
-    unary: function (fun) {
-      return function unary (a) {
-        return fun.call(this, a);
-      };
-    },
-
-    binary: function (fun) {
-      return function binary (a, b) {
-        return fun.call(this, a, b);
-      };
-    },
-
-    ternary: function (fun) {
-      return function ternary (a, b, c) {
-        return fun.call(this, a, b, c);
-      };
-    },
-
-    quaternary: function (fun) {
-      return function quaternary (a, b, c, d) {
-        return fun.call(this, a, b, c, d);
-      };
-    },
-
-    // Flexible curry function with strict arity.
-    // Argument application left to right.
-    // source: https://github.com/eborden/js-curry
-    curry: curry,
-
-    // Flexible right to left curry with strict arity.
-    rCurry: function (func) {
-        return curry.call(this, func, true);
-    },
-
-
-    curry2: function (fun) {
-      return enforcesUnary(function curried (first) {
-        return enforcesUnary(function (last) {
-          return fun.call(this, first, last);
-        });
-      })
-    },
-
-    curry3: function (fun) {
-      return enforcesUnary(function (first) {
-        return enforcesUnary(function (second) {
-          return enforcesUnary(function (last) {
-            return fun.call(this, first, second, last);
-          })
-        })
-      })
-    },
-
-      // reverse currying for functions taking two arguments.
-    rcurry2: function (fun) {
-      return enforcesUnary(function (last) {
-        return enforcesUnary(function (first) {
-          return fun.call(this, first, last);
-        })
-      })
-    },
-
-    rcurry3: function (fun) {
-      return enforcesUnary(function (last) {
-        return enforcesUnary(function (second) {
-          return enforcesUnary(function (first) {
-            return fun.call(this, first, second, last);
-          })
-        })
-      })
-    },
-    // Dynamic decorator to enforce function arity and defeat varargs.
-    enforce: enforce
-  });
-
-  _.arity = (function () {
-    var FUNCTIONS = {};
-    return function arity (numberOfArgs, fun) {
-      if (FUNCTIONS[numberOfArgs] == null) {
-        var parameters = new Array(numberOfArgs);
-        for (var i = 0; i < numberOfArgs; ++i) {
-          parameters[i] = "__" + i;
-        }
-        var pstr = parameters.join();
-        var code = "return function ("+pstr+") { return fun.apply(this, arguments); };";
-        FUNCTIONS[numberOfArgs] = new Function(['fun'], code);
-      }
-      if (fun == null) {
-        return function (fun) { return arity(numberOfArgs, fun); };
-      }
-      else return FUNCTIONS[numberOfArgs](fun);
-    };
-  })();
-
-})(this);
-
-})()
-},{"underscore":22}],11:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.collections.walk.js 0.0.1)
-// (c) 2013 Patrick Dubroy
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  // An internal object that can be returned from a visitor function to
-  // prevent a top-down walk from walking subtrees of a node.
-  var breaker = {};
-
-  var notTreeError = 'Not a tree: same object found in two different branches';
-
-  // Walk the tree recursively beginning with `root`, calling `beforeFunc`
-  // before visiting an objects descendents, and `afterFunc` afterwards.
-  function walk(root, beforeFunc, afterFunc, context) {
-    var visited = [];
-    (function _walk(value, key, parent) {
-      if (beforeFunc && beforeFunc.call(context, value, key, parent) === breaker)
-        return;
-
-      if (_.isObject(value) || _.isArray(value)) {
-        // Keep track of objects that have been visited, and throw an exception
-        // when trying to visit the same object twice.
-        if (visited.indexOf(value) >= 0) throw new TypeError(notTreeError);
-        visited.push(value);
-
-        // Recursively walk this object's descendents. If it's a DOM node, walk
-        // its DOM children.
-        _.each(_.isElement(value) ? value.children : value, _walk, context);
-      }
-
-      if (afterFunc) afterFunc.call(context, value, key, parent);
-    })(root);
-  }
-
-  function pluck(obj, propertyName, recursive) {
-    var results = [];
-    _.walk.preorder(obj, function(value, key) {
-      if (key === propertyName) {
-        results[results.length] = value;
-        if (!recursive) return breaker;
-      }
-    });
-    return results;
-  }
-
-  // Add the `walk` namespace
-  // ------------------------
-
-  _.walk = walk;
-  _.extend(walk, {
-    // Recursively traverses `obj` in a depth-first fashion, invoking the
-    // `visitor` function for each object only after traversing its children.
-    postorder: function(obj, visitor, context) {
-      walk(obj, null, visitor, context);
-    },
-
-    // Recursively traverses `obj` in a depth-first fashion, invoking the
-    // `visitor` function for each object before traversing its children.
-    preorder: function(obj, visitor, context) {
-      walk(obj, visitor, null, context)
-    },
-
-    // Produces a new array of values by recursively traversing `obj` and
-    // mapping each value through the transformation function `visitor`.
-    // `strategy` is the traversal function to use, e.g. `preorder` or
-    // `postorder`.
-    map: function(obj, strategy, visitor, context) {
-      var results = [];
-      strategy.call(null, obj, function(value, key, parent) {
-        results[results.length] = visitor.call(context, value, key, parent);
-      });
-      return results;
-    },
-
-    // Return the value of properties named `propertyName` reachable from the
-    // tree rooted at `obj`. Results are not recursively searched; use
-    // `pluckRec` for that.
-    pluck: function(obj, propertyName) {
-      return pluck(obj, propertyName, false);
-    },
-
-    // Version of `pluck` which recursively searches results for nested objects
-    // with a property named `propertyName`.
-    pluckRec: function(obj, propertyName) {
-      return pluck(obj, propertyName, true);
-    }
-  });
-  _.walk.collect = _.walk.map;  // Alias `map` as `collect`.
-})(this);
-
-})()
-},{"underscore":22}],13:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.function.combinators.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  var existy = function(x) { return x != null; };
-  var truthy = function(x) { return (x !== false) && existy(x); };
-  var __reverse = [].reverse;
-  var __slice = [].slice;
-  var __map = [].map;
-  var curry2 = function (fun) {
-    return function curried (first, optionalLast) {
-      if (arguments.length === 1) {
-        return function (last) {
-          return fun(first, last);
-        };
-      }
-      else return fun(first, optionalLast);
-    };
-  };
-  
-  // n.b. depends on underscore.function.arity.js
-    
-  // Takes a target function and a mapping function. Returns a function
-  // that applies the mapper to its arguments before evaluating the body.
-  function baseMapArgs (fun, mapFun) {
-    return _.arity(fun.length, function () {
-      return fun.apply(this, __map.call(arguments, mapFun));
-    });
-  };
-  
-  // Mixing in the combinator functions
-  // ----------------------------------
-
-  _.mixin({
-    // Takes a value and returns a function that always returns
-    // said value.
-    always: function(value) {
-      return function() { return value; };
-    },
-
-    // Takes some number of functions, either as an array or variadically
-    // and returns a function that takes some value as its first argument 
-    // and runs it through a pipeline of the original functions given.
-    pipeline: function(/*, funs */){
-      var funs = (_.isArray(arguments[0])) ? arguments[0] : arguments;
-
-      return function(seed) {
-        return _.reduce(funs,
-                        function(l,r) { return r(l); },
-                        seed);
-      };
-    },
-
-    // Composes a bunch of predicates into a single predicate that
-    // checks all elements of an array for conformance to all of the
-    // original predicates.
-    conjoin: function(/* preds */) {
-      var preds = arguments;
-
-      return function(array) {
-        return _.every(array, function(e) {
-          return _.every(preds, function(p) {
-            return p(e);
-          });
-        });
-      };
-    },
-
-    // Composes a bunch of predicates into a single predicate that
-    // checks all elements of an array for conformance to any of the
-    // original predicates.
-    disjoin: function(/* preds */) {
-      var preds = arguments;
-
-      return function(array) {
-        return _.some(array, function(e) {
-          return _.some(preds, function(p) {
-            return p(e);
-          });
-        });
-      };
-    },
-
-    // Takes a predicate-like and returns a comparator (-1,0,1).
-    comparator: function(fun) {
-      return function(x, y) {
-        if (truthy(fun(x, y)))
-          return -1;
-        else if (truthy(fun(y, x)))
-          return 1;
-        else
-          return 0;
-      };
-    },
-
-    // Returns a function that reverses the sense of a given predicate-like.
-    complement: function(pred) {
-      return function() {
-        return !pred.apply(null, arguments);
-      };
-    },
-
-    // Takes a function expecting varargs and
-    // returns a function that takes an array and
-    // uses its elements as the args to  the original
-    // function
-    splat: function(fun) {
-      return function(array) {
-        return fun.apply(null, array);
-      };
-    },
-
-    // Takes a function expecting an array and returns
-    // a function that takes varargs and wraps all
-    // in an array that is passed to the original function.
-    unsplat: function(fun) {
-      var funLength = fun.length;
-
-      if (funLength < 1) {
-        return fun;
-      }
-      else if (funLength === 1)  {
-        return function () {
-          return fun.call(this, __slice.call(arguments, 0));
-        };
-      }
-      else {
-        return function () {
-          var numberOfArgs = arguments.length,
-              namedArgs = __slice.call(arguments, 0, funLength - 1),
-              numberOfMissingNamedArgs = Math.max(funLength - numberOfArgs - 1, 0),
-              argPadding = new Array(numberOfMissingNamedArgs),
-              variadicArgs = __slice.call(arguments, fun.length - 1);
-
-          return fun.apply(this, namedArgs.concat(argPadding).concat([variadicArgs]));
-        };
-      }
-    },
-
-    // Same as unsplat, but the rest of the arguments are collected in the
-    // first parameter, e.g. unsplatl( function (args, callback) { ... ]})
-    unsplatl: function(fun) {
-      var funLength = fun.length;
-
-      if (funLength < 1) {
-        return fun;
-      }
-      else if (funLength === 1)  {
-        return function () {
-          return fun.call(this, __slice.call(arguments, 0))
-        };
-      }
-      else {
-        return function () {
-          var numberOfArgs = arguments.length,
-              namedArgs = __slice.call(arguments, Math.max(numberOfArgs - funLength + 1, 0)),
-              variadicArgs = __slice.call(arguments, 0, Math.max(numberOfArgs - funLength + 1, 0));
-
-          return fun.apply(this, [variadicArgs].concat(namedArgs));
-        };
-      }
-    },
-    
-    // map the arguments of a function
-    mapArgs: curry2(baseMapArgs),
-
-    // Returns a function that returns an array of the calls to each
-    // given function for some arguments.
-    juxt: function(/* funs */) {
-      var funs = arguments;
-
-      return function(/* args */) {
-        var args = arguments;
-        return _.map(funs, function(f) {
-          return f.apply(null, args);
-        });
-      };
-    },
-
-    // Returns a function that protects a given function from receiving
-    // non-existy values.  Each subsequent value provided to `fnull` acts
-    // as the default to the original function should a call receive non-existy
-    // values in the defaulted arg slots.
-    fnull: function(fun /*, defaults */) {
-      var defaults = _.rest(arguments);
-
-      return function(/*args*/) {
-        var args = _.toArray(arguments);
-        var sz = _.size(defaults);
-
-        for(var i = 0; i < sz; i++) {
-          if (!existy(args[i]))
-            args[i] = defaults[i];
-        }
-
-        return fun.apply(null, args);
-      };
-    },
-
-    // Flips the first two args of a function
-    flip2: function(fun) {
-      return function(/* args */) {
-        var tmp = arguments[0];
-        arguments[0] = arguments[1];
-        arguments[1] = tmp;
-
-        return fun.apply(null, arguments);
-      };
-    },
-
-    // Flips an arbitrary number of args of a function
-    flip: function(fun) {
-      return function(/* args */) {
-        var reversed = __reverse.call(arguments);
-
-        return fun.apply(null, reversed);
-      };
-    },
-    
-    k: _.always,
-    t: _.pipeline
-  });
-  
-  _.unsplatr = _.unsplat;
-    
-  // map the arguments of a function, takes the mapping function
-  // first so it can be used as a combinator
-  _.mapArgsWith = curry2(_.flip(baseMapArgs));
-  
-  // Returns function property of object by name, bound to object
-  _.bound = function(obj, fname) {
-    var fn = obj[fname];
-    if (!_.isFunction(fn))
-      throw new TypeError("Expected property to be a function");
-    return _.bind(fn, obj);
-  };
-
-})(this);
-
-})()
-},{"underscore":22}],14:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.function.iterators.js 0.0.1)
-// (c) 2013 Michael Fogus and DocumentCloud Inc.
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-  
-  var HASNTBEENRUN = {};
-  
-  function unary (fun) {
-    return function (first) {
-      return fun.call(this, first);
-    };
-  }
-  
-  function binary (fun) {
-    return function (first, second) {
-      return fun.call(this, first, second);
-    };
-  }
-  
-  var undefined = void 0;
-
-  
-  // Mixing in the iterator functions
-  // --------------------------------
-
-     function foldl (iter, binaryFn, seed) {
-      var state, element;
-      if (seed !== void 0) {
-        state = seed;
-      }
-      else {
-        state = iter();
-      }
-      element = iter();
-      while (element != null) {
-        state = binaryFn.call(element, state, element);
-        element = iter();
-      }
-      return state;
-    };
-  
-    function unfold (seed, unaryFn) {
-      var state = HASNTBEENRUN;
-      return function () {
-        if (state === HASNTBEENRUN) {
-          return (state = seed);
-        }
-        else if (state != null) {
-          return (state = unaryFn.call(state, state));
-        }
-        else return state;
-      };
-    };
-  
-    // note that the unfoldWithReturn behaves differently than
-    // unfold with respect to the first value returned
-    function unfoldWithReturn (seed, unaryFn) {
-      var state = seed,
-          pair,
-          value;
-      return function () {
-        if (state != null) {
-          pair = unaryFn.call(state, state);
-          value = pair[1];
-          state = value != null
-                  ? pair[0]
-                  : void 0;
-          return value;
-        }
-        else return void 0;
-      };
-    };
-
-    function accumulate (iter, binaryFn, initial) {
-      var state = initial;
-      return function () {
-        element = iter();
-        if (element == null) {
-          return element;
-        }
-        else {
-          if (state === void 0) {
-            return (state = element);
-          }
-          else return (state = binaryFn.call(element, state, element));
-        }
-      };
-    };
-  
-    function accumulateWithReturn (iter, binaryFn, initial) {
-      var state = initial,
-          stateAndReturnValue;
-      return function () {
-        element = iter();
-        if (element == null) {
-          return element;
-        }
-        else {
-          if (state === void 0) {
-            return (state = element);
-          }
-          else {
-            stateAndReturnValue = binaryFn.call(element, state, element);
-            state = stateAndReturnValue[0];
-            return stateAndReturnValue[1];
-          }
-        }
-      };
-    };
-  
-    function map (iter, unaryFn) {
-      return function() {
-        var element;
-        element = iter();
-        if (element != null) {
-          return unaryFn.call(element, element);
-        } else {
-          return void 0;
-        }
-      };
-    };
-
-    function select (iter, unaryPredicateFn) {
-      return function() {
-        var element;
-        element = iter();
-        while (element != null) {
-          if (unaryPredicateFn.call(element, element)) {
-            return element;
-          }
-          element = iter();
-        }
-        return void 0;
-      };
-    };
-  
-    function reject (iter, unaryPredicateFn) {
-      return select(iter, function (something) {
-        return !unaryPredicateFn(something);
-      });
-    };
-  
-    function find (iter, unaryPredicateFn) {
-      return select(iter, unaryPredicateFn)();
-    }
-
-    function slice (iter, numberToDrop, numberToTake) {
-      var count = 0;
-      while (numberToDrop-- > 0) {
-        iter();
-      }
-      if (numberToTake != null) {
-        return function() {
-          if (++count <= numberToTake) {
-            return iter();
-          } else {
-            return void 0;
-          }
-        };
-      }
-      else return iter;
-    };
-  
-    function drop (iter, numberToDrop) {
-      return slice(iter, numberToDrop == null ? 1 : numberToDrop);
-    }
-  
-    function take (iter, numberToTake) {
-      return slice(iter, 0, numberToTake == null ? 1 : numberToTake);
-    }
-
-    function List (array) {
-      var index = 0;
-      return function() {
-        return array[index++];
-      };
-    };
-  
-    function Tree (array) {
-      var index, myself, state;
-      index = 0;
-      state = [];
-      myself = function() {
-        var element, tempState;
-        element = array[index++];
-        if (element instanceof Array) {
-          state.push({
-            array: array,
-            index: index
-          });
-          array = element;
-          index = 0;
-          return myself();
-        } else if (element === void 0) {
-          if (state.length > 0) {
-            tempState = state.pop(), array = tempState.array, index = tempState.index;
-            return myself();
-          } else {
-            return void 0;
-          }
-        } else {
-          return element;
-        }
-      };
-      return myself;
-    };
-  
-    function K (value) {
-      return function () {
-        return value;
-      };
-    };
-
-    function upRange (from, to, by) {
-      return function () {
-        var was;
-      
-        if (from > to) {
-          return void 0;
-        }
-        else {
-          was = from;
-          from = from + by;
-          return was;
-        }
-      }
-    };
-
-    function downRange (from, to, by) {
-      return function () {
-        var was;
-      
-        if (from < to) {
-          return void 0;
-        }
-        else {
-          was = from;
-          from = from - by;
-          return was;
-        }
-      };
-    };
-  
-    function range (from, to, by) {
-      if (from == null) {
-        return upRange(1, Infinity, 1);
-      }
-      else if (to == null) {
-        return upRange(from, Infinity, 1);
-      }
-      else if (by == null) {
-        if (from <= to) {
-          return upRange(from, to, 1);
-        }
-        else return downRange(from, to, 1)
-      }
-      else if (by > 0) {
-        return upRange(from, to, by);
-      }
-      else if (by < 0) {
-        return downRange(from, to, Math.abs(by))
-      }
-      else return k(from);
-    };
-  
-    var numbers = unary(range);
-
-    _.iterators = {
-      accumulate: accumulate,
-      accumulateWithReturn: accumulateWithReturn,
-      foldl: foldl,
-      reduce: foldl,
-      unfold: unfold,
-      unfoldWithReturn: unfoldWithReturn,
-      map: map,
-      select: select,
-      reject: reject,
-      filter: select,
-      find: find,
-      slice: slice,
-      drop: drop,
-      take: take,
-      List: List,
-      Tree: Tree,
-      constant: K,
-      K: K,
-      numbers: numbers,
-      range: range
-    };
-
-})(this);
-
-})()
-},{"underscore":22}],16:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.object.builders.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  // Create quick reference variables for speed access to core prototypes.
-  var slice   = Array.prototype.slice,
-      concat  = Array.prototype.concat;
-
-  var existy = function(x) { return x != null; };
-  var truthy = function(x) { return (x !== false) && existy(x); };
-  var isAssociative = function(x) { return _.isArray(x) || _.isObject(x); };
-  var curry2 = function(fun) {
-    return function(last) {
-      return function(first) {
-        return fun(first, last);
-      };
-    };
-  };
-  
-  // Mixing in the object builders
-  // ----------------------------
-
-  _.mixin({
-    // Merges two or more objects starting with the left-most and
-    // applying the keys right-word
-    // {any:any}* -> {any:any}
-    merge: function(/* objs */){
-      var dest = _.some(arguments) ? {} : null;
-
-      if (truthy(dest)) {
-        _.extend.apply(null, concat.call([dest], _.toArray(arguments)));
-      }
-
-      return dest;
-    },
-
-    // Takes an object and another object of strings to strings where the second
-    // object describes the key renaming to occur in the first object.
-    renameKeys: function(obj, kobj) {
-      return _.reduce(kobj, function(o, nu, old) {
-        if (existy(obj[old])) {
-          o[nu] = obj[old];
-          return o;
-        }
-        else
-          return o;
-      },
-      _.omit.apply(null, concat.call([obj], _.keys(kobj))));
-    },
-
-    // Snapshots an object deeply. Based on the version by
-    // [Keith Devens](http://keithdevens.com/weblog/archive/2007/Jun/07/javascript.clone)
-    // until we can find a more efficient and robust way to do it.
-    snapshot: function(obj) {
-      if(obj == null || typeof(obj) != 'object') {
-        return obj;
-      }
-
-      var temp = new obj.constructor();
-
-      for(var key in obj) {
-        temp[key] = _.snapshot(obj[key]);
-      }
-
-      return temp;
-    },
-
-    // Updates the value at any depth in a nested object based on the
-    // path described by the keys given.  The function provided is supplied
-    // the current value and is expected to return a value for use as the
-    // new value.  If no keys are provided, then the object itself is presented
-    // to the given function.
-    updatePath: function(obj, fun, ks) {
-      if (!isAssociative(obj)) throw new TypeError("Attempted to update a non-associative object.");
-      if (!existy(ks)) return fun(obj);
-
-      var deepness = _.isArray(ks);
-      var keys     = deepness ? ks : [ks];
-      var ret      = deepness ? _.snapshot(obj) : _.clone(obj);
-      var lastKey  = _.last(keys);
-      var target   = ret;
-
-      _.each(_.initial(keys), function(key) {
-        target = target[key];
-      });
-
-      target[lastKey] = fun(target[lastKey]);
-      return ret;
-    },
-
-    // Sets the value at any depth in a nested object based on the
-    // path described by the keys given.
-    setPath: function(obj, value, ks) {
-      if (!existy(ks)) throw new TypeError("Attempted to set a property at a null path.");
-
-      return _.updatePath(obj, function() { return value; }, ks);
-    },
-
-    // Returns an object where each element of an array is keyed to
-    // the number of times that it occurred in said array.
-    frequencies: curry2(_.countBy)(_.identity)
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],15:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.object.selectors.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  // Create quick reference variables for speed access to core prototypes.
-  var concat  = Array.prototype.concat;
-
-  // Mixing in the object selectors
-  // ------------------------------
-
-  _.mixin({
-    // Returns a function that will attempt to look up a named field
-    // in any object that it's given.
-    accessor: function(field) {
-      return function(obj) {
-        return (obj && obj[field]);
-      };
-    },
-
-    // Given an object, returns a function that will attempt to look up a field
-    // that it's given.
-    dictionary: function (obj) {
-      return function(field) {
-        return (obj && field && obj[field]);
-      };
-    },
-
-    // Like `_.pick` except that it takes an array of keys to pick.
-    selectKeys: function (obj, ks) {
-      return _.pick.apply(null, concat.call([obj], ks));
-    },
-
-    // Returns the key/value pair for a given property in an object, undefined if not found.
-    kv: function(obj, key) {
-      if (_.has(obj, key)) {
-        return [key, obj[key]];
-      }
-
-      return void 0;
-    },
-
-    // Gets the value at any depth in a nested object based on the
-    // path described by the keys given.
-    getPath: function getPath (obj, ks) {
-      // If we have reached an undefined property
-      // then stop executing and return undefined
-      if (obj === undefined) return void 0;
-
-      // If the path array has no more elements, we've reached
-      // the intended property and return its value
-      if (ks.length === 0) return obj;
-
-      // If we still have elements in the path array and the current
-      // value is null, stop executing and return undefined
-      if (obj === null) return void 0;
-
-      return getPath(obj[_.first(ks)], _.rest(ks));
-    },
-
-    // Returns a boolean indicating whether there is a property
-    // at the path described by the keys given
-    hasPath: function hasPath (obj, ks) {
-      var numKeys = ks.length;
-
-      if (obj == null && numKeys > 0) return false;
-
-      if (!(ks[0] in obj)) return false;
-
-      if (numKeys === 1) return true;
-
-      return hasPath(obj[_.first(ks)], _.rest(ks));
-    }
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],17:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.function.predicates.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-
-  // Mixing in the predicate functions
-  // ---------------------------------
-
-  _.mixin({
-    // A wrapper around instanceof
-    isInstanceOf: function(x, t) { return (x instanceof t); },
-
-    // An associative object is one where its elements are
-    // accessed via a key or index. (i.e. array and object)
-    isAssociative: function(x) { return _.isArray(x) || _.isObject(x) || _.isArguments(x); },
-
-    // An indexed object is anything that allows numerical index for
-    // accessing its elements (e.g. arrays and strings). NOTE: Underscore
-    // does not support cross-browser consistent use of strings as array-like
-    // objects, so be wary in IE 8 when using  String objects and IE<8.
-    // on string literals & objects.
-    isIndexed: function(x) { return _.isArray(x) || _.isString(x) || _.isArguments(x); },
-
-    // A seq is something considered a sequential composite type (i.e. arrays and `arguments`).
-    isSequential: function(x) { return (_.isArray(x)) || (_.isArguments(x)); },
-
-    // These do what you think that they do
-    isZero: function(x) { return 0 === x; },
-    isEven: function(x) { return _.isFinite(x) && (x & 1) === 0; },
-    isOdd: function(x) { return _.isFinite(x) && !_.isEven(x); },
-    isPositive: function(x) { return x > 0; },
-    isNegative: function(x) { return x < 0; },
-    isValidDate: function(x) { return _.isDate(x) && !_.isNaN(x.getTime()); },
-
-    // A numeric is a variable that contains a numeric value, regardless its type
-    // It can be a String containing a numeric value, exponential notation, or a Number object
-    // See here for more discussion: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
-    isNumeric: function(n) {
-      return !isNaN(parseFloat(n)) && isFinite(n);
-    },
-
-    // An integer contains an optional minus sign to begin and only the digits 0-9
-    // Objects that can be parsed that way are also considered ints, e.g. "123"
-    // Floats that are mathematically equal to integers are considered integers, e.g. 1.0
-    // See here for more discussion: http://stackoverflow.com/questions/1019515/javascript-test-for-an-integer
-    isInteger: function(i) {
-      return _.isNumeric(i) && i % 1 === 0;
-    },
-
-    // A float is a numbr that is not an integer.
-    isFloat: function(n) {
-      return _.isNumeric(n) && !_.isInteger(n);
-    },
-
-    // Returns true if its arguments are monotonically
-    // increaing values; false otherwise.
-    isIncreasing: function() {
-      var count = _.size(arguments);
-      if (count === 1) return true;
-      if (count === 2) return arguments[0] < arguments[1];
-
-      for (var i = 1; i < count; i++) {
-        if (arguments[i-1] >= arguments[i]) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-
-    // Returns true if its arguments are monotonically
-    // decreaing values; false otherwise.
-    isDecreasing: function() {
-      var count = _.size(arguments);
-      if (count === 1) return true;
-      if (count === 2) return arguments[0] > arguments[1];
-
-      for (var i = 1; i < count; i++) {
-        if (arguments[i-1] <= arguments[i]) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],19:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.function.arity.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-  
-  // Mixing in the operator functions
-  // -----------------------------
-
-  _.mixin({
-    add: function(x, y) {
-      return x + y;
-    },
-    sub: function(x, y) {
-      return x - y;
-    },
-    mul: function(x, y) {
-      return x * y;
-    },
-    div: function(x, y) {
-      return x / y;
-    },
-    mod: function(x, y) {
-      return x % y;
-    },
-    inc: function(x) {
-      return ++x;
-    },
-    dec: function(x) {
-      return --x;
-    },
-    neg: function(x) {
-      return -x;
-    },
-    eq: function(x, y) {
-      return x == y;
-    },
-    seq: function(x, y) {
-      return x === y;
-    },
-    neq: function(x, y) {
-      return x != y;
-    },
-    sneq: function(x, y) {
-      return x !== y;
-    },
-    not: function(x) {
-      return !x;
-    },
-    gt: function(x, y) {
-      return x > y;
-    },
-    lt: function(x, y) {
-      return x < y;
-    },
-    gte: function(x, y) {
-      return x >= y;
-    },
-    lte: function(x, y) {
-      return x <= y;
-    },
-    bitwiseAnd: function(x, y) {
-      return x & y;
-    },
-    bitwiseOr: function(x, y) {
-      return x | y;
-    },
-    bitwiseXor: function(x, y) {
-      return x ^ y;
-    },
-    bitwiseNot: function(x) {
-      return ~x;
-    },
-    bitwiseLeft: function(x, y) {
-      return x << y;
-    },
-    bitwiseRight: function(x, y) {
-      return x >> y;
-    },
-    bitwiseZ: function(x, y) {
-      return x >>> y;
-    }
-  });
-})(this);
-
-})()
-},{"underscore":22}],18:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.util.existential.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  
-  // Mixing in the truthiness
-  // ------------------------
-
-  _.mixin({
-    exists: function(x) { return x != null; },
-    truthy: function(x) { return (x !== false) && _.exists(x); },
-    falsey: function(x) { return !_.truthy(x); },
-    not:    function(b) { return !b; }
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],20:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.util.strings.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  // Mixing in the string utils
-  // ----------------------------
-
-  _.mixin({
-    // Explodes a string into an array of chars
-    explode: function(s) {
-      return s.split('');
-    },
-
-    // Implodes and array of chars into a string
-    implode: function(a) {
-      return a.join('');
-    }
-  });
-})(this);
-
-})()
-},{"underscore":22}],21:[function(require,module,exports){
-(function(){// Underscore-contrib (underscore.util.trampolines.js 0.0.1)
-// (c) 2013 Michael Fogus, DocumentCloud and Investigative Reporters & Editors
-// Underscore-contrib may be freely distributed under the MIT license.
-
-(function(root) {
-
-  // Baseline setup
-  // --------------
-
-  // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
-
-  // Helpers
-  // -------
-
-  
-  // Mixing in the truthiness
-  // ------------------------
-
-  _.mixin({
-    done: function(value) {
-      var ret = _(value);
-      ret.stopTrampoline = true;
-      return ret;
-    },
-
-    trampoline: function(fun /*, args */) {
-      var result = fun.apply(fun, _.rest(arguments));
-
-      while (_.isFunction(result)) {
-        result = result();
-        if ((result instanceof _) && (result.stopTrampoline)) break;
-      }
-
-      return result.value();
-    }
-  });
-
-})(this);
-
-})()
-},{"underscore":22}],30:[function(require,module,exports){
+},{"events":8,"util":27}],30:[function(require,module,exports){
 require=(function(e,t,n,r){function i(r){if(!n[r]){if(!t[r]){if(e)return e(r);throw new Error("Cannot find module '"+r+"'")}var s=n[r]={exports:{}};t[r][0](function(e){var n=t[r][1][e];return i(n?n:e)},s,s.exports)}return n[r].exports}for(var s=0;s<r.length;s++)i(r[s]);return i})(typeof require!=="undefined"&&require,{1:[function(require,module,exports){
 exports.readIEEE754 = function(buffer, offset, isBE, mLen, nBytes) {
   var e, m,
@@ -9099,7 +9182,7 @@ BufferList.prototype.consume = function (bytes) {
 
 module.exports = BufferList
 })(require("__browserify_buffer").Buffer)
-},{"util":25,"readable-stream/duplex":31,"__browserify_buffer":30}],28:[function(require,module,exports){
+},{"util":27,"readable-stream/duplex":31,"__browserify_buffer":30}],26:[function(require,module,exports){
 var http = module.exports;
 var EventEmitter = require('events').EventEmitter;
 var Request = require('./lib/request');
@@ -9303,10 +9386,7 @@ Req.prototype.setLocation = function (uri) {
 };
 
 })(require("__browserify_process"),require("__browserify_buffer").Buffer)
-},{"url":26,"http":28,"https":27,"stream":29,"through":33,"duplexer":34,"__browserify_process":7,"__browserify_buffer":30}],31:[function(require,module,exports){
-module.exports = require("./lib/_stream_duplex.js")
-
-},{"./lib/_stream_duplex.js":35}],33:[function(require,module,exports){
+},{"url":28,"http":26,"https":25,"stream":29,"through":33,"duplexer":34,"__browserify_process":7,"__browserify_buffer":30}],33:[function(require,module,exports){
 (function(process){var Stream = require('stream')
 
 // through
@@ -9412,7 +9492,10 @@ function through (write, end) {
 
 
 })(require("__browserify_process"))
-},{"stream":29,"__browserify_process":7}],34:[function(require,module,exports){
+},{"stream":29,"__browserify_process":7}],31:[function(require,module,exports){
+module.exports = require("./lib/_stream_duplex.js")
+
+},{"./lib/_stream_duplex.js":35}],34:[function(require,module,exports){
 var Stream = require("stream")
 var writeMethods = ["write", "end", "destroy"]
 var readMethods = ["resume", "pause"]
@@ -9818,7 +9901,7 @@ assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
 assert.ifError = function(err) { if (err) {throw err;}};
 
 })()
-},{"util":25,"buffer":37}],38:[function(require,module,exports){
+},{"util":27,"buffer":37}],38:[function(require,module,exports){
 var Stream = require('stream');
 
 var Response = module.exports = function (res) {
@@ -9939,7 +10022,79 @@ var isArray = Array.isArray || function (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{"stream":29}],39:[function(require,module,exports){
+},{"stream":29}],35:[function(require,module,exports){
+(function(process){// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// a duplex stream is just a stream that is both readable and writable.
+// Since JS doesn't have multiple prototypal inheritance, this class
+// prototypally inherits from Readable, and then parasitically from
+// Writable.
+
+module.exports = Duplex;
+var util = require('util');
+var Readable = require('./_stream_readable');
+var Writable = require('./_stream_writable');
+
+util.inherits(Duplex, Readable);
+
+Object.keys(Writable.prototype).forEach(function(method) {
+  if (!Duplex.prototype[method])
+    Duplex.prototype[method] = Writable.prototype[method];
+});
+
+function Duplex(options) {
+  if (!(this instanceof Duplex))
+    return new Duplex(options);
+
+  Readable.call(this, options);
+  Writable.call(this, options);
+
+  if (options && options.readable === false)
+    this.readable = false;
+
+  if (options && options.writable === false)
+    this.writable = false;
+
+  this.allowHalfOpen = true;
+  if (options && options.allowHalfOpen === false)
+    this.allowHalfOpen = false;
+
+  this.once('end', onend);
+}
+
+// the no-half-open enforcer
+function onend() {
+  // if we allow half-open state, or if the writable side ended,
+  // then we're ok.
+  if (this.allowHalfOpen || this._writableState.ended)
+    return;
+
+  // no more data can be written.
+  // But allow more writes to happen in this tick.
+  process.nextTick(this.end.bind(this));
+}
+
+})(require("__browserify_process"))
+},{"util":27,"./_stream_readable":39,"./_stream_writable":40,"__browserify_process":7}],41:[function(require,module,exports){
 exports.readIEEE754 = function(buffer, offset, isBE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -10025,79 +10180,7 @@ exports.writeIEEE754 = function(buffer, value, offset, isBE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}],35:[function(require,module,exports){
-(function(process){// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// a duplex stream is just a stream that is both readable and writable.
-// Since JS doesn't have multiple prototypal inheritance, this class
-// prototypally inherits from Readable, and then parasitically from
-// Writable.
-
-module.exports = Duplex;
-var util = require('util');
-var Readable = require('./_stream_readable');
-var Writable = require('./_stream_writable');
-
-util.inherits(Duplex, Readable);
-
-Object.keys(Writable.prototype).forEach(function(method) {
-  if (!Duplex.prototype[method])
-    Duplex.prototype[method] = Writable.prototype[method];
-});
-
-function Duplex(options) {
-  if (!(this instanceof Duplex))
-    return new Duplex(options);
-
-  Readable.call(this, options);
-  Writable.call(this, options);
-
-  if (options && options.readable === false)
-    this.readable = false;
-
-  if (options && options.writable === false)
-    this.writable = false;
-
-  this.allowHalfOpen = true;
-  if (options && options.allowHalfOpen === false)
-    this.allowHalfOpen = false;
-
-  this.once('end', onend);
-}
-
-// the no-half-open enforcer
-function onend() {
-  // if we allow half-open state, or if the writable side ended,
-  // then we're ok.
-  if (this.allowHalfOpen || this._writableState.ended)
-    return;
-
-  // no more data can be written.
-  // But allow more writes to happen in this tick.
-  process.nextTick(this.end.bind(this));
-}
-
-})(require("__browserify_process"))
-},{"util":25,"./_stream_readable":40,"./_stream_writable":41,"__browserify_process":7}],37:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function(){function SlowBuffer (size) {
     this.length = size;
 };
@@ -11417,227 +11500,7 @@ SlowBuffer.prototype.writeDoubleLE = Buffer.prototype.writeDoubleLE;
 SlowBuffer.prototype.writeDoubleBE = Buffer.prototype.writeDoubleBE;
 
 })()
-},{"assert":36,"./buffer_ieee754":39,"base64-js":42}],32:[function(require,module,exports){
-(function(){var Stream = require('stream');
-var Response = require('./response');
-var concatStream = require('concat-stream')
-var Buffer = require('buffer')
-
-var Request = module.exports = function (xhr, params) {
-    var self = this;
-    self.writable = true;
-    self.xhr = xhr;
-    self.body = concatStream()
-    
-    var uri = params.host
-        + (params.port ? ':' + params.port : '')
-        + (params.path || '/')
-    ;
-    
-    xhr.open(
-        params.method || 'GET',
-        (params.scheme || 'http') + '://' + uri,
-        true
-    );
-    
-    if (params.headers) {
-        var keys = objectKeys(params.headers);
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            if (!self.isSafeRequestHeader(key)) continue;
-            var value = params.headers[key];
-            if (isArray(value)) {
-                for (var j = 0; j < value.length; j++) {
-                    xhr.setRequestHeader(key, value[j]);
-                }
-            }
-            else xhr.setRequestHeader(key, value)
-        }
-    }
-    
-    if (params.auth) {
-        //basic auth
-        this.setHeader('Authorization', 'Basic ' + new Buffer(params.auth).toString('base64'));
-    }
-
-    var res = new Response;
-    res.on('close', function () {
-        self.emit('close');
-    });
-    
-    res.on('ready', function () {
-        self.emit('response', res);
-    });
-    
-    xhr.onreadystatechange = function () {
-        res.handle(xhr);
-    };
-};
-
-Request.prototype = new Stream;
-
-Request.prototype.setHeader = function (key, value) {
-    if (isArray(value)) {
-        for (var i = 0; i < value.length; i++) {
-            this.xhr.setRequestHeader(key, value[i]);
-        }
-    }
-    else {
-        this.xhr.setRequestHeader(key, value);
-    }
-};
-
-Request.prototype.write = function (s) {
-    this.body.write(s);
-};
-
-Request.prototype.destroy = function (s) {
-    this.xhr.abort();
-    this.emit('close');
-};
-
-Request.prototype.end = function (s) {
-    if (s !== undefined) this.body.write(s);
-    this.body.end()
-    this.xhr.send(this.body.getBody());
-};
-
-// Taken from http://dxr.mozilla.org/mozilla/mozilla-central/content/base/src/nsXMLHttpRequest.cpp.html
-Request.unsafeHeaders = [
-    "accept-charset",
-    "accept-encoding",
-    "access-control-request-headers",
-    "access-control-request-method",
-    "connection",
-    "content-length",
-    "cookie",
-    "cookie2",
-    "content-transfer-encoding",
-    "date",
-    "expect",
-    "host",
-    "keep-alive",
-    "origin",
-    "referer",
-    "te",
-    "trailer",
-    "transfer-encoding",
-    "upgrade",
-    "user-agent",
-    "via"
-];
-
-Request.prototype.isSafeRequestHeader = function (headerName) {
-    if (!headerName) return false;
-    return indexOf(Request.unsafeHeaders, headerName.toLowerCase()) === -1;
-};
-
-var objectKeys = Object.keys || function (obj) {
-    var keys = [];
-    for (var key in obj) keys.push(key);
-    return keys;
-};
-
-var isArray = Array.isArray || function (xs) {
-    return Object.prototype.toString.call(xs) === '[object Array]';
-};
-
-var indexOf = function (xs, x) {
-    if (xs.indexOf) return xs.indexOf(x);
-    for (var i = 0; i < xs.length; i++) {
-        if (xs[i] === x) return i;
-    }
-    return -1;
-};
-
-})()
-},{"stream":29,"buffer":37,"./response":38,"concat-stream":43}],42:[function(require,module,exports){
-(function (exports) {
-	'use strict';
-
-	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-	function b64ToByteArray(b64) {
-		var i, j, l, tmp, placeHolders, arr;
-	
-		if (b64.length % 4 > 0) {
-			throw 'Invalid string. Length must be a multiple of 4';
-		}
-
-		// the number of equal signs (place holders)
-		// if there are two placeholders, than the two characters before it
-		// represent one byte
-		// if there is only one, then the three characters before it represent 2 bytes
-		// this is just a cheap hack to not do indexOf twice
-		placeHolders = b64.indexOf('=');
-		placeHolders = placeHolders > 0 ? b64.length - placeHolders : 0;
-
-		// base64 is 4/3 + up to two characters of the original data
-		arr = [];//new Uint8Array(b64.length * 3 / 4 - placeHolders);
-
-		// if there are placeholders, only get up to the last complete 4 chars
-		l = placeHolders > 0 ? b64.length - 4 : b64.length;
-
-		for (i = 0, j = 0; i < l; i += 4, j += 3) {
-			tmp = (lookup.indexOf(b64[i]) << 18) | (lookup.indexOf(b64[i + 1]) << 12) | (lookup.indexOf(b64[i + 2]) << 6) | lookup.indexOf(b64[i + 3]);
-			arr.push((tmp & 0xFF0000) >> 16);
-			arr.push((tmp & 0xFF00) >> 8);
-			arr.push(tmp & 0xFF);
-		}
-
-		if (placeHolders === 2) {
-			tmp = (lookup.indexOf(b64[i]) << 2) | (lookup.indexOf(b64[i + 1]) >> 4);
-			arr.push(tmp & 0xFF);
-		} else if (placeHolders === 1) {
-			tmp = (lookup.indexOf(b64[i]) << 10) | (lookup.indexOf(b64[i + 1]) << 4) | (lookup.indexOf(b64[i + 2]) >> 2);
-			arr.push((tmp >> 8) & 0xFF);
-			arr.push(tmp & 0xFF);
-		}
-
-		return arr;
-	}
-
-	function uint8ToBase64(uint8) {
-		var i,
-			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-			output = "",
-			temp, length;
-
-		function tripletToBase64 (num) {
-			return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F];
-		};
-
-		// go through the array every three bytes, we'll deal with trailing stuff later
-		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
-			output += tripletToBase64(temp);
-		}
-
-		// pad the end with zeros, but make sure to not forget the extra bytes
-		switch (extraBytes) {
-			case 1:
-				temp = uint8[uint8.length - 1];
-				output += lookup[temp >> 2];
-				output += lookup[(temp << 4) & 0x3F];
-				output += '==';
-				break;
-			case 2:
-				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1]);
-				output += lookup[temp >> 10];
-				output += lookup[(temp >> 4) & 0x3F];
-				output += lookup[(temp << 2) & 0x3F];
-				output += '=';
-				break;
-		}
-
-		return output;
-	}
-
-	module.exports.toByteArray = b64ToByteArray;
-	module.exports.fromByteArray = uint8ToBase64;
-}());
-
-},{}],40:[function(require,module,exports){
+},{"assert":36,"./buffer_ieee754":41,"base64-js":42}],39:[function(require,module,exports){
 (function(process,Buffer){// Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -12516,58 +12379,227 @@ function endReadable(stream) {
 }
 
 })(require("__browserify_process"),require("__browserify_buffer").Buffer)
-},{"events":8,"stream":29,"util":25,"string_decoder":44,"__browserify_process":7,"__browserify_buffer":30}],43:[function(require,module,exports){
-(function(Buffer){var stream = require('stream')
-var util = require('util')
+},{"events":8,"stream":29,"util":27,"string_decoder":43,"__browserify_process":7,"__browserify_buffer":30}],32:[function(require,module,exports){
+(function(){var Stream = require('stream');
+var Response = require('./response');
+var concatStream = require('concat-stream')
+var Buffer = require('buffer')
 
-function ConcatStream(cb) {
-  stream.Stream.call(this)
-  this.writable = true
-  if (cb) this.cb = cb
-  this.body = []
-  if (this.cb) this.on('error', cb)
-}
+var Request = module.exports = function (xhr, params) {
+    var self = this;
+    self.writable = true;
+    self.xhr = xhr;
+    self.body = concatStream()
+    
+    var uri = params.host
+        + (params.port ? ':' + params.port : '')
+        + (params.path || '/')
+    ;
+    
+    xhr.open(
+        params.method || 'GET',
+        (params.scheme || 'http') + '://' + uri,
+        true
+    );
+    
+    if (params.headers) {
+        var keys = objectKeys(params.headers);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (!self.isSafeRequestHeader(key)) continue;
+            var value = params.headers[key];
+            if (isArray(value)) {
+                for (var j = 0; j < value.length; j++) {
+                    xhr.setRequestHeader(key, value[j]);
+                }
+            }
+            else xhr.setRequestHeader(key, value)
+        }
+    }
+    
+    if (params.auth) {
+        //basic auth
+        this.setHeader('Authorization', 'Basic ' + new Buffer(params.auth).toString('base64'));
+    }
 
-util.inherits(ConcatStream, stream.Stream)
+    var res = new Response;
+    res.on('close', function () {
+        self.emit('close');
+    });
+    
+    res.on('ready', function () {
+        self.emit('response', res);
+    });
+    
+    xhr.onreadystatechange = function () {
+        res.handle(xhr);
+    };
+};
 
-ConcatStream.prototype.write = function(chunk) {
-  this.body.push(chunk)
-}
+Request.prototype = new Stream;
 
-ConcatStream.prototype.arrayConcat = function(arrs) {
-  if (arrs.length === 0) return []
-  if (arrs.length === 1) return arrs[0]
-  return arrs.reduce(function (a, b) { return a.concat(b) })
-}
+Request.prototype.setHeader = function (key, value) {
+    if (isArray(value)) {
+        for (var i = 0; i < value.length; i++) {
+            this.xhr.setRequestHeader(key, value[i]);
+        }
+    }
+    else {
+        this.xhr.setRequestHeader(key, value);
+    }
+};
 
-ConcatStream.prototype.isArray = function(arr) {
-  var isArray = Array.isArray(arr)
-  var isTypedArray = arr.toString().match(/Array/)
-  return isArray || isTypedArray
-}
+Request.prototype.write = function (s) {
+    this.body.write(s);
+};
 
-ConcatStream.prototype.getBody = function () {
-  if (this.body.length === 0) return
-  if (typeof(this.body[0]) === "string") return this.body.join('')
-  if (this.isArray(this.body[0])) return this.arrayConcat(this.body)
-  if (typeof(Buffer) !== "undefined" && Buffer.isBuffer(this.body[0])) {
-    return Buffer.concat(this.body)
-  }
-  return this.body
-}
+Request.prototype.destroy = function (s) {
+    this.xhr.abort();
+    this.emit('close');
+};
 
-ConcatStream.prototype.end = function() {
-  if (this.cb) this.cb(false, this.getBody())
-}
+Request.prototype.end = function (s) {
+    if (s !== undefined) this.body.write(s);
+    this.body.end()
+    this.xhr.send(this.body.getBody());
+};
 
-module.exports = function(cb) {
-  return new ConcatStream(cb)
-}
+// Taken from http://dxr.mozilla.org/mozilla/mozilla-central/content/base/src/nsXMLHttpRequest.cpp.html
+Request.unsafeHeaders = [
+    "accept-charset",
+    "accept-encoding",
+    "access-control-request-headers",
+    "access-control-request-method",
+    "connection",
+    "content-length",
+    "cookie",
+    "cookie2",
+    "content-transfer-encoding",
+    "date",
+    "expect",
+    "host",
+    "keep-alive",
+    "origin",
+    "referer",
+    "te",
+    "trailer",
+    "transfer-encoding",
+    "upgrade",
+    "user-agent",
+    "via"
+];
 
-module.exports.ConcatStream = ConcatStream
+Request.prototype.isSafeRequestHeader = function (headerName) {
+    if (!headerName) return false;
+    return indexOf(Request.unsafeHeaders, headerName.toLowerCase()) === -1;
+};
 
-})(require("__browserify_buffer").Buffer)
-},{"stream":29,"util":25,"__browserify_buffer":30}],44:[function(require,module,exports){
+var objectKeys = Object.keys || function (obj) {
+    var keys = [];
+    for (var key in obj) keys.push(key);
+    return keys;
+};
+
+var isArray = Array.isArray || function (xs) {
+    return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+var indexOf = function (xs, x) {
+    if (xs.indexOf) return xs.indexOf(x);
+    for (var i = 0; i < xs.length; i++) {
+        if (xs[i] === x) return i;
+    }
+    return -1;
+};
+
+})()
+},{"stream":29,"buffer":37,"./response":38,"concat-stream":44}],42:[function(require,module,exports){
+(function (exports) {
+	'use strict';
+
+	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+	function b64ToByteArray(b64) {
+		var i, j, l, tmp, placeHolders, arr;
+	
+		if (b64.length % 4 > 0) {
+			throw 'Invalid string. Length must be a multiple of 4';
+		}
+
+		// the number of equal signs (place holders)
+		// if there are two placeholders, than the two characters before it
+		// represent one byte
+		// if there is only one, then the three characters before it represent 2 bytes
+		// this is just a cheap hack to not do indexOf twice
+		placeHolders = b64.indexOf('=');
+		placeHolders = placeHolders > 0 ? b64.length - placeHolders : 0;
+
+		// base64 is 4/3 + up to two characters of the original data
+		arr = [];//new Uint8Array(b64.length * 3 / 4 - placeHolders);
+
+		// if there are placeholders, only get up to the last complete 4 chars
+		l = placeHolders > 0 ? b64.length - 4 : b64.length;
+
+		for (i = 0, j = 0; i < l; i += 4, j += 3) {
+			tmp = (lookup.indexOf(b64[i]) << 18) | (lookup.indexOf(b64[i + 1]) << 12) | (lookup.indexOf(b64[i + 2]) << 6) | lookup.indexOf(b64[i + 3]);
+			arr.push((tmp & 0xFF0000) >> 16);
+			arr.push((tmp & 0xFF00) >> 8);
+			arr.push(tmp & 0xFF);
+		}
+
+		if (placeHolders === 2) {
+			tmp = (lookup.indexOf(b64[i]) << 2) | (lookup.indexOf(b64[i + 1]) >> 4);
+			arr.push(tmp & 0xFF);
+		} else if (placeHolders === 1) {
+			tmp = (lookup.indexOf(b64[i]) << 10) | (lookup.indexOf(b64[i + 1]) << 4) | (lookup.indexOf(b64[i + 2]) >> 2);
+			arr.push((tmp >> 8) & 0xFF);
+			arr.push(tmp & 0xFF);
+		}
+
+		return arr;
+	}
+
+	function uint8ToBase64(uint8) {
+		var i,
+			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
+			output = "",
+			temp, length;
+
+		function tripletToBase64 (num) {
+			return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F];
+		};
+
+		// go through the array every three bytes, we'll deal with trailing stuff later
+		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
+			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
+			output += tripletToBase64(temp);
+		}
+
+		// pad the end with zeros, but make sure to not forget the extra bytes
+		switch (extraBytes) {
+			case 1:
+				temp = uint8[uint8.length - 1];
+				output += lookup[temp >> 2];
+				output += lookup[(temp << 4) & 0x3F];
+				output += '==';
+				break;
+			case 2:
+				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1]);
+				output += lookup[temp >> 10];
+				output += lookup[(temp >> 4) & 0x3F];
+				output += lookup[(temp << 2) & 0x3F];
+				output += '=';
+				break;
+		}
+
+		return output;
+	}
+
+	module.exports.toByteArray = b64ToByteArray;
+	module.exports.fromByteArray = uint8ToBase64;
+}());
+
+},{}],43:[function(require,module,exports){
 (function(Buffer){var StringDecoder = exports.StringDecoder = function(encoding) {
   this.encoding = (encoding || 'utf8').toLowerCase().replace(/[-_]/, '');
   switch (this.encoding) {
@@ -12731,7 +12763,58 @@ function base64DetectIncompleteChar(buffer) {
 }
 
 })(require("__browserify_buffer").Buffer)
-},{"__browserify_buffer":30}],41:[function(require,module,exports){
+},{"__browserify_buffer":30}],44:[function(require,module,exports){
+(function(Buffer){var stream = require('stream')
+var util = require('util')
+
+function ConcatStream(cb) {
+  stream.Stream.call(this)
+  this.writable = true
+  if (cb) this.cb = cb
+  this.body = []
+  if (this.cb) this.on('error', cb)
+}
+
+util.inherits(ConcatStream, stream.Stream)
+
+ConcatStream.prototype.write = function(chunk) {
+  this.body.push(chunk)
+}
+
+ConcatStream.prototype.arrayConcat = function(arrs) {
+  if (arrs.length === 0) return []
+  if (arrs.length === 1) return arrs[0]
+  return arrs.reduce(function (a, b) { return a.concat(b) })
+}
+
+ConcatStream.prototype.isArray = function(arr) {
+  var isArray = Array.isArray(arr)
+  var isTypedArray = arr.toString().match(/Array/)
+  return isArray || isTypedArray
+}
+
+ConcatStream.prototype.getBody = function () {
+  if (this.body.length === 0) return
+  if (typeof(this.body[0]) === "string") return this.body.join('')
+  if (this.isArray(this.body[0])) return this.arrayConcat(this.body)
+  if (typeof(Buffer) !== "undefined" && Buffer.isBuffer(this.body[0])) {
+    return Buffer.concat(this.body)
+  }
+  return this.body
+}
+
+ConcatStream.prototype.end = function() {
+  if (this.cb) this.cb(false, this.getBody())
+}
+
+module.exports = function(cb) {
+  return new ConcatStream(cb)
+}
+
+module.exports.ConcatStream = ConcatStream
+
+})(require("__browserify_buffer").Buffer)
+},{"stream":29,"util":27,"__browserify_buffer":30}],40:[function(require,module,exports){
 (function(process,Buffer){// Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13081,6 +13164,6 @@ function endWritable(stream, state, cb) {
 }
 
 })(require("__browserify_process"),require("__browserify_buffer").Buffer)
-},{"util":25,"assert":36,"stream":29,"./_stream_duplex":35,"__browserify_process":7,"__browserify_buffer":30}]},{},[2])(2)
+},{"util":27,"assert":36,"stream":29,"./_stream_duplex":35,"__browserify_process":7,"__browserify_buffer":30}]},{},[2])(2)
 });
 ;
