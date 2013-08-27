@@ -23,7 +23,7 @@ function DemoCtrl($scope, enQ) {
     if (!contentType) return;
     $scope.entries = enQ(client.entries({
       order: 'sys.updatedAt',
-      'sys.contentType.sys.id': contentType.sys.id
+      content_type: contentType.sys.id
     }));
   });
 }
