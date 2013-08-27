@@ -21,9 +21,12 @@ bower install contentful
 # <script src="components/contentful/dist/contentful.min.js"></script>
 ```
 
+Latest [contentful.min.js](https://raw.github.com/contentful/contentful.js/master/dist/contentful.min.js).
+
 Note: The next minor version release of `dist/contentful.min.js` will
-be much smaller. Please use bower to keep your JS dependencies up to
-date and get the newest version right when it's ready!
+be much smaller. Please use a package manager to keep your JS
+dependencies up to date and get the newest version right when it's
+ready!
 
 ## Usage
 
