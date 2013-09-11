@@ -2,7 +2,6 @@
 
 /* global L, $ */
 
-
 if (typeof require !== 'undefined') {
   var contentful = require('../../index');
 }
