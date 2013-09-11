@@ -9,10 +9,10 @@ var client = contentful.createClient({
   accessToken: 'b4c0n73n7fu1'
 });
 
-function DemoCtrl($scope, enQ) {
-  $scope.space = enQ(client.space());
+function DemoCtrl($scope, $q) {
+  $scope.space = $q.when(client.space());
 
-  $scope.contentTypes = enQ(client.contentTypes());
+  $scope.contentTypes = $q.when(client.contentTypes());
 
   $scope.contentTypes.then(function(types) {{
     if (!types || !types.length) return;
@@ -21,7 +21,7 @@ function DemoCtrl($scope, enQ) {
 
   $scope.$watch('contentType', function(contentType) {
     if (!contentType) return;
-    $scope.entries = enQ(client.entries({
+    $scope.entries = $q.when(client.entries({
       order: 'sys.updatedAt',
       content_type: contentType.sys.id
     }));
@@ -29,19 +29,5 @@ function DemoCtrl($scope, enQ) {
 }
 
 angular.module('meow', []).
+  controller('DemoCtrl', DemoCtrl);
 
-  controller('DemoCtrl', DemoCtrl).
-
-  factory('enQ', function($rootScope, $q) {
-    return function enQ(foreignPromise) {
-      var deferred = $q.defer();
-      foreignPromise.then(function (data) {
-        deferred.resolve(data);
-        $rootScope.$digest();
-      }, function (reason) {
-        deferred.reject(reason);
-        $rootScope.$digest();
-      });
-      return deferred.promise;
-    };
-  });
