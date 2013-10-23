@@ -21,7 +21,7 @@ var Client = redefine.Class({
     if (!options) options = {};
     if (!options.headers) options.headers = {};
     if (!options.query) options.query = {};
-    options.headers['Content-Type'] = 'application/vnd.contentful.v1+json';
+    options.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
     options.query.access_token = this.options.accessToken;
 
     var uri = [
