@@ -536,7 +536,7 @@ var Sys = redefine.Class({
           contentType: object.contentType && Link.parse(object.contentType),
           createdAt: object.createdAt && new Date(object.createdAt),
           linkType: object.linkType,
-          updatedAt: object.createdAt && new Date(object.createdAt),
+          updatedAt: object.updatedAt && new Date(object.updatedAt),
           space: object.space && Link.parse(object.space)
         })
       );
