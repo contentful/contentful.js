@@ -8,8 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "underscore-contrib": "~0.1.4",
-    "pacta": "~0.2.0",
-    "redefine": "~0.2.0",
-    "questor": "~0.0.2"
+    "pacta": "0.2.0",
+    "redefine": "0.2.0",
+    "questor": "0.0.2"
   }
 }
