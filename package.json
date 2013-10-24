@@ -1,6 +1,6 @@
 {
   "name": "contentful",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Client for Contentful's Content Delivery API",
   "main": "index.js",
   "repository": "git@github.com:contentful/contentful.js.git",
