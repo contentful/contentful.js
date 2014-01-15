@@ -1,9 +1,17 @@
 language: node_js
 node_js:
 - '0.8'
+after_script:
+  - travis-notify-geckoboard -a $GECKOBOARD_API_KEY -w $GECKOBOARD_WIDGET_KEY
+before_script:
+  - npm install -g travis-notify-geckoboard
 cache:
   directories:
   - node_modules
+env:
+  global:
+  - secure: "CJUqdUkFyce7OTzn/bxSUP13SMl+QxDy3lOZrDHaUy9clhVXXDw8PCspeg6jXMcIQisgRtWHhpN0CvUX0lj4ARRLrPQloBviuv14O4wtdtiZN9rzETvRB/odzUIK5hS1yzCCSKV8BN2D+rCxHEX2Ukdtgj1eYWM7dLITtfDC7Rk="
+  - secure: "js0gyIrJ5Ll/B4KfMLf2MvTHj09OMjfD0ZA24kuc9RyO3n+tw0LLxgrhqBtcuH0L55m1n0SiL96P6IecNEzfLAcLArMNrqjTG9frmQjw1vR84HtOGydDFfXeqlFEbGFRfhEi10lxgVJvm07NN5tTSVXb1GJeM38iS1rv/v+udls="
 notifications:
   flowdock:
   - secure: "EcnNczlehdwHapm1iKt9gUesSeoHu0BHdmSmqvgsxFiO0bikTh55jtVPt/GtQzLel4qMY/6TQtAWdraNBqlyBahaXDjxRqvg5EPLq1nP2yeiz8YfvvbyLQNU9KDwU4HncyO/purcUKC6KcSEopp/neUzDFdjzlVpbzeLOF6Rj4I="
