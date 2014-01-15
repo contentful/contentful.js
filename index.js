@@ -46,40 +46,45 @@ var Client = redefine.Class({
       });
   },
 
-  asset: function(id) {
-    return this.request('/assets/' + id).then(Asset.parse);
+  asset: function(id, callback) {
+    return this.request('/assets/' + id).then(Asset.parse).nodeify(callback);
   },
 
-  assets: function(object) {
+  assets: function(object, callback) {
     var query = Query.parse(object);
     return this.request('/assets', {query: query})
-      .then(_.partial(SearchResult.parse, Asset));
+      .then(_.partial(SearchResult.parse, Asset))
+      .nodeify(callback);
   },
 
-  contentType: function(id) {
+  contentType: function(id, callback) {
     return this.request('/content_types/' + id)
-      .then(ContentType.parse);
+      .then(ContentType.parse)
+      .nodeify(callback);
   },
 
-  contentTypes: function(object) {
+  contentTypes: function(object, callback) {
     var query = Query.parse(object);
     return this.request('/content_types', {query: query})
-      .then(_.partial(SearchResult.parse, ContentType));
+      .then(_.partial(SearchResult.parse, ContentType))
+      .nodeify(callback);
   },
 
-  entry: function(id) {
+  entry: function(id, callback) {
     return this.request('/entries/' + id)
-      .then(Entry.parse);
+      .then(Entry.parse)
+      .nodeify(callback);
   },
 
-  entries: function(object) {
+  entries: function(object, callback) {
     var query = Query.parse(object);
     return this.request('/entries', {query: query})
-      .then(_.partial(SearchResult.parse, Entry));
+      .then(_.partial(SearchResult.parse, Entry))
+      .nodeify(callback);
   },
 
-  space: function() {
-    return this.request('');
+  space: function(callback) {
+    return this.request('').nodeify(callback);
   }
 });
 
