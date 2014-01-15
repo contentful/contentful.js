@@ -52,6 +52,12 @@ client.space().then(log, log);
 
 // Get all Entries
 client.entries().then(log, log);
+
+// Get Assets using callback interface
+client.entries({}, function(err, entries) {
+  if (err) { console.log(err); return; }
+  console.log(entries);
+});
 ```
 
 For now, please check out the
