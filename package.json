@@ -1,15 +1,23 @@
 {
   "name": "contentful",
-  "version": "0.0.13",
   "description": "Client for Contentful's Content Delivery API",
+  "version": "0.0.13",
+  "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
   "repository": "git@github.com:contentful/contentful.js.git",
-  "author": "Stephan Seidt <evilhackerdude@gmail.com>",
+  "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
   "dependencies": {
-    "underscore-contrib": "~0.1.4",
-    "pacta": "0.2.0",
-    "redefine": "0.2.0",
-    "questor": "0.0.2"
+    "redefine": "~0.2.0",
+    "questor": "1.0.0-alpha.2",
+    "underscore-contrib": "~0.2.1"
+  },
+  "devDependencies": {
+    "buster": "~0.7.6",
+    "bluebird": "~1.0.0"
+  },
+  "scripts": {
+    "test": "buster-test -g node_integration",
+    "prepare-browser-test": "browserify -d -s helper -t envify -x buster test/helper.js > test/bundle-helper.js"
   }
 }

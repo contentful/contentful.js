@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- '0.8'
+cache:
+  directories:
+  - node_modules
+notifications:
+  flowdock:
+    - secure: lKoJdDX1B34uMyuE2EQFihyNUEQ2nLfM7esCDHcCjOOHSc4DtzxduDmCEv1a6Zw6T//sTo/ZR35ywEzdQuqFYy7oGuwJnnfseX4wgx8weH+Gq5K7MErtwIcqCJGOqfrXreItuJ394JqiMzhhcWRHScrsKf4/iDlOab28iuvWiV4=

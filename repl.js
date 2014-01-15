@@ -2,7 +2,6 @@
 
 var _ = require('underscore-contrib');
 var contentful = require('./index');
-var Promise = require('pacta').Promise;
 
 module.exports = repl;
 function repl(options, root) {
@@ -14,7 +13,6 @@ function repl(options, root) {
 
   var env = {
     _: _,
-    Promise: Promise,
 
     client: client,
     contentful: contentful,

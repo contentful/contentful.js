@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('underscore-contrib');
-var Promise = require('pacta').Promise;
 var questor = require('questor');
 var redefine = require('redefine');
 var querystring = require('querystring');
@@ -37,76 +36,50 @@ var Client = redefine.Class({
       querystring.stringify(options.query)
     ].join('');
 
-    var promise = new Promise();
-    var request = questor(uri, options);
-    request.onRejected(function(reason) {
-      if (reason instanceof Error) return reason;
-      return parseJSONBody(reason);
-    }).map(_.bound(promise, 'reject'));
-    request.map(parseJSONBody).map(_.bound(promise, 'resolve'));
-    return promise;
+    return questor(uri, options)
+      .then(parseJSONBody)
+      .catch(Error, function(error) {
+        throw error;
+      })
+      .catch(function(error) {
+        throw parseJSONBody(error);
+      });
   },
 
   asset: function(id) {
-    var promise = new Promise();
-    var request = this.request('/assets/' + id);
-    request.map(Asset.parse).map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('/assets/' + id).then(Asset.parse);
   },
 
   assets: function(object) {
     var query = Query.parse(object);
-    var promise = new Promise();
-    var request = this.request('/assets', {query: query});
-    request.map(_.partial(SearchResult.parse, Asset))
-           .map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('/assets', {query: query})
+      .then(_.partial(SearchResult.parse, Asset));
   },
 
   contentType: function(id) {
-    var promise = new Promise();
-    var request = this.request('/content_types/' + id);
-    request.map(ContentType.parse).map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('/content_types/' + id)
+      .then(ContentType.parse);
   },
 
   contentTypes: function(object) {
     var query = Query.parse(object);
-    var promise = new Promise();
-    var request = this.request('/content_types', {query: query});
-    request.map(_.partial(SearchResult.parse, ContentType))
-           .map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('/content_types', {query: query})
+      .then(_.partial(SearchResult.parse, ContentType));
   },
 
   entry: function(id) {
-    var promise = new Promise();
-    var request = this.request('/entries/' + id);
-    request.map(Entry.parse).map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('/entries/' + id)
+      .then(Entry.parse);
   },
 
   entries: function(object) {
     var query = Query.parse(object);
-    var promise = new Promise();
-    var request = this.request('/entries', {query: query});
-    request.map(_.partial(SearchResult.parse, Entry))
-           .map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('/entries', {query: query})
+      .then(_.partial(SearchResult.parse, Entry));
   },
 
   space: function() {
-    var promise = new Promise();
-    var request = this.request('');
-    request.map(_.bound(promise, 'resolve'));
-    request.onRejected(_.bound(promise, 'reject'));
-    return promise;
+    return this.request('');
   }
 });
 
@@ -268,7 +241,7 @@ function parseResource(resource) {
 }
 
 function parseJSONBody(response) {
-  return JSON.parse(response.responseText);
+  return JSON.parse(response.body);
 }
 
 function stringifyArrayValues(object) {
