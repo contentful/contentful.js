@@ -6,4 +6,4 @@ cache:
   - node_modules
 notifications:
   flowdock:
-    - secure: lKoJdDX1B34uMyuE2EQFihyNUEQ2nLfM7esCDHcCjOOHSc4DtzxduDmCEv1a6Zw6T//sTo/ZR35ywEzdQuqFYy7oGuwJnnfseX4wgx8weH+Gq5K7MErtwIcqCJGOqfrXreItuJ394JqiMzhhcWRHScrsKf4/iDlOab28iuvWiV4=
+  - secure: "EcnNczlehdwHapm1iKt9gUesSeoHu0BHdmSmqvgsxFiO0bikTh55jtVPt/GtQzLel4qMY/6TQtAWdraNBqlyBahaXDjxRqvg5EPLq1nP2yeiz8YfvvbyLQNU9KDwU4HncyO/purcUKC6KcSEopp/neUzDFdjzlVpbzeLOF6Rj4I="
