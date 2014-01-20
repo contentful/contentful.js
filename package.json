@@ -20,7 +20,7 @@
     "bluebird": "~1.0.0"
   },
   "scripts": {
-    "prepare-browser-test": "browserify -d -s helper -t envify -x buster test/helper.js > test/bundle-helper.js"
-  }
     "test": "testem ci",
+    "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js"
+ }
 }
