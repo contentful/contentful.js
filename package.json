@@ -20,7 +20,8 @@
     "bluebird": "~1.0.0",
     "envify": "~1.0.1",
     "testem": "~0.6.2",
-    "browserstack-cli": "~0.3.1"
+    "browserstack-cli": "~0.3.1",
+    "browserify": "~3.20.0"
   },
   "scripts": {
     "test": "testem ci",
