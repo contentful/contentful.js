@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "buster": "~0.7.6",
-    "bluebird": "~1.0.0"
+    "bluebird": "~1.0.0",
+    "envify": "~1.0.1"
   },
   "scripts": {
     "test": "testem ci",
