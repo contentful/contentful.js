@@ -6,7 +6,7 @@ after_script:
 before_script:
   - npm install -g travis-notify-geckoboard
   - mkdir $HOME/.browserstack
-  - echo "{\"username\": \"$BROWSERSTACK_USERNAME\", \"password\": \"$BROWSERSTACK_PASSWORD\", \"apiKey\": \"$BROWSERSTACK_KEY\"}" > $HOME/.browserstack/browserstack.json
+  - 'echo "{\"username\": \"$BROWSERSTACK_USERNAME\", \"password\": \"$BROWSERSTACK_PASSWORD\", \"apiKey\": \"$BROWSERSTACK_KEY\"}" > $HOME/.browserstack/browserstack.json'
 cache:
   directories:
   - node_modules
