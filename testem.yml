@@ -1,0 +1,47 @@
+framework: buster
+
+on_start:
+  command: browserstack tunnel localhost:<port>
+  wait_for_text: Tunnel is running
+
+before_tests: npm run prepare-browser-test
+
+src_files: 
+  - index.js
+  - questor.min.js
+  - test/integration/**-test.js
+
+serve_files: 
+  - test/bundle-helper.js
+  - test/integration/**-test.js
+
+launchers:
+  Node:
+    command: node_modules/.bin/buster-test -r tap
+    protocol: tap
+  BS_Chrome:
+    command: browserstack launch --attach chrome --timeout 60 <url>
+    protocol: browser
+    timeout: 60
+  BS_IE10:
+    command: browserstack launch --attach ie:10 --timeout 60 <url>
+    protocol: browser
+    timeout: 60
+  BS_IE11:
+    command: browserstack launch --attach ie:11 --timeout 60 <url>
+    protocol: browser
+    timeout: 60
+
+launch_in_ci: 
+  - Node
+  - BS_Chrome
+  - BS_IE10
+  - BS_IE11
+
+launch_in_dev:
+  - Chrome
+  - Chrome Canary
+  - Firefox
+  - Node
+  - Safari
+  - PhantomJS
