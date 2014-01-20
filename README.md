@@ -6,6 +6,7 @@ Javascript client for [Contentful's](https://www.contentful.com) Content Deliver
 
 - [Documentation](https://www.contentful.com/developers/documentation/content-delivery-api)
 - [Example Apps](http://contentful.github.io/contentful.js/example/)
+- [Tests](https://github.com/contentful/contentful.js/tree/master/test/integration) running in node and browsers via [BrowserStack](http://browserstack.com)
 
 ## Install
 
