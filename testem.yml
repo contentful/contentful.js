@@ -36,7 +36,7 @@ launch_in_ci:
   - Node
   - BS_Chrome
   - BS_IE10
-  - BS_IE11
+#  - BS_IE11
 
 launch_in_dev:
   - Chrome
