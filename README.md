@@ -67,6 +67,19 @@ For now, please check out the
 [Content Delivery API documentation](https://www.contentful.com/developers/documentation/content-delivery-api)
 to learn how the API and the JavaScript client work.
 
+## Functionality
+
+### supported
+
+* .space() = get details of current space
+* .contentTypes() = get content types of current space
+* .entries() = get entries of current space
+* ... 
+
+### not supported
+
+* Sync
+
 ## License
 
 MIT
