@@ -24,7 +24,7 @@
     "browserify": "~3.20.0"
   },
   "scripts": {
-    "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js"
+    "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js",
     "test": "testem ci -P 6"
   }
 }
