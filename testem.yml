@@ -41,7 +41,7 @@ launch_in_ci:
   - BS_Chrome
   - BS_Firefox
   - BS_IE10
-  - BS_IOS7
+#  - BS_IOS7
 
 launch_in_dev:
   - Chrome
