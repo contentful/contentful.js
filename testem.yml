@@ -6,12 +6,12 @@ on_start:
 
 before_tests: npm run prepare-browser-test
 
-src_files: 
+src_files:
   - index.js
   - questor.min.js
   - test/integration/**-test.js
 
-serve_files: 
+serve_files:
   - test/bundle-helper.js
   - test/integration/**-test.js
 
@@ -32,7 +32,7 @@ launchers:
     protocol: browser
     timeout: 300
 
-launch_in_ci: 
+launch_in_ci:
   - Node
   - BS_Chrome
   - BS_IE10
