@@ -2,22 +2,23 @@ language: node_js
 node_js:
 - '0.8'
 after_script:
-  - travis-notify-geckoboard -a $GECKOBOARD_API_KEY -w $GECKOBOARD_WIDGET_KEY
+- travis-notify-geckoboard -a $GECKOBOARD_API_KEY -w $GECKOBOARD_WIDGET_KEY
 before_script:
-  - npm install -g travis-notify-geckoboard
-  - mkdir $HOME/.browserstack
-  - curl -o $HOME/.browserstack/BrowserStackTunnel.jar http://www.browserstack.com/BrowserStackTunnel.jar
-  - 'echo "{\"username\": \"$BROWSERSTACK_USERNAME\", \"password\": \"$BROWSERSTACK_PASSWORD\", \"apiKey\": \"$BROWSERSTACK_KEY\"}" > $HOME/.browserstack/browserstack.json'
+- npm install -g travis-notify-geckoboard
+- mkdir $HOME/.browserstack
+- curl -o $HOME/.browserstack/BrowserStackTunnel.jar http://www.browserstack.com/BrowserStackTunnel.jar
+- ! 'echo "{\"username\": \"$BROWSERSTACK_USERNAME\", \"password\": \"$BROWSERSTACK_PASSWORD\",
+  \"apiKey\": \"$BROWSERSTACK_KEY\"}" > $HOME/.browserstack/browserstack.json'
 cache:
   directories:
   - node_modules
 env:
   global:
-  - secure: "CJUqdUkFyce7OTzn/bxSUP13SMl+QxDy3lOZrDHaUy9clhVXXDw8PCspeg6jXMcIQisgRtWHhpN0CvUX0lj4ARRLrPQloBviuv14O4wtdtiZN9rzETvRB/odzUIK5hS1yzCCSKV8BN2D+rCxHEX2Ukdtgj1eYWM7dLITtfDC7Rk=" # GECKOBOARD_API_KEY
-  - secure: "js0gyIrJ5Ll/B4KfMLf2MvTHj09OMjfD0ZA24kuc9RyO3n+tw0LLxgrhqBtcuH0L55m1n0SiL96P6IecNEzfLAcLArMNrqjTG9frmQjw1vR84HtOGydDFfXeqlFEbGFRfhEi10lxgVJvm07NN5tTSVXb1GJeM38iS1rv/v+udls=" # GECKOBOARD_WIDGET_KEY
-  - secure: "VtmlDMdfSqFS5AynUMKr0B0/ceGmGeVlpM0RsfTiyPM7Kq1yGkBGcD/PXiSaZBKrXQzYd1XWX8rdWk4dF25061kCd9wCCXg6K1GpiQOgmiIKesWMSUTUZJ+sKfqhUVCj/l4p3PWqpYZ7DG9nDu61myRCY4lNgTlZgfZWu4gosvo=" # BROWSERSTACK_USERNAME
-  - secure: "OrARhE2bI0tpt+AOUQyiDzbmLRjXL4tLlqyzNPR/8HVzzllW2SU4n05zR47litXxdOi8jhY70mq3Vh3ERRJdWmLzrw6dTQP/UL5QGtBpV1UwFXGUKNZalI69tAWJfoTUvM3oVpErXBG3DBGzUH2yBi7zFYHNvjyIRBhOyhIqS9U=" # BROWSERSTACK_PASSWORD
-  - secure: "KXqYPCm+I2mNpJJ6iPyWcV/yLYmPyPZ6gnHFQNJ2H419BvDedaPJHGPt/v3zfvx1r3M1i+7vFd72LDRdyNk16/yB1nT9Aary3YTiTlkWHCu/7LNdxujUnPD43nWiem1t6vafMCycwBmkqjBbPupIe4LS3Urp/lcCpdzh9SHS3/k=" # BROWSERSTACK_KEY
+  - secure: CJUqdUkFyce7OTzn/bxSUP13SMl+QxDy3lOZrDHaUy9clhVXXDw8PCspeg6jXMcIQisgRtWHhpN0CvUX0lj4ARRLrPQloBviuv14O4wtdtiZN9rzETvRB/odzUIK5hS1yzCCSKV8BN2D+rCxHEX2Ukdtgj1eYWM7dLITtfDC7Rk= # GECKOBOARD_API_KEY
+  - secure: js0gyIrJ5Ll/B4KfMLf2MvTHj09OMjfD0ZA24kuc9RyO3n+tw0LLxgrhqBtcuH0L55m1n0SiL96P6IecNEzfLAcLArMNrqjTG9frmQjw1vR84HtOGydDFfXeqlFEbGFRfhEi10lxgVJvm07NN5tTSVXb1GJeM38iS1rv/v+udls= # GECKOBOARD_WIDGET_KEY
+  - secure: U4H5PglvvwY0hG0d9IugNzdMb2/vb+b50w1PxwZS5EBm6ZDUMNLFkiLmR2AaAsyQ0no7N1b06809unJMOWm0MwO7h+pYrODyh/R0qkC2v23bxF2XTJBw0y/v7yZ7KNaK9amfc7UH3EjzORq1qNCeMdPKubRQS+icrMjFz7+pP3I= # BROWSERSTACK_USERNAME
+  - secure: d0rsB29VkbWdwsB2uytuzYBmAN0faeeMcLPH011arU84a1psnTOglNIJF7itHBmFGB/92COfVUdLwPs2Oyz1xqH7CLHEOHDn6Z2ISEbbOqh8z98X8D4cZOs2cLIWXqpFm8Oe9KFJsG/B+pDMC3vO+Ztbr3g1tVKvWf1Mcun5F3M= # BROWSERSTACK_PASSWORD
+  - secure: iga1oX84uiZ9DI3nr8p8/mQq5D9q9chS8E0m3bvPVXouJGhXW/NQ8EveO3Z9XAaP1SRakEm/I2aWDHlEpx/eCF+meLxr3tSL7aFJNmsCKT30oRQ7r2WaOjcWsH5YcY7R5Kngm9ST/8p9wTyBW4d+xUQhlqf7FwevXAb8Y002LZ8= # BROWSERSTACK_KEY
 notifications:
   flowdock:
-  - secure: "EcnNczlehdwHapm1iKt9gUesSeoHu0BHdmSmqvgsxFiO0bikTh55jtVPt/GtQzLel4qMY/6TQtAWdraNBqlyBahaXDjxRqvg5EPLq1nP2yeiz8YfvvbyLQNU9KDwU4HncyO/purcUKC6KcSEopp/neUzDFdjzlVpbzeLOF6Rj4I="
+  - secure: EcnNczlehdwHapm1iKt9gUesSeoHu0BHdmSmqvgsxFiO0bikTh55jtVPt/GtQzLel4qMY/6TQtAWdraNBqlyBahaXDjxRqvg5EPLq1nP2yeiz8YfvvbyLQNU9KDwU4HncyO/purcUKC6KcSEopp/neUzDFdjzlVpbzeLOF6Rj4I=
