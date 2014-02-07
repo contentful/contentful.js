@@ -20,23 +20,28 @@ launchers:
     command: node_modules/.bin/buster-test -r tap
     protocol: tap
   BS_Chrome:
-    command: browserstack launch --attach chrome --timeout 300 <url>
+    command: browserstack launch chrome --attach --timeout 300 <url>
+    protocol: browser
+    timeout: 300
+  BS_Firefox:
+    command: browserstack launch firefox --attach --timeout 300 <url>
     protocol: browser
     timeout: 300
   BS_IE10:
-    command: browserstack launch --attach ie:10 --timeout 300 <url>
+    command: browserstack launch ie:10 --attach --timeout 300 <url>
     protocol: browser
     timeout: 300
-  BS_IE11:
-    command: browserstack launch --attach ie:11 --timeout 300 <url>
+  BS_IOS7:
+    command: browserstack launch 'Mobile Safari' --os ios:7.0 --attach --timeout 300 <url>
     protocol: browser
     timeout: 300
 
 launch_in_ci:
   - Node
   - BS_Chrome
+  - BS_Firefox
   - BS_IE10
-#  - BS_IE11
+  - BS_IOS7
 
 launch_in_dev:
   - Chrome
