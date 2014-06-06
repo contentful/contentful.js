@@ -1,8 +1,8 @@
 'use strict';
 
-var _ = require('underscore-contrib');
 var questor = require('questor');
 var redefine = require('redefine');
+var resolveResponse = require('contentful-resolve-response');
 var querystring = require('querystring');
 
 var Client = redefine.Class({
@@ -143,7 +143,7 @@ var SearchResult = redefine.Class({
   statics: {
     parse: function(ItemType, object) {
       walkMutate(object, isParseableResource, parseResource);
-      var items = resolveLinks(object);
+      var items = resolveResponse(object);
       return redefine(
         items, {
           limit: object.limit,
@@ -254,27 +254,6 @@ function stringifyArrayValues(object) {
     object[key] = _.isArray(value) ? value.join(',') : value;
     return object;
   }, {});
-}
-
-function resolveLinks(response) {
-  walkMutate(response, isLink, function(link) {
-    return getLink(response, link) || link;
-  });
-  return response.items;
-}
-
-function isLink(object) {
-  return _.getPath(object, ['sys', 'type']) === 'Link';
-}
-
-function getLink(response, link) {
-  var type = link.sys.linkType;
-  var id = link.sys.id;
-  var pred = function(resource) {
-    return resource.sys.type === type && resource.sys.id === id;
-  };
-  return _.find(response.items, pred) ||
-    response.includes && _.find(response.includes[type], pred);
 }
 
 function walkMutate(input, pred, mutator) {

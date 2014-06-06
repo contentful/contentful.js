@@ -11,9 +11,9 @@
   "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
   "dependencies": {
-    "redefine": "~0.2.0",
+    "contentful-resolve-response": "~0.1.0",
     "questor": "1.0.0-alpha.2",
-    "underscore-contrib": "0.2.2"
+    "redefine": "~0.2.0"
   },
   "devDependencies": {
     "buster": "~0.7.6",
