@@ -1,7 +1,7 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
   "browser": {
@@ -13,7 +13,8 @@
   "dependencies": {
     "contentful-resolve-response": "~0.1.0",
     "questor": "1.0.0-alpha.2",
-    "redefine": "~0.2.0"
+    "redefine": "~0.2.0",
+    "underscore-contrib": "0.2.2"
   },
   "devDependencies": {
     "buster": "~0.7.6",
