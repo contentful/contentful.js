@@ -13,7 +13,8 @@ buster.testCase('Content Type', {
 
   'can be listed': function() {
     return client.contentTypes({
-      'order': 'name'
+      'order': 'name',
+      'sys.id[in]': 'cat,dog,human'
     }).then(function(contentTypes) {
       assert.match(contentTypes, [
         {name: 'Cat'},
