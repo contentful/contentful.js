@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash-contrib');
 var questor = require('questor');
 var redefine = require('redefine');
 var resolveResponse = require('contentful-resolve-response');
