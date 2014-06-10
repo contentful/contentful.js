@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash-contrib');
+var _ = require('lodash');
 var questor = require('questor');
 var redefine = require('redefine');
 var resolveResponse = require('contentful-resolve-response');
@@ -214,19 +214,27 @@ var Link = redefine.Class({
   }
 });
 
-exports.createClient = _.fnull(function(options) {
-  return new Client(options);
-}, {});
+exports.createClient = function(options) {
+  return new Client(options || {});
+};
+
+function exists(value) {
+  return value != null;
+}
+
+function truthy(value) {
+  return (value !== false) && exists(value);
+}
 
 function compacto(object) {
   return _.reduce(object, function(compacted, value, key) {
-    if (_.truthy(value)) compacted[key] = value;
+    if (truthy(value)) compacted[key] = value;
     return compacted;
   }, {});
 }
 
 function enforcep(object, property) {
-  if (!_.exists(object[property]))
+  if (!exists(object[property]))
     throw new TypeError('Expected property ' + property);
 }
 
@@ -238,7 +246,8 @@ var parseableResourceTypes =  {
 };
 
 function isParseableResource(object) {
-  return _.getPath(object, ['sys', 'type']) in parseableResourceTypes;
+  return _.isObject(object) && _.isObject(object.sys) && 'type' in object.sys &&
+    object.sys.type in parseableResourceTypes;
 }
 
 function parseResource(resource) {

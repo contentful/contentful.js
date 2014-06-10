@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "contentful-resolve-response": "~0.1.0",
-    "lodash-contrib": "~241.4.10",
+    "lodash": "~2.4.1",
     "questor": "1.0.0-alpha.2",
     "redefine": "~0.2.0"
   },
