@@ -1,6 +1,6 @@
 'use strict';
 
-global._ = require('underscore-contrib');
+global._ = require('lodash-contrib');
 
 if (typeof buster === 'undefined') {
   global.buster = require('buster');
