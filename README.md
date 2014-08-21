@@ -52,7 +52,10 @@ var client = contentful.createClient({
   accessToken: 'b4c0n73n7fu1',
 
   // Enable or disable SSL. Enabled by default.
-  secure: true
+  secure: true,
+
+  // Set an alternate hostname, default shown.
+  host: 'cdn.contentful.com'
 });
 
 var log = console.log.bind(console); // wat
