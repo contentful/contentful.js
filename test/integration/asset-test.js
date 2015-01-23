@@ -13,7 +13,7 @@ buster.testCase('Asset', {
 
   'can be listed': function() {
     return client.assets().then(function(assets) {
-      assert(_.any(assets, function(asset) {
+      assert(_.any(assets.items, function(asset) {
         return asset.fields.title === 'Nyan Cat';
       }));
     });
