@@ -1,14 +1,9 @@
 framework: buster
 
-on_start:
-  command: browserstack tunnel localhost:<port>
-  wait_for_text: Tunnel is running
-
 before_tests: npm run prepare-browser-test
 
 src_files:
   - index.js
-  - questor.min.js
   - test/integration/**-test.js
 
 serve_files:
@@ -19,29 +14,21 @@ launchers:
   Node:
     command: node_modules/.bin/buster-test -r tap
     protocol: tap
-  BS_Chrome:
-    command: browserstack launch chrome --attach --timeout 300 <url>
-    protocol: browser
+  SL_Chrome:
+    command: saucie --browserNameSL="chrome"
+    protocol: tap
     timeout: 300
-  BS_Firefox:
-    command: browserstack launch firefox --attach --timeout 300 <url>
-    protocol: browser
+  SL_Firefox:
+    command: saucie --browserNameSL="firefox"
+    protocol: tap
     timeout: 300
-  BS_IE10:
-    command: browserstack launch ie:10 --attach --timeout 300 <url>
-    protocol: browser
-    timeout: 300
-  BS_IOS7:
-    command: browserstack launch 'Mobile Safari' --os ios:7.0 --attach --timeout 300 <url>
-    protocol: browser
+  SL_IE10:
+    command: saucie --browserNameSL="internet explorer"
+    protocol: tap
     timeout: 300
 
 launch_in_ci:
   - Node
-  - BS_Chrome
-  - BS_Firefox
-  - BS_IE10
-#  - BS_IOS7
 
 launch_in_dev:
   - Chrome
