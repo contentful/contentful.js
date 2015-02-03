@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.8'
+- '0.10'
 after_script:
 - travis-notify-geckoboard -a $GECKOBOARD_API_KEY -w $GECKOBOARD_WIDGET_KEY
 before_install:
