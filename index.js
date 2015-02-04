@@ -39,10 +39,9 @@ var Client = redefine.Class({
 
     return questor(uri, options)
       .then(parseJSONBody)
-      .catch(Error, function(error) {
-        throw error;
-      })
-      .catch(function(error) {
+      .catch(function (error) {
+        return error.body;
+      }, function(error) {
         throw parseJSONBody(error);
       });
   },

@@ -4,29 +4,26 @@
   "version": "0.1.2",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
-  "browser": {
-    "questor": "./questor.min.js"
-  },
   "repository": "git@github.com:contentful/contentful.js.git",
   "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
   "dependencies": {
     "contentful-resolve-response": "~0.1.0",
     "lodash": "~2.4.1",
-    "questor": "1.0.0-alpha.2",
+    "questor": "^1.0.0",
     "redefine": "~0.2.0"
   },
   "devDependencies": {
     "buster": "~0.7.6",
-    "bluebird": "~1.2.4",
+    "bluebird": "^2.0.0",
     "envify": "~1.0.1",
     "testem": "~0.6.2",
-    "browserstack-cli": "~0.3.1",
-    "browserify": "~3.20.0"
+    "browserify": "~3.20.0",
+    "saucie": "^0.1.0"
   },
   "scripts": {
     "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js",
-    "test": "testem ci -P 6",
-    "test-local": "testem"
+    "ci": "testem ci -P 6",
+    "test": "testem"
   }
 }
