@@ -16,7 +16,7 @@ buster.testCase('Content Type', {
       'order': 'name',
       'sys.id[in]': 'cat,dog,human'
     }).then(function(contentTypes) {
-      assert.match(contentTypes, [
+      assert.match(contentTypes.items, [
         {name: 'Cat'},
         {name: 'Dog'},
         {name: 'Human'}

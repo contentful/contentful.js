@@ -137,24 +137,30 @@ var Field = redefine.Class({
   }
 });
 
-var SearchResult = redefine.Class({
-  constructor: function SearchResult() {},
+function SearchResult(ItemType, object) {
+  this.responseData = object;
+  this.total = object.total;
+  this.limit = object.limit;
+  this.skip = object.skip;
+  var temp = _.cloneDeep(object);
+  walkMutate(temp, isParseableResource, parseResource);
+  this.items = resolveResponse(temp);
+}
+  
+SearchResult.parse = function(ItemType, object) {
+  return new SearchResult(ItemType, object);
+};
 
-  statics: {
-    parse: function(ItemType, object) {
-      walkMutate(object, isParseableResource, parseResource);
-      var items = resolveResponse(object);
-      return redefine(
-        items, {
-          limit: object.limit,
-          skip: object.skip,
-          total: object.total
-        }, {
-          enumerable: false
-        }
-      );
-    }
-  }
+SearchResult.prototype.toJSON = function () {
+  return this.responseData;
+};
+
+Object.keys(Array.prototype).filter(function (key) {
+  return typeof Array.prototype[key] === 'function';
+}).forEach(function (method) {
+  SearchResult.prototype[method] = function () {
+    Array.prototype[method].apply(this.items, arguments);
+  };
 });
 
 var Query = redefine.Class({
