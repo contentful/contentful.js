@@ -53,7 +53,7 @@ var Client = redefine.Class({
   assets: function(object, callback) {
     var query = Query.parse(object);
     return this.request('/assets', {query: query})
-      .then(_.partial(SearchResult.parse, Asset))
+      .then(_.partial(SearchResult.parse))
       .nodeify(callback);
   },
 
@@ -66,7 +66,7 @@ var Client = redefine.Class({
   contentTypes: function(object, callback) {
     var query = Query.parse(object);
     return this.request('/content_types', {query: query})
-      .then(_.partial(SearchResult.parse, ContentType))
+      .then(_.partial(SearchResult.parse))
       .nodeify(callback);
   },
 
@@ -79,7 +79,7 @@ var Client = redefine.Class({
   entries: function(object, callback) {
     var query = Query.parse(object);
     return this.request('/entries', {query: query})
-      .then(_.partial(SearchResult.parse, Entry))
+      .then(_.partial(SearchResult.parse))
       .nodeify(callback);
   },
 
@@ -141,7 +141,7 @@ var SearchResult = redefine.Class({
   constructor: function SearchResult() {},
 
   statics: {
-    parse: function(ItemType, object) {
+    parse: function(object) {
       walkMutate(object, isParseableResource, parseResource);
       var items = resolveResponse(object);
       return redefine(
