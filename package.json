@@ -8,9 +8,9 @@
   "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.5.2",
     "contentful-resolve-response": "~0.1.0",
     "lodash": "~2.4.1",
-    "questor": "^1.0.0",
     "redefine": "~0.2.0"
   },
   "devDependencies": {
