@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var questor = require('questor');
+var axios = require('axios');
 var redefine = require('redefine');
 var resolveResponse = require('contentful-resolve-response');
 var querystring = require('querystring');
@@ -17,74 +17,79 @@ var Client = redefine.Class({
     });
   },
 
-  request: function(path, options) {
-    if (!options) options = {};
-    if (!options.headers) options.headers = {};
-    if (!options.query) options.query = {};
-    options.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
-    options.query.access_token = this.options.accessToken;
+  _request: function(path, query) {
+    if (!query) query = {};
+    query.access_token = this.options.accessToken;
 
-    var uri = [
-      this.options.secure ? 'https' : 'http',
-      '://',
-      _.first(this.options.host.split(':')),
-      ':',
-      this.options.secure ? '443' : '80',
-      '/spaces/',
-      this.options.space,
-      path,
-      '?',
-      querystring.stringify(options.query)
-    ].join('');
+    var params = {
+      headers: {},
+      method: 'get',
+      url: [
+        this.options.secure ? 'https' : 'http',
+        '://',
+        _.first(this.options.host.split(':')),
+        ':',
+        this.options.secure ? '443' : '80',
+        '/spaces/',
+        this.options.space,
+        path,
+        '?',
+        querystring.stringify(query)
+      ].join('')
+    };
+    params.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
 
-    return questor(uri, options)
-      .then(parseJSONBody)
+    return axios(params)
+      .then(function (response) {
+        return response.data;
+      })
       .catch(function (error) {
-        return error.body;
-      }, function(error) {
-        throw parseJSONBody(error);
+        throw error.data;
       });
   },
 
   asset: function(id, callback) {
-    return this.request('/assets/' + id).then(Asset.parse).nodeify(callback);
+    return nodeify(
+      this._request('/assets/' + id).then(Asset.parse),
+      callback
+    );
   },
 
   assets: function(object, callback) {
     var query = Query.parse(object);
-    return this.request('/assets', {query: query})
-      .then(_.partial(SearchResult.parse))
-      .nodeify(callback);
+    var deferred = this._request('/assets', query)
+                   .then(_.partial(SearchResult.parse));
+    return nodeify(deferred, callback);
   },
 
   contentType: function(id, callback) {
-    return this.request('/content_types/' + id)
-      .then(ContentType.parse)
-      .nodeify(callback);
+    var deferred = this._request('/content_types/' + id)
+                   .then(ContentType.parse);
+    return nodeify(deferred, callback);
   },
 
   contentTypes: function(object, callback) {
     var query = Query.parse(object);
-    return this.request('/content_types', {query: query})
-      .then(_.partial(SearchResult.parse))
-      .nodeify(callback);
+    var deferred = this._request('/content_types', query)
+                   .then(_.partial(SearchResult.parse));
+    return nodeify(deferred, callback);
   },
 
   entry: function(id, callback) {
-    return this.request('/entries/' + id)
-      .then(Entry.parse)
-      .nodeify(callback);
+    var deferred = this._request('/entries/' + id)
+                   .then(Entry.parse);
+    return nodeify(deferred, callback);
   },
 
   entries: function(object, callback) {
     var query = Query.parse(object);
-    return this.request('/entries', {query: query})
-      .then(_.partial(SearchResult.parse))
-      .nodeify(callback);
+    var deferred = this._request('/entries', query)
+                   .then(_.partial(SearchResult.parse));
+    return nodeify(deferred, callback);
   },
 
   space: function(callback) {
-    return this.request('').nodeify(callback);
+    return nodeify(this._request(''), callback);
   }
 });
 
@@ -254,10 +259,6 @@ function parseResource(resource) {
   return Type.parse(resource);
 }
 
-function parseJSONBody(response) {
-  return JSON.parse(response.body);
-}
-
 function stringifyArrayValues(object) {
   return _.reduce(object, function(object, value, key) {
     object[key] = _.isArray(value) ? value.join(',') : value;
@@ -277,4 +278,19 @@ function walkMutate(input, pred, mutator) {
   }
 
   return input;
+}
+
+function nodeify(deferred, callback) {
+  if(callback) {
+    return deferred
+    .then(function (response) {
+      callback(null, response);
+      return response;
+    })
+    .catch(function (error) {
+      callback(error);
+      throw error;
+    });
+  }
+  return deferred;
 }
