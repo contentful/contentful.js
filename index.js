@@ -90,6 +90,35 @@ var Client = redefine.Class({
 
   space: function(callback) {
     return nodeify(this._request(''), callback);
+  },
+
+  _pagedSync: function (sync) {
+    var self = this;
+    return this._request('/sync', sync.query)
+               .then(function (data) {
+                 sync.append(data);
+                 if(!sync.done){
+                   return self._pagedSync(sync);
+                 } else {
+                   return {
+                     items: sync.items,
+                     nextSyncToken: sync.nextSyncToken
+                   };
+                 }
+               });
+  },
+
+  sync: function (object, callback) {
+    if (!object || (!object.initial && !object.nextSyncToken)) {
+      throw new Error('Please provide either the initial flag or a nextSyncToken for syncing');
+    }
+    var query = Query.parse(object);
+    var deferred = this._pagedSync(new Sync(query))
+                   .then(function (response) {
+                     response.items = SearchResult.parse(response);
+                     return response;
+                   });
+    return nodeify(deferred, callback);
   }
 });
 
@@ -217,6 +246,29 @@ var Link = redefine.Class({
     }
   }
 });
+
+var Sync = redefine.Class({
+  constructor: function Sync(query) {
+    this.query = query;
+    this.items = [];
+    this.done = false;
+  },
+
+  append: function (data) {
+    this.items = this.items.concat(data.items);
+    if(data.nextPageUrl){
+      var nextPageUrl = data.nextPageUrl.split('?');
+      this.query = _.omit(this.query, 'initial', 'sync_token');
+      this.query.sync_token = querystring.parse(nextPageUrl[1]).sync_token;
+    } else if(data.nextSyncUrl){
+      var nextSyncUrl = data.nextSyncUrl.split('?');
+      this.nextSyncToken = querystring.parse(nextSyncUrl[1]).sync_token;
+      this.done = true;
+    }
+  }
+
+});
+
 
 exports.createClient = function(options) {
   return new Client(options || {});

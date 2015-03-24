@@ -71,6 +71,19 @@ client.entries({}, function(err, entries) {
   if (err) { console.log(err); return; }
   console.log(entries);
 });
+
+var syncToken;
+// Get all data in a space
+client.sync({initial: true})
+.then(function(data){
+  syncToken = data.nextSyncToken;
+});
+
+// Get all data since the last sync
+client.sync({nextSyncToken: syncToken})
+.then(function(data){
+  syncToken = data.nextSyncToken;
+});
 ```
 
 For now, please check out the
@@ -84,11 +97,7 @@ to learn how the API and the JavaScript client work.
 * .space() = get details of current space
 * .contentTypes() = get content types of current space
 * .entries() = get entries of current space
-* ... 
-
-### not supported
-
-* Sync
+* .sync() = get all the data in a space
 
 ## License
 
