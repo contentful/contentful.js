@@ -258,7 +258,7 @@ var Sync = redefine.Class({
     this.items = this.items.concat(data.items);
     if(data.nextPageUrl){
       var nextPageUrl = data.nextPageUrl.split('?');
-      this.query = _.omit(this.query, 'initial', 'sync_token');
+      this.query = _.omit(this.query, 'initial', 'type', 'sync_token');
       this.query.sync_token = querystring.parse(nextPageUrl[1]).sync_token;
     } else if(data.nextSyncUrl){
       var nextSyncUrl = data.nextSyncUrl.split('?');

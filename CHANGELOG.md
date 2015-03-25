@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Upcoming
+- Fix issue where type parameter was sent on sync requests with a sync
+  token
+
 ## v1.1.0 - 2015-03-24
 ### Added
 - Add support for the sync endpoint
