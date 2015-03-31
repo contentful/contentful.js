@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Ignore `node_modules` directory in git
 - Use local modules during build process
+- Move from redefine to ES6 classes using babel
 - Update dist files
 
 ## v1.1.1 - 2015-03-25
