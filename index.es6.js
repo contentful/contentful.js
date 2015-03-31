@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var axios = require('axios');
-var redefine = require('redefine');
 var resolveResponse = require('contentful-resolve-response');
 var querystring = require('querystring');
 
@@ -25,7 +24,7 @@ class Client {
     if (!query) query = {};
     query.access_token = this.options.accessToken;
 
-    var params = {
+    const params = {
       headers: {},
       method: 'get',
       url: [
@@ -54,7 +53,7 @@ class Client {
 
   asset (id, callback) {
     return nodeify(
-      this._request('/assets/' + id).then(Asset.parse),
+      this._request('/assets/' + id).then(parseResource),
       callback
     );
   }
@@ -62,7 +61,7 @@ class Client {
   assets (object, callback) {
     var query = Query.parse(object);
     var deferred = this._request('/assets', query)
-                   .then(_.partial(SearchResult.parse));
+                   .then(parseSearchResult);
     return nodeify(deferred, callback);
   }
 
@@ -75,7 +74,7 @@ class Client {
   contentTypes (object, callback) {
     var query = Query.parse(object);
     var deferred = this._request('/content_types', query)
-                   .then(_.partial(SearchResult.parse));
+                   .then(parseSearchResult);
     return nodeify(deferred, callback);
   }
 
@@ -88,7 +87,7 @@ class Client {
   entries (object, callback) {
     var query = Query.parse(object);
     var deferred = this._request('/entries', query)
-                   .then(_.partial(SearchResult.parse));
+                   .then(parseSearchResult);
     return nodeify(deferred, callback);
   }
 
@@ -96,7 +95,7 @@ class Client {
     return nodeify(this._request(''), callback);
   }
 
-  _pagedSync  (sync) {
+  _pagedSync (sync) {
     var self = this;
     return this._request('/sync', sync.query)
                .then(function (data) {
@@ -112,14 +111,14 @@ class Client {
                });
   }
 
-  sync  (object, callback) {
+  sync (object, callback) {
     if (!object || (!object.initial && !object.nextSyncToken)) {
       throw new Error('Please provide either the initial flag or a nextSyncToken for syncing');
     }
     var query = Query.parse(object);
     var deferred = this._pagedSync(new Sync(query))
                    .then(function (response) {
-                     response.items = SearchResult.parse(response);
+                     response.items = parseSearchResult(response);
                      return response;
                    });
     return nodeify(deferred, callback);
@@ -156,22 +155,6 @@ class ContentType {
 class Field {
   static parse (object) {
     return _.extend(new Field(), object);
-  }
-}
-
-class SearchResult {
-  static parse (object) {
-    walkMutate(object, isParseableResource, parseResource);
-    var items = resolveResponse(object);
-    return redefine(
-      items, {
-        limit: object.limit,
-        skip: object.skip,
-        total: object.total
-      }, {
-        enumerable: false
-      }
-    );
   }
 }
 
@@ -257,7 +240,7 @@ function enforcep(object, property) {
     throw new TypeError('Expected property ' + property);
 }
 
-var parseableResourceTypes =  {
+var parseableResourceTypes = {
   Asset: Asset,
   ContentType: ContentType,
   Entry: Entry,
@@ -272,6 +255,17 @@ function isParseableResource(object) {
 function parseResource(resource) {
   var Type = parseableResourceTypes[resource.sys.type];
   return Type.parse(resource);
+}
+
+function parseSearchResult (object) {
+  walkMutate(object, isParseableResource, parseResource);
+  var items = resolveResponse(object);
+  Object.defineProperties(items, {
+    limit: { value: object.limit, enumerable: false },
+    skip:  { value: object.skip,  enumerable: false },
+    total: { value: object.total, enumerable: false }
+  });
+  return items;
 }
 
 function stringifyArrayValues(object) {

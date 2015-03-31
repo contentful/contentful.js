@@ -10,8 +10,7 @@
   "dependencies": {
     "axios": "^0.5.2",
     "contentful-resolve-response": "~0.1.0",
-    "lodash": "~2.4.1",
-    "redefine": "~0.2.0"
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "babel": "^4.7.16",
