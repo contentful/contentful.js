@@ -3,7 +3,7 @@
   "description": "Client for Contentful's Content Delivery API",
   "version": "1.1.1",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
-  "main": "index.es5.js",
+  "main": "index.js",
   "repository": "git@github.com:contentful/contentful.js.git",
   "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
