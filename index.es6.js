@@ -133,6 +133,30 @@ class Asset {
   static parse (object) {
     return new Asset(object);
   }
+
+  get file () {
+    return this.fields.file;
+  }
+
+  get title () {
+    return this.fields.title;
+  }
+
+  get description () {
+    return this.fields.description;
+  }
+
+  get url () {
+    return this.fields.file.url;
+  }
+
+  get contentType () {
+    return this.fields.file.contentType;
+  }
+
+  get details () {
+    return this.fields.file.details;
+  }
 }
 
 class Entry {
