@@ -4,6 +4,7 @@
   "version": "1.1.1",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
+  "browser": "index.es5.js",
   "repository": "git@github.com:contentful/contentful.js.git",
   "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
