@@ -1,45 +1,48 @@
 'use strict';
 
-var _ = require('lodash');
-var axios = require('axios');
-var resolveResponse = require('contentful-resolve-response');
-var querystring = require('querystring');
+import axios from 'axios';
+import resolveResponse from 'contentful-resolve-response';
+import querystring from 'querystring';
 
-export default function createClient (options) {
+export function createClient (options) {
   return new Client(options || {});
 };
 
 class Client {
-  constructor (options) {
-    enforcep(options, 'accessToken');
-    enforcep(options, 'space');
+  constructor ({accessToken, space, secure, host}) {
+    if (!accessToken) {
+      throw new TypeError('Expected property accessToken');
+    }
 
-    this.options = _.defaults({}, options, {
-      host: 'cdn.contentful.com',
-      secure: true
-    });
+    if (!space) {
+      throw new TypeError('Expected property space');
+    }
+
+    const insecure = secure === false;
+    var [hostname, port] = (host && host.split(':')) || [];
+
+    hostname = hostname || 'cdn.contentful.com';
+    port = port || (insecure ? 80 : 443);
+
+    this.options = {
+      baseUrl: `${insecure ? 'http' : 'https'}://${hostname}:${port}/spaces/${space}`,
+      accessToken: accessToken
+    };
   }
 
   _request (path, query) {
-    if (!query) query = {};
+    if (!query) {
+      query = {}
+    };
+
     query.access_token = this.options.accessToken;
 
     const params = {
       headers: {},
       method: 'get',
-      url: [
-        this.options.secure ? 'https' : 'http',
-        '://',
-        _.first(this.options.host.split(':')),
-        ':',
-        this.options.secure ? '443' : '80',
-        '/spaces/',
-        this.options.space,
-        path,
-        '?',
-        querystring.stringify(query)
-      ].join('')
+      url: `${this.options.baseUrl}${path}?${querystring.stringify(query)}`
     };
+
     params.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
 
     return axios(params)
@@ -59,35 +62,31 @@ class Client {
   }
 
   assets (object, callback) {
-    var query = Query.parse(object);
-    var deferred = this._request('/assets', query)
-                   .then(parseSearchResult);
+    const query = new Query(object);
+    const deferred = this._request('/assets', query).then(parseSearchResult);
     return nodeify(deferred, callback);
   }
 
   contentType (id, callback) {
-    var deferred = this._request('/content_types/' + id)
-                   .then(ContentType.parse);
+    const deferred = this._request('/content_types/' + id).then(ContentType.parse);
     return nodeify(deferred, callback);
   }
 
   contentTypes (object, callback) {
-    var query = Query.parse(object);
-    var deferred = this._request('/content_types', query)
-                   .then(parseSearchResult);
+    const query = new Query(object);
+    const deferred = this._request('/content_types', query).then(parseSearchResult);
     return nodeify(deferred, callback);
   }
 
   entry (id, callback) {
-    var deferred = this._request('/entries/' + id)
+    const deferred = this._request('/entries/' + id)
                    .then(Entry.parse);
     return nodeify(deferred, callback);
   }
 
   entries (object, callback) {
-    var query = Query.parse(object);
-    var deferred = this._request('/entries', query)
-                   .then(parseSearchResult);
+    const query = new Query(object);
+    const deferred = this._request('/entries', query).then(parseSearchResult);
     return nodeify(deferred, callback);
   }
 
@@ -96,7 +95,7 @@ class Client {
   }
 
   _pagedSync (sync) {
-    var self = this;
+    const self = this;
     return this._request('/sync', sync.query)
                .then(function (data) {
                  sync.append(data);
@@ -115,56 +114,75 @@ class Client {
     if (!object || (!object.initial && !object.nextSyncToken)) {
       throw new Error('Please provide either the initial flag or a nextSyncToken for syncing');
     }
-    var query = Query.parse(object);
-    var deferred = this._pagedSync(new Sync(query))
-                   .then(function (response) {
-                     response.items = parseSearchResult(response);
-                     return response;
-                   });
+    const query = new Query(object);
+    const deferred = this._pagedSync(new Sync(query)).then(function (response) {
+      response.items = parseSearchResult(response);
+      return response;
+    });
     return nodeify(deferred, callback);
   }
 }
 
 class Asset {
+  constructor ({sys, fields}) {
+    this.sys = new Sys(sys);
+    this.fields = fields;
+  }
+
   static parse (object) {
-    return _.extend(new Asset(), {
-      sys: Sys.parse(object.sys),
-      fields: object.fields
-    });
+    return new Asset(object);
   }
 }
 
 class Entry {
+  constructor ({sys, fields}) {
+    this.sys = new Sys(sys);
+    this.fields = fields;
+  }
+
   static parse (object) {
-    return _.extend(new Entry(), {
-      sys: Sys.parse(object.sys),
-      fields: object.fields
-    });
+    return new Entry(object);
   }
 }
 
 class ContentType {
+  constructor ({sys, fields, name, displayField}) {
+    this.sys = new Sys(sys);
+    this.name = name;
+    this.displayField = displayField;
+    this.fields = fields && fields.map(Field.parse);
+  }
+
   static parse (object) {
-    return _.extend(new ContentType(), {
-      sys: Sys.parse(object.sys),
-      fields: object.fields.map(Field.parse),
-    }, _.pick(object, 'name', 'displayField'));
+    return new ContentType(object);
   }
 }
 
 class Field {
+  constructor (object) {
+    for (var k in object) {
+      this[k] = object[k];
+    }
+  }
+
   static parse (object) {
-    return _.extend(new Field(), object);
+    return new Field(object);
   }
 }
 
 class Query {
+  constructor (object) {
+    for (var k in object) {
+      this[k] = object[k];
+    }
+  }
+
   toQueryString () {
     return querystring.stringify(this);
   }
 
   static parse (object) {
-    return _.extend(new Query(), stringifyArrayValues(object));
+    return new Query(stringifyArrayValues(object));
   }
 }
 
@@ -175,26 +193,29 @@ class Space {
 }
 
 class Sys {
+  constructor ({id, revision, type, locale, contentType, createdAt, linkType, updatedAt, space}) {
+    this.id = id;
+    this.revision = revision;
+    this.type = type;
+    this.locale = locale;
+    this.space = space && Link.parse(space);
+    this.contentType = contentType && new Link(contentType);
+    this.createdAt = createdAt && new Date(createdAt);
+    this.updatedAt = updatedAt && new Date(updatedAt);
+  }
+
   static parse (object) {
-    return _.extend(
-      new Sys(),
-      _.pick(object, 'id', 'revision', 'type', 'locale'),
-      compacto({
-        contentType: object.contentType && Link.parse(object.contentType),
-        createdAt: object.createdAt && new Date(object.createdAt),
-        linkType: object.linkType,
-        updatedAt: object.updatedAt && new Date(object.updatedAt),
-        space: object.space && Link.parse(object.space)
-      })
-    );
+    return new Sys(object);
   }
 }
 
 class Link {
+  constructor ({sys}) {
+    this.sys = new Sys(sys);
+  }
+
   static parse (object) {
-    return _.extend(new Link(), {
-      sys: Sys.parse(object.sys)
-    });
+    return new Link(object);
   }
 }
 
@@ -208,39 +229,18 @@ class Sync {
   append (data) {
     this.items = this.items.concat(data.items);
     if(data.nextPageUrl){
-      var nextPageUrl = data.nextPageUrl.split('?');
+      const nextPageUrl = data.nextPageUrl.split('?');
       this.query = _.omit(this.query, 'initial', 'type', 'sync_token');
       this.query.sync_token = querystring.parse(nextPageUrl[1]).sync_token;
     } else if(data.nextSyncUrl){
-      var nextSyncUrl = data.nextSyncUrl.split('?');
+      const nextSyncUrl = data.nextSyncUrl.split('?');
       this.nextSyncToken = querystring.parse(nextSyncUrl[1]).sync_token;
       this.done = true;
     }
   }
 }
 
-
-function exists(value) {
-  return value != null;
-}
-
-function truthy(value) {
-  return (value !== false) && exists(value);
-}
-
-function compacto(object) {
-  return _.reduce(object, function(compacted, value, key) {
-    if (truthy(value)) compacted[key] = value;
-    return compacted;
-  }, {});
-}
-
-function enforcep(object, property) {
-  if (!exists(object[property]))
-    throw new TypeError('Expected property ' + property);
-}
-
-var parseableResourceTypes = {
+const parseableResourceTypes = {
   Asset: Asset,
   ContentType: ContentType,
   Entry: Entry,
@@ -259,7 +259,7 @@ function parseResource(resource) {
 
 function parseSearchResult (object) {
   walkMutate(object, isParseableResource, parseResource);
-  var items = resolveResponse(object);
+  const items = resolveResponse(object);
   Object.defineProperties(items, {
     limit: { value: object.limit, enumerable: false },
     skip:  { value: object.skip,  enumerable: false },
@@ -269,21 +269,22 @@ function parseSearchResult (object) {
 }
 
 function stringifyArrayValues(object) {
-  return _.reduce(object, function(object, value, key) {
-    object[key] = _.isArray(value) ? value.join(',') : value;
-    return object;
+  return keys(object).reduce(function(result, key) {
+    const value = object[key];
+    result[key] = _.isArray(value) ? value.join(',') : value;
+    return result;
   }, {});
 }
 
 function walkMutate(input, pred, mutator) {
-  if (pred(input))
+  if (pred(input)) {
     return mutator(input);
+  }
 
-  if (_.isArray(input) || _.isObject(input)) {
-    _.each(input, function(item, key) {
-      input[key] = walkMutate(item, pred, mutator);
-    });
-    return input;
+  if (input && typeof input === 'object') {
+    for (var key in input) {
+      input[key] = walkMutate(input[key], pred, mutator);
+    }
   }
 
   return input;
