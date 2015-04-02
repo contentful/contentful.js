@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## Upcoming
+### Added
+- Development dependency `uglify-js`
+
 ### Changed
 - Ignore `node_modules` directory in git
 

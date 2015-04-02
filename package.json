@@ -14,12 +14,13 @@
     "redefine": "~0.2.0"
   },
   "devDependencies": {
-    "buster": "~0.7.6",
     "bluebird": "^2.0.0",
-    "envify": "~1.0.1",
-    "testem": "~0.6.2",
     "browserify": "~3.20.0",
-    "saucie": "^0.1.0"
+    "buster": "~0.7.6",
+    "envify": "~1.0.1",
+    "saucie": "^0.1.0",
+    "testem": "~0.6.2",
+    "uglify-js": "^2.4.19"
   },
   "scripts": {
     "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js",
