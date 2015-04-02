@@ -1,6 +1,6 @@
 build:
-	browserify -s contentful index.js > dist/contentful.js
-	uglifyjs dist/contentful.js -m -c > dist/contentful.min.js
+	node_modules/.bin/browserify -s contentful index.js > dist/contentful.js
+	node_modules/.bin/uglifyjs dist/contentful.js -m -c > dist/contentful.min.js
 	ls -hl dist
 
 clean:
