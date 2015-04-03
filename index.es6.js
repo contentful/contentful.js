@@ -99,7 +99,8 @@ class Client {
     return this._request('/sync', sync.query)
                .then(function (data) {
                  sync.append(data);
-                 if(!sync.done){
+
+                 if (!sync.done) {
                    return self._pagedSync(sync);
                  } else {
                    return {
@@ -228,11 +229,12 @@ class Sync {
 
   append (data) {
     this.items = this.items.concat(data.items);
-    if(data.nextPageUrl){
+
+    if (data.nextPageUrl) {
       const nextPageUrl = data.nextPageUrl.split('?');
       this.query = _.omit(this.query, 'initial', 'type', 'sync_token');
       this.query.sync_token = querystring.parse(nextPageUrl[1]).sync_token;
-    } else if(data.nextSyncUrl){
+    } else if (data.nextSyncUrl) {
       const nextSyncUrl = data.nextSyncUrl.split('?');
       this.nextSyncToken = querystring.parse(nextSyncUrl[1]).sync_token;
       this.done = true;
@@ -247,12 +249,12 @@ const parseableResourceTypes = {
   Space: Space
 };
 
-function isParseableResource(object) {
+function isParseableResource (object) {
   return _.isObject(object) && _.isObject(object.sys) && 'type' in object.sys &&
     object.sys.type in parseableResourceTypes;
 }
 
-function parseResource(resource) {
+function parseResource (resource) {
   var Type = parseableResourceTypes[resource.sys.type];
   return Type.parse(resource);
 }
@@ -268,15 +270,15 @@ function parseSearchResult (object) {
   return items;
 }
 
-function stringifyArrayValues(object) {
-  return keys(object).reduce(function(result, key) {
+function stringifyArrayValues (object) {
+  return keys(object).reduce(function (result, key) {
     const value = object[key];
     result[key] = _.isArray(value) ? value.join(',') : value;
     return result;
   }, {});
 }
 
-function walkMutate(input, pred, mutator) {
+function walkMutate (input, pred, mutator) {
   if (pred(input)) {
     return mutator(input);
   }
@@ -290,8 +292,8 @@ function walkMutate(input, pred, mutator) {
   return input;
 }
 
-function nodeify(deferred, callback) {
-  if(callback) {
+function nodeify (deferred, callback) {
+  if (callback) {
     return deferred
     .then(function (response) {
       callback(null, response);

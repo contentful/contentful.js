@@ -14,19 +14,22 @@
   },
   "devDependencies": {
     "babel": "^4.7.16",
-    "buster": "~0.7.6",
     "bluebird": "^2.0.0",
     "browserify": "~3.20.0",
+    "buster": "~0.7.6",
     "envify": "~1.0.1",
+    "jscs": "^1.12.0",
+    "lodash": "~2.4.1",
     "saucie": "^0.1.0",
     "testem": "~0.6.2",
     "uglify-js": "^2.4.19"
   },
   "scripts": {
+    "jscs": "jscs --esnext index.es6.js",
     "prepublish": "babel index.es6.js -s -o index.es5.js",
     "watch": "babel index.es6.js -s -w -o index.es5.js",
     "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js",
-    "ci": "testem ci -P 6",
-    "test": "testem"
+    "ci": "testem ci -P 6 && npm run jscs",
+    "test": "testem && npm run jscs"
   }
 }
