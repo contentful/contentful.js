@@ -5,7 +5,6 @@
     "**/.*",
     "node_modules",
     "components",
-    "Makefile",
     "example",
     "package.json",
     "repl.js"

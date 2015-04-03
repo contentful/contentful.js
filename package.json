@@ -1,5 +1,5 @@
 {
-  "name": "contentful",
+"name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
   "version": "1.1.1",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
@@ -14,18 +14,21 @@
   },
   "devDependencies": {
     "babel": "^4.7.16",
+    "babelify": "^6.0.1",
     "bluebird": "^2.0.0",
-    "browserify": "~3.20.0",
+    "browserify": "^9.0.6",
     "buster": "~0.7.6",
     "envify": "~1.0.1",
+    "exorcist": "^0.1.6",
     "jscs": "^1.12.0",
     "lodash": "~2.4.1",
     "saucie": "^0.1.0",
     "testem": "~0.6.2",
-    "uglify-js": "^2.4.19"
+    "uglifyify": "^3.0.1"
   },
   "scripts": {
     "jscs": "jscs --esnext index.es6.js",
+    "bower-build": "browserify -s contentful --debug -t [ babelify --sourceMapRelative . ] -t uglifyify index.es6.js | exorcist dist/contentful.min.js.map > dist/contentful.min.js",
     "prepublish": "babel index.es6.js -s -o index.es5.js",
     "watch": "babel index.es6.js -s -w -o index.es5.js",
     "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js",
