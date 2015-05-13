@@ -11,17 +11,6 @@ var client = contentful.createClient({
   accessToken: '0c6ef483524b5e46b3bafda1bf355f38f5f40b4830f7599f790a410860c7c271'
 });
 
-var mapId = 'stephanseidt.map-hhhrrit1';
-var retinaMapId = 'stephanseidt.map-j9eqvtbq';
-var roswellLatLng = [33.38830000000001, -104.5191];
-
-var map = L.mapbox.map('map')
-    .setView(roswellLatLng, 12)
-    .addLayer(L.mapbox.tileLayer(mapId, {
-      detectRetina: true,
-      retinaVersion: retinaMapId
-    }));
-
 function UfoController($scope, $timeout, enQ) {
   var query = $scope.query = {
     term: ''
@@ -68,16 +57,16 @@ function UfoController($scope, $timeout, enQ) {
     if (!ufos) return;
     $scope.position = 0;
     $scope.ufo = ufos[0];
-    var markers = ufos.map(ufoToGeoJson);
+/*    var markers = ufos.map(ufoToGeoJson);
     map.markerLayer.clearLayers();
-    map.markerLayer.setGeoJSON(markers);
+    map.markerLayer.setGeoJSON(markers);*/
   });
 
   $scope.$watch('ufo', function(ufo) {
     if (!ufo) return;
     var location = [ufo.fields.location.lat, ufo.fields.location.lon];
-    map.panTo(location);
-    map.setZoom(12);
+/*    map.panTo(location);
+    map.setZoom(12);*/
   });
 
   update();
@@ -132,10 +121,10 @@ function ufo() {
         $(window).off('keyup', onkeyup);
       });
 
-      map.markerLayer.on('click', function(e) {
+      /*map.markerLayer.on('click', function(e) {
         scope.ufo = e.layer.feature.properties.ufo;
         scope.$apply();
-      });
+      });*/
     }
   };
 }

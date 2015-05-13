@@ -21,7 +21,7 @@ date,p { font-size: 1.6rem; }
 
 date{ color: #888; }
 
-#map { position:absolute; top:0; bottom:0; width:100%; }
+#map { position:absolute; top:100px; bottom:0; width:100%; }
 
 body, input {
     font-family: 'helvetica neue';
