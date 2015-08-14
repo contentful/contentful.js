@@ -36,7 +36,9 @@ be much smaller. Please use a package manager to keep your JS
 dependencies up to date and get the newest version right when it's
 ready!
 
-## Usage
+## API
+
+### createClient(opts) -> Client
 
 ``` js
 // Don't require if you've already included contentful as a script tag
@@ -55,48 +57,288 @@ var client = contentful.createClient({
   // Set an alternate hostname, default shown.
   host: 'cdn.contentful.com'
 });
+```
 
-var log = console.log.bind(console); // wat
+### Client#space() -> SpacePromise
 
-// Get Space
-client.space().then(log, log);
+```js
+client.space()
+```
 
-// Get all Entries
-client.entries().then(log, log);
+Returns a promise for a Space object:
 
-// Get Assets using callback interface
-client.entries({}, function(err, entries) {
-  if (err) { console.log(err); return; }
-  console.log(entries);
-});
+```js
+{
+  "sys": {
+    "type": "Space",
+      "id": "cfexampleapi"
+  },
+    "name": "Contentful Example API",
+    "locales": [
+    {"code": "en-US", "name": "English"},
+    {"code": "tlh", "name": "Klingon"}
+  ]
+}
+```
 
-var syncToken;
-// Get all data in a space
-client.sync({initial: true})
-.then(function(data){
-  syncToken = data.nextSyncToken;
-});
+### Client#entry(id) -> EntryPromise
 
-// Get all data since the last sync
-client.sync({nextSyncToken: syncToken})
-.then(function(data){
-  syncToken = data.nextSyncToken;
+Get an entry by it's `sys.id`. Note that this example uses an entry created
+with a human-readable ID via the [Content Management API][cma-entry-put].
+Entries created in the [Contentful app][cf-app] will have auto-generated ID's.
+
+```js
+client.entry('nyancat')
+```
+
+Returns a promise for an Entry object:
+
+```js
+{
+  "sys": {
+    "type": "Entry",
+    "id": "cat",
+    "space": {"sys": {"type": "Link", "linkType": "Space", "id": "example"}},
+    "contentType": {"sys": {"type": "Link", "linkType": "ContentType", "id": "cat"}},
+    "createdAt": "2013-03-26T00:13:37.123Z",
+    "updatedAt": "2013-03-26T00:13:37.123Z",
+    "revision": 1
+  },
+  "fields": {
+    "name": "Nyan cat",
+    "color": "Rainbow",
+    "nyan": true,
+    "birthday": "2011-04-02T00:00:00.000Z",
+    "diary": "Nyan cat has an epic rainbow trail.",
+    "likes": ["rainbows", "fish"],
+    "bestFriend": {"type": "Link", "linkType": "Entry", "id": "happycat"}
+  }
+}
+```
+
+### Client#entries(query) -> EntryCollectionPromise
+
+Search & filter all of the entries in a space. The `query` parameter should be
+an object of querystring key-value pairs. The permissible keys are documented
+in [the API Documentation][search-parameters].
+
+```js
+client.entries({ content_type: 'cat' })
+```
+
+Returns a promise for a collection of Entry objects:
+
+```js
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    /* Each item in the array is a full Entry object as shown above */
+  ]
+}
+```
+
+
+### Client#asset(id) -> Asset
+
+Get an asset by it's `sys.id`. Note that this example uses an entry created
+with a human-readable ID via the [Content Management API][cma-asset-put].
+Assets created in the [Contentful app][cf-app] will have auto-generated ID's.
+
+```js
+client.asset('nyancat')
+```
+
+Returns a promise for an Asset object:
+
+```js
+{
+  "sys": {
+    "type": "Asset",
+      "id": "nyancat",
+      "space": {"sys": {"type": "Link", "linkType": "Space", "id": "example"}},
+      "createdAt": "2013-03-26T00:13:37.123Z",
+      "updatedAt": "2013-03-26T00:13:37.123Z",
+      "revision": 1
+  },
+    "fields": {
+      "title": "Nyan cat",
+      "description": "A typical picture of Nyancat including the famous rainbow trail.",
+      "file": {
+        "fileName": "nyancat.png",
+        "contentType": "image/png",
+        "details": {
+          "image": {
+            "width": 250,
+            "height": 250
+          },
+          "size": 12273
+        },
+        "url": "//images.contentful.com/cfexampleapi/4gp6taAwW4CmSgumq2ekUm/9da0cd1936871b8d72343e895a00d611/Nyan_cat_250px_frame.png"
+      }
+    }
+}
+```
+
+### Client#assets(query) -> AssetCollectionPromise
+
+Search & filter all of the assets in a space. The `query` parameter should be
+an object of querystring key-value pairs. The permissible keys are documented
+in [the API Documentation][search-parameters].
+
+```js
+client.assets({ query: 'kitten' })
+```
+
+Returns a promise for a collection of Asset objects:
+
+```js
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    /* Each item in the array is a full Asset object as shown above */
+  ]
+}
+```
+
+### Client#contentType(id) -> ContentTypePromise
+
+Get a content type by it's `sys.id`. Note that this example uses a content type
+created with a human-readable ID via the [Content Management API][cma-ct-put].
+Content types created in the [Contentful app][cf-app] will have auto-generated
+ID's.
+
+```js
+client.contentType('cat')
+```
+
+Returns a promise for a ContentType object:
+
+```js
+{
+  "sys": {
+    "type": "ContentType",
+      "id": "cat"
+  },
+  "name": "Cat",
+  "description": "Meow.",
+  "fields": [
+    {"id": "name", "name": "Name", "type": "Text"},
+    {"id": "diary", "name": "Diary", "type": "Text"},
+    {"id": "likes", "name": "Likes", "type": "Array", "items": {"type": "Symbol"}},
+    {"id": "bestFriend", "name": "Best Friend", "type": "Link"},
+    {"id": "lifes", "name": "Lifes left", "type": "Integer"}
+  ]
+}
+```
+
+### Client#contentTypes() -> ContentTypeCollectionPromise
+
+```js
+client.contentTypes()
+```
+
+Returns a promise for a collection of ContentType objects:
+
+```js
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 3,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    /* Each item in the array is a full ContentType object as shown above */
+  ]
+}
+```
+
+### Client#sync(opts) -> SyncResponse
+
+Our [Sync API][sync-api] allows to keep a local copy of the data in your space
+up to date by receiving delta updates.
+
+There are two supported options, pass `{ initial: true }` to start a brand new
+copy, or `{ syncToken: syncToken }` resume syncing using a token returned in a
+previous call to `sync`.
+
+Here is an example of syncing some local store:
+
+```js
+// E.g. by loading the token from persistent storage
+
+var syncToken = getTokenFromLastRun()
+
+client.sync(token ? {syncToken: syncToken} : {initial: true}).then(function(data){
+  data.items.forEach(updateLocalCopy)
+  if (syncToken !== data.nextSyncToken) {
+    syncToken = data.nextSyncToken;
+    return client.sync({syncToken: syncToken})
+  }
 });
 ```
 
-For now, please check out the
-[Content Delivery API documentation](https://www.contentful.com/developers/documentation/content-delivery-api)
-to learn how the API and the JavaScript client work.
+Each call to `sync` returns a SyncResponse object:
 
-## Functionality
+```
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 3,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    /* Each item in the array is either an Entry, Asset, DeletedEntry or DeletedAsset */
+  ]
+}
+```
 
-### supported
+In addition the entries and assets, a sync response may contain deletion items:
 
-* .space() = get details of current space
-* .contentTypes() = get content types of current space
-* .entries() = get entries of current space
-* .sync() = get all the data in a space
+```js
+{
+  "sys": {
+    "type": "DeletedEntry",
+    "id": "cat",
+    "space": {"sys": {"type": "Link", "linkType": "Space", "id": "example"}},
+    "contentType": {"sys": {"type": "Link", "linkType": "ContentType", "id": "cat"}},
+    "createdAt": "2013-03-26T00:13:37.123Z",
+    "updatedAt": "2013-03-26T00:13:37.123Z"
+  },
+}
+```
+
+```js
+{
+  "sys": {
+    "type": "DeletedAsset",
+    "id": "nyancat",
+    "space": {"sys": {"type": "Link", "linkType": "Space", "id": "example"}},
+    "createdAt": "2013-03-26T00:13:37.123Z",
+    "updatedAt": "2013-03-26T00:13:37.123Z"
+  },
+}
+```
 
 ## License
 
 MIT
+
+[contentful]: http://www.contentful.com
+[search-parameters]: http://docs.contentfulcda.apiary.io/#reference/search-parameters
+[cma-entry-put]: http://docs.contentfulcma.apiary.io/#reference/entries/entry/create/update-an-entry
+[cma-asset-put]: http://docs.contentfulcma.apiary.io/#reference/assets/asset/create/update-an-asset
+[cma-ct-put]: http://docs.contentfulcma.apiary.io/#reference/content-types/content-type/create/update-a-content-type
+[cf-app]: https://app.contentful.com
+[sync-api]: http://docs.contentfulcda.apiary.io/#reference/synchronization
