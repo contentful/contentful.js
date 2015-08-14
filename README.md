@@ -84,8 +84,8 @@ Returns a promise for a Space object:
 ### Client#entry(id) -> EntryPromise
 
 Get an entry by it's `sys.id`. Note that this example uses an entry created
-with a human-readable ID via the [Content Management API][cma-docs]. Entries
-created in the [Contentful app][cf-app] will have auto-generated ID's.
+with a human-readable ID via the [Content Management API][cma-entry-put].
+Entries created in the [Contentful app][cf-app] will have auto-generated ID's.
 
 ```js
 client.entry('nyancat')
@@ -146,8 +146,8 @@ Returns a promise for a collection of Entry objects:
 ### Client#asset(id) -> Asset
 
 Get an asset by it's `sys.id`. Note that this example uses an entry created
-with a human-readable ID via the [Content Management API][cma-docs]. Assets
-created in the [Contentful app][cf-app] will have auto-generated ID's.
+with a human-readable ID via the [Content Management API][cma-asset-put].
+Assets created in the [Contentful app][cf-app] will have auto-generated ID's.
 
 ```js
 client.asset('nyancat')
@@ -213,7 +213,7 @@ Returns a promise for a collection of Asset objects:
 ### Client#contentType(id) -> ContentTypePromise
 
 Get a content type by it's `sys.id`. Note that this example uses a content type
-created with a human-readable ID via the [Content Management API][cma-docs].
+created with a human-readable ID via the [Content Management API][cma-ct-put].
 Content types created in the [Contentful app][cf-app] will have auto-generated
 ID's.
 
@@ -338,6 +338,8 @@ MIT
 
 [contentful]: http://www.contentful.com
 [search-parameters]: http://docs.contentfulcda.apiary.io/#reference/search-parameters
-[cma-docs]: http://docs.contentfulcma.apiary.io/
+[cma-entry-put]: http://docs.contentfulcma.apiary.io/#reference/entries/entry/create/update-an-entry
+[cma-asset-put]: http://docs.contentfulcma.apiary.io/#reference/assets/asset/create/update-an-asset
+[cma-ct-put]: http://docs.contentfulcma.apiary.io/#reference/content-types/content-type/create/update-a-content-type
 [cf-app]: https://app.contentful.com
 [sync-api]: http://docs.contentfulcda.apiary.io/#reference/synchronization
