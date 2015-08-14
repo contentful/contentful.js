@@ -325,7 +325,6 @@ In addition the entries and assets, a sync response may contain deletion items:
     "type": "DeletedAsset",
     "id": "nyancat",
     "space": {"sys": {"type": "Link", "linkType": "Space", "id": "example"}},
-    "contentType": {"sys": {"type": "Link", "linkType": "ContentType", "id": "cat"}},
     "createdAt": "2013-03-26T00:13:37.123Z",
     "updatedAt": "2013-03-26T00:13:37.123Z"
   },
