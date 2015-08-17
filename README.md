@@ -2,7 +2,7 @@
 
 Javascript client for [Contentful's](https://www.contentful.com) Content Delivery API:
 
-- [Documentation](https://www.contentful.com/developers/documentation/content-delivery-api)
+- [Documentation](#api)
 - [Example Apps](http://contentful.github.io/contentful.js/example/)
 - [Tests](https://github.com/contentful/contentful.js/tree/master/test/integration) running in node and browsers via [BrowserStack](http://browserstack.com)
 
@@ -118,15 +118,14 @@ Returns a promise for an Entry object:
 
 ### Client#entries(query) -> EntryCollectionPromise
 
-Search & filter all of the entries in a space. The `query` parameter should be
-an object of querystring key-value pairs. The permissible keys are documented
-in [the API Documentation][search-parameters].
+Search & filter all of the entries in a space. The `query` parameter will be
+added to the request querystring key-value pairs.
 
 ```js
 client.entries({ content_type: 'cat' })
 ```
 
-Returns a promise for a collection of Entry objects:
+Returns a promise for a [collection][] of Entry objects:
 
 ```js
 {
@@ -142,6 +141,72 @@ Returns a promise for a collection of Entry objects:
 }
 ```
 
+#### Search Examples
+
+These examples show some of the searching you can do by passing query params
+to [`Client#entries`][client-entries]. Each
+query parameter name must be a dot-separated property path followed by an
+optional operator in square brackets. For example: `fields.name[ne]` means
+"entries where `fields.name` is not-equal to ...". Full documentation of the
+allowed query parameters & field operators can be found in
+[our API Documentation][search-parameters].
+
+Search entries that have been updated since the 1st of January, 2013:
+
+```js
+client.entries({ 'sys.updatedAt[gte]': '2013-01-01T00:00:00Z' })
+```
+
+Retrieve a specific set of entries by their `sys.id`:
+
+```js
+client.entries({ 'sys.id[in]': [ 'finn', 'jake' ] })
+```
+
+Search for `cat` entries that have less than three lives left:
+
+```js
+client.entries({
+  'content_type': 'cat',
+  'fields.lives[lt]': 3
+})
+```
+
+> Specifying the `content_type` query parameter is _required_ when querying on
+> fields (such as `fields.lives` above). Note that `'cat'` is the content type
+> **ID** and not it's name.
+
+Full-text search for entries with "bacon" anywhere in their textual content:
+
+```js
+client.entries({ query: 'bacon' })
+```
+
+Full-text search for dogs with "bacon" specifically in the `description` field:
+
+```js
+client.entries({
+  'content_type': 'dog',
+  'fields.description[match]': 'bacon'
+})
+```
+
+Get the 50 most recently created entries, and the next 50:
+
+```js
+client.entries({
+  order: '-sys.createdAt',
+  limit: 50
+})
+
+client.entries({
+  order: '-sys.createdAt',
+  skip: 100,
+  limit: 100
+})
+```
+
+See also: [Collections and pagination][collection].
 
 ### Client#asset(id) -> Asset
 
@@ -186,15 +251,15 @@ Returns a promise for an Asset object:
 
 ### Client#assets(query) -> AssetCollectionPromise
 
-Search & filter all of the assets in a space. The `query` parameter should be
-an object of querystring key-value pairs. The permissible keys are documented
-in [the API Documentation][search-parameters].
+Search & filter all of the assets in a space. The keys-value pairs from `query`
+will be added to the request query string like [`Client#entries(query)`][client-entries].
+See the [`Client#entries(query)` search examples](#search-examples) for more details.
 
 ```js
 client.assets({ query: 'kitten' })
 ```
 
-Returns a promise for a collection of Asset objects:
+Returns a promise for a [collection][] of Asset objects:
 
 ```js
 {
@@ -247,7 +312,7 @@ Returns a promise for a ContentType object:
 client.contentTypes()
 ```
 
-Returns a promise for a collection of ContentType objects:
+Returns a promise for a [collection][] of ContentType objects:
 
 ```js
 {
@@ -331,6 +396,30 @@ In addition the entries and assets, a sync response may contain deletion items:
 }
 ```
 
+### Collections and pagination
+
+Many methods return collections of resources. These collections are represented
+as a JSON object containing items and pagination details:
+
+```
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,    // Total number of items matching the query
+  "skip": 0,     // Offset into the result set represented by this response
+  "limit": 100,  // Effective limit on # of items returned in this response
+  "items": [
+    // Full representations of each item
+  ]
+}
+```
+
+The `entries` and `assets` methods both accept `limit`, `skip`, and `order` as
+query parameters, allowing you to paginate through larger result sets. Note that
+you should specify a stable `order` property (such as `order: 'sys.createdAt'`)
+when paginating.
+
 ## License
 
 MIT
@@ -342,3 +431,6 @@ MIT
 [cma-ct-put]: http://docs.contentfulcma.apiary.io/#reference/content-types/content-type/create/update-a-content-type
 [cf-app]: https://app.contentful.com
 [sync-api]: http://docs.contentfulcda.apiary.io/#reference/synchronization
+
+[collection]: #collections-and-pagination
+[client-entries]: #cliententriesquery---entrycollectionpromise
