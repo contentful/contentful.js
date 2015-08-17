@@ -201,8 +201,8 @@ client.entries({
 
 client.entries({
   order: '-sys.createdAt',
-  skip: 100,
-  limit: 100
+  skip: 50,
+  limit: 50
 })
 ```
 
