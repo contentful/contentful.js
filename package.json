@@ -1,5 +1,5 @@
 {
-"name": "contentful",
+  "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
   "version": "1.1.1",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.5.2",
-    "contentful-resolve-response": "~0.1.0"
+    "contentful-resolve-response": "^0.1.1"
   },
   "devDependencies": {
     "babel": "^4.7.16",
