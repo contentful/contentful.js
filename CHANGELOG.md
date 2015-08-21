@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Upcoming
+## 1.1.3
+### Fixed
+- Bug in 1.1.2 where list responses without an `includes` property would error.
+
+## 1.1.2
 ### Added
 - Development dependencies `uglifyify`, `jscs`, and `exorcist`.
 
