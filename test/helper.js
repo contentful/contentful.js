@@ -1,7 +1,5 @@
 'use strict';
 
-global._ = require('lodash');
-
 if (typeof buster === 'undefined') {
   global.buster = require('buster');
 }
