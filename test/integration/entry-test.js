@@ -13,9 +13,11 @@ buster.testCase('Entry', {
 
   'can be listed': function() {
     return client.entries().then(function(entries) {
-      assert(_.any(entries, function(entry) {
+      var entry = entries.filter(function (entry) {
         return entry.fields.name === 'Nyan Cat';
-      }));
+      })[0];
+
+      assert(entry);
     });
   }
 });

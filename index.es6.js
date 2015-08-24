@@ -3,6 +3,7 @@
 import axios from 'axios';
 import resolveResponse from 'contentful-resolve-response';
 import querystring from 'querystring';
+import _ from 'lodash';
 
 export function createClient (options) {
   return new Client(options || {});
