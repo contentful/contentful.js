@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Upcoming
+- Removed dist/contentful.js
+
 ## v1.1.5 - 2015-08-24
 - Regenerated bower build
 
