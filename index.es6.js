@@ -3,7 +3,6 @@
 import axios from 'axios';
 import resolveResponse from 'contentful-resolve-response';
 import querystring from 'querystring';
-import _ from 'lodash';
 
 export function createClient (options) {
   return new Client(options || {});
@@ -190,7 +189,13 @@ class Query {
 
 class Space {
   static parse (object) {
-    return _.extend(new Space(), object);
+    return new Space(object);
+  }
+
+  constructor (props = {}) {
+    for (let k in props) {
+      this[k] = props[k]
+    }
   }
 }
 
@@ -233,7 +238,12 @@ class Sync {
 
     if (data.nextPageUrl) {
       const nextPageUrl = data.nextPageUrl.split('?');
-      this.query = _.omit(this.query, 'initial', 'type', 'sync_token');
+      this.query = Object.keys(this.query).reduce((query, key) => {
+        if (key !== 'initial' && key !== 'type' && key !== 'sync_token') {
+          query[key] = this.query[key]
+        }
+        return query
+      }, {})
       this.query.sync_token = querystring.parse(nextPageUrl[1]).sync_token;
     } else if (data.nextSyncUrl) {
       const nextSyncUrl = data.nextSyncUrl.split('?');
@@ -251,8 +261,7 @@ const parseableResourceTypes = {
 };
 
 function isParseableResource (object) {
-  return _.isObject(object) && _.isObject(object.sys) && 'type' in object.sys &&
-    object.sys.type in parseableResourceTypes;
+  return object && object.sys && object.sys.type in parseableResourceTypes;
 }
 
 function parseResource (resource) {
@@ -274,7 +283,7 @@ function parseSearchResult (object) {
 function stringifyArrayValues (object) {
   return keys(object).reduce(function (result, key) {
     const value = object[key];
-    result[key] = _.isArray(value) ? value.join(',') : value;
+    result[key] = Array.isArray(value) ? value.join(',') : value;
     return result;
   }, {});
 }
