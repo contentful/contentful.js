@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Upcoming
+- Regenerated bower build
+
 ## v1.1.4 - 2015-08-24
 - Removed lodash dependency
 
