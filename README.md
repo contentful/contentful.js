@@ -157,10 +157,10 @@ Search entries that have been updated since the 1st of January, 2013:
 client.entries({ 'sys.updatedAt[gte]': '2013-01-01T00:00:00Z' })
 ```
 
-Retrieve a specific set of entries by their `sys.id`:
+Retrieve a specific set of entries by their multiple `sys.id` using the inclusion operator:
 
 ```js
-client.entries({ 'sys.id[in]': [ 'finn', 'jake' ] })
+client.entries({ 'sys.id[in]': 'finn,jake' ] })
 ```
 
 Search for `cat` entries that have less than three lives left:
