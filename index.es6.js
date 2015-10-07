@@ -9,7 +9,7 @@ export function createClient (options) {
 };
 
 class Client {
-  constructor ({accessToken, space, secure, host}) {
+  constructor ({accessToken, space, secure, host, headers}) {
     if (!accessToken) {
       throw new TypeError('Expected property accessToken');
     }
@@ -26,7 +26,8 @@ class Client {
 
     this.options = {
       baseUrl: `${insecure ? 'http' : 'https'}://${hostname}:${port}/spaces/${space}`,
-      accessToken: accessToken
+      accessToken: accessToken,
+      headers: headers || {}
     };
   }
 
@@ -38,7 +39,7 @@ class Client {
     query.access_token = this.options.accessToken;
 
     const params = {
-      headers: {},
+      headers: this.options.headers,
       method: 'get',
       url: `${this.options.baseUrl}${path}?${querystring.stringify(query)}`
     };
