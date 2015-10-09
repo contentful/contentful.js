@@ -206,6 +206,14 @@ client.entries({
 })
 ```
 
+Getting localized entries:
+
+```js
+client.entries({
+  locale: 'es-ES'
+})
+```
+
 See also: [Collections and pagination][collection].
 
 ### Client#asset(id) -> Asset
