@@ -116,6 +116,10 @@ class Client {
     if (!object || (!object.initial && !object.nextSyncToken)) {
       throw new Error('Please provide either the initial flag or a nextSyncToken for syncing');
     }
+    if(object.nextSyncToken){
+      object.sync_token = object.nextSyncToken;
+      delete object.nextSyncToken;
+    }
     const query = new Query(object);
     const deferred = this._pagedSync(new Sync(query)).then(function (response) {
       response.items = parseSearchResult(response);

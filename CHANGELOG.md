@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## Upcoming
+- Fix sync on non initial sync
 - Removed dist/contentful.js
 
 ## v1.1.5 - 2015-08-24
