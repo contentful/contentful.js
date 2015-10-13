@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Upcoming
+## v1.2.0 - 2015-10-13
 - Allow response resolving to be turned off
 - Fix sync on non initial sync
 - Removed dist/contentful.js
