@@ -27,7 +27,8 @@ class Client {
     this.options = {
       baseUrl: `${insecure ? 'http' : 'https'}://${hostname}:${port}/spaces/${space}`,
       accessToken: accessToken,
-      headers: headers || {}
+      headers: headers || {},
+      resolveLinks: true
     };
   }
 
@@ -64,7 +65,7 @@ class Client {
 
   assets (object, callback) {
     const query = new Query(object);
-    const deferred = this._request('/assets', query).then(parseSearchResult);
+    const deferred = this._request('/assets', query).then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
     return nodeify(deferred, callback);
   }
 
@@ -75,7 +76,7 @@ class Client {
 
   contentTypes (object, callback) {
     const query = new Query(object);
-    const deferred = this._request('/content_types', query).then(parseSearchResult);
+    const deferred = this._request('/content_types', query).then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
     return nodeify(deferred, callback);
   }
 
@@ -87,7 +88,7 @@ class Client {
 
   entries (object, callback) {
     const query = new Query(object);
-    const deferred = this._request('/entries', query).then(parseSearchResult);
+    const deferred = this._request('/entries', query).then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
     return nodeify(deferred, callback);
   }
 
@@ -121,6 +122,10 @@ class Client {
       delete object.nextSyncToken;
     }
     const query = new Query(object);
+    const parseSearchResult = makeSearchResultParser({
+      // TODO fix this by resolving links only after the whole fetch is over
+      resolveLinks: false
+    });
     const deferred = this._pagedSync(new Sync(query)).then(function (response) {
       response.items = parseSearchResult(response);
       return response;
@@ -274,15 +279,17 @@ function parseResource (resource) {
   return Type.parse(resource);
 }
 
-function parseSearchResult (object) {
-  walkMutate(object, isParseableResource, parseResource);
-  const items = resolveResponse(object);
-  Object.defineProperties(items, {
-    limit: { value: object.limit, enumerable: false },
-    skip:  { value: object.skip,  enumerable: false },
-    total: { value: object.total, enumerable: false }
-  });
-  return items;
+function makeSearchResultParser(options){
+  return function parseSearchResult (object) {
+    walkMutate(object, isParseableResource, parseResource);
+    const items = options.resolveLinks ? resolveResponse(object) : object.items;
+    Object.defineProperties(items, {
+      limit: { value: object.limit, enumerable: false },
+      skip:  { value: object.skip,  enumerable: false },
+      total: { value: object.total, enumerable: false }
+    });
+    return items;
+  }
 }
 
 function stringifyArrayValues (object) {

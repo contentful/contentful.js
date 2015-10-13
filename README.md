@@ -55,7 +55,10 @@ var client = contentful.createClient({
   secure: true,
 
   // Set an alternate hostname, default shown.
-  host: 'cdn.contentful.com'
+  host: 'cdn.contentful.com',
+
+  // Resolve links to entries and assets
+  resolveLinks: true
 });
 ```
 
