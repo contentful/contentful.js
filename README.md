@@ -90,6 +90,8 @@ Get an entry by it's `sys.id`. Note that this example uses an entry created
 with a human-readable ID via the [Content Management API][cma-entry-put].
 Entries created in the [Contentful app][cf-app] will have auto-generated ID's.
 
+Links to other entries are not resolved when using this call. If you'd like to have your links resolved automatically, you should use the `entries()` call with [search parameters](#search-examples)
+
 ```js
 client.entry('nyancat')
 ```
@@ -153,6 +155,8 @@ optional operator in square brackets. For example: `fields.name[ne]` means
 "entries where `fields.name` is not-equal to ...". Full documentation of the
 allowed query parameters & field operators can be found in
 [our API Documentation][search-parameters].
+
+*Be aware that these search parameters are only applicable to `entries()` and not `entry()`
 
 Search entries that have been updated since the 1st of January, 2013:
 
