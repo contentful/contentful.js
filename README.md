@@ -66,6 +66,9 @@ var client = contentful.createClient({
 
 ```js
 client.space()
+.then(function (space) {
+  console.log(space.name)
+})
 ```
 
 Returns a promise for a Space object:
@@ -94,6 +97,9 @@ Links to other entries are not resolved when using this call. If you'd like to h
 
 ```js
 client.entry('nyancat')
+.then(function (entry) {
+  console.log(entry.id)
+})
 ```
 
 Returns a promise for an Entry object:
@@ -128,6 +134,12 @@ added to the request querystring key-value pairs.
 
 ```js
 client.entries({ content_type: 'cat' })
+.then(function (entries) {
+  console.log('Total entries:', entries.total)
+  entries.items.forEach(function (entry) {
+    console.log(entry.id)
+  })
+})
 ```
 
 Returns a promise for a [collection][] of Entry objects:
@@ -162,12 +174,18 @@ Search entries that have been updated since the 1st of January, 2013:
 
 ```js
 client.entries({ 'sys.updatedAt[gte]': '2013-01-01T00:00:00Z' })
+.then(function (entries) {
+  // ...
+})
 ```
 
 Retrieve a specific set of entries by their multiple `sys.id` using the inclusion operator:
 
 ```js
 client.entries({ 'sys.id[in]': 'finn,jake' ] })
+.then(function (entries) {
+  // ...
+})
 ```
 
 Search for `cat` entries that have less than three lives left:
@@ -176,6 +194,9 @@ Search for `cat` entries that have less than three lives left:
 client.entries({
   'content_type': 'cat',
   'fields.lives[lt]': 3
+})
+.then(function (entries) {
+  // ...
 })
 ```
 
@@ -187,6 +208,9 @@ Full-text search for entries with "bacon" anywhere in their textual content:
 
 ```js
 client.entries({ query: 'bacon' })
+.then(function (entries) {
+  // ...
+})
 ```
 
 Full-text search for dogs with "bacon" specifically in the `description` field:
@@ -195,6 +219,9 @@ Full-text search for dogs with "bacon" specifically in the `description` field:
 client.entries({
   'content_type': 'dog',
   'fields.description[match]': 'bacon'
+})
+.then(function (entries) {
+  // ...
 })
 ```
 
@@ -205,11 +232,17 @@ client.entries({
   order: '-sys.createdAt',
   limit: 50
 })
+.then(function (entries) {
+  // ...
+})
 
 client.entries({
   order: '-sys.createdAt',
   skip: 50,
   limit: 50
+})
+.then(function (entries) {
+  // ...
 })
 ```
 
@@ -218,6 +251,9 @@ Getting localized entries:
 ```js
 client.entries({
   locale: 'es-ES'
+})
+.then(function (entries) {
+  // ...
 })
 ```
 
@@ -231,6 +267,9 @@ Assets created in the [Contentful app][cf-app] will have auto-generated ID's.
 
 ```js
 client.asset('nyancat')
+.then(function (asset) {
+  console.log(asset.fields.file.url)
+})
 ```
 
 Returns a promise for an Asset object:
@@ -272,6 +311,11 @@ See the [`Client#entries(query)` search examples](#search-examples) for more det
 
 ```js
 client.assets({ query: 'kitten' })
+.then(function (assets) {
+  assets.items.forEach(function (asset) {
+    console.log(asset.fields.file.url)
+  })
+})
 ```
 
 Returns a promise for a [collection][] of Asset objects:
@@ -299,6 +343,9 @@ ID's.
 
 ```js
 client.contentType('cat')
+.then(function (contentType) {
+  console.log(contentType.name)
+})
 ```
 
 Returns a promise for a ContentType object:
@@ -325,6 +372,11 @@ Returns a promise for a ContentType object:
 
 ```js
 client.contentTypes()
+.then(function (contentTypes) {
+  contentTypes.items.forEach(function (contentType) {
+    console.log(contentType.name)
+  })
+})
 ```
 
 Returns a promise for a [collection][] of ContentType objects:
@@ -355,16 +407,22 @@ previous call to `sync`.
 Here is an example of syncing some local store:
 
 ```js
-// E.g. by loading the token from persistent storage
+// Assuming you have some wrapper around browser storage
+var syncToken = storage.get('syncToken')
+var entries = storage.get('entries')
 
-var syncToken = getTokenFromLastRun()
-
-client.sync(token ? {syncToken: syncToken} : {initial: true}).then(function(data){
-  data.items.forEach(updateLocalCopy)
-  if (syncToken !== data.nextSyncToken) {
-    syncToken = data.nextSyncToken;
-    return client.sync({syncToken: syncToken})
-  }
+client.sync(token ? {syncToken: syncToken} : {initial: true})
+.then(function(response){
+  response.items.forEach(function (entity) {
+    if(entity.sys.type === 'Entry'){
+      entries[entity.sys.id] = entity
+    }
+    if(entity.sys.type === 'DeletedEntry'){
+      delete entries[entity.sys.id]
+    }
+  })
+  storage.set('entries', entries)
+  storage.set('syncToken', data.syncToken)
 });
 ```
 
