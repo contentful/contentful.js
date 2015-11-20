@@ -136,26 +136,21 @@ added to the request querystring key-value pairs.
 client.entries({ content_type: 'cat' })
 .then(function (entries) {
   console.log('Total entries:', entries.total)
-  entries.items.forEach(function (entry) {
+  entries.forEach(function (entry) {
     console.log(entry.id)
   })
 })
 ```
 
-Returns a promise for a [collection][] of Entry objects:
+Returns a promise for a [collection][] of Entry objects, which is an array with 3 special properties:
 
 ```js
-{
-  "sys": {
-    "type": "Array"
-  },
+[
   "total": 2,
   "skip": 0,
   "limit": 100,
-  "items": [
-    /* Each item in the array is a full Entry object as shown above */
-  ]
-}
+  /* Each item in the array is a full Entry object as shown above */
+]
 ```
 
 #### Search Examples
@@ -312,26 +307,21 @@ See the [`Client#entries(query)` search examples](#search-examples) for more det
 ```js
 client.assets({ query: 'kitten' })
 .then(function (assets) {
-  assets.items.forEach(function (asset) {
+  assets.forEach(function (asset) {
     console.log(asset.fields.file.url)
   })
 })
 ```
 
-Returns a promise for a [collection][] of Asset objects:
+Returns a promise for a [collection][] of Asset objects, which is an array with 3 special properties:
 
 ```js
-{
-  "sys": {
-    "type": "Array"
-  },
+[
   "total": 2,
   "skip": 0,
   "limit": 100,
-  "items": [
-    /* Each item in the array is a full Asset object as shown above */
-  ]
-}
+  /* Each item in the array is a full Asset object as shown above */
+]
 ```
 
 ### Client#contentType(id) -> ContentTypePromise
@@ -373,25 +363,20 @@ Returns a promise for a ContentType object:
 ```js
 client.contentTypes()
 .then(function (contentTypes) {
-  contentTypes.items.forEach(function (contentType) {
+  contentTypes.forEach(function (contentType) {
     console.log(contentType.name)
   })
 })
 ```
 
-Returns a promise for a [collection][] of ContentType objects:
+Returns a promise for a [collection][] of ContentType objects, which is an array with 3 special properties:
 
 ```js
 {
-  "sys": {
-    "type": "Array"
-  },
   "total": 3,
   "skip": 0,
   "limit": 100,
-  "items": [
-    /* Each item in the array is a full ContentType object as shown above */
-  ]
+  /* Each item in the array is a full ContentType object as shown above */
 }
 ```
 
@@ -476,15 +461,10 @@ as a JSON object containing items and pagination details:
 
 ```
 {
-  "sys": {
-    "type": "Array"
-  },
   "total": 1,    // Total number of items matching the query
   "skip": 0,     // Offset into the result set represented by this response
   "limit": 100,  // Effective limit on # of items returned in this response
-  "items": [
-    // Full representations of each item
-  ]
+  // Full representations of each item
 }
 ```
 
