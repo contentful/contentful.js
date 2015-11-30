@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## v1.2.1
+- Remove initial parameter on sync() call if nextSyncToken is also defined
+- Fix docs for sync()
+
 ## v1.2.0 - 2015-10-13
 - Allow response resolving to be turned off
 - Fix sync on non initial sync
