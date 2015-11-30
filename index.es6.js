@@ -119,6 +119,7 @@ class Client {
     }
     if(object.nextSyncToken){
       object.sync_token = object.nextSyncToken;
+      delete object.initial;
       delete object.nextSyncToken;
     }
     const query = new Query(object);
