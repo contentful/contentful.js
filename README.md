@@ -386,7 +386,7 @@ Our [Sync API][sync-api] allows to keep a local copy of the data in your space
 up to date by receiving delta updates.
 
 There are two supported options, pass `{ initial: true }` to start a brand new
-copy, or `{ syncToken: syncToken }` resume syncing using a token returned in a
+copy, or `{ nextSyncToken: syncToken }` resume syncing using a token returned in a
 previous call to `sync`.
 
 Here is an example of syncing some local store:
@@ -396,7 +396,7 @@ Here is an example of syncing some local store:
 var syncToken = storage.get('syncToken')
 var entries = storage.get('entries')
 
-client.sync(token ? {syncToken: syncToken} : {initial: true})
+client.sync(token ? {nextSyncToken: syncToken} : {initial: true})
 .then(function(response){
   response.items.forEach(function (entity) {
     if(entity.sys.type === 'Entry'){
@@ -407,7 +407,7 @@ client.sync(token ? {syncToken: syncToken} : {initial: true})
     }
   })
   storage.set('entries', entries)
-  storage.set('syncToken', data.syncToken)
+  storage.set('syncToken', data.nextSyncToken)
 });
 ```
 
