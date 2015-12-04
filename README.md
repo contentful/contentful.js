@@ -1,4 +1,4 @@
-# contentful.js [![Build Status](https://travis-ci.org/contentful/contentful.js.png?branch=master)](https://travis-ci.org/contentful/contentful.js)
+# contentful.js
 
 Javascript client for [Contentful's](https://www.contentful.com) Content Delivery API:
 
