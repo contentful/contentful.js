@@ -127,10 +127,10 @@ Returns a promise for an Entry object:
 }
 ```
 
-### Client#entries(query) -> EntryCollectionPromise
+### Client#entries(query) and Client#publicEntries -> EntryCollectionPromise
 
 Search & filter all of the entries in a space. The `query` parameter will be
-added to the request querystring key-value pairs.
+added to the request querystring key-value pairs. Use `public` to see the published entries.
 
 ```js
 client.entries({ content_type: 'cat' })

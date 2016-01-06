@@ -65,7 +65,8 @@ class Client {
 
   assets (object, callback) {
     const query = new Query(object);
-    const deferred = this._request('/assets', query).then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
+    const deferred = this._request('/assets', query)
+                   .then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
     return nodeify(deferred, callback);
   }
 
@@ -76,7 +77,8 @@ class Client {
 
   contentTypes (object, callback) {
     const query = new Query(object);
-    const deferred = this._request('/content_types', query).then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
+    const deferred = this._request('/content_types', query)
+                   .then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
     return nodeify(deferred, callback);
   }
 
@@ -88,7 +90,15 @@ class Client {
 
   entries (object, callback) {
     const query = new Query(object);
-    const deferred = this._request('/entries', query).then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
+    const deferred = this._request('/entries', query)
+                   .then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
+    return nodeify(deferred, callback);
+  }
+
+  publicEntries (object, callback) {
+    const query = new Query(object);
+    const deferred = this._request('/public/entries', query)
+                    .then(makeSearchResultParser({resolveLinks: this.options.resolveLinks}));
     return nodeify(deferred, callback);
   }
 
@@ -117,7 +127,8 @@ class Client {
     if (!object || (!object.initial && !object.nextSyncToken)) {
       throw new Error('Please provide either the initial flag or a nextSyncToken for syncing');
     }
-    if(object.nextSyncToken){
+
+    if (object.nextSyncToken) {
       object.sync_token = object.nextSyncToken;
       delete object.initial;
       delete object.nextSyncToken;
@@ -280,7 +291,7 @@ function parseResource (resource) {
   return Type.parse(resource);
 }
 
-function makeSearchResultParser(options){
+function makeSearchResultParser (options) {
   return function parseSearchResult (object) {
     walkMutate(object, isParseableResource, parseResource);
     const items = options.resolveLinks ? resolveResponse(object) : object.items;
