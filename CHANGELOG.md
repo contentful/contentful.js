@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Upcoming
+- Updated axios to 0.8.1 (no more auto polyfilled Promises)
+
 ## v1.2.1
 - Remove initial parameter on sync() call if nextSyncToken is also defined
 - Fix docs for sync()

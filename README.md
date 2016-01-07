@@ -36,6 +36,10 @@ be much smaller. Please use a package manager to keep your JS
 dependencies up to date and get the newest version right when it's
 ready!
 
+## Promises
+
+contentful.js uses [axios](https://github.com/mzabriskie/axios) under the hood, which depends on a native ES6 Promise implementation to be supported. If your environment doesn't support ES6 Promises, you can [polyfill](https://github.com/jakearchibald/es6-promise#auto-polyfill) it.
+
 ## API
 
 ### createClient(opts) -> Client

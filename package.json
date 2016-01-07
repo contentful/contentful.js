@@ -9,7 +9,7 @@
   "author": "Stephan Seidt <stephan@contentful.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.5.2",
+    "axios": "^0.8.1",
     "contentful-resolve-response": "^0.1.2"
   },
   "devDependencies": {
