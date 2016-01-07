@@ -3,6 +3,7 @@
 import axios from 'axios';
 import resolveResponse from 'contentful-resolve-response';
 import querystring from 'querystring';
+import HttpsProxyAgent from 'https-proxy-agent';
 
 export function createClient (options) {
   return new Client(options || {});
@@ -44,6 +45,16 @@ class Client {
       method: 'get',
       url: `${this.options.baseUrl}${path}?${querystring.stringify(query)}`
     };
+
+    const proxy = process.env.https_proxy;
+    let agent, credentials, encodedCreds;
+    if (!!proxy) {
+      agent = new HttpsProxyAgent(proxy);
+      credentials = proxy.split('/')[2].split('@')[0];
+      encodedCreds = new Buffer(credentials).toString('base64');
+      params.agent = agent;
+      params.headers['Proxy-Authorization'] = 'Basic ' + encodedCreds;
+    }
 
     params.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
 
