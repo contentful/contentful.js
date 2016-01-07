@@ -9,7 +9,7 @@ export function createClient (options) {
 };
 
 class Client {
-  constructor ({accessToken, space, secure, host, headers}) {
+  constructor ({accessToken, space, secure, host, headers, agent}) {
     if (!accessToken) {
       throw new TypeError('Expected property accessToken');
     }
@@ -30,6 +30,8 @@ class Client {
       headers: headers || {},
       resolveLinks: true
     };
+
+    this.agent = agent;
   }
 
   _request (path, query) {
@@ -44,6 +46,8 @@ class Client {
       method: 'get',
       url: `${this.options.baseUrl}${path}?${querystring.stringify(query)}`
     };
+
+    if(this.agent) params.agent = this.agent;
 
     params.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
 

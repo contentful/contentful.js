@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## v2.1.0
+- Allow an agent to be passed down to axios and subsequently to Node's http module (see https://nodejs.org/api/http.html#http_class_http_agent)
+
 ## v2.0.0
 - Updated axios to 0.8.1 (no more auto polyfilled Promises)
 
