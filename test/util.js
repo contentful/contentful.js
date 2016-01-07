@@ -2,6 +2,7 @@
 
 var contentful = require('..');
 var Promise = require('bluebird');
+global.Promise = Promise;
 
 exports.client = contentful.createClient({
   space: 'cfexampleapi',
