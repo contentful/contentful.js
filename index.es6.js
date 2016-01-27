@@ -50,7 +50,7 @@ class Client {
     if(this.agent) params.agent = this.agent;
 
     params.headers['Content-Type'] = 'application/vnd.contentful.delivery.v1+json';
-    params.headers['User-Agent'] = 'contentful.js/2.x';
+    params.headers['X-Contentful-User-Agent'] = 'contentful.js/2.x';
 
     return axios(params)
       .then(function (response) {
