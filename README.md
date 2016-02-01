@@ -11,6 +11,13 @@ Supported browsers/environments:
 - IE11 / Edge
 - node.js >= 0.10
 
+## TODO
+
+[] - Setup dist-tag
+[] - Setup docs publishing to ghpages
+[] - Setup and test browser builds
+[] - Setup automated browser testing
+
 ## Install
 
 In node, using [npm](http://npmjs.org):
