@@ -13,10 +13,11 @@ Supported browsers/environments:
 
 ## TODO
 
-[] - Setup dist-tag
-[] - Setup docs publishing to ghpages
-[] - Setup and test browser builds
-[] - Setup automated browser testing
+* [ ] - Implement code :)
+* [ ] - Setup dist-tag
+* [ ] - Setup docs publishing to ghpages
+* [ ] - Setup and test browser builds
+* [ ] - Setup automated browser testing
 
 ## Install
 
