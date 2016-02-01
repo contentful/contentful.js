@@ -1,3 +1,5 @@
-test/bundle-helper.js
-index.es5.js*
 node_modules
+*.log
+coverage
+.lock-wscript
+dist
