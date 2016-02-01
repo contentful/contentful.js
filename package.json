@@ -1,35 +1,57 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
-  "version": "2.1.2",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
-  "browser": "index.es5.js",
   "repository": "git@github.com:contentful/contentful.js.git",
-  "author": "Stephan Seidt <stephan@contentful.com>",
+  "author": "Contentful <support@contentful.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && mkdirp dist && babel lib --out-dir dist",
+    "clean": "rimraf dist && rimraf coverage",
+    "prepublish": "in-publish && npm run build || not-in-publish",
+    "postpublish": "npm run clean",
+    "pretest": "standard && flow",
+    "test": "npm run test:cover",
+    "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
+    "test:only": "BABEL_ENV=test babel-node ./test/runner",
+    "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
+    "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "files": [
+    "index.js"
+  ],
   "dependencies": {
     "axios": "^0.8.1",
     "contentful-resolve-response": "^0.1.2"
   },
   "devDependencies": {
-    "babel": "^4.7.16",
-    "babelify": "^6.0.1",
-    "bluebird": "^2.0.0",
-    "browserify": "^9.0.6",
-    "buster": "~0.7.6",
-    "envify": "~1.0.1",
-    "exorcist": "^0.1.6",
-    "saucie": "^0.1.0",
-    "testem": "~0.6.2",
-    "uglifyify": "^3.0.1"
+    "babel-cli": "^6.4.5",
+    "babel-eslint": "^5.0.0-beta8",
+    "babel-plugin-transform-flow-strip-types": "^6.4.0",
+    "babel-plugin-transform-runtime": "^6.4.3",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "coveralls": "^2.11.6",
+    "cz-conventional-changelog": "^1.1.5",
+    "flow-cli": "0.0.0-pre",
+    "in-publish": "^2.0.0",
+    "istanbul": "^1.0.0-alpha.2",
+    "mkdirp": "^0.5.1",
+    "opener": "^1.4.1",
+    "require-all": "^2.0.0",
+    "rimraf": "^2.5.1",
+    "semantic-release": "^4.3.5",
+    "standard": "^5.4.1",
+    "tape": "^4.4.0"
   },
-  "scripts": {
-    "bower-build": "browserify -s contentful --debug -t [ babelify --sourceMapRelative . ] -t uglifyify index.es6.js | exorcist dist/contentful.min.js.map > dist/contentful.min.js",
-    "prepublish": "babel index.es6.js -s -o index.es5.js; npm run bower-build",
-    "watch": "babel index.es6.js -s -w -o index.es5.js",
-    "prepare-browser-test": "browserify -d -t envify -x buster test/helper.js > test/bundle-helper.js",
-    "ci": "testem ci -P 6",
-    "test": "testem"
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

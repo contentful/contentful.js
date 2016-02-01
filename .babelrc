@@ -1,0 +1,14 @@
+{
+  "presets": [
+    "es2015"
+  ],
+  "plugins": [
+    "babel-plugin-transform-runtime",
+    "transform-flow-strip-types"
+  ],
+  "env": {
+    "test": {
+      "sourceMaps": "inline"
+    }
+  }
+}
