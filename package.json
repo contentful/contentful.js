@@ -9,14 +9,16 @@
   "scripts": {
     "build": "rimraf dist && mkdirp dist && babel lib --out-dir dist",
     "clean": "rimraf dist && rimraf coverage",
+    "postinstall": "npm run vendor",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run clean",
     "docs": "documentation build lib/*.js --shallow --format=html -o docs",
-    "pretest": "standard && flow",
+    "pretest": "standard lib/*.js && standard lib/**/*.js && flow",
     "test": "npm run test:cover",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
+    "vendor": "rimraf vendor && mkdirp vendor && babel node_modules/axios/lib/ --out-dir vendor/",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -24,10 +26,11 @@
     "index.js"
   ],
   "dependencies": {
-    "axios": "^0.8.1",
+    "babel-runtime": "^6.3.19",
     "contentful-resolve-response": "^0.1.2"
   },
   "devDependencies": {
+    "axios": "^0.9.1",
     "babel-cli": "^6.4.5",
     "babel-eslint": "^5.0.0-beta8",
     "babel-plugin-transform-flow-strip-types": "^6.4.0",

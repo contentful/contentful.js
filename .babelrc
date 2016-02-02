@@ -3,7 +3,7 @@
     "es2015"
   ],
   "plugins": [
-    "babel-plugin-transform-runtime",
+    "transform-runtime",
     "transform-flow-strip-types"
   ],
   "env": {
