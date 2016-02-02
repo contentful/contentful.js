@@ -37,7 +37,7 @@
     "coveralls": "^2.11.6",
     "cz-conventional-changelog": "^1.1.5",
     "documentation": "^4.0.0-beta",
-    "flow-cli": "0.0.0-pre",
+    "flow-bin": "^0.21.0",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
     "mkdirp": "^0.5.1",
