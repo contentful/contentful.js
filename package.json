@@ -19,9 +19,11 @@
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
+    "test:integration": "babel-node ./test/integration/tests.js",
     "vendor": "rimraf vendor && mkdirp vendor && babel node_modules/axios/lib/ --out-dir vendor/",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "flow-watcher": "watchy -w lib flow"
   },
   "files": [
     "index.js"
