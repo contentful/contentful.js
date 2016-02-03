@@ -1,7 +1,7 @@
 import test from 'tape'
 import sinon from 'sinon'
 
-import createHttpClient from '../lib/create-http-client'
+import createHttpClient from '../../lib/create-http-client'
 
 const axiosCreateStub = sinon.stub()
 
