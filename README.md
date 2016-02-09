@@ -13,7 +13,9 @@ Supported browsers/environments:
 
 ## TODO
 
-* [ ] - Implement code :)
+* [ ] - Query parsing
+* [ ] - Link resolving
+* [ ] - Sync
 * [ ] - Setup dist-tag
 * [ ] - Setup docs publishing to ghpages
 * [ ] - Setup and test browser builds
