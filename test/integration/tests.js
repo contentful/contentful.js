@@ -52,6 +52,16 @@ test('Gets entries', t => {
   })
 })
 
+test('Gets entries with linked includes', t => {
+  client.getEntries({include: 2})
+  .then(response => {
+    t.ok(response.includes, 'includes')
+    t.ok(response.includes.Asset, 'includes for Assets')
+    t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items')
+    t.end()
+  })
+})
+
 test('Gets entries with content type query param', t => {
   client.getEntries({content_type: 'cat'})
   .then(response => {
