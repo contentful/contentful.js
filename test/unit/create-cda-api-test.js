@@ -23,7 +23,7 @@ test('CDA call getSpace', t => {
 
   api.getSpace()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
@@ -40,7 +40,7 @@ test('CDA call getSpace fails', t => {
 
   api.getSpace()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -57,7 +57,7 @@ test('CDA call getContentType', t => {
 
   api.getContentType()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -74,7 +74,7 @@ test('CDA call getContentType fails', t => {
 
   api.getContentType()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -91,7 +91,7 @@ test('CDA call getContentTypes', t => {
 
   api.getContentTypes()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -108,7 +108,7 @@ test('CDA call getContentTypes fails', t => {
 
   api.getContentTypes()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -125,7 +125,7 @@ test('CDA call getEntry', t => {
 
   api.getEntry()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -142,7 +142,7 @@ test('CDA call getEntry fails', t => {
 
   api.getEntry()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -159,7 +159,7 @@ test('CDA call getEntries', t => {
 
   api.getEntries()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -176,7 +176,7 @@ test('CDA call getEntries fails', t => {
 
   api.getEntries()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -193,7 +193,7 @@ test('CDA call getAsset', t => {
 
   api.getAsset()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -210,7 +210,7 @@ test('CDA call getAsset fails', t => {
 
   api.getAsset()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -227,7 +227,7 @@ test('CDA call getAssets', t => {
 
   api.getAssets()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -244,7 +244,7 @@ test('CDA call getAssets fails', t => {
 
   api.getAssets()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -261,7 +261,7 @@ test('CDA call sync', t => {
 
   api.sync()
   .then(r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
@@ -278,7 +278,7 @@ test('CDA call sync fails', t => {
 
   api.sync()
   .then(() => {}, r => {
-    t.equal(r, data)
+    t.looseEqual(r, data)
     t.end()
   })
 })
