@@ -1,3 +1,4 @@
+/* @flow */
 import test from 'tape'
 import sinon from 'sinon'
 
@@ -21,7 +22,7 @@ test('CDA call getSpace', t => {
     data: data
   }))
 
-  api.getSpace()
+  api.getSpace('spaceid')
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
     t.end()
@@ -38,7 +39,7 @@ test('CDA call getSpace fails', t => {
     data: data
   }))
 
-  api.getSpace()
+  api.getSpace('spaceid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
     t.end()
@@ -55,7 +56,7 @@ test('CDA call getContentType', t => {
     data: data
   }))
 
-  api.getContentType()
+  api.getContentType('ctid')
   .then(r => {
     t.looseEqual(r, data)
     t.end()
@@ -72,7 +73,7 @@ test('CDA call getContentType fails', t => {
     data: data
   }))
 
-  api.getContentType()
+  api.getContentType('ctid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
     t.end()
@@ -123,7 +124,7 @@ test('CDA call getEntry', t => {
     data: data
   }))
 
-  api.getEntry()
+  api.getEntry('eid')
   .then(r => {
     t.looseEqual(r, data)
     t.end()
@@ -140,7 +141,7 @@ test('CDA call getEntry fails', t => {
     data: data
   }))
 
-  api.getEntry()
+  api.getEntry('eid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
     t.end()
@@ -191,7 +192,7 @@ test('CDA call getAsset', t => {
     data: data
   }))
 
-  api.getAsset()
+  api.getAsset('aid')
   .then(r => {
     t.looseEqual(r, data)
     t.end()
@@ -208,7 +209,7 @@ test('CDA call getAsset fails', t => {
     data: data
   }))
 
-  api.getAsset()
+  api.getAsset('aid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
     t.end()
@@ -259,7 +260,7 @@ test('CDA call sync', t => {
     data: data
   }))
 
-  api.sync()
+  api.sync({})
   .then(r => {
     t.looseEqual(r, data)
     t.end()
@@ -276,7 +277,7 @@ test('CDA call sync fails', t => {
     data: data
   }))
 
-  api.sync()
+  api.sync({})
   .then(() => {}, r => {
     t.looseEqual(r, data)
     t.end()
