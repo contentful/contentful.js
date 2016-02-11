@@ -58,7 +58,7 @@ test('CDA call getContentType', t => {
 
   api.getContentType('ctid')
   .then(r => {
-    t.looseEqual(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
@@ -92,7 +92,7 @@ test('CDA call getContentTypes', t => {
 
   api.getContentTypes()
   .then(r => {
-    t.looseEqual(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
@@ -126,7 +126,7 @@ test('CDA call getEntry', t => {
 
   api.getEntry('eid')
   .then(r => {
-    t.looseEqual(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
@@ -160,7 +160,7 @@ test('CDA call getEntries', t => {
 
   api.getEntries()
   .then(r => {
-    t.looseEqual(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
@@ -194,7 +194,7 @@ test('CDA call getAsset', t => {
 
   api.getAsset('aid')
   .then(r => {
-    t.looseEqual(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
@@ -228,7 +228,7 @@ test('CDA call getAssets', t => {
 
   api.getAssets()
   .then(r => {
-    t.looseEqual(r, data)
+    t.looseEqual(r.toPlainObject(), data)
     t.end()
   })
 })
