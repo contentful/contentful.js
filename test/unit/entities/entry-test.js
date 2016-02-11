@@ -17,21 +17,22 @@ const entry = {
   }
 }
 
-test.only('Entry is wrapped', t => {
+test('Entry is wrapped', t => {
   const wrappedEntry = wrapEntry(entry)
   t.looseEqual(wrappedEntry.toPlainObject(), entry)
   t.end()
 })
 
 test('Entry collection is wrapped', t => {
-  const wrappedEntry = wrapEntryCollection({
+  const entryCollection = {
     total: 1,
     skip: 0,
     limit: 100,
     items: [
       entry
     ]
-  })
-  t.looseEqual(wrappedEntry.toPlainObject(), entry)
+  }
+  const wrappedEntry = wrapEntryCollection(entryCollection)
+  t.looseEqual(wrappedEntry.toPlainObject(), entryCollection)
   t.end()
 })
