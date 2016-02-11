@@ -1,38 +1,36 @@
-'use strict'
+import test from 'tape'
+import mixinLinkGetters from '../../../lib/mixins/link-getters'
 
-var test = require('tape')
-var mixinLinkGetters = require('../../lib/mixins/link-getters').default
-
-test('empty response', function (t) {
-  var response = {items: []}
+test('empty response', t => {
+  const response = {items: []}
   t.looseEquals(mixinLinkGetters(response), response)
   t.end()
 })
 
-test('no links in response', function (t) {
-  var response = {
+test('no links in response', t => {
+  const response = {
     items: [{
       foo: 'bar'
     }]
   }
-  var mixedResponse = mixinLinkGetters(response)
+  const mixedResponse = mixinLinkGetters(response)
   t.looseEquals(mixedResponse, response)
   t.end()
 })
 
-test('links in response, without matching include should remain', function (t) {
-  var response = {
+test('links in response, without matching include should remain', t => {
+  const response = {
     items: [
       {sys: {type: 'Link', linkType: 'Piglet', id: 'oink'}
       }]
   }
-  var mixedResponse = mixinLinkGetters(response)
+  const mixedResponse = mixinLinkGetters(response)
   t.looseEquals(mixedResponse, response)
   t.end()
 })
 
-test('links in response, with matching include should resolve', function (t) {
-  var response = {
+test('links in response, with matching include should resolve', t => {
+  const response = {
     items: [
       {
         sys: {type: 'Entry'},
@@ -77,8 +75,8 @@ test('links in response, with matching include should resolve', function (t) {
     }
   }
 
-  var mixedResponse = mixinLinkGetters(response)
-  var items = mixedResponse.items
+  const mixedResponse = mixinLinkGetters(response)
+  const items = mixedResponse.items
   t.looseEquals(items[0].fields.animal.sys, response.includes.Animal[0].sys, 'pig')
   t.looseEquals(items[0].fields.animal.fields.friend.sys, response.includes.Animal[1].sys, 'groundhog')
   t.looseEquals(items[0].fields.anotheranimal.sys.type, 'Link', 'first middle parrot not resolved')
@@ -88,8 +86,8 @@ test('links in response, with matching include should resolve', function (t) {
   t.end()
 })
 
-test('links in response, with circular references', function (t) {
-  var response = {
+test('links in response, with circular references', t => {
+  const response = {
     items: [
       {
         sys: {type: 'Entry'},
@@ -112,8 +110,8 @@ test('links in response, with circular references', function (t) {
     }
   }
 
-  var mixedResponse = mixinLinkGetters(response)
-  var items = mixedResponse.items
+  const mixedResponse = mixinLinkGetters(response)
+  const items = mixedResponse.items
 
   t.equals(items[0].fields.animal.sys.type, 'Animal', 'first link type')
   t.equals(items[0].fields.animal.sys.id, 'oink', 'first link id')
