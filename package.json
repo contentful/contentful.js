@@ -23,7 +23,7 @@
     "vendor": "rimraf vendor && mkdirp vendor && babel node_modules/axios/lib/ --out-dir vendor/",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "flow-watcher": "watchy -w lib flow"
+    "flow-watcher": "watchy -w lib,test flow"
   },
   "files": [
     "index.js"
