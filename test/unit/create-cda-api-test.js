@@ -1,5 +1,5 @@
 /* @flow */
-import test from 'tape'
+import test from 'blue-tape'
 import sinon from 'sinon'
 
 import createCdaApi from '../../lib/create-cda-api'
@@ -13,6 +13,7 @@ function setupWithData (promise) {
 }
 
 test('CDA call getSpace', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -22,14 +23,15 @@ test('CDA call getSpace', t => {
     data: data
   }))
 
-  api.getSpace('spaceid')
+  return api.getSpace('spaceid')
   .then(r => {
+    console.log('resolving')
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getSpace fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -39,14 +41,14 @@ test('CDA call getSpace fails', t => {
     data: data
   }))
 
-  api.getSpace('spaceid')
+  return api.getSpace('spaceid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
 test('CDA call getContentType', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -56,14 +58,14 @@ test('CDA call getContentType', t => {
     data: data
   }))
 
-  api.getContentType('ctid')
+  return api.getContentType('ctid')
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getContentType fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -73,14 +75,14 @@ test('CDA call getContentType fails', t => {
     data: data
   }))
 
-  api.getContentType('ctid')
+  return api.getContentType('ctid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
 test('CDA call getContentTypes', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -90,14 +92,14 @@ test('CDA call getContentTypes', t => {
     data: data
   }))
 
-  api.getContentTypes()
+  return api.getContentTypes()
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getContentTypes fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -107,14 +109,14 @@ test('CDA call getContentTypes fails', t => {
     data: data
   }))
 
-  api.getContentTypes()
+  return api.getContentTypes()
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
 test('CDA call getEntry', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -124,14 +126,14 @@ test('CDA call getEntry', t => {
     data: data
   }))
 
-  api.getEntry('eid')
+  return api.getEntry('eid')
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getEntry fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -141,14 +143,14 @@ test('CDA call getEntry fails', t => {
     data: data
   }))
 
-  api.getEntry('eid')
+  return api.getEntry('eid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
 test('CDA call getEntries', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -158,14 +160,14 @@ test('CDA call getEntries', t => {
     data: data
   }))
 
-  api.getEntries()
+  return api.getEntries()
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getEntries fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -175,14 +177,14 @@ test('CDA call getEntries fails', t => {
     data: data
   }))
 
-  api.getEntries()
+  return api.getEntries()
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
 test('CDA call getAsset', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -192,14 +194,14 @@ test('CDA call getAsset', t => {
     data: data
   }))
 
-  api.getAsset('aid')
+  return api.getAsset('aid')
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getAsset fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -209,14 +211,14 @@ test('CDA call getAsset fails', t => {
     data: data
   }))
 
-  api.getAsset('aid')
+  return api.getAsset('aid')
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
 test('CDA call getAssets', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -226,14 +228,14 @@ test('CDA call getAssets', t => {
     data: data
   }))
 
-  api.getAssets()
+  return api.getAssets()
   .then(r => {
     t.looseEqual(r.toPlainObject(), data)
-    t.end()
   })
 })
 
 test('CDA call getAssets fails', t => {
+  t.plan(1)
   const data = {
     sys: {
       id: 'id'
@@ -243,10 +245,9 @@ test('CDA call getAssets fails', t => {
     data: data
   }))
 
-  api.getAssets()
+  return api.getAssets()
   .then(() => {}, r => {
     t.looseEqual(r, data)
-    t.end()
   })
 })
 
