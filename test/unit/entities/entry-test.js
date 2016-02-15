@@ -17,8 +17,11 @@ test('Entry collection is wrapped', t => {
     skip: 0,
     limit: 100,
     items: [
-      entry
-    ]
+      entryMock
+    ],
+    includes: {
+      Entry: []
+    }
   }
   const wrappedEntry = wrapEntryCollection(entryCollection)
   t.looseEqual(wrappedEntry.toPlainObject(), entryCollection)

@@ -280,5 +280,15 @@ test('Gets assets', t => {
     t.ok(response.items, 'items')
   })
 })
+
+test('Sync space', t => {
+  t.plan(5)
+  return client.sync({initial: true})
+  .then(response => {
+    t.ok(response.entries, 'entries')
+    t.ok(response.assets, 'assets')
+    t.ok(response.deletedEntries, 'deleted entries')
+    t.ok(response.deletedAssets, 'deleted assets')
+    t.ok(response.nextSyncToken, 'next sync token')
   })
 })
