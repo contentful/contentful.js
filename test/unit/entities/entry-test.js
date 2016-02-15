@@ -1,25 +1,13 @@
 /* @flow */
 import test from 'tape'
-import {assign} from 'lodash/object'
 import {cloneDeep} from 'lodash/lang'
-import {sysMock, linkMock} from '../mocks'
 
+import {entryMock} from '../mocks'
 import {wrapEntry, wrapEntryCollection} from '../../../lib/entities/entry'
 
-const entry = {
-  sys: assign(cloneDeep(sysMock), {
-    type: 'Entry',
-    contentType: assign(cloneDeep(linkMock), {linkType: 'ContentType'}),
-    locale: 'locale'
-  }),
-  fields: {
-    field1: 'str'
-  }
-}
-
 test('Entry is wrapped', t => {
-  const wrappedEntry = wrapEntry(entry)
-  t.looseEqual(wrappedEntry.toPlainObject(), entry)
+  const wrappedEntry = wrapEntry(entryMock)
+  t.looseEqual(wrappedEntry.toPlainObject(), entryMock)
   t.end()
 })
 

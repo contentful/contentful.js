@@ -1,24 +1,11 @@
 /* @flow */
 import test from 'tape'
-import {assign} from 'lodash/object'
-import {cloneDeep} from 'lodash/lang'
-import {sysMock} from '../mocks'
-
+import {assetMock} from '../mocks'
 import {wrapAsset, wrapAssetCollection} from '../../../lib/entities/asset'
 
-const asset = {
-  sys: assign(cloneDeep(sysMock), {
-    type: 'Asset',
-    locale: 'locale'
-  }),
-  fields: {
-    field1: 'str'
-  }
-}
-
 test('Asset is wrapped', t => {
-  const wrappedAsset = wrapAsset(asset)
-  t.looseEqual(wrappedAsset.toPlainObject(), asset)
+  const wrappedAsset = wrapAsset(assetMock)
+  t.looseEqual(wrappedAsset.toPlainObject(), assetMock)
   t.end()
 })
 
@@ -28,7 +15,7 @@ test('Asset collection is wrapped', t => {
     skip: 0,
     limit: 100,
     items: [
-      asset
+      assetMock
     ]
   }
   const wrappedAsset = wrapAssetCollection(assetCollection)

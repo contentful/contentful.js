@@ -1,4 +1,5 @@
 /* @flow */
+import {assign} from 'lodash/object'
 import {cloneDeep} from 'lodash/lang'
 
 import type {Sys} from '../../lib/entities/sys'
@@ -19,7 +20,30 @@ const sysMock: Sys = {
   revision: 1
 }
 
+const entryMock = {
+  sys: assign(cloneDeep(sysMock), {
+    type: 'Entry',
+    contentType: assign(cloneDeep(linkMock), {linkType: 'ContentType'}),
+    locale: 'locale'
+  }),
+  fields: {
+    field1: 'str'
+  }
+}
+
+const assetMock = {
+  sys: assign(cloneDeep(sysMock), {
+    type: 'Asset',
+    locale: 'locale'
+  }),
+  fields: {
+    field1: 'str'
+  }
+}
+
 export {
   linkMock,
-  sysMock
+  sysMock,
+  entryMock,
+  assetMock
 }
