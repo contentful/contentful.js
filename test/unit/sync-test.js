@@ -27,7 +27,7 @@ test('Throws with no parameters', t => {
   t.plan(1)
   const http = {get: sinon.stub()}
   t.throws(() => {
-    pagedSync(http, {})
+    pagedSync(http, {}, true)
   }, /initial.*nextSyncToken/)
 })
 
@@ -39,7 +39,7 @@ test('Throws with incompatible content_type and type parameter', t => {
       initial: true,
       content_type: 'id',
       type: 'ContentType'
-    })
+    }, true)
   }, /content_type.*type.*Entry/)
 })
 
@@ -63,7 +63,7 @@ test('Initial sync with one page', t => {
     }
   }))
 
-  return pagedSync(http, {initial: true})
+  return pagedSync(http, {initial: true}, true)
   .then(response => {
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
     t.equal(response.entries.length, 3, 'entries length')
@@ -92,7 +92,7 @@ test('Initial sync with one page and filter', t => {
     }
   }))
 
-  return pagedSync(http, {initial: true, content_type: 'cat'})
+  return pagedSync(http, {initial: true, content_type: 'cat'}, true)
   .then(response => {
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
     t.equal(http.get.args[0][1].params.content_type, 'cat', 'http request has content type filter param')
@@ -138,7 +138,7 @@ test('Initial sync with multiple pages', t => {
     }
   }))
 
-  return pagedSync(http, {initial: true})
+  return pagedSync(http, {initial: true}, true)
   .then(response => {
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
     t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
@@ -166,7 +166,7 @@ test('Sync with existing token', t => {
     }
   }))
 
-  return pagedSync(http, {nextSyncToken: 'nextsynctoken'})
+  return pagedSync(http, {nextSyncToken: 'nextsynctoken'}, true)
   .then(response => {
     t.equal(http.get.args[0][1].params.sync_token, 'nextsynctoken', 'http request param for sync')
     t.equal(response.entries.length, 1, 'entries length')

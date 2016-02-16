@@ -1,6 +1,5 @@
 /* @flow */
 import test from 'tape'
-import {cloneDeep} from 'lodash/lang'
 
 import {entryMock} from '../mocks'
 import {wrapEntry, wrapEntryCollection} from '../../../lib/entities/entry'
@@ -23,7 +22,7 @@ test('Entry collection is wrapped', t => {
       Entry: []
     }
   }
-  const wrappedEntry = wrapEntryCollection(entryCollection)
+  const wrappedEntry = wrapEntryCollection(entryCollection, true)
   t.looseEqual(wrappedEntry.toPlainObject(), entryCollection)
   t.end()
 })

@@ -2,13 +2,14 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
 
-import createCdaApi from '../../lib/create-cda-api'
+// $FlowIgnoreRewire
+import createCdaApi, {__RewireAPI__ as createCdaApiRewireApi} from '../../lib/create-cda-api'
 
-function setupWithData (promise) {
+function setupWithData (promise, resolveLinks = true) {
   const getStub = sinon.stub()
   const api = createCdaApi({
     get: getStub.returns(promise)
-  })
+  }, resolveLinks)
   return {api, getStub}
 }
 
@@ -150,19 +151,82 @@ test('CDA call getEntry fails', t => {
 })
 
 test('CDA call getEntries', t => {
-  t.plan(1)
-  const data = {
-    sys: {
-      id: 'id'
-    }
-  }
-  const {api} = setupWithData(Promise.resolve({
-    data: data
-  }))
+  t.plan(2)
+
+  const data = {sys: {id: 'id'}}
+
+  const wrapStub = sinon.stub()
+  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
+  wrapStub.returns(data)
+
+  const {api} = setupWithData(Promise.resolve({data: data}))
 
   return api.getEntries()
   .then(r => {
-    t.looseEqual(r.toPlainObject(), data)
+    t.ok(wrapStub.args[0][1], 'resolveLinks turned on by default')
+    t.looseEqual(r, data, 'returns expected data')
+    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+  })
+})
+
+test('CDA call getEntries with global resolve links turned off', t => {
+  t.plan(2)
+
+  const data = {sys: {id: 'id'}}
+
+  const wrapStub = sinon.stub()
+  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
+  wrapStub.returns(data)
+
+  const resolveLinks = false
+  const {api} = setupWithData(Promise.resolve({data: data}), resolveLinks)
+
+  return api.getEntries()
+  .then(r => {
+    t.notOk(wrapStub.args[0][1], 'resolveLinks turned off globally')
+    t.looseEqual(r, data, 'returns expected data')
+    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+  })
+})
+
+test('CDA call getEntries with global resolve links turned off but overridden', t => {
+  t.plan(3)
+
+  const data = {sys: {id: 'id'}}
+
+  const wrapStub = sinon.stub()
+  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
+  wrapStub.returns(data)
+
+  const resolveLinks = false
+  const {api, getStub} = setupWithData(Promise.resolve({data: data}), resolveLinks)
+
+  return api.getEntries({resolveLinks: true})
+  .then(r => {
+    t.ok(wrapStub.args[0][1], 'resolveLinks turned on by override')
+    t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
+    t.looseEqual(r, data, 'returns expected data')
+    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+  })
+})
+
+test('CDA call getEntries with global resolve links turned on but overridden', t => {
+  t.plan(3)
+
+  const data = {sys: {id: 'id'}}
+
+  const wrapStub = sinon.stub()
+  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
+  wrapStub.returns(data)
+
+  const {api, getStub} = setupWithData(Promise.resolve({data: data}))
+
+  return api.getEntries({resolveLinks: false})
+  .then(r => {
+    t.notOk(wrapStub.args[0][1], 'resolveLinks turned off by override')
+    t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
+    t.looseEqual(r, data, 'returns expected data')
+    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
   })
 })
 

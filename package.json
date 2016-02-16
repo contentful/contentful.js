@@ -30,7 +30,6 @@
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
-    "contentful-resolve-response": "^0.1.2",
     "lodash": "^4.2.0"
   },
   "devDependencies": {
