@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && mkdirp dist && babel lib --out-dir dist",
-    "clean": "rimraf dist && rimraf coverage",
+    "clean": "rimraf dist && rimraf browser-dist && rimraf coverage",
+    "build:standalone": "npm run clean && webpack -p",
     "postinstall": "npm run vendor",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run clean",
@@ -26,7 +27,9 @@
     "flow-watcher": "watchy -w lib,test flow"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "dist",
+    "vendor"
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
@@ -36,6 +39,7 @@
     "axios": "^0.9.1",
     "babel-cli": "^6.4.5",
     "babel-eslint": "^5.0.0-beta8",
+    "babel-loader": "^6.2.2",
     "babel-plugin-rewire": "^1.0.0-beta-5",
     "babel-plugin-transform-flow-strip-types": "^6.4.0",
     "babel-plugin-transform-runtime": "^6.4.3",
@@ -48,13 +52,15 @@
     "flow-bin": "^0.21.0",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
+    "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
     "opener": "^1.4.1",
     "require-all": "^2.0.0",
     "rimraf": "^2.5.1",
     "semantic-release": "^4.3.5",
     "sinon": "^1.17.3",
-    "standard": "^5.4.1"
+    "standard": "^5.4.1",
+    "webpack": "^1.12.13"
   },
   "standard": {
     "parser": "babel-eslint"
