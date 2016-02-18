@@ -31,8 +31,9 @@ module.exports = function (config) {
   karmaBaseConf.reporters.push('saucelabs')
   karmaBaseConf.logLevel = config.LOG_DEBUG
   karmaBaseConf.customLaunchers = browsers
-  karmaBaseConf.captureTimeout = 120000
-  karmaBaseConf.concurrency = 5
+  karmaBaseConf.captureTimeout = 240000
+  karmaBaseConf.browserDisconnectTolerance = 3
+  karmaBaseConf.concurrency = 1
   karmaBaseConf.browsers = Object.keys(browsers)
   karmaBaseConf.sauceLabs = {
     // Should be false for running on travis, as travis already starts its own
