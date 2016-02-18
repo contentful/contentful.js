@@ -1,7 +1,6 @@
 var karmaBaseConf = require('./karma.base.conf')
 
 var browsers = {
-  /*
   sl_chrome: {
     base: 'SauceLabs',
     browserName: 'chrome',
@@ -19,7 +18,6 @@ var browsers = {
     platform: 'Windows 8.1',
     version: '11'
   },
-  */
   sl_edge: {
     base: 'SauceLabs',
     browserName: 'MicrosoftEdge',
