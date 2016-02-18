@@ -21,7 +21,8 @@
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
     "test:integration": "babel-node ./test/integration/tests.js",
-    "vendor": "rimraf vendor && mkdirp vendor && babel node_modules/axios/lib/ --out-dir vendor/",
+    "vendor:node": "rimraf vendor-node && mkdirp vendor-node && babel node_modules/axios/lib/ --out-dir vendor-node/",
+    "vendor:browser": "rimraf vendor-browser && mkdirp vendor-browser && babel node_modules/axios/dist/axios.js --out-file vendor-browser/axios.js",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "flow-watcher": "watchy -w lib,test flow"
@@ -29,7 +30,8 @@
   "files": [
     "index.js",
     "dist",
-    "vendor"
+    "vendor-browser",
+    "vendor-node"
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
