@@ -32,6 +32,11 @@ module.exports = function (config) {
   karmaBaseConf.logLevel = config.INFO
   karmaBaseConf.customLaunchers = browsers
   karmaBaseConf.browsers = Object.keys(browsers)
+  karmaBaseConf.sauceLabs = {
+    // Should be false for running on travis, as travis already starts its own
+    // sauce connect
+    startConnect: false
+  }
 
   config.set(karmaBaseConf)
 }
