@@ -14,3 +14,8 @@ node_js:
 #  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
 #  - export $(cat .to_export_back) &> /dev/null
 #  - npm run semantic-release
+addons:
+  sauce_connect:
+    username: "trodrigues"
+    access_key:
+      secure: "fiNKMWp3AYw1ShnfYMjm+lYDBL286JIrs3SOHCRF2+UxExpJIIAzClJXEH1khYMCn1s3T4WRPecnv/HCNkiupc+T2oXEuWBmjJhziAMNukQ0h0T/V2hMu5s7XiSYLLB41x8bweanv5GQulaAxlaxytxl51/2FQMRgb0bFXWTiVA="
