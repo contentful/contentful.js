@@ -17,7 +17,8 @@
     "docs:build": "documentation build lib/*.js --shallow --format=html -o docs",
     "docs:preview": "documentation serve lib/*.js --shallow --format=html -o docs",
     "pretest": "standard lib/*.js && standard lib/**/*.js && flow",
-    "test": "npm run test:cover && npm run test:integration && npm run test:browser-remote",
+    "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
+    "test:ci": "npm run test:cover && npm run test:integration && if [ $TRAVIS_NODE_VERSION -eq \"5.0\" ] ; then npm run test:browser-remote; fi",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
@@ -39,7 +40,6 @@
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
-    "karma-sauce-launcher": "^0.3.0",
     "lodash": "^4.2.0"
   },
   "devDependencies": {
@@ -64,6 +64,7 @@
     "karma": "^0.13.21",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^0.2.2",
+    "karma-sauce-launcher": "^0.3.0",
     "karma-tap": "^1.0.3",
     "karma-webpack": "^1.7.0",
     "mkdirp": "^0.5.1",

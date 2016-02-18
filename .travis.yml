@@ -8,6 +8,7 @@ node_js:
   - "3.3"
   - "4.2"
   - "5.0"
+script: npm run test:ci
 #after_success:
 #  - curl -Lo travis_after_all.py https://raw.githubusercontent.com/contentful/travis_after_all/master/travis_after_all.py
 #  - python travis_after_all.py
