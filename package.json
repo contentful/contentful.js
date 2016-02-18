@@ -10,6 +10,7 @@
     "build": "rimraf dist && mkdirp dist && babel lib --out-dir dist",
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage",
     "build:standalone": "npm run clean && webpack -p",
+    "build:optimize": "ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js",
     "postinstall": "npm run vendor",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run clean",
@@ -27,6 +28,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "flow-watcher": "watchy -w lib,test flow"
   },
+  "browser": "./browser.js",
   "files": [
     "index.js",
     "dist",
@@ -48,6 +50,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.4.3",
     "blue-tape": "^0.2.0",
+    "closurecompiler": "^1.5.2",
     "coveralls": "^2.11.6",
     "cz-conventional-changelog": "^1.1.5",
     "documentation": "^4.0.0-beta",
