@@ -1,11 +1,12 @@
 import test from 'blue-tape'
 import {filter, map} from 'lodash/collection'
-import contentful from '../../lib/contentful'
+import contentful from '../../'
 
 const client = contentful.createClient({
   accessToken: 'b4c0n73n7fu1',
   space: 'cfexampleapi'
 })
+
 
 test('Gets space', t => {
   t.plan(3)
