@@ -29,8 +29,9 @@ var browsers = {
 module.exports = function (config) {
   karmaBaseConf.plugins.push(require('karma-sauce-launcher'))
   karmaBaseConf.reporters.push('saucelabs')
-  karmaBaseConf.logLevel = config.INFO
+  karmaBaseConf.logLevel = config.LOG_DEBUG
   karmaBaseConf.customLaunchers = browsers
+  karmaBaseConf.captureTimeout = 120000
   karmaBaseConf.browsers = Object.keys(browsers)
   karmaBaseConf.sauceLabs = {
     // Should be false for running on travis, as travis already starts its own
