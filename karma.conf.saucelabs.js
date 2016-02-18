@@ -38,7 +38,8 @@ module.exports = function (config) {
   karmaBaseConf.sauceLabs = {
     // Should be false for running on travis, as travis already starts its own
     // sauce connect
-    startConnect: false
+    startConnect: false,
+    tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
   }
 
   config.set(karmaBaseConf)
