@@ -18,7 +18,7 @@
     "docs:preview": "documentation serve lib/*.js --shallow --format=html -o docs",
     "pretest": "standard lib/*.js && standard lib/**/*.js && flow",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
-    "test:ci": "npm run test:cover && npm run test:integration && if [ \"$TRAVIS_NODE_VERSION\" == \"5.0\" ] ; then npm run test:browser-remote; fi",
+    "test:ci": "npm run test:cover && npm run test:integration && if [ \"$TRAVIS_NODE_VERSION\" = \"5.0\" ] ; then npm run test:browser-remote; fi",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
