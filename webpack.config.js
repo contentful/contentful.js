@@ -1,3 +1,4 @@
+var webpack = require('webpack')
 module.exports = {
   context: __dirname,
   entry: './browser',
@@ -18,5 +19,8 @@ module.exports = {
         loader: 'json'
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.NormalModuleReplacementPlugin(/\.\/vendor-node\/axios/g, './vendor-browser/axios.js')
+  ]
 }
