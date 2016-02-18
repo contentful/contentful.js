@@ -11,7 +11,7 @@
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage",
     "build:standalone": "npm run clean && webpack -p",
     "build:optimize": "ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js",
-    "postinstall": "npm run vendor",
+    "postinstall": "npm run vendor:node && npm run vendor:browser",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run clean",
     "docs:build": "documentation build lib/*.js --shallow --format=html -o docs",
