@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Contentful CDA SDK: Source: sync.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sync.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _freeze = require('babel-runtime/core-js/object/freeze');
+
+var _freeze2 = _interopRequireDefault(_freeze);
+
+exports.default = pagedSync;
+
+var _collection = require('lodash/collection');
+
+var _lang = require('lodash/lang');
+
+var _createRequestConfig = require('./create-request-config');
+
+var _createRequestConfig2 = _interopRequireDefault(_createRequestConfig);
+
+var _linkGetters = require('./mixins/link-getters');
+
+var _linkGetters2 = _interopRequireDefault(_linkGetters);
+
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @private
+ * This module retrieves all the available pages for a sync operation
+ */
+
+
+/**
+ * @memberof Sync
+ * @typedef SyncCollection
+ * @prop {Array&lt;Entities.Entry>} entries - All existing entries on first sync. New and updated entries on subsequent syncs.
+ * @prop {Array&lt;Entities.Asset>} assets - All existing assets on first sync. New and updated assets on subsequent syncs.
+ * @prop {Array&lt;Entities.DeletedEntry>} deletedEntries - List of deleted Entries since last sync
+ * @prop {Array&lt;Entities.DeletedAsset>} deletedAssets - List of deleted Assets since last sync
+ * @prop {string} nextSyncToken - Token to be sent to the next sync call
+ */
+
+/**
+ * @namespace Sync
+ */
+function pagedSync(http, query, resolveLinks) {
+  if (!query || !query.initial &amp;&amp; !query.nextSyncToken) {
+    throw new Error('Please provide one of `initial` or `nextSyncToken` parameters for syncing');
+  }
+
+  if (query &amp;&amp; query.content_type &amp;&amp; !query.type) {
+    query.type = 'Entry';
+  } else if (query &amp;&amp; query.content_type &amp;&amp; query.type &amp;&amp; query.type !== 'Entry') {
+    throw new Error('When using the `content_type` filter your `type` parameter cannot be different from `Entry`.');
+  }
+
+  if (query.nextSyncToken) {
+    query.sync_token = query.nextSyncToken;
+    delete query.initial;
+    delete query.nextSyncToken;
+  }
+
+  return getSyncPage(http, [], query).then(function (response) {
+    // clones response.items used in includes because we don't want these to be mutated
+    if (resolveLinks) {
+      (0, _linkGetters2.default)(response.items, (0, _lang.cloneDeep)(mapResponseItems(response.items)));
+    }
+    // maps response items again after getters are attached
+    var mappedResponseItems = mapResponseItems(response.items);
+    mappedResponseItems.nextSyncToken = response.nextSyncToken;
+    return (0, _freeze2.default)(mappedResponseItems);
+  }, function (error) {
+    throw error.data;
+  });
+}
+
+function mapResponseItems(items) {
+  return {
+    entries: (0, _collection.filter)(items, ['sys.type', 'Entry']),
+    assets: (0, _collection.filter)(items, ['sys.type', 'Asset']),
+    deletedEntries: (0, _collection.filter)(items, ['sys.type', 'DeletedEntry']),
+    deletedAssets: (0, _collection.filter)(items, ['sys.type', 'DeletedAsset'])
+  };
+}
+
+/**
+ * @private
+ * If the response contains a nextPageUrl, extracts the sync token to get the
+ * next page and calls itself again with that token.
+ * Otherwise, if the response contains a nextSyncUrl, extracts the sync token
+ * and returns it.
+ * On each call of this function, any retrieved items are collected in the
+ * supplied items array, which gets returned in the end
+ */
+function getSyncPage(http, items, query) {
+  return http.get('sync', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
+    var data = response.data;
+    items = items.concat(data.items);
+    if (data.nextPageUrl) {
+      delete query.initial;
+      query.sync_token = getToken(data.nextPageUrl);
+      return getSyncPage(http, items, query);
+    } else if (data.nextSyncUrl) {
+      return {
+        items: items,
+        nextSyncToken: getToken(data.nextSyncUrl)
+      };
+    }
+  });
+}
+
+function getToken(url) {
+  var urlParts = url.split('?');
+  return urlParts.length > 0 ? urlParts[1].replace('sync_token=', '') : '';
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="contentful.html">contentful</a></li><li><a href="ContentfulCdaApi.html">ContentfulCdaApi</a></li><li><a href="Entities.html">Entities</a></li><li><a href="Fields.html">Fields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Feb 19 2016 17:54:21 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
