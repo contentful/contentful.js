@@ -49,7 +49,8 @@
   "dependencies": {
     "babel-runtime": "^6.3.19",
     "follow-redirects": "0.0.7",
-    "lodash": "^4.2.0"
+    "lodash": "^4.2.0",
+    "type-check": "^0.3.2"
   },
   "devDependencies": {
     "axios": "^0.9.1",
@@ -57,7 +58,6 @@
     "babel-eslint": "^5.0.0-beta8",
     "babel-loader": "^6.2.2",
     "babel-plugin-rewire": "^1.0.0-beta-5",
-    "babel-plugin-transform-flow-strip-types": "^6.4.0",
     "babel-plugin-transform-runtime": "^6.4.3",
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.4.3",

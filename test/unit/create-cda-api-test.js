@@ -4,6 +4,7 @@ import sinon from 'sinon'
 
 // $FlowIgnoreRewire
 import createCdaApi, {__RewireAPI__ as createCdaApiRewireApi} from '../../lib/create-cda-api'
+import {contentTypeMock, assetMock, entryMock} from './mocks'
 
 function setupWithData (promise, resolveLinks = true) {
   const getStub = sinon.stub()
@@ -17,8 +18,11 @@ test('CDA call getSpace', t => {
   t.plan(1)
   const data = {
     sys: {
-      id: 'id'
-    }
+      id: 'id',
+      type: 'Space'
+    },
+    name: 'name',
+    locales: [ 'en-US' ]
   }
   const {api} = setupWithData(Promise.resolve({
     data: data
@@ -50,18 +54,13 @@ test('CDA call getSpace fails', t => {
 
 test('CDA call getContentType', t => {
   t.plan(1)
-  const data = {
-    sys: {
-      id: 'id'
-    }
-  }
   const {api} = setupWithData(Promise.resolve({
-    data: data
+    data: contentTypeMock
   }))
 
   return api.getContentType('ctid')
   .then(r => {
-    t.looseEqual(r.toPlainObject(), data)
+    t.looseEqual(r.toPlainObject(), contentTypeMock)
   })
 })
 
@@ -85,9 +84,10 @@ test('CDA call getContentType fails', t => {
 test('CDA call getContentTypes', t => {
   t.plan(1)
   const data = {
-    sys: {
-      id: 'id'
-    }
+    total: 100,
+    skip: 0,
+    limit: 10,
+    items: [contentTypeMock]
   }
   const {api} = setupWithData(Promise.resolve({
     data: data
@@ -118,18 +118,13 @@ test('CDA call getContentTypes fails', t => {
 
 test('CDA call getEntry', t => {
   t.plan(1)
-  const data = {
-    sys: {
-      id: 'id'
-    }
-  }
   const {api} = setupWithData(Promise.resolve({
-    data: data
+    data: entryMock
   }))
 
   return api.getEntry('eid')
   .then(r => {
-    t.looseEqual(r.toPlainObject(), data)
+    t.looseEqual(r.toPlainObject(), entryMock)
   })
 })
 
@@ -153,7 +148,12 @@ test('CDA call getEntry fails', t => {
 test('CDA call getEntries', t => {
   t.plan(2)
 
-  const data = {sys: {id: 'id'}}
+  const data = {
+    total: 100,
+    skip: 0,
+    limit: 10,
+    items: [entryMock]
+  }
 
   const wrapStub = sinon.stub()
   createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
@@ -249,18 +249,13 @@ test('CDA call getEntries fails', t => {
 
 test('CDA call getAsset', t => {
   t.plan(1)
-  const data = {
-    sys: {
-      id: 'id'
-    }
-  }
   const {api} = setupWithData(Promise.resolve({
-    data: data
+    data: assetMock
   }))
 
   return api.getAsset('aid')
   .then(r => {
-    t.looseEqual(r.toPlainObject(), data)
+    t.looseEqual(r.toPlainObject(), assetMock)
   })
 })
 
@@ -284,9 +279,10 @@ test('CDA call getAsset fails', t => {
 test('CDA call getAssets', t => {
   t.plan(1)
   const data = {
-    sys: {
-      id: 'id'
-    }
+    total: 100,
+    skip: 0,
+    limit: 10,
+    items: [assetMock]
   }
   const {api} = setupWithData(Promise.resolve({
     data: data

@@ -3,8 +3,7 @@
     "es2015"
   ],
   "plugins": [
-    "transform-runtime",
-    "transform-flow-strip-types"
+    "transform-runtime"
   ],
   "env": {
     "test": {
