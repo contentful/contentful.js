@@ -1,12 +1,13 @@
 #!/bin/bash
 # This script pushes the styleguide into the gh-pages branch
 set -e
-echo "Publishing docs"
 
 PAGES_DIR=./gh-pages
 DOCS_DIR=./out
 REPO="git@github.com:contentful/contentful.js.git"
 VERSION=`cat package.json|grep version|sed -e 's/.*version": "//g'|sed -e 's/",.*//g'`
+
+echo "Publishing docs"
 
 if ! [ -d $DOCS_DIR ] ; then
   echo "Docs can't be found. Maybe you haven't generated them?"
@@ -19,7 +20,7 @@ if [ ! -d $PAGES_DIR ] ; then
 fi
 
 cp -r $DOCS_DIR/* $PAGES_DIR
-echo '<meta http-equiv="refresh" content="0; url=https://contentful.github.io/contentful.js/contentful/$VERSION/">'
+echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/contentful.js/contentful/$VERSION/\">" > $PAGES_DIR/index.html
 
 pushd $PAGES_DIR
 git add .
