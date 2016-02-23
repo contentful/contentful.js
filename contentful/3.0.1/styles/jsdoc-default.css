@@ -1,0 +1,390 @@
+@font-face{
+  font-family: "Avenir Next W01";
+  src: url("//static.contentful.com/app/2cd55546-ec00-4af9-aeca-4a3cd186da53.woff2") format("woff2"),
+       url("//static.contentful.com/app/1e9892c0-6927-4412-9874-1b82801ba47a.woff") format("woff"),
+       url("../fonts/2cd55546-ec00-4af9-aeca-4a3cd186da53.woff2") format("woff2"),
+       url("../fonts/1e9892c0-6927-4412-9874-1b82801ba47a.woff") format("woff");
+  font-weight:  400;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: "Avenir Next W01";
+  src: url("http://static.contentful.com/app/7377dbe6-f11a-4a05-b33c-bc8ce1f60f84.woff2") format("woff2"),
+       url("http://static.contentful.com/app/92b66dbd-4201-4ac2-a605-4d4ffc8705cc.woff") format("woff"),
+       url("../fonts/7377dbe6-f11a-4a05-b33c-bc8ce1f60f84.woff2") format("woff2"),
+       url("../fonts/92b66dbd-4201-4ac2-a605-4d4ffc8705cc.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face{
+  font-family:"Avenir Next W01";
+  src: url("http://static.contentful.com/app/627fbb5a-3bae-4cd9-b617-2f923e29d55e.woff2") format("woff2"),
+       url("http://static.contentful.com/app/f26faddb-86cc-4477-a253-1e1287684336.woff") format("woff"),
+       url("../fonts/627fbb5a-3bae-4cd9-b617-2f923e29d55e.woff2") format("woff2"),
+       url("../fonts/f26faddb-86cc-4477-a253-1e1287684336.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html
+{
+    overflow: auto;
+    background-color: #fff;
+    font-size: 16px;
+}
+
+body
+{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-family: 'Avenir Next W01', sans-serif;
+    -webkit-font-smoothing: subpixel-antialiased;
+    line-height: 1.5;
+    color: #536171;
+    background-color: white;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  height: 97%;
+  overflow: auto;
+}
+
+a, a:visited, a:active {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+header
+{
+    display: block;
+    padding: 0px 4px;
+}
+
+tt, code, kbd, samp {
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+}
+
+.class-description {
+    font-size: 130%;
+    line-height: 140%;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.class-description:empty {
+    margin: 0;
+}
+
+#main {
+    width: 70%;
+}
+
+article dl {
+    margin-bottom: 20px;
+}
+
+article > dl {
+    margin-bottom: 60px;
+}
+
+article .entity {
+    margin-bottom: 100px;
+}
+
+section
+{
+    display: block;
+    background-color: #fff;
+    padding: 12px 24px;
+    border-bottom: 1px solid #ccc;
+    margin-right: 30px;
+}
+
+section:last-of-type {
+  border-bottom: none;
+}
+
+.variation {
+    display: none;
+}
+
+.signature-attributes {
+    font-size: 60%;
+    color: #aaa;
+    font-style: italic;
+    font-weight: lighter;
+}
+
+nav
+{
+    display: block;
+    margin-top: 28px;
+    width: 30%;
+    box-sizing: border-box;
+    border-left: 1px solid #ccc;
+    padding-left: 16px;
+}
+
+nav ul {
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', arial, sans-serif;
+    font-size: 100%;
+    line-height: 17px;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+nav ul a, nav ul a:visited, nav ul a:active {
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    line-height: 18px;
+    color: #4D4E53;
+}
+
+nav h3 {
+    margin-top: 12px;
+}
+
+nav li {
+    margin-top: 6px;
+}
+
+footer {
+    display: block;
+    padding: 6px;
+    margin-top: 12px;
+    font-style: italic;
+    font-size: 90%;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 200;
+    margin: 0;
+}
+
+h1
+{
+    font-family: 'Avenir Next W01', sans-serif;
+    font-size: 48px;
+    letter-spacing: -2px;
+    margin: 12px 24px 20px;
+}
+
+h2, h3
+{
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+}
+
+h4
+{
+    font-size: 18px;
+    letter-spacing: -0.33px;
+    margin-bottom: 12px;
+    color: #4d4e53;
+}
+
+h5, .container-overview .subsection-title
+{
+    font-size: 120%;
+    font-weight: bold;
+    letter-spacing: -0.01em;
+    margin: 8px 0 3px 0;
+}
+
+h6
+{
+    font-size: 100%;
+    letter-spacing: -0.01em;
+    margin: 6px 0 3px 0;
+    font-style: italic;
+}
+
+.ancestors { color: #999; }
+.ancestors a
+{
+    color: #999 !important;
+    text-decoration: none;
+}
+
+.clear
+{
+    clear: both;
+}
+
+.important
+{
+    font-weight: bold;
+    color: #950B02;
+}
+
+.yes-def {
+    text-indent: -1000px;
+}
+
+.type-signature {
+    color: #aaa;
+}
+
+.name, .signature {
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+}
+
+.details { margin-top: 14px; border-left: 2px solid #DDD; }
+.details dt { width: 120px; float: left; padding-left: 10px;  padding-top: 6px; }
+.details dd { margin-left: 70px; }
+.details ul { margin: 0; }
+.details ul { list-style-type: none; }
+.details li { margin-left: 30px; padding-top: 6px; }
+.details pre.prettyprint { margin: 0 }
+.details .object-value { padding-top: 0; }
+
+.description {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.code-caption
+{
+    font-style: italic;
+    font-size: 107%;
+    margin: 0;
+}
+
+.prettyprint
+{
+    border: 1px solid #ddd;
+    width: 80%;
+    overflow: auto;
+}
+
+.prettyprint.source {
+    width: inherit;
+}
+
+.prettyprint code
+{
+    font-size: 100%;
+    line-height: 18px;
+    display: block;
+    padding: 4px 12px;
+    margin: 0;
+    background-color: #fff;
+    color: #4D4E53;
+}
+
+.prettyprint code span.line
+{
+  display: inline-block;
+}
+
+.prettyprint.linenums
+{
+  padding-left: 70px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prettyprint.linenums ol
+{
+  padding-left: 0;
+}
+
+.prettyprint.linenums li
+{
+  border-left: 3px #ddd solid;
+}
+
+.prettyprint.linenums li.selected,
+.prettyprint.linenums li.selected *
+{
+  background-color: lightyellow;
+}
+
+.prettyprint.linenums li *
+{
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.params, .props
+{
+    margin-top: 10px;
+    margin-bottom: 30px;
+    border-spacing: 0;
+    border: 0;
+    border-collapse: collapse;
+}
+
+.params .name, .props .name, .name code {
+    color: #4D4E53;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 100%;
+}
+
+.params td, .params th, .props td, .props th
+{
+    border: 1px solid #DBE3E7;
+    margin: 0px;
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 12px;
+    display: table-cell;
+}
+
+.params thead tr, .props thead tr
+{
+    background-color: #F7F9FA;
+    font-weight: bold;
+}
+
+.params .params thead tr, .props .props thead tr
+{
+    background-color: #fff;
+    font-weight: bold;
+}
+
+.params td.description > p:first-child,
+.props td.description > p:first-child
+{
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.params td.description > p:last-child,
+.props td.description > p:last-child
+{
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.disabled {
+    color: #454545;
+}
