@@ -24,6 +24,10 @@
         url('../fonts/OpenSans-Light-webfont.svg#open_sanslight') format('svg');
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html
 {
     overflow: auto;
@@ -33,10 +37,29 @@ html
 
 body
 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     font-family: 'Open Sans', sans-serif;
     line-height: 1.5;
     color: #4d4e53;
     background-color: white;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  height: 97%;
+  overflow: auto;
 }
 
 a, a:visited, a:active {
@@ -70,7 +93,6 @@ tt, code, kbd, samp {
 }
 
 #main {
-    float: left;
     width: 70%;
 }
 
@@ -95,6 +117,10 @@ section
     margin-right: 30px;
 }
 
+section:last-of-type {
+  border-bottom: none;
+}
+
 .variation {
     display: none;
 }
@@ -109,7 +135,6 @@ section
 nav
 {
     display: block;
-    float: right;
     margin-top: 28px;
     width: 30%;
     box-sizing: border-box;
