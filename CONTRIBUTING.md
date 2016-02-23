@@ -1,3 +1,9 @@
+We appreciate any community contributions to this project, whether in the form of issues or Pull Requests.
+
+This document outlines the we'd like you to follow in terms of commit messages and code style.
+
+It also explains what to do in case you want to setup the project locally and run tests.
+
 # Setup
 
 This project is written in ES2015 and transpiled to ES5 using Babel, to the `dist` directory. This should generally only happen at publishing time, or for testing purposes only.
@@ -17,6 +23,10 @@ Axios, one of the main dependencies is vendored. This generally shouldn't matter
 This project uses [standard](https://github.com/feross/standard). Install a relevant editor plugin if you'd like.
 
 Everywhere where it isn't applicable, follow a style similar to the existing code.
+
+# Commit messages and issues
+
+This project uses the [Angular JS Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit), via semantic-release. See the semantic-release [Default Commit Message Format](https://github.com/semantic-release/semantic-release#default-commit-message-format) section for more details.
 
 # Running tests
 
