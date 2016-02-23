@@ -7,7 +7,6 @@ const client = contentful.createClient({
   space: 'cfexampleapi'
 })
 
-
 test('Gets space', t => {
   t.plan(3)
   return client.getSpace()
