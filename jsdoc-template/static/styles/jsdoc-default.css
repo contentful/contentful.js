@@ -76,6 +76,8 @@ tt, code, kbd, samp {
 
 article dl {
     margin-bottom: 40px;
+article .entity {
+    margin-bottom: 100px;
 }
 
 section
