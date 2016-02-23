@@ -4,16 +4,22 @@ set -e
 echo "Publishing docs"
 
 PAGES_DIR=./gh-pages
+DOCS_DIR=./out
 REPO="git@github.com:contentful/contentful.js.git"
+VERSION=`cat package.json|grep version|sed -e 's/.*version": "//g'|sed -e 's/",.*//g'`
 
-npm run docs:build
+if ! [ -d $DOCS_DIR ] ; then
+  echo "Docs can't be found. Maybe you haven't generated them?"
+  exit 1
+fi
 
 # get the gh-pages branch of the repo
 if [ ! -d $PAGES_DIR ] ; then
   git clone --single-branch --branch gh-pages $REPO $PAGES_DIR
 fi
 
-cp -r out/* $PAGES_DIR
+cp -r $DOCS_DIR/* $PAGES_DIR
+echo '<meta http-equiv="refresh" content="0; url=https://contentful.github.io/contentful.js/contentful/$VERSION/">'
 
 pushd $PAGES_DIR
 git add .
