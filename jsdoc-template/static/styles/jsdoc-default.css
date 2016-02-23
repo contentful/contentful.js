@@ -75,7 +75,13 @@ tt, code, kbd, samp {
 }
 
 article dl {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+}
+
+article > dl {
+    margin-bottom: 60px;
+}
+
 article .entity {
     margin-bottom: 100px;
 }

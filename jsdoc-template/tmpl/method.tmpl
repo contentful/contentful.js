@@ -27,12 +27,10 @@ var self = this;
 <?js } ?>
 
 <?js if (kind === 'event' && data.type && data.type.names) {?>
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            <?js= self.partial('type.tmpl', data.type.names) ?>
-        </li>
-    </ul>
+  <dl class="types">
+    <dt><strong>Type:</strong></dt>
+    <dd> <?js= self.partial('type.tmpl', data.type.names) ?> </dd>
+  </dl>
 <?js } ?>
 
 <?js if (data['this']) { ?>
@@ -44,8 +42,6 @@ var self = this;
     <h5>Parameters:</h5>
     <?js= this.partial('params.tmpl', params) ?>
 <?js } ?>
-
-<?js= this.partial('details.tmpl', data) ?>
 
 <?js if (data.kind !== 'module' && data.requires && data.requires.length) { ?>
 <h5>Requires:</h5>
@@ -98,6 +94,8 @@ var self = this;
         <?js= self.partial('returns.tmpl', r) ?>
     <?js });
 } } ?>
+
+<?js= this.partial('details.tmpl', data) ?>
 
 <?js if (data.examples && examples.length) { ?>
     <h5>Example<?js= examples.length > 1? 's':'' ?></h5>
