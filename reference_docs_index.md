@@ -2,8 +2,6 @@ This is the reference documentation for contentful.js, the JavaScript SDK for [C
 
 TODO
 * Figure out how to deploy for each library version and redirect the index page
-* Maybe try to use Avenir as a font and fallback to the current One
-* see if there's any Contentful color tweaks that can be done
 
 To get started, follow the instructions on the [Github Project Page](https://github.com/contentful/contentful.js).
 
