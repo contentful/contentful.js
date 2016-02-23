@@ -1,0 +1,8 @@
+{
+  "opts": {
+    "mainpagetitle": "contentful.js",
+    "template": "jsdoc-template",
+    "readme": "reference_docs_index.md",
+    "package": "package.json"
+  }
+}

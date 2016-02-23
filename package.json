@@ -14,7 +14,7 @@
     "postinstall": "npm run vendor:node && npm run vendor:browser",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run clean",
-    "docs:build": "npm run build && jsdoc -r dist -t jsdoc-template",
+    "docs:build": "npm run build && jsdoc -r -c jsdoc.json dist",
     "docs:watch": "watchy -w lib,jsdoc-template npm run docs:build",
     "pretest": "standard lib/*.js && standard lib/**/*.js && flow",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
