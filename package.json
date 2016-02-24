@@ -28,10 +28,9 @@
     "postinstall": "npm run vendor:node && npm run vendor:browser",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run docs:publish && npm run clean",
-    "pretest": "standard lib/*.js && standard lib/**/*.js && flow",
+    "pretest": "standard lib/*.js && standard lib/**/*.js",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "flow-watcher": "watchy -w lib,test flow"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "browser": "./browser.js",
   "files": [
@@ -59,7 +58,6 @@
     "closurecompiler": "^1.5.2",
     "coveralls": "^2.11.6",
     "cz-conventional-changelog": "^1.1.5",
-    "flow-bin": "^0.21.0",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
     "jsdoc": "^3.4.0",
