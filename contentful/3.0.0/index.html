@@ -36,20 +36,48 @@
 
 
     <section>
-        <article><p>This is the reference documentation for contentful.js, the JavaScript SDK for <a href="https://www.contentful.com">Contentful's</a> Content Delivery API.</p>
-<p>TODO</p>
-<ul>
-<li>Figure out how to deploy for each library version and redirect the index page</li>
+        <article><p>Javascript SDK for <a href="https://www.contentful.com">Contentful's</a> Content Delivery API.</p>
+<h2>About</h2><p><a href="https://www.contentful.com">Contentful</a> is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit &amp; manage content in the cloud and publish it anywhere via a powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.</p>
+<h2>Features</h2><ul>
+<li>Content retrieval through Contentful's <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">Content Delivery API</a>.</li>
+<li><a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a></li>
+<li><a href="https://www.contentful.com/developers/docs/concepts/locales/">Localization support</a></li>
+<li><a href="https://www.contentful.com/developers/docs/concepts/links/">Link resolution</a></li>
 </ul>
-<p>To get started, follow the instructions on the <a href="https://github.com/contentful/contentful.js">Github Project Page</a>.</p>
-<p>If you've already done so, the first thing you want to look at is the <a href="./contentful.html"><code>contentful</code></a> namespace.</p>
+<h2>Supported environments</h2><p>Browsers and Node.js:</p>
+<ul>
+<li>Chrome</li>
+<li>Firefox</li>
+<li>IE11 / Edge</li>
+<li>node.js &gt;= 0.10</li>
+</ul>
+<h2>Getting started</h2><p>In order to get started with the Contentful JS SDK you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.</p>
+<h2>Installation</h2><p>In node, using <a href="http://npmjs.org">npm</a>:</p>
+<pre class="prettyprint source lang-sh"><code>npm install contentful</code></pre><p>Or, if you'd like to use a standalone built file you can use the following script tag or just download it from <a href="https://npmcdn.com">npmcdn</a>, under the <code>browser-dist</code> directory:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://npmcdn.com/contentful@latest/browser-dist/contentful.min.js&quot;>&lt;/script></code></pre><p>Using <code>contentful@latest</code> will always get you the latest version, but you can also specify a specific version number:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://npmcdn.com/contentful@3.0.0/browser-dist/contentful.min.js&quot;>&lt;/script></code></pre><h2>Authentication</h2><p>To get content from Contentful, an app should authenticate with an with an OAuth bearer token.</p>
+<p>You can create API keys using <a href="https://app.contentful.com">Contentful's web interface</a>. Go to the app, open the space that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section and create your first token. Done.</p>
+<p>Don't forget to also get your Space ID.</p>
+<p>For more information, check the Contentful's REST API reference on <a href="https://www.contentful.com/developers/docs/references/authentication/">Authentication</a>.</p>
+<h2>Documentation/References</h2><p>The first thing you want to look at is the <a href="./contentful.html"><code>contentful</code></a> namespace.</p>
 <p>Here's a quick description of the other namespaces:</p>
 <ul>
 <li><a href="./CDAClient.html"><code>CDAClient</code></a> - The main client object, which provides the methods to get entities out of Contentful such as Entries, Assets and Content Types.</li>
 <li><a href="./Entities.html"><code>Entities</code></a> - Defines properties and methods for each of the different entities you'll find in Contentful.</li>
 <li><a href="./EntryFields.html"><code>EntryFields</code></a> - Defines the different kinds of fields you will find in Entries.</li>
 <li><a href="./Sync.html"><code>Sync</code></a> - Defines the types used when working with the <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> endpoint</li>
-</ul></article>
+</ul>
+<p>Additional resources:</p>
+<ul>
+<li>Check the <a href="https://www.contentful.com/developers/docs/javascript/">Contentful for JavaScript</a> page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful</li>
+<li><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">Contentful's CDA REST API reference</a> for additional details on the Delivery API</li>
+</ul>
+<h2>Versioning</h2><p>This project strictly follows <a href="http://semver.org/">Semantic Versioning</a> by use of <a href="https://github.com/semantic-release/semantic-release">semantic-release</a>.</p>
+<p>This means that new versions are released automatically as fixes, features or breaking changes are released.</p>
+<p>You can check the changelog on the <a href="https://github.com/contentful/contentful.js/releases">releases</a> page.</p>
+<h2>Support</h2><p>Please open an <a href="https://github.com/contentful/contentful.js/issues/new">issue</a></p>
+<h2>Contributing</h2><p>See <a href="https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
+<h2>License</h2><p>MIT</p></article>
     </section>
 
 
@@ -66,8 +94,8 @@
 
     <footer>
         Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
-         on Tue Feb 23 2016 11:55:51 GMT+0100 (CET)
-        for contentful.js 3.0.0
+         on Wed Feb 24 2016 14:25:16 GMT+0100 (CET)
+        for contentful.js 3.0.1
     </footer>
   </main>
 
