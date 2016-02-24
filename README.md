@@ -67,8 +67,8 @@ For more information, check the Contentful's REST API reference on [Authenticati
 ## Documentation/References
 
 * [Contentful's JS SDK reference](https://contentful.github.io/contentful.js)
-  * From version 3.0.0 onwards, you can access documentation for a specific version by visiting https://contentful.github.io/contentful.js/contentful/VERSION
-  * For versions prior to 3.0.0, you can access documentation at https://github.com/contentful/contentful.js/tree/legacy
+  * From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+  * For versions prior to 3.0.0, you can access documentation at [https://github.com/contentful/contentful.js/tree/legacy](https://github.com/contentful/contentful.js/tree/legacy)
 * Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful
 * [Contentful's CDA REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/) for additional details on the Delivery API
 
