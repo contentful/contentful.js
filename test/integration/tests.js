@@ -2,10 +2,17 @@ import test from 'blue-tape'
 import {filter, map} from 'lodash/collection'
 import contentful from '../../'
 
-const client = contentful.createClient({
+const params = {
   accessToken: 'b4c0n73n7fu1',
   space: 'cfexampleapi'
-})
+}
+
+if (process.env.API_INTEGRATION_TESTS) {
+  params.host = '127.0.0.1:5000'
+  params.insecure = true
+}
+
+const client = contentful.createClient(params)
 
 test('Gets space', t => {
   t.plan(3)
