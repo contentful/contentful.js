@@ -20,7 +20,7 @@ if [ ! -d $PAGES_DIR ] ; then
 fi
 
 cp -r $DOCS_DIR/* $PAGES_DIR
-echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/contentful.js/contentful/$VERSION/\">" > $PAGES_DIR/index.html
+echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/contentful.js/contentful/${VERSION}/\">" > $PAGES_DIR/index.html
 
 pushd $PAGES_DIR
 git add .
