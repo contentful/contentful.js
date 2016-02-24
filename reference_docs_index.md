@@ -31,7 +31,17 @@ In node, using [npm](http://npmjs.org):
 npm install contentful
 ```
 
-TODO: add npmcdn instructions
+Or, if you'd like to use a standalone built file you can use the following script tag or just download it from [npmcdn](https://npmcdn.com), under the `browser-dist` directory:
+
+``` html
+<script src="https://npmcdn.com/contentful@latest/browser-dist/contentful.min.js"></script>
+```
+
+Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
+
+``` html
+<script src="https://npmcdn.com/contentful@3.0.0/browser-dist/contentful.min.js"></script>
+```
 
 ## Authentication
 
