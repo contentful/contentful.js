@@ -12,8 +12,7 @@
   "scripts": {
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage && rimraf out",
     "build": "npm run clean && babel lib --out-dir dist && npm run build:optimize",
-    "build:standalone": "npm run clean && webpack -p",
-    "build:optimize": "npm run build:standalone && ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js",
+    "build:optimize": "webpack -p && ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js",
     "docs:build": "jsdoc -r -c jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib,jsdoc-template npm run docs:dev",
