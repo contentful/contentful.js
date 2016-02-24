@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage && rimraf out",
-    "build": "npm run clean && babel lib --out-dir dist && npm run build:optimize",
+    "build": "npm run clean && npm run vendor && babel lib --out-dir dist && npm run build:optimize",
     "build:optimize": "webpack -p && ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js",
     "docs:build": "jsdoc -r -c jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
@@ -24,6 +24,7 @@
     "test:integration": "babel-node ./test/integration/tests.js",
     "test:browser-local": "BABEL_ENV=test ./node_modules/.bin/karma start karma.conf.local.js",
     "test:browser-remote": "BABEL_ENV=test ./node_modules/.bin/karma start karma.conf.saucelabs.js",
+    "vendor": "npm run vendor:node && npm run vendor:browser",
     "vendor:node": "rimraf vendor-node && mkdirp vendor-node && babel node_modules/axios/lib/ --out-dir vendor-node/",
     "vendor:browser": "rimraf vendor-browser && mkdirp vendor-browser && babel node_modules/axios/dist/axios.js --out-file vendor-browser/axios.js",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
