@@ -282,7 +282,7 @@ test('Gets assets', t => {
 })
 
 test('Sync space', t => {
-  t.plan(5)
+  t.plan(6)
   return client.sync({initial: true})
   .then(response => {
     t.ok(response.entries, 'entries')
@@ -290,5 +290,6 @@ test('Sync space', t => {
     t.ok(response.deletedEntries, 'deleted entries')
     t.ok(response.deletedAssets, 'deleted assets')
     t.ok(response.nextSyncToken, 'next sync token')
+    t.equal(response.entries[4].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
   })
 })

@@ -44,12 +44,20 @@ test('Throws with incompatible content_type and type parameter', t => {
 })
 
 test('Initial sync with one page', t => {
-  t.plan(6)
+  t.plan(7)
   const http = {get: sinon.stub()}
+  const entryWithLink = createEntry('1')
+  entryWithLink.fields.linked = {
+    sys: {
+      id: '2',
+      type: 'Link',
+      linkType: 'Entry'
+    }
+  }
   http.get.withArgs('sync', {params: {initial: true}}).returns(Promise.resolve({
     data: {
       items: [
-        createEntry('1'),
+        entryWithLink,
         createEntry('2'),
         createEntry('3'),
         createEntry('3', true),
@@ -71,6 +79,7 @@ test('Initial sync with one page', t => {
     t.equal(response.assets.length, 3, 'entries length')
     t.equal(response.deletedAssets.length, 1, 'deleted assets length')
     t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
+    t.equal(response.entries[0].fields.linked.sys.type, 'Entry', 'linked entry is resolved')
   })
 })
 
