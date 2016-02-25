@@ -4,10 +4,10 @@ before_install:
   - npm set progress=false
 language: node_js
 node_js:
-  - "0.10"
-  - "3.3"
-  - "4.3"
   - "5.7"
+  - "4.3"
+  - "3.3"
+  - "0.10"
 script: npm run test:ci
 after_success:
   - curl -Lo travis_after_all.py https://raw.githubusercontent.com/contentful/travis_after_all/master/travis_after_all.py
