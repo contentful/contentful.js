@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Contentful CDA SDK: Namespace: Sync</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+  <main>
+    <div class="content">
+      <div id="main">
+
+          <h1 class="page-title">Namespace: Sync</h1>
+
+          
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>Sync</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+          <div class="entity">
+            
+                
+<h4 class="name" id=".DeletedAsset">DeletedAsset</h4>
+
+
+
+
+<div class="description">
+    Deleted Assets are the same as Assets, but only appear on the sync API.
+</div>
+
+
+
+  <dl class="types">
+    <dt><strong>Type:</strong></dt>
+    <dd> 
+<span class="param-type"><a href="Entities.html#.Asset">Entities.Asset</a></span>
+
+ </dd>
+  </dl>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+          </div>
+        
+          <div class="entity">
+            
+                
+<h4 class="name" id=".DeletedEntry">DeletedEntry</h4>
+
+
+
+
+<div class="description">
+    Deleted Entries are the same as Entries, but only appear on the sync API.
+</div>
+
+
+
+  <dl class="types">
+    <dt><strong>Type:</strong></dt>
+    <dd> 
+<span class="param-type"><a href="Entities.html#.Entry">Entities.Entry</a></span>
+
+ </dd>
+  </dl>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+          </div>
+        
+          <div class="entity">
+            
+                
+<h4 class="name" id=".SyncCollection">SyncCollection</h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>entries</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="Entities.html#.Entry">Entities.Entry</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">All existing entries on first sync. New and updated entries on subsequent syncs.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>assets</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="Entities.html#.Asset">Entities.Asset</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">All existing assets on first sync. New and updated assets on subsequent syncs.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deletedEntries</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="Sync.html#.DeletedEntry">Sync.DeletedEntry</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">List of deleted Entries since last sync</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deletedAssets</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="Sync.html#.DeletedAsset">Sync.DeletedAsset</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">List of deleted Assets since last sync</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nextSyncToken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Token to be sent to the next sync call</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line47">line 47</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+          </div>
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+      </div>
+
+      <nav>
+          <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="CDAClient.html">CDAClient</a></li><li><a href="contentful.html">contentful</a></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+      </nav>
+    </div>
+
+    <footer>
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+         on Thu Feb 25 2016 13:10:00 GMT+0000 (UTC)
+        for contentful.js 3.0.6
+    </footer>
+  </main>
+
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
+</body>
+</html>
