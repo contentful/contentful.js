@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Contentful CDA SDK: Source: create-cda-api.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+  <main>
+    <div class="content">
+      <div id="main">
+
+          <h1 class="page-title">Source: create-cda-api.js</h1>
+
+          
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createCdaApi;
+
+var _space = require('./entities/space');
+
+var _contentType = require('./entities/content-type');
+
+var _entry = require('./entities/entry');
+
+var _asset = require('./entities/asset');
+
+var _sync = require('./sync');
+
+var _sync2 = _interopRequireDefault(_sync);
+
+var _createRequestConfig = require('./create-request-config');
+
+var _createRequestConfig2 = _interopRequireDefault(_createRequestConfig);
+
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @memberof CDAClient
+ * @typedef {Object} ClientAPI
+ * @prop {function} getSpace
+ * @prop {function} getContentType
+ * @prop {function} getContentTypes
+ * @prop {function} getEntry
+ * @prop {function} getEntries
+ * @prop {function} getAsset
+ * @prop {function} getAssets
+ * @prop {function} sync
+ */
+
+function errorHandler(error) {
+  if (error.data) {
+    throw error.data;
+  }
+  throw error;
+}
+
+/**
+ * @private
+ * Link resolution can be turned off for the methods that use it, or it can
+ * be turned off globally. The local setting overrides the global setting.
+ */
+
+
+/**
+ * Contentful CDA API
+ * @namespace CDAClient
+ */
+
+/**
+ * @namespace Entities
+ */
+
+/**
+ * Link to another entity. See &lt;a href="https://www.contentful.com/developers/docs/concepts/links/">Links&lt;/a> for more details.
+ * @memberof Entities
+ * @typedef Link
+ * @prop {string} type - type of this entity. Always link.
+ * @prop {string} id
+ * @prop {string} linkType - type of this link. If defined, either Entry or Asset
+ */
+
+/**
+ * System metadata. See &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes">Common Resource Attributes&lt;/a> for more details.
+ * @memberof Entities
+ * @typedef Sys
+ * @prop {string} type
+ * @prop {string} id
+ * @prop {Entities.Link} space
+ * @prop {string} createdAt
+ * @prop {string} updatedAt
+ * @prop {number} revision
+ */
+
+function shouldLinksResolve(query, globalSetting) {
+  return !!('resolveLinks' in query ? query.resolveLinks : globalSetting);
+}
+
+function createCdaApi(http, resolveLinksGlobalSetting) {
+  /**
+   * Gets the Space which the client is currently configured to use
+   * @memberof CDAClient
+   * @return {Promise&lt;Entities.Space>} Promise for a Space
+   * @example
+   * client.getSpace()
+   * .then(space => console.log(space))
+   */
+  function getSpace() {
+    return http.get('').then(function (response) {
+      return (0, _space.wrapSpace)(response.data);
+    }, errorHandler);
+  }
+
+  /**
+   * Gets a Content Type
+   * @memberof CDAClient
+   * @param  {string} id
+   * @return {Promise&lt;Entities.ContentType>} Promise for a Content Type
+   * @example
+   * client.getContentType('contentTypeId')
+   * .then(contentType => console.log(contentType))
+   */
+  function getContentType(id) {
+    return http.get('content_types/' + id).then(function (response) {
+      return (0, _contentType.wrapContentType)(response.data);
+    }, errorHandler);
+  }
+
+  /**
+   * Gets a collection of Content Types
+   * @memberof CDAClient
+   * @param  {Entities.Query} query
+   * @return {Promise&lt;Entities.ContentTypeCollection>} Promise for a collection of Content Types
+   * @example
+   * client.getContentTypes()
+   * .then(contentTypes => console.log(contentTypes.items))
+   */
+  function getContentTypes() {
+    var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    return http.get('content_types', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
+      return (0, _contentType.wrapContentTypeCollection)(response.data);
+    }, errorHandler);
+  }
+
+  /**
+   * Gets an Entry
+   * @memberof CDAClient
+   * @param  {string} id
+   * @return {Promise&lt;Entities.Entry>} Promise for an Entry
+   * @example
+   * client.getEntry('entryId')
+   * .then(entry => console.log(entry))
+   */
+  function getEntry(id) {
+    return http.get('entries/' + id).then(function (response) {
+      return (0, _entry.wrapEntry)(response.data);
+    }, errorHandler);
+  }
+
+  /**
+   * Gets a collection of Entries
+   * @memberof CDAClient
+   * @param  {Object=} query - Object with search parameters. Check &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">Search Parameters&lt;/a> for more details.
+   * @param  {boolean=} query.resolveLinks - When true, links to other Entries or Assets are resolved. Default: true.
+   * @return {Promise&lt;Entities.EntryCollection>} Promise for a collection of Entries
+   * @example
+   * client.getEntries({content_type: 'contentTypeId'})
+   * .then(entries => console.log(entries.items))
+   */
+  function getEntries() {
+    var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var resolveLinks = shouldLinksResolve(query, resolveLinksGlobalSetting);
+    return http.get('entries', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
+      return (0, _entry.wrapEntryCollection)(response.data, resolveLinks);
+    }, errorHandler);
+  }
+
+  /**
+   * Gets an Asset
+   * @memberof CDAClient
+   * @param  {string} id
+   * @return {Promise&lt;Entities.Asset>} Promise for an Asset
+   * @example
+   * client.getAsset('assetId')
+   * .then(asset => console.log(asset))
+   */
+  function getAsset(id) {
+    return http.get('assets/' + id).then(function (response) {
+      return (0, _asset.wrapAsset)(response.data);
+    }, errorHandler);
+  }
+
+  /**
+   * Gets a collection of Assets
+   * @memberof CDAClient
+   * @param  {Object=} query - Object with search parameters. Check &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">Search Parameters&lt;/a> for more details.
+   * @return {Promise&lt;Entities.AssetCollection>} Promise for a collection of Assets
+   * @example
+   * client.getAssets()
+   * .then(assets => console.log(assets.items))
+   */
+  function getAssets() {
+    var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    return http.get('assets', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
+      return (0, _asset.wrapAssetCollection)(response.data);
+    }, errorHandler);
+  }
+
+  /**
+   * Synchronizes either all the content or only new content since last sync
+   * See &lt;a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization&lt;/a> for more information.
+   * @memberof CDAClient
+   * @param  {Object} query - Query object for the sync call. One of initial or nextSyncToken always needs to be specified, but not both.
+   * @param  {boolean?} query.initial - Indicates if this is the first sync. Use it if you don't have a sync token.
+   * @param  {string?} query.nextSyncToken - The token you got the last time you used this method. Ensures you only get changed content.
+   * @param  {string=} query.type - Filter by this type (Entry or Asset)
+   * @param  {string=} query.content_type - Filter by this content type id
+   * @param  {boolean=} query.resolveLinks - When true, links to other Entries or Assets are resolved. Default: true.
+   * @return {Promise&lt;Sync.SyncCollection>} Promise for the collection resulting of a sync operation
+   * @example
+   * client.sync()
+   * .then(response => console.log(response.entries, response.assets, response.nextSyncToken))
+   */
+  function sync() {
+    var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var resolveLinks = shouldLinksResolve(query, resolveLinksGlobalSetting);
+    return (0, _sync2.default)(http, query, resolveLinks);
+  }
+
+  return {
+    getSpace: getSpace,
+    getContentType: getContentType,
+    getContentTypes: getContentTypes,
+    getEntry: getEntry,
+    getEntries: getEntries,
+    getAsset: getAsset,
+    getAssets: getAssets,
+    sync: sync
+  };
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+
+      <nav>
+          <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="CDAClient.html">CDAClient</a></li><li><a href="contentful.html">contentful</a></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+      </nav>
+    </div>
+
+    <footer>
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+         on Thu Feb 25 2016 13:10:00 GMT+0000 (UTC)
+        for contentful.js 3.0.6
+    </footer>
+  </main>
+
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
+</body>
+</html>
