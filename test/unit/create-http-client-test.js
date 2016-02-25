@@ -8,9 +8,7 @@ test('Calls axios with expected URL', t => {
     create: sinon.stub()
   }
 
-  createHttpClient.__Rewire__('packageFile', {
-    version: 'version'
-  })
+  createHttpClient.__Rewire__('version', 'version')
 
   createHttpClient(axios, {
     accessToken: 'clientAccessToken',

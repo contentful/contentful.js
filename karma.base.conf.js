@@ -3,16 +3,18 @@
 // Use karma.conf.saucelabs.js for saucelabs tests
 
 var _ = require('lodash')
-var webpack = _.cloneDeep(require('./webpack.config.js'))
-delete webpack.entry
-delete webpack.output
-webpack.devtool = 'inline-source-map'
+var webpack = require('webpack')
+var webpackConfig = _.cloneDeep(require('./webpack.config.js'))
+delete webpackConfig.entry
+delete webpackConfig.output
+webpackConfig.devtool = 'inline-source-map'
 
 // https://webpack.github.io/docs/configuration.html#node
 // https://rmurphey.com/blog/2015/07/20/karma-webpack-tape-code-coverage
-webpack.node = {
+webpackConfig.node = {
   fs: 'empty'
 }
+webpackConfig.plugins.push(new webpack.NormalModuleReplacementPlugin(/\.\/dist\/contentful/g, './lib/contentful'))
 
 module.exports = {
   plugins: [
@@ -31,7 +33,7 @@ module.exports = {
     'test/unit/**/*.js': ['webpack']
   },
 
-  webpack: webpack,
+  webpack: webpackConfig,
 
   reporters: [ 'dots' ],
   port: 9876,
