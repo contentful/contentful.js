@@ -16,7 +16,7 @@
     "docs:build": "jsdoc -r -c jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib,jsdoc-template npm run docs:dev",
-    "docs:publish": "npm run docs:build && ./publish-docs.sh",
+    "docs:publish": "npm run docs:build && ./bin/publish-docs.sh",
     "test:ci": "npm run test:cover && npm run test:integration && if [ \"$TRAVIS_NODE_VERSION\" = \"5.0\" ] ; then npm run test:browser-remote; fi",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
