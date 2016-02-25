@@ -19,3 +19,5 @@ Axios is vendored because it expects a native or polyfilled implementation of pr
 Axios can be vendored with `npm run vendor:browser` and `npm run vendor:node`.
 
 The browser vendored version runs on top of the standalone Axios browser version which is already optimized for this use case (it's not a good idea to try and run babel on top of the normal axios commonjs package as it produces an unnecessarily large file)
+
+Because of this, the follow-redirects dependency of axios needs to be a dependency on this package as well, otherwise it won't be installed.

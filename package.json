@@ -47,6 +47,7 @@
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
+    "follow-redirects": "0.0.7",
     "lodash": "^4.2.0"
   },
   "devDependencies": {
