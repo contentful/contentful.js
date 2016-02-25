@@ -4,7 +4,7 @@ set -e
 
 PAGES_DIR=./gh-pages
 DOCS_DIR=./out
-REPO="git@github.com:contentful/contentful.js.git"
+REPO="https://${GH_TOKEN}@github.com/contentful/contentful.js.git"
 VERSION=`cat package.json|grep version|sed -e 's/.*version": "//g'|sed -e 's/",.*//g'`
 
 echo "Publishing docs"
