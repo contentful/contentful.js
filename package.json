@@ -11,8 +11,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage && rimraf out",
-    "build": "npm run clean && npm run vendor && babel lib --out-dir dist && npm run build:optimize",
-    "build:optimize": "webpack -p && ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js",
+    "build": "npm run clean && npm run vendor && npm run build:dist && npm run build:standalone",
+    "build:dist": "babel lib --out-dir dist",
+    "build:standalone": "webpack -p && ccjs browser-dist/contentful.js --compilation_level=ADVANCED_OPTIMIZATIONS > browser-dist/contentful.min.js 2>/dev/null",
     "docs:build": "jsdoc -r -c jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib,jsdoc-template npm run docs:dev",
