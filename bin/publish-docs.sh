@@ -20,6 +20,8 @@ if [ ! -d $PAGES_DIR ] ; then
 fi
 
 cp -r $DOCS_DIR/* $PAGES_DIR
+rm -rf $PAGES_DIR/contentful/latest
+cp -r $DOCS_DIR/contentful/$VERSION $PAGES_DIR/contentful/latest
 echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/contentful.js/contentful/${VERSION}/\">" > $PAGES_DIR/index.html
 
 pushd $PAGES_DIR
