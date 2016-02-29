@@ -1,1 +1,1 @@
-module.exports = require('./package.json').version
+module.exports = ''

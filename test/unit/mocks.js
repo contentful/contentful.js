@@ -2,22 +2,37 @@
 import {assign} from 'lodash/object'
 import {cloneDeep} from 'lodash/lang'
 
-import type {Sys} from '../../lib/entities/sys'
-import type {Link} from '../../lib/entities/link'
-
-const linkMock: Link = {
+const linkMock = {
   id: 'linkid',
   type: 'Link',
   linkType: 'linkType'
 }
 
-const sysMock: Sys = {
+const sysMock = {
   type: 'Type',
   id: 'id',
   space: cloneDeep(linkMock),
   createdAt: 'createdatdate',
   updatedAt: 'updatedatdate',
   revision: 1
+}
+
+const contentTypeMock = {
+  sys: assign(cloneDeep(sysMock), {
+    type: 'ContentType'
+  }),
+  name: 'name',
+  description: 'desc',
+  displayField: 'displayfield',
+  fields: [
+    {
+      id: 'fieldid',
+      name: 'fieldname',
+      type: 'Text',
+      localized: true,
+      required: false
+    }
+  ]
 }
 
 const entryMock = {
@@ -44,6 +59,7 @@ const assetMock = {
 export {
   linkMock,
   sysMock,
+  contentTypeMock,
   entryMock,
   assetMock
 }
