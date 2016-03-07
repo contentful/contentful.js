@@ -28,7 +28,10 @@ Browsers and Node.js:
 - Chrome
 - Firefox
 - IE11 / Edge
-- node.js >= 0.10
+- Safari
+- node.js (0.10, iojs-3.x, 4.x, 5.x)
+
+Other browsers should also work, but at the moment we're only running automated tests on the browsers and Node.js versions specified above.
 
 # Getting started
 
