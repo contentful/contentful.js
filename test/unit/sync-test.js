@@ -1,4 +1,3 @@
-/* @flow */
 import test from 'blue-tape'
 import sinon from 'sinon'
 import {cloneDeep} from 'lodash/lang'

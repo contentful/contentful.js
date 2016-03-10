@@ -1,4 +1,3 @@
-/* @flow */
 import test from 'tape'
 import {assetMock} from '../mocks'
 import {wrapAsset, wrapAssetCollection} from '../../../lib/entities/asset'

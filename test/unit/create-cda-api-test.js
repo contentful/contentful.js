@@ -1,8 +1,6 @@
-/* @flow */
 import test from 'blue-tape'
 import sinon from 'sinon'
 
-// $FlowIgnoreRewire
 import createCdaApi, {__RewireAPI__ as createCdaApiRewireApi} from '../../lib/create-cda-api'
 import {contentTypeMock, assetMock, entryMock} from './mocks'
 

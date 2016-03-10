@@ -1,4 +1,3 @@
-/* @flow */
 import {assign} from 'lodash/object'
 import {cloneDeep} from 'lodash/lang'
 
