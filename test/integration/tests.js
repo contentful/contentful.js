@@ -251,12 +251,13 @@ test('Gets entries by inverse creation order', t => {
 })
 
 test('Gets entries by creation order and id order', t => {
-  t.plan(2)
+  t.plan(3)
   return client.getEntries({
-    order: 'sys.createdAt,sys.id'
+    order: 'sys.revision,sys.id'
   })
   .then(response => {
-    t.ok(response.items[0].sys.createdAt < response.items[1].sys.createdAt, 'createdAt')
+    t.equal(response.items[0].sys.revision, response.items[1].sys.revision)
+    t.ok(response.items[1].sys.revision < response.items[2].sys.revision, 'revision')
     t.ok(response.items[0].sys.id < response.items[1].sys.id, 'id')
   })
 })
