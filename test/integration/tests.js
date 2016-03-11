@@ -60,12 +60,14 @@ test('Gets entries', t => {
 })
 
 test('Gets entries with linked includes', t => {
-  t.plan(3)
+  t.plan(5)
   return client.getEntries({include: 2})
   .then(response => {
     t.ok(response.includes, 'includes')
     t.ok(response.includes.Asset, 'includes for Assets')
     t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items')
+    t.equal(response.items[0].fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
+    t.ok(response.items[0].fields.bestFriend.fields, 'resolved entry has fields')
   })
 })
 
