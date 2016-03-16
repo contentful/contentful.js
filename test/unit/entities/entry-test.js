@@ -37,7 +37,7 @@ test('Entry collection is wrapped', t => {
   t.end()
 })
 
-test.only('Entry collection links are resolved', t => {
+test('Entry collection links are resolved', t => {
   const entryCollection = {
     total: 1,
     skip: 0,
@@ -87,7 +87,9 @@ test.only('Entry collection links are resolved', t => {
     }
   }
 
-  const wrappedEntry = wrapEntryCollection(entryCollection, true).toPlainObject()
+  const wrappedCollection = wrapEntryCollection(entryCollection, true)
+  const wrappedEntry = wrappedCollection.toPlainObject()
+
   // first linked entry resolved from includes
   t.equals(wrappedEntry.items[0].fields.linked1.sys.type, 'Asset', 'first linked entity is resolved')
   t.ok(wrappedEntry.items[0].fields.linked1.fields, 'first linked entity has fields')
@@ -96,5 +98,6 @@ test.only('Entry collection links are resolved', t => {
   t.ok(wrappedEntry.items[0].fields.linked2.fields, 'second linked entity has fields')
   t.equals(wrappedEntry.items[1].fields.linked1.sys.type, 'Entry', 'third linked entity is resolved')
   t.ok(wrappedEntry.items[1].fields.linked1.fields, 'third linked entity has fields')
+  t.ok(wrappedCollection.stringifySafe(), 'stringifies safely')
   t.end()
 })
