@@ -50,12 +50,15 @@ Or, if you'd like to use a standalone built file you can use the following scrip
 ``` html
 <script src="https://npmcdn.com/contentful@latest/browser-dist/contentful.min.js"></script>
 ```
+**It is not recommended to use the above URL for production.**
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
 ``` html
 <script src="https://npmcdn.com/contentful@3.0.0/browser-dist/contentful.min.js"></script>
 ```
+
+Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
 
 ## Authentication
 
