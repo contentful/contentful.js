@@ -111,7 +111,7 @@ test('Initial sync with one page and filter', t => {
 })
 
 test('Initial sync with multiple pages', t => {
-  t.plan(8)
+  t.plan(9)
   const http = {get: sinon.stub()}
   http.get.withArgs('sync', {params: {initial: true}}).returns(Promise.resolve({
     data: {
@@ -148,14 +148,16 @@ test('Initial sync with multiple pages', t => {
 
   return pagedSync(http, {initial: true}, true)
   .then(response => {
+    const objResponse = response.toPlainObject()
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
     t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
     t.equal(http.get.args[2][1].params.sync_token, 'nextpage2', 'http request param for second page')
-    t.equal(response.entries.length, 3, 'entries length')
-    t.equal(response.deletedEntries.length, 2, 'deleted entries length')
-    t.equal(response.assets.length, 3, 'entries length')
-    t.equal(response.deletedAssets.length, 1, 'deleted assets length')
-    t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
+    t.equal(objResponse.entries.length, 3, 'entries length')
+    t.equal(objResponse.deletedEntries.length, 2, 'deleted entries length')
+    t.equal(objResponse.assets.length, 3, 'entries length')
+    t.equal(objResponse.deletedAssets.length, 1, 'deleted assets length')
+    t.equal(objResponse.nextSyncToken, 'nextsynctoken', 'next sync token')
+    t.ok(response.stringifySafe(), 'stringifies response')
   })
 })
 
