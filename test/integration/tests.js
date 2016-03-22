@@ -59,6 +59,39 @@ test('Gets entries', t => {
   })
 })
 
+test('Gets entries with a specific locale', t => {
+  t.plan(2)
+  return client.getEntries({
+    locale: 'tlh'
+  })
+  .then(response => {
+    t.equal(response.items[0].sys.locale, 'tlh')
+    t.ok(response.items, 'items')
+  })
+})
+
+test('Gets entries with a limit parameter', t => {
+  t.plan(2)
+  return client.getEntries({
+    limit: 2
+  })
+  .then(response => {
+    t.ok(response.items, 'items')
+    t.equal(response.items.length, 2)
+  })
+})
+
+test('Gets entries with a skip parameter', t => {
+  t.plan(2)
+  return client.getEntries({
+    skip: 2
+  })
+  .then(response => {
+    t.ok(response.items, 'items')
+    t.equal(response.skip, 2)
+  })
+})
+
 test('Gets entries with linked includes', t => {
   t.plan(5)
   return client.getEntries({include: 2})
@@ -164,6 +197,17 @@ test('Gets entries with inverse exists query', t => {
   })
   .then(response => {
     t.equal(map(response.items, 'fields.likes').length, 0)
+  })
+})
+
+test('Gets entries with field link query', t => {
+  t.plan(1)
+  return client.getEntries({
+    content_type: 'cat',
+    'fields.bestFriend.sys.id': 'happycat'
+  })
+  .then(response => {
+    t.equal(response.items[0].sys.id, 'nyancat', 'returned entry has link to specified linked entry')
   })
 })
 
@@ -301,5 +345,37 @@ test('Sync space', t => {
     t.ok(response.deletedAssets, 'deleted assets')
     t.ok(response.nextSyncToken, 'next sync token')
     t.equal(response.entries[4].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
+  })
+})
+
+test('Sync space with token', t => {
+  t.plan(5)
+  return client.sync({nextSyncToken: 'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybCnV_Cg8OASMKpwo1UY8K8bsKFwqJrw7DDhcKnM2RDOVbDt1E-wo7CnDjChMKKGsK1wrzCrBzCqMOpZAwOOcOvCcOAwqHDv0XCiMKaOcOxZA8BJUzDr8K-wo1lNx7DnHE'})
+  .then(response => {
+    t.ok(response.entries, 'entries')
+    t.ok(response.assets, 'assets')
+    t.ok(response.deletedEntries, 'deleted entries')
+    t.ok(response.deletedAssets, 'deleted assets')
+    t.ok(response.nextSyncToken, 'next sync token')
+  })
+})
+
+test('Sync spaces assets', t => {
+  t.plan(3)
+  return client.sync({initial: true, type: 'Asset'})
+  .then(response => {
+    t.ok(response.assets, 'assets')
+    t.ok(response.deletedAssets, 'deleted assets')
+    t.ok(response.nextSyncToken, 'next sync token')
+  })
+})
+
+test('Sync space entries by content type', t => {
+  t.plan(3)
+  return client.sync({initial: true, type: 'Entry', content_type: 'dog'})
+  .then(response => {
+    t.ok(response.entries, 'entries')
+    t.ok(response.deletedEntries, 'deleted entries')
+    t.ok(response.nextSyncToken, 'next sync token')
   })
 })
