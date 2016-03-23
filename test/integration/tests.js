@@ -51,6 +51,16 @@ test('Gets entry', t => {
   })
 })
 
+test('Gets an entry with a specific locale', t => {
+  t.plan(1)
+  return client.getEntry('nyancat', {
+    locale: 'tlh'
+  })
+  .then(entry => {
+    t.equal(entry.sys.locale, 'tlh')
+  })
+})
+
 test('Gets entries', t => {
   t.plan(1)
   return client.getEntries()
@@ -324,6 +334,16 @@ test('Gets asset', t => {
   .then(response => {
     t.ok(response.sys, 'sys')
     t.ok(response.fields, 'fields')
+  })
+})
+
+test('Gets an asset with a specific locale', t => {
+  t.plan(1)
+  return client.getEntry('jake', {
+    locale: 'tlh'
+  })
+  .then(asset => {
+    t.equal(asset.sys.locale, 'tlh')
   })
 })
 
