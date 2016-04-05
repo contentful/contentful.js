@@ -38,11 +38,21 @@ Both of these test environments are setup to deal with Babel and code transpilin
 - `npm run test:only` runs Node.js unit tests without coverage. `npm run test:cover` to run Node.js unit tests with coverage. `npm run test:debug` runs babel-node in debug mode (same as running `node debug`).
 - `npm run test:integration` runs the integration tests against the Contentful CDA API
 - `npm run test:browser-local` runs both the unit and integration tests using Karma against local browsers.
+- `npm run test:ci` runs tests in CI
+- `npm run test:browser-remote` runs both the unit and integration tests using Karma against Sauce Labs. This is only usable in the CI environment, as it expects the credentials and connection tunnel to be present.
 
 # Documentation
 
 Code is documented using JSDoc 3, and reference documentation is published automatically with each new version.
 
+- `npm run docs:watch` watches code directory, and rebuilds documentation when anything changes. Useful for documentation writing and development.
+- `npm run docs:dev` builds code and builds docs afterwards. Used by `npm run docs:watch`. Code building is required as the documentation is generated from the unminified ES5 compiled sources, rather than the original ES6 sources.
+- `npm run docs:build` builds documentation.
+- `npm run docs:publish` builds documentation and publishes it to github pages.
+
 # Other tasks
 
-Check `package.json` or run `npm run` to see additional tasks. Some of these are used only on CI environments and not relevant for usual development.
+- `npm run clean` removes any built files
+- `npm run build` builds vendored files, node package and browser version
+- `npm run build:dist` builds ES5 sources from ES6 ones
+- `npm run build:standalone` builds unminified and minified sources for browsers
