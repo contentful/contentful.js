@@ -16,7 +16,7 @@
     "build:standalone": "webpack && webpack -p --output-filename contentful.min.js",
     "docs:build": "jsdoc -r -c jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
-    "docs:watch": "watchy -w lib,jsdoc-template npm run docs:dev",
+    "docs:watch": "opener out/contentful/index.html & watchy -w lib,jsdoc-template npm run docs:dev",
     "docs:publish": "npm run docs:build && ./bin/publish-docs.sh",
     "test:ci": "npm run test:cover && npm run test:integration && if [ `echo $TRAVIS_NODE_VERSION|cut -c 1` == \"5\" ] ; then npm run test:browser-remote; fi",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
