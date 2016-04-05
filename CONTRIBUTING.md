@@ -46,7 +46,7 @@ Both of these test environments are setup to deal with Babel and code transpilin
 Code is documented using JSDoc 3, and reference documentation is published automatically with each new version.
 
 - `npm run docs:watch` watches code directory, and rebuilds documentation when anything changes. Useful for documentation writing and development.
-- `npm run docs:dev` builds code and builds docs afterwards. Used by `npm run docs:watch`. Code building is required as the documentation is generated from the unminified ES5 compiled sources, rather than the original ES6 sources.
+- `npm run docs:dev` builds code and builds docs afterwards. Used by `npm run docs:watch`. Code building is required as the documentation is generated from the unminified ES5 compiled sources, rather than the original ES6 sources. You should then open the generated `out/contentful/index.html` in your browser.
 - `npm run docs:build` builds documentation.
 - `npm run docs:publish` builds documentation and publishes it to github pages.
 
