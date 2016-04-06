@@ -45,7 +45,8 @@
     "dist",
     "browser-dist",
     "vendor-browser",
-    "vendor-node"
+    "vendor-node",
+    "tonic-example.js"
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
