@@ -9,6 +9,7 @@
   },
   "author": "Contentful <support@contentful.com>",
   "license": "MIT",
+  "tonicExampleFilename": "tonic-example.js",
   "scripts": {
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage && rimraf out",
     "build": "npm run clean && npm run vendor && npm run build:dist && npm run build:standalone",
