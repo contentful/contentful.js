@@ -19,7 +19,7 @@
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib,jsdoc-template npm run docs:dev",
     "docs:publish": "npm run docs:build && ./bin/publish-docs.sh",
-    "test:ci": "npm run test:cover && npm run build && npm run test:integration && if [ `echo $TRAVIS_NODE_VERSION|cut -c 1` == \"5\" ] ; then npm run test:browser-remote; fi",
+    "test:ci": "npm run test:cover && npm run build && npm run test:integration && ./bin/run-if-node-version.js && npm run test:browser-remote || true",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
