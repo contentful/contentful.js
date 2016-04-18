@@ -1,7 +1,7 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
 
-import createCdaApi, {__RewireAPI__ as createCdaApiRewireApi} from '../../lib/create-cda-api'
+import createCdaApi from '../../lib/create-cda-api'
 import {contentTypeMock, assetMock, entryMock} from './mocks'
 
 let entitiesMock
@@ -24,19 +24,15 @@ function setupWithData ({promise, resolveLinks = true}) {
       wrapAssetCollection: sinon.stub()
     }
   }
-  createCdaApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
   const api = createCdaApi({
     http: {
       get: getStub.returns(promise)
     },
+    entities: entitiesMock,
     resolveLinksGlobalSetting: resolveLinks
   })
   return {api, getStub}
-}
-
-function teardown () {
-  createCdaApiRewireApi.__ResetDependency__('entities')
 }
 
 test('CDA call getSpace', t => {
@@ -196,7 +192,6 @@ test('CDA call getEntries', t => {
   .then(r => {
     t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
     t.looseEqual(r, data, 'returns expected data')
-    teardown()
   })
 })
 
@@ -215,7 +210,6 @@ test('CDA call getEntries with global resolve links turned off', t => {
   .then(r => {
     t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
     t.looseEqual(r, data, 'returns expected data')
-    teardown()
   })
 })
 
@@ -235,7 +229,6 @@ test('CDA call getEntries with global resolve links turned off but overridden', 
     t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by override')
     t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
     t.looseEqual(r, data, 'returns expected data')
-    teardown()
   })
 })
 
@@ -254,7 +247,6 @@ test('CDA call getEntries with global resolve links turned on but overridden', t
     t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off by override')
     t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
     t.looseEqual(r, data, 'returns expected data')
-    teardown()
   })
 })
 
