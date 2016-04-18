@@ -1,7 +1,7 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
 
-import createCdaApi from '../../lib/create-cda-api'
+import createContentfulApi from '../../lib/create-contentful-api'
 import {contentTypeMock, assetMock, entryMock} from './mocks'
 
 let entitiesMock
@@ -25,7 +25,7 @@ function setupWithData ({promise, shouldLinksResolve = sinon.stub().returns(true
     }
   }
   const getStub = sinon.stub()
-  const api = createCdaApi({
+  const api = createContentfulApi({
     http: {
       get: getStub.returns(promise)
     },
@@ -35,7 +35,7 @@ function setupWithData ({promise, shouldLinksResolve = sinon.stub().returns(true
   return {api, getStub}
 }
 
-test('CDA call getSpace', t => {
+test('API call getSpace', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -56,7 +56,7 @@ test('CDA call getSpace', t => {
   })
 })
 
-test('CDA call getSpace fails', t => {
+test('API call getSpace fails', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -74,7 +74,7 @@ test('CDA call getSpace fails', t => {
   })
 })
 
-test('CDA call getContentType', t => {
+test('API call getContentType', t => {
   t.plan(1)
   const {api} = setupWithData({
     promise: Promise.resolve({ data: contentTypeMock })
@@ -87,7 +87,7 @@ test('CDA call getContentType', t => {
   })
 })
 
-test('CDA call getContentType fails', t => {
+test('API call getContentType fails', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -105,7 +105,7 @@ test('CDA call getContentType fails', t => {
   })
 })
 
-test('CDA call getContentTypes', t => {
+test('API call getContentTypes', t => {
   t.plan(1)
   const data = {
     total: 100,
@@ -124,7 +124,7 @@ test('CDA call getContentTypes', t => {
   })
 })
 
-test('CDA call getContentTypes fails', t => {
+test('API call getContentTypes fails', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -142,7 +142,7 @@ test('CDA call getContentTypes fails', t => {
   })
 })
 
-test('CDA call getEntry', t => {
+test('API call getEntry', t => {
   t.plan(1)
   const {api} = setupWithData({
     promise: Promise.resolve({ data: entryMock })
@@ -155,7 +155,7 @@ test('CDA call getEntry', t => {
   })
 })
 
-test('CDA call getEntry fails', t => {
+test('API call getEntry fails', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -173,7 +173,7 @@ test('CDA call getEntry fails', t => {
   })
 })
 
-test('CDA call getEntries', t => {
+test('API call getEntries', t => {
   t.plan(2)
 
   const data = {
@@ -195,7 +195,7 @@ test('CDA call getEntries', t => {
   })
 })
 
-test('CDA call getEntries with global resolve links turned off', t => {
+test('API call getEntries with global resolve links turned off', t => {
   t.plan(2)
 
   const data = {sys: {id: 'id'}}
@@ -213,7 +213,7 @@ test('CDA call getEntries with global resolve links turned off', t => {
   })
 })
 
-test('CDA call getEntries fails', t => {
+test('API call getEntries fails', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -231,7 +231,7 @@ test('CDA call getEntries fails', t => {
   })
 })
 
-test('CDA call getAsset', t => {
+test('API call getAsset', t => {
   t.plan(1)
   const {api} = setupWithData({
     promise: Promise.resolve({ data: assetMock })
@@ -244,7 +244,7 @@ test('CDA call getAsset', t => {
   })
 })
 
-test('CDA call getAsset fails', t => {
+test('API call getAsset fails', t => {
   t.plan(1)
   const data = {
     sys: {
@@ -262,7 +262,7 @@ test('CDA call getAsset fails', t => {
   })
 })
 
-test('CDA call getAssets', t => {
+test('API call getAssets', t => {
   t.plan(1)
   const data = {
     total: 100,
@@ -281,7 +281,7 @@ test('CDA call getAssets', t => {
   })
 })
 
-test('CDA call getAssets fails', t => {
+test('API call getAssets fails', t => {
   t.plan(1)
   const data = {
     sys: {

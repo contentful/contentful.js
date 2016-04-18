@@ -32,7 +32,7 @@ test('Returns a client instance', t => {
 
 test('Initializes API with link resolution turned on by default', t => {
   const apiStub = sinon.stub().returns({})
-  createClient.__Rewire__('createCdaApi', apiStub)
+  createClient.__Rewire__('createContentfulApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
   t.ok(apiStub.args[0][0].shouldLinksResolve({}), 'not overriden by query')
   t.notOk(apiStub.args[0][0].shouldLinksResolve({resolveLinks: false}), 'overriden by query')
@@ -41,7 +41,7 @@ test('Initializes API with link resolution turned on by default', t => {
 
 test('Initializes API with link resolution turned on explicitly', t => {
   const apiStub = sinon.stub().returns({})
-  createClient.__Rewire__('createCdaApi', apiStub)
+  createClient.__Rewire__('createContentfulApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: true})
   t.ok(apiStub.args[0][0].shouldLinksResolve({}), 'not overriden by query')
   t.notOk(apiStub.args[0][0].shouldLinksResolve({resolveLinks: false}), 'overriden by query')
@@ -50,13 +50,13 @@ test('Initializes API with link resolution turned on explicitly', t => {
 
 test('Initializes API with link resolution turned off explicitly', t => {
   const apiStub = sinon.stub().returns({})
-  createClient.__Rewire__('createCdaApi', apiStub)
+  createClient.__Rewire__('createContentfulApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: false})
   t.notOk(apiStub.args[0][0].resolveLinksGlobalSetting)
   t.end()
 })
 
-test('CDA call sync', t => {
+test('API call sync', t => {
   t.plan(5)
 
   axios.create.returns({
@@ -78,7 +78,7 @@ test('CDA call sync', t => {
   })
 })
 
-test('CDA call sync fails', t => {
+test('API call sync fails', t => {
   t.plan(1)
   axios.create.returns({
     get: sinon.stub().returns(Promise.reject({ data: 'error' }))
