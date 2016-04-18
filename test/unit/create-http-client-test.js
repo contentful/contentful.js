@@ -8,14 +8,12 @@ test('Calls axios with expected URL', t => {
     create: sinon.stub()
   }
 
-  createHttpClient.__Rewire__('version', 'version')
-
   createHttpClient(axios, {
     accessToken: 'clientAccessToken',
-    space: 'clientSpaceId'
+    space: 'clientSpaceId',
+    defaultHostname: 'defaulthost'
   })
 
-  t.equals(axios.create.args[0][0].baseURL, 'https://cdn.contentful.com:443/spaces/clientSpaceId/')
-  t.equals(axios.create.args[0][0].headers['X-Contentful-User-Agent'], 'contentful.js/version')
+  t.equals(axios.create.args[0][0].baseURL, 'https://defaulthost:443/spaces/clientSpaceId/')
   t.end()
 })

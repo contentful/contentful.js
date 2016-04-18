@@ -18,6 +18,17 @@ test('Throws if no space is defined', t => {
   t.end()
 })
 
+test('Passes along HTTP client parameters', t => {
+  createClient.__Rewire__('version', 'version')
+  const createHttpClientStub = sinon.stub()
+  createClient.__Rewire__('createHttpClient', createHttpClientStub)
+  createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
+  t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
+  t.equals(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'], 'contentful.js/version')
+  createClient.__ResetDependency__('createHttpClient')
+  t.end()
+})
+
 test('Returns a client instance', t => {
   const client = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
   t.ok(client.getSpace, 'getSpace')
