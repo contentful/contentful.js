@@ -34,7 +34,7 @@ test('Initializes API with link resolution turned on by default', t => {
   const apiStub = sinon.stub()
   createClient.__Rewire__('createCdaApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
-  t.ok(apiStub.args[0][1])
+  t.ok(apiStub.args[0][0].resolveLinksGlobalSetting)
   t.end()
 })
 
@@ -42,7 +42,7 @@ test('Initializes API with link resolution turned on explicitly', t => {
   const apiStub = sinon.stub()
   createClient.__Rewire__('createCdaApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: true})
-  t.ok(apiStub.args[0][1])
+  t.ok(apiStub.args[0][0].resolveLinksGlobalSetting)
   t.end()
 })
 
@@ -50,6 +50,6 @@ test('Initializes API with link resolution turned off explicitly', t => {
   const apiStub = sinon.stub()
   createClient.__Rewire__('createCdaApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: false})
-  t.notOk(apiStub.args[0][1])
+  t.notOk(apiStub.args[0][0].resolveLinksGlobalSetting)
   t.end()
 })

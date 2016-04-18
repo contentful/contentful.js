@@ -27,8 +27,11 @@ function setupWithData ({promise, resolveLinks = true}) {
   createCdaApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
   const api = createCdaApi({
-    get: getStub.returns(promise)
-  }, resolveLinks)
+    http: {
+      get: getStub.returns(promise)
+    },
+    resolveLinksGlobalSetting: resolveLinks
+  })
   return {api, getStub}
 }
 
