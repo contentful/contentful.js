@@ -6,7 +6,7 @@ import {contentTypeMock, assetMock, entryMock} from './mocks'
 
 let entitiesMock
 
-function setupWithData ({promise, resolveLinks = true}) {
+function setupWithData ({promise, shouldLinksResolve = sinon.stub().returns(true)}) {
   entitiesMock = {
     space: {
       wrapSpace: sinon.stub()
@@ -30,7 +30,7 @@ function setupWithData ({promise, resolveLinks = true}) {
       get: getStub.returns(promise)
     },
     entities: entitiesMock,
-    resolveLinksGlobalSetting: resolveLinks
+    shouldLinksResolve: shouldLinksResolve
   })
   return {api, getStub}
 }
@@ -202,50 +202,13 @@ test('CDA call getEntries with global resolve links turned off', t => {
 
   const {api} = setupWithData({
     promise: Promise.resolve({ data: data }),
-    resolveLinks: false
+    shouldLinksResolve: sinon.stub().returns(false)
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
   .then(r => {
     t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
-    t.looseEqual(r, data, 'returns expected data')
-  })
-})
-
-test('CDA call getEntries with global resolve links turned off but overridden', t => {
-  t.plan(3)
-
-  const data = {sys: {id: 'id'}}
-
-  const {api, getStub} = setupWithData({
-    promise: Promise.resolve({ data: data }),
-    resolveLinks: false
-  })
-  entitiesMock.entry.wrapEntryCollection.returns(data)
-
-  return api.getEntries({resolveLinks: true})
-  .then(r => {
-    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by override')
-    t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
-    t.looseEqual(r, data, 'returns expected data')
-  })
-})
-
-test('CDA call getEntries with global resolve links turned on but overridden', t => {
-  t.plan(3)
-
-  const data = {sys: {id: 'id'}}
-
-  const {api, getStub} = setupWithData({
-    promise: Promise.resolve({ data: data })
-  })
-  entitiesMock.entry.wrapEntryCollection.returns(data)
-
-  return api.getEntries({resolveLinks: false})
-  .then(r => {
-    t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off by override')
-    t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
     t.looseEqual(r, data, 'returns expected data')
   })
 })
@@ -333,36 +296,5 @@ test('CDA call getAssets fails', t => {
   return api.getAssets()
   .then(() => {}, r => {
     t.looseEqual(r, data)
-  })
-})
-
-test('CDA call sync', t => {
-  t.plan(5)
-  const {api} = setupWithData({
-    promise: Promise.resolve({ data: { items: [],
-      nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken'
-    }
-    })
-  })
-
-  return api.sync({initial: true})
-  .then(r => {
-    t.ok(r.entries, 'entries')
-    t.ok(r.assets, 'assets')
-    t.ok(r.deletedEntries, 'deletedEntries')
-    t.ok(r.deletedAssets, 'deletedAssets')
-    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
-  })
-})
-
-test('CDA call sync fails', t => {
-  t.plan(1)
-  const {api} = setupWithData({
-    promise: Promise.reject({ data: 'error' })
-  })
-
-  return api.sync({initial: true})
-  .then(() => {}, r => {
-    t.equal(r, 'error')
   })
 })

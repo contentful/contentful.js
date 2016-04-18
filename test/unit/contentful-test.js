@@ -2,7 +2,7 @@ import test from 'tape'
 import sinon from 'sinon'
 import createClient from '../../lib/contentful'
 
-const axios = {create: () => {}}
+const axios = {create: sinon.stub()}
 
 test('Throws if no accessToken is defined', t => {
   t.throws(() => {
@@ -31,25 +31,62 @@ test('Returns a client instance', t => {
 })
 
 test('Initializes API with link resolution turned on by default', t => {
-  const apiStub = sinon.stub()
+  const apiStub = sinon.stub().returns({})
   createClient.__Rewire__('createCdaApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
-  t.ok(apiStub.args[0][0].resolveLinksGlobalSetting)
+  t.ok(apiStub.args[0][0].shouldLinksResolve({}), 'not overriden by query')
+  t.notOk(apiStub.args[0][0].shouldLinksResolve({resolveLinks: false}), 'overriden by query')
   t.end()
 })
 
 test('Initializes API with link resolution turned on explicitly', t => {
-  const apiStub = sinon.stub()
+  const apiStub = sinon.stub().returns({})
   createClient.__Rewire__('createCdaApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: true})
-  t.ok(apiStub.args[0][0].resolveLinksGlobalSetting)
+  t.ok(apiStub.args[0][0].shouldLinksResolve({}), 'not overriden by query')
+  t.notOk(apiStub.args[0][0].shouldLinksResolve({resolveLinks: false}), 'overriden by query')
   t.end()
 })
 
 test('Initializes API with link resolution turned off explicitly', t => {
-  const apiStub = sinon.stub()
+  const apiStub = sinon.stub().returns({})
   createClient.__Rewire__('createCdaApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: false})
   t.notOk(apiStub.args[0][0].resolveLinksGlobalSetting)
   t.end()
+})
+
+test('CDA call sync', t => {
+  t.plan(5)
+
+  axios.create.returns({
+    get: sinon.stub().returns(Promise.resolve({
+      data: { items: [],
+        nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken'
+      }
+    }))
+  })
+
+  const api = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
+  return api.sync({initial: true})
+  .then(r => {
+    t.ok(r.entries, 'entries')
+    t.ok(r.assets, 'assets')
+    t.ok(r.deletedEntries, 'deletedEntries')
+    t.ok(r.deletedAssets, 'deletedAssets')
+    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
+  })
+})
+
+test('CDA call sync fails', t => {
+  t.plan(1)
+  axios.create.returns({
+    get: sinon.stub().returns(Promise.reject({ data: 'error' }))
+  })
+
+  const api = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
+  return api.sync({initial: true})
+  .then(() => {}, r => {
+    t.equal(r, 'error')
+  })
 })
