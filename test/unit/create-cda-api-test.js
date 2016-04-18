@@ -4,12 +4,36 @@ import sinon from 'sinon'
 import createCdaApi, {__RewireAPI__ as createCdaApiRewireApi} from '../../lib/create-cda-api'
 import {contentTypeMock, assetMock, entryMock} from './mocks'
 
-function setupWithData (promise, resolveLinks = true) {
+let entitiesMock
+
+function setupWithData ({promise, resolveLinks = true}) {
+  entitiesMock = {
+    space: {
+      wrapSpace: sinon.stub()
+    },
+    contentType: {
+      wrapContentType: sinon.stub(),
+      wrapContentTypeCollection: sinon.stub()
+    },
+    entry: {
+      wrapEntry: sinon.stub(),
+      wrapEntryCollection: sinon.stub()
+    },
+    asset: {
+      wrapAsset: sinon.stub(),
+      wrapAssetCollection: sinon.stub()
+    }
+  }
+  createCdaApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
   const api = createCdaApi({
     get: getStub.returns(promise)
   }, resolveLinks)
   return {api, getStub}
+}
+
+function teardown () {
+  createCdaApiRewireApi.__ResetDependency__('entities')
 }
 
 test('CDA call getSpace', t => {
@@ -22,14 +46,14 @@ test('CDA call getSpace', t => {
     name: 'name',
     locales: [ 'en-US' ]
   }
-  const {api} = setupWithData(Promise.resolve({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.space.wrapSpace.returns(data)
 
   return api.getSpace('spaceid')
   .then(r => {
-    console.log('resolving')
-    t.looseEqual(r.toPlainObject(), data)
+    t.looseEqual(r, data)
   })
 })
 
@@ -40,9 +64,10 @@ test('CDA call getSpace fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.space.wrapSpace.returns(data)
 
   return api.getSpace('spaceid')
   .then(() => {}, r => {
@@ -52,13 +77,14 @@ test('CDA call getSpace fails', t => {
 
 test('CDA call getContentType', t => {
   t.plan(1)
-  const {api} = setupWithData(Promise.resolve({
-    data: contentTypeMock
-  }))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: contentTypeMock })
+  })
+  entitiesMock.contentType.wrapContentType.returns(contentTypeMock)
 
   return api.getContentType('ctid')
   .then(r => {
-    t.looseEqual(r.toPlainObject(), contentTypeMock)
+    t.looseEqual(r, contentTypeMock)
   })
 })
 
@@ -69,9 +95,10 @@ test('CDA call getContentType fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.contentType.wrapContentType.returns(data)
 
   return api.getContentType('ctid')
   .then(() => {}, r => {
@@ -87,13 +114,14 @@ test('CDA call getContentTypes', t => {
     limit: 10,
     items: [contentTypeMock]
   }
-  const {api} = setupWithData(Promise.resolve({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
   return api.getContentTypes()
   .then(r => {
-    t.looseEqual(r.toPlainObject(), data)
+    t.looseEqual(r, data)
   })
 })
 
@@ -104,9 +132,10 @@ test('CDA call getContentTypes fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
   return api.getContentTypes()
   .then(() => {}, r => {
@@ -116,13 +145,14 @@ test('CDA call getContentTypes fails', t => {
 
 test('CDA call getEntry', t => {
   t.plan(1)
-  const {api} = setupWithData(Promise.resolve({
-    data: entryMock
-  }))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: entryMock })
+  })
+  entitiesMock.entry.wrapEntry.returns(entryMock)
 
   return api.getEntry('eid')
   .then(r => {
-    t.looseEqual(r.toPlainObject(), entryMock)
+    t.looseEqual(r, entryMock)
   })
 })
 
@@ -133,9 +163,10 @@ test('CDA call getEntry fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.entry.wrapEntry.returns(data)
 
   return api.getEntry('eid')
   .then(() => {}, r => {
@@ -153,17 +184,16 @@ test('CDA call getEntries', t => {
     items: [entryMock]
   }
 
-  const wrapStub = sinon.stub()
-  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
-  wrapStub.returns(data)
-
-  const {api} = setupWithData(Promise.resolve({data: data}))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
   .then(r => {
-    t.ok(wrapStub.args[0][1], 'resolveLinks turned on by default')
+    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
     t.looseEqual(r, data, 'returns expected data')
-    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+    teardown()
   })
 })
 
@@ -172,18 +202,17 @@ test('CDA call getEntries with global resolve links turned off', t => {
 
   const data = {sys: {id: 'id'}}
 
-  const wrapStub = sinon.stub()
-  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
-  wrapStub.returns(data)
-
-  const resolveLinks = false
-  const {api} = setupWithData(Promise.resolve({data: data}), resolveLinks)
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data }),
+    resolveLinks: false
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
   .then(r => {
-    t.notOk(wrapStub.args[0][1], 'resolveLinks turned off globally')
+    t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
     t.looseEqual(r, data, 'returns expected data')
-    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+    teardown()
   })
 })
 
@@ -192,19 +221,18 @@ test('CDA call getEntries with global resolve links turned off but overridden', 
 
   const data = {sys: {id: 'id'}}
 
-  const wrapStub = sinon.stub()
-  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
-  wrapStub.returns(data)
-
-  const resolveLinks = false
-  const {api, getStub} = setupWithData(Promise.resolve({data: data}), resolveLinks)
+  const {api, getStub} = setupWithData({
+    promise: Promise.resolve({ data: data }),
+    resolveLinks: false
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries({resolveLinks: true})
   .then(r => {
-    t.ok(wrapStub.args[0][1], 'resolveLinks turned on by override')
+    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by override')
     t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
     t.looseEqual(r, data, 'returns expected data')
-    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+    teardown()
   })
 })
 
@@ -213,18 +241,17 @@ test('CDA call getEntries with global resolve links turned on but overridden', t
 
   const data = {sys: {id: 'id'}}
 
-  const wrapStub = sinon.stub()
-  createCdaApiRewireApi.__Rewire__('wrapEntryCollection', wrapStub)
-  wrapStub.returns(data)
-
-  const {api, getStub} = setupWithData(Promise.resolve({data: data}))
+  const {api, getStub} = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries({resolveLinks: false})
   .then(r => {
-    t.notOk(wrapStub.args[0][1], 'resolveLinks turned off by override')
+    t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off by override')
     t.notOk(getStub.args[0][1].params.resolveLinks, 'resolveLinks was removed from query')
     t.looseEqual(r, data, 'returns expected data')
-    createCdaApiRewireApi.__ResetDependency__('wrapEntryCollection')
+    teardown()
   })
 })
 
@@ -235,9 +262,10 @@ test('CDA call getEntries fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
   .then(() => {}, r => {
@@ -247,13 +275,14 @@ test('CDA call getEntries fails', t => {
 
 test('CDA call getAsset', t => {
   t.plan(1)
-  const {api} = setupWithData(Promise.resolve({
-    data: assetMock
-  }))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: assetMock })
+  })
+  entitiesMock.asset.wrapAsset.returns(assetMock)
 
   return api.getAsset('aid')
   .then(r => {
-    t.looseEqual(r.toPlainObject(), assetMock)
+    t.looseEqual(r, assetMock)
   })
 })
 
@@ -264,9 +293,10 @@ test('CDA call getAsset fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.asset.wrapAsset.returns(data)
 
   return api.getAsset('aid')
   .then(() => {}, r => {
@@ -282,13 +312,14 @@ test('CDA call getAssets', t => {
     limit: 10,
     items: [assetMock]
   }
-  const {api} = setupWithData(Promise.resolve({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.asset.wrapAssetCollection.returns(data)
 
   return api.getAssets()
   .then(r => {
-    t.looseEqual(r.toPlainObject(), data)
+    t.looseEqual(r, data)
   })
 })
 
@@ -299,9 +330,10 @@ test('CDA call getAssets fails', t => {
       id: 'id'
     }
   }
-  const {api} = setupWithData(Promise.reject({
-    data: data
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: data })
+  })
+  entitiesMock.asset.wrapAssetCollection.returns(data)
 
   return api.getAssets()
   .then(() => {}, r => {
@@ -311,12 +343,12 @@ test('CDA call getAssets fails', t => {
 
 test('CDA call sync', t => {
   t.plan(5)
-  const {api} = setupWithData(Promise.resolve({
-    data: {
-      items: [],
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: { items: [],
       nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken'
     }
-  }))
+    })
+  })
 
   return api.sync({initial: true})
   .then(r => {
@@ -330,9 +362,9 @@ test('CDA call sync', t => {
 
 test('CDA call sync fails', t => {
   t.plan(1)
-  const {api} = setupWithData(Promise.reject({
-    data: 'error'
-  }))
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: 'error' })
+  })
 
   return api.sync({initial: true})
   .then(() => {}, r => {
