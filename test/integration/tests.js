@@ -104,7 +104,7 @@ test('Gets entries with a skip parameter', t => {
 
 test('Gets entries with linked includes', t => {
   t.plan(5)
-  return client.getEntries({include: 2})
+  return client.getEntries({include: 2, 'sys.id': 'nyancat'})
   .then(response => {
     t.ok(response.includes, 'includes')
     t.ok(response.includes.Asset, 'includes for Assets')
