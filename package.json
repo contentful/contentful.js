@@ -17,7 +17,7 @@
     "build:standalone": "webpack && webpack -p --output-filename contentful.min.js",
     "link-dev-deps": "mkdirp node_modules && ln -s ../../contentful-sdk-core/src node_modules/contentful-sdk-core",
     "unlink-dev-deps": "rimraf node_modules/contentful-sdk-core",
-    "docs:build": "jsdoc node_modules/contentful-sdk-core/*.js -r -c ./node_modules/contentful-sdk-jsdoc/jsdoc.json dist",
+    "docs:build": "jsdoc -r -c ./node_modules/contentful-sdk-jsdoc/jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib npm run docs:dev",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
