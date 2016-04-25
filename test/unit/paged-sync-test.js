@@ -2,7 +2,7 @@ import test from 'blue-tape'
 import sinon from 'sinon'
 import {cloneDeep} from 'lodash/lang'
 import {entryMock, assetMock} from './mocks'
-import createSyncRequester from '../../lib/create-sync-requester'
+import pagedSync from '../../lib/paged-sync'
 
 function createEntry (id, deleted) {
   const entry = cloneDeep(entryMock)
@@ -25,22 +25,20 @@ function createAsset (id, deleted) {
 test('Throws with no parameters', (t) => {
   t.plan(1)
   const http = {get: sinon.stub()}
-  const sync = createSyncRequester(http, sinon.stub().returns(true))
   t.throws(() => {
-    sync({})
+    pagedSync(http, {}, true)
   }, /initial.*nextSyncToken/)
 })
 
 test('Throws with incompatible content_type and type parameter', (t) => {
   t.plan(1)
   const http = {get: sinon.stub()}
-  const sync = createSyncRequester(http, sinon.stub().returns(true))
   t.throws(() => {
-    sync({
+    pagedSync(http, {
       initial: true,
       content_type: 'id',
       type: 'ContentType'
-    })
+    }, true)
   }, /content_type.*type.*Entry/)
 })
 
@@ -71,9 +69,8 @@ test('Initial sync with one page', (t) => {
       nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken'
     }
   }))
-  const sync = createSyncRequester(http, sinon.stub().returns(true))
 
-  return sync({initial: true})
+  return pagedSync(http, {initial: true}, true)
   .then((response) => {
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
     t.equal(response.entries.length, 3, 'entries length')
@@ -102,9 +99,8 @@ test('Initial sync with one page and filter', (t) => {
       nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken'
     }
   }))
-  const sync = createSyncRequester(http, sinon.stub().returns(true))
 
-  return sync({initial: true, content_type: 'cat'})
+  return pagedSync(http, {initial: true, content_type: 'cat'}, true)
   .then((response) => {
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
     t.equal(http.get.args[0][1].params.content_type, 'cat', 'http request has content type filter param')
@@ -149,9 +145,8 @@ test('Initial sync with multiple pages', (t) => {
       nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken'
     }
   }))
-  const sync = createSyncRequester(http, sinon.stub().returns(true))
 
-  return sync({initial: true})
+  return pagedSync(http, {initial: true}, true)
   .then((response) => {
     const objResponse = response.toPlainObject()
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
@@ -180,9 +175,8 @@ test('Sync with existing token', (t) => {
       nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken'
     }
   }))
-  const sync = createSyncRequester(http, sinon.stub().returns(true))
 
-  return sync({nextSyncToken: 'nextsynctoken'})
+  return pagedSync(http, {nextSyncToken: 'nextsynctoken'}, true)
   .then((response) => {
     t.equal(http.get.args[0][1].params.sync_token, 'nextsynctoken', 'http request param for sync')
     t.equal(response.entries.length, 1, 'entries length')

@@ -66,38 +66,3 @@ test('Initializes API with link resolution turned off explicitly', (t) => {
   t.notOk(apiStub.args[0][0].resolveLinksGlobalSetting)
   t.end()
 })
-
-test('API call sync', (t) => {
-  t.plan(5)
-
-  axios.create.returns({
-    get: sinon.stub().returns(Promise.resolve({
-      data: { items: [],
-        nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken'
-      }
-    }))
-  })
-
-  const api = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
-  return api.sync({initial: true})
-  .then((r) => {
-    t.ok(r.entries, 'entries')
-    t.ok(r.assets, 'assets')
-    t.ok(r.deletedEntries, 'deletedEntries')
-    t.ok(r.deletedAssets, 'deletedAssets')
-    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
-  })
-})
-
-test('API call sync fails', (t) => {
-  t.plan(1)
-  axios.create.returns({
-    get: sinon.stub().returns(Promise.reject({ data: 'error' }))
-  })
-
-  const api = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
-  return api.sync({initial: true})
-  .then(() => {}, (r) => {
-    t.equal(r, 'error')
-  })
-})

@@ -298,3 +298,36 @@ test('API call getAssets fails', (t) => {
     t.looseEqual(r, data)
   })
 })
+
+test('CDA call sync', (t) => {
+  t.plan(5)
+  const {api} = setupWithData({
+    promise: Promise.resolve({
+      data: {
+        items: [],
+        nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken'
+      }
+    })
+  })
+
+  return api.sync({initial: true})
+  .then((r) => {
+    t.ok(r.entries, 'entries')
+    t.ok(r.assets, 'assets')
+    t.ok(r.deletedEntries, 'deletedEntries')
+    t.ok(r.deletedAssets, 'deletedAssets')
+    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
+  })
+})
+
+test('CDA call sync fails', (t) => {
+  t.plan(1)
+  const {api} = setupWithData({
+    promise: Promise.reject({ data: 'error' })
+  })
+
+  return api.sync({initial: true})
+  .then(() => {}, (r) => {
+    t.equal(r, 'error')
+  })
+})
