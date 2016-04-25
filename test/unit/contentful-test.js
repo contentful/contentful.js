@@ -4,21 +4,21 @@ import createClient from '../../lib/contentful'
 
 const axios = {create: sinon.stub()}
 
-test('Throws if no accessToken is defined', t => {
+test('Throws if no accessToken is defined', (t) => {
   t.throws(() => {
     createClient(axios, {space: 'spaceid'})
   }, /Expected parameter accessToken/)
   t.end()
 })
 
-test('Throws if no space is defined', t => {
+test('Throws if no space is defined', (t) => {
   t.throws(() => {
     createClient(axios, {accessToken: 'accesstoken'})
   }, /Expected parameter space/)
   t.end()
 })
 
-test('Passes along HTTP client parameters', t => {
+test('Passes along HTTP client parameters', (t) => {
   createClient.__Rewire__('version', 'version')
   const createHttpClientStub = sinon.stub()
   createClient.__Rewire__('createHttpClient', createHttpClientStub)
@@ -29,7 +29,7 @@ test('Passes along HTTP client parameters', t => {
   t.end()
 })
 
-test('Returns a client instance', t => {
+test('Returns a client instance', (t) => {
   const client = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
   t.ok(client.getSpace, 'getSpace')
   t.ok(client.getEntry, 'getEntry')
@@ -41,7 +41,7 @@ test('Returns a client instance', t => {
   t.end()
 })
 
-test('Initializes API with link resolution turned on by default', t => {
+test('Initializes API with link resolution turned on by default', (t) => {
   const apiStub = sinon.stub().returns({})
   createClient.__Rewire__('createContentfulApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
@@ -50,7 +50,7 @@ test('Initializes API with link resolution turned on by default', t => {
   t.end()
 })
 
-test('Initializes API with link resolution turned on explicitly', t => {
+test('Initializes API with link resolution turned on explicitly', (t) => {
   const apiStub = sinon.stub().returns({})
   createClient.__Rewire__('createContentfulApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: true})
@@ -59,7 +59,7 @@ test('Initializes API with link resolution turned on explicitly', t => {
   t.end()
 })
 
-test('Initializes API with link resolution turned off explicitly', t => {
+test('Initializes API with link resolution turned off explicitly', (t) => {
   const apiStub = sinon.stub().returns({})
   createClient.__Rewire__('createContentfulApi', apiStub)
   createClient(axios, {accessToken: 'accesstoken', space: 'spaceid', resolveLinks: false})
@@ -67,7 +67,7 @@ test('Initializes API with link resolution turned off explicitly', t => {
   t.end()
 })
 
-test('API call sync', t => {
+test('API call sync', (t) => {
   t.plan(5)
 
   axios.create.returns({
@@ -80,7 +80,7 @@ test('API call sync', t => {
 
   const api = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
   return api.sync({initial: true})
-  .then(r => {
+  .then((r) => {
     t.ok(r.entries, 'entries')
     t.ok(r.assets, 'assets')
     t.ok(r.deletedEntries, 'deletedEntries')
@@ -89,7 +89,7 @@ test('API call sync', t => {
   })
 })
 
-test('API call sync fails', t => {
+test('API call sync fails', (t) => {
   t.plan(1)
   axios.create.returns({
     get: sinon.stub().returns(Promise.reject({ data: 'error' }))
@@ -97,7 +97,7 @@ test('API call sync fails', t => {
 
   const api = createClient(axios, {accessToken: 'accesstoken', space: 'spaceid'})
   return api.sync({initial: true})
-  .then(() => {}, r => {
+  .then(() => {}, (r) => {
     t.equal(r, 'error')
   })
 })

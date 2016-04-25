@@ -32,7 +32,7 @@
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
     "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run docs:publish && npm run clean",
-    "pretest": "standard lib/*.js && standard lib/**/*.js",
+    "pretest": "standard lib/*.js && standard lib/**/*.js && standard test/**/*.js",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -54,7 +54,7 @@
   "devDependencies": {
     "axios": "^0.9.1",
     "babel-cli": "^6.4.5",
-    "babel-eslint": "^5.0.0-beta8",
+    "babel-eslint": "^6.0.3",
     "babel-loader": "^6.2.2",
     "babel-plugin-rewire": "^1.0.0-beta-5",
     "babel-plugin-transform-runtime": "^6.4.3",
@@ -81,7 +81,7 @@
     "rimraf": "^2.5.1",
     "semantic-release": "^4.3.5",
     "sinon": "^2.0.0-pre",
-    "standard": "^5.4.1",
+    "standard": "^6.0.8",
     "webpack": "^1.12.13"
   },
   "standard": {
