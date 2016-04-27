@@ -1,7 +1,7 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
 
-import createContentfulApi from '../../lib/create-contentful-api'
+import createContentfulApi, {__RewireAPI__ as createContentfulApiRewireApi} from '../../lib/create-contentful-api'
 import {contentTypeMock, assetMock, entryMock} from './mocks'
 
 let entitiesMock
@@ -24,15 +24,19 @@ function setupWithData ({promise, shouldLinksResolve = sinon.stub().returns(true
       wrapAssetCollection: sinon.stub()
     }
   }
+  createContentfulApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
   const api = createContentfulApi({
     http: {
       get: getStub.returns(promise)
     },
-    entities: entitiesMock,
     shouldLinksResolve: shouldLinksResolve
   })
   return {api, getStub}
+}
+
+function teardown () {
+  createContentfulApiRewireApi.__ResetDependency__('entities')
 }
 
 test('API call getSpace', (t) => {
@@ -53,6 +57,7 @@ test('API call getSpace', (t) => {
   return api.getSpace('spaceid')
   .then((r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -71,6 +76,7 @@ test('API call getSpace fails', (t) => {
   return api.getSpace('spaceid')
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -84,6 +90,7 @@ test('API call getContentType', (t) => {
   return api.getContentType('ctid')
   .then((r) => {
     t.looseEqual(r, contentTypeMock)
+    teardown()
   })
 })
 
@@ -102,6 +109,7 @@ test('API call getContentType fails', (t) => {
   return api.getContentType('ctid')
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -121,6 +129,7 @@ test('API call getContentTypes', (t) => {
   return api.getContentTypes()
   .then((r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -139,6 +148,7 @@ test('API call getContentTypes fails', (t) => {
   return api.getContentTypes()
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -152,6 +162,7 @@ test('API call getEntry', (t) => {
   return api.getEntry('eid')
   .then((r) => {
     t.looseEqual(r, entryMock)
+    teardown()
   })
 })
 
@@ -170,6 +181,7 @@ test('API call getEntry fails', (t) => {
   return api.getEntry('eid')
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -192,6 +204,7 @@ test('API call getEntries', (t) => {
   .then((r) => {
     t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
     t.looseEqual(r, data, 'returns expected data')
+    teardown()
   })
 })
 
@@ -210,6 +223,7 @@ test('API call getEntries with global resolve links turned off', (t) => {
   .then((r) => {
     t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
     t.looseEqual(r, data, 'returns expected data')
+    teardown()
   })
 })
 
@@ -228,6 +242,7 @@ test('API call getEntries fails', (t) => {
   return api.getEntries()
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -241,6 +256,7 @@ test('API call getAsset', (t) => {
   return api.getAsset('aid')
   .then((r) => {
     t.looseEqual(r, assetMock)
+    teardown()
   })
 })
 
@@ -259,6 +275,7 @@ test('API call getAsset fails', (t) => {
   return api.getAsset('aid')
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -278,6 +295,7 @@ test('API call getAssets', (t) => {
   return api.getAssets()
   .then((r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -296,6 +314,7 @@ test('API call getAssets fails', (t) => {
   return api.getAssets()
   .then(() => {}, (r) => {
     t.looseEqual(r, data)
+    teardown()
   })
 })
 
@@ -317,6 +336,7 @@ test('CDA call sync', (t) => {
     t.ok(r.deletedEntries, 'deletedEntries')
     t.ok(r.deletedAssets, 'deletedAssets')
     t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
+    teardown()
   })
 })
 
@@ -329,5 +349,6 @@ test('CDA call sync fails', (t) => {
   return api.sync({initial: true})
   .then(() => {}, (r) => {
     t.equal(r, 'error')
+    teardown()
   })
 })
