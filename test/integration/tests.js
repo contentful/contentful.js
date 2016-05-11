@@ -306,15 +306,24 @@ test('Gets entries by inverse creation order', (t) => {
   })
 })
 
+/**
+ * This test checks if entries can be ordered by two properties. The first
+ * property (in this case revision) takes priority. The test checks if two
+ * entries with the same revision are ordered by the second property, id.
+ * It also checks if the entry which comes after these two has a higher revision.
+ *
+ * It's a slightly fragile test as it can break if any of the entries are
+ * updated and republished.
+ */
 test('Gets entries by creation order and id order', (t) => {
   t.plan(3)
   return client.getEntries({
     order: 'sys.revision,sys.id'
   })
   .then((response) => {
-    t.equal(response.items[0].sys.revision, response.items[1].sys.revision)
-    t.ok(response.items[1].sys.revision < response.items[2].sys.revision, 'revision')
-    t.ok(response.items[0].sys.id < response.items[1].sys.id, 'id')
+    t.equal(response.items[0].sys.revision, response.items[1].sys.revision, 'revisions of entries with index 0 and 1 are the same')
+    t.ok(response.items[0].sys.id < response.items[1].sys.id, 'the entries with the same version are ordered by id')
+    t.ok(response.items[1].sys.revision < response.items[2].sys.revision, 'revision of entry with index 2 is higher')
   })
 })
 
