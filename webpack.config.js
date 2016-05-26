@@ -1,9 +1,10 @@
 var webpack = require('webpack')
+var path = require('path')
 module.exports = {
   context: __dirname,
   entry: './browser',
   output: {
-    path: __dirname + '/browser-dist',
+    path: path.join(__dirname, '/browser-dist'),
     filename: 'contentful.js',
     library: 'contentful'
   },
