@@ -17,13 +17,13 @@ const contentType = {
   ]
 }
 
-test('ContentType is wrapped', t => {
+test('ContentType is wrapped', (t) => {
   const wrappedContentType = wrapContentType(contentType)
   t.looseEqual(wrappedContentType.toPlainObject(), contentType)
   t.end()
 })
 
-test('ContentType collection is wrapped', t => {
+test('ContentType collection is wrapped', (t) => {
   const contentTypeCollection = {
     total: 1,
     skip: 0,

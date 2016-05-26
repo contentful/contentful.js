@@ -4,13 +4,13 @@ import {entryMock, assetMock} from '../mocks'
 import {cloneDeep} from 'lodash/lang'
 import {wrapEntry, wrapEntryCollection} from '../../../lib/entities/entry'
 
-test('Entry is wrapped', t => {
+test('Entry is wrapped', (t) => {
   const wrappedEntry = wrapEntry(entryMock)
   t.looseEqual(wrappedEntry.toPlainObject(), entryMock)
   t.end()
 })
 
-test('Localized entry is wrapped', t => {
+test('Localized entry is wrapped', (t) => {
   const entry = cloneDeep(entryMock)
   const field = entry.fields.field1
   entry.fields = {
@@ -23,7 +23,7 @@ test('Localized entry is wrapped', t => {
   t.end()
 })
 
-test('Entry collection is wrapped', t => {
+test('Entry collection is wrapped', (t) => {
   const entryCollection = {
     total: 1,
     skip: 0,
@@ -37,7 +37,7 @@ test('Entry collection is wrapped', t => {
   t.end()
 })
 
-test('Entry collection links are resolved', t => {
+test('Entry collection links are resolved', (t) => {
   const entryCollection = {
     total: 1,
     skip: 0,

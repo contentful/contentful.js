@@ -1,7 +1,7 @@
 import test from 'tape'
 import mixinLinkGetters from '../../../lib/mixins/link-getters'
 
-test('links in response, without matching include should remain', t => {
+test('links in response, without matching include should remain', (t) => {
   const items = [{
     sys: {type: 'Entry', locale: 'en-US'},
     fields: {
@@ -13,7 +13,7 @@ test('links in response, without matching include should remain', t => {
   t.end()
 })
 
-test('links in response, with matching include should resolve', t => {
+test('links in response, with matching include should resolve', (t) => {
   const items = [
     {
       sys: {type: 'Entry', locale: 'en-US'},
@@ -82,7 +82,7 @@ test('links in response, with matching include should resolve', t => {
   t.end()
 })
 
-test('links in response, with circular references', t => {
+test('links in response, with circular references', (t) => {
   const items = [
     {
       sys: {type: 'Entry', locale: 'en-US'},

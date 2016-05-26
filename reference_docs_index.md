@@ -58,7 +58,7 @@ For more information, check the Contentful's REST API reference on [Authenticati
 The first thing you want to look at is the [`contentful`](./contentful.html) namespace.
 
 Here's a quick description of the other namespaces:
-* [`CDAClient`](./CDAClient.html) - The main client object, which provides the methods to get entities out of Contentful such as Entries, Assets and Content Types.
+* [`ContentfulClientAPI`](./ContentfulClientAPI.html) - The main client object, which provides the methods to get entities out of Contentful such as Entries, Assets and Content Types.
 * [`Entities`](./Entities.html) - Defines properties and methods for each of the different entities you'll find in Contentful.
 * [`EntryFields`](./EntryFields.html) - Defines the different kinds of fields you will find in Entries.
 * [`Sync`](./Sync.html) - Defines the types used when working with the [Synchronization](https://www.contentful.com/developers/docs/concepts/sync/) endpoint
