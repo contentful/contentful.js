@@ -1,6 +1,6 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
-import {cloneDeep} from 'lodash/lang'
+import cloneDeep from 'lodash/cloneDeep'
 import {entryMock, assetMock} from './mocks'
 import pagedSync from '../../lib/paged-sync'
 

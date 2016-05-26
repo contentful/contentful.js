@@ -1,5 +1,6 @@
 import test from 'blue-tape'
-import {filter, map} from 'lodash/collection'
+import filter from 'lodash/filter'
+import map from 'lodash/map'
 import contentful from '../../'
 
 const params = {

@@ -1,7 +1,7 @@
 import test from 'tape'
 
 import {entryMock, assetMock} from '../mocks'
-import {cloneDeep} from 'lodash/lang'
+import cloneDeep from 'lodash/cloneDeep'
 import {wrapEntry, wrapEntryCollection} from '../../../lib/entities/entry'
 
 test('Entry is wrapped', (t) => {
