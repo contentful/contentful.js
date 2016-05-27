@@ -70,13 +70,37 @@ Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
 
+## Your first request
+
+The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
+
+```js
+var contentful = require('contentful')
+var client = contentful.createClient({
+  // This is the space ID. A space is like a project folder in Contentful terms
+  space: 'developer_bookshelf',
+  // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+  accessToken: '0b7f6x59a0'
+})
+// This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
+client.getEntry('5PeGS2SoZGSa4GuiQsigQu')
+.then((entry) => console.log(entry))
+```
+
+You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
+
 ## Documentation/References
+
+In order to do more with this SDK, have a look at the various documentation links below:
 
 * [Contentful's JS SDK reference](https://contentful.github.io/contentful.js)
   * From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
-  * For versions prior to 3.0.0, you can access documentation at [https://github.com/contentful/contentful.js/tree/legacy](https://github.com/contentful/contentful.js/tree/legacy)
 * Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful
 * [Contentful's CDA REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/) for additional details on the Delivery API
+
+### Legacy contentful.js
+
+For versions prior to 3.0.0, you can access documentation at [https://github.com/contentful/contentful.js/tree/legacy](https://github.com/contentful/contentful.js/tree/legacy)
 
 ## Versioning
 
@@ -94,7 +118,9 @@ See the [migration guide](migration_from_2_x.md) for more information.
 
 ## Support
 
-Please open an [issue](https://github.com/contentful/contentful.js/issues/new)
+If you have a problem with this library, please file an [issue](https://github.com/contentful/contentful.js/issues/new) here on Github.
+
+If you have other problems with Contentful not related to this library, you can contact [Customer Support](https://support.contentful.com).
 
 ## Contributing
 
