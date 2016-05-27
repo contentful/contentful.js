@@ -47,7 +47,7 @@
   ],
   "dependencies": {
     "babel-runtime": "^6.3.19",
-    "contentful-sdk-core": "^2.1.1",
+    "contentful-sdk-core": "^2.1.2",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.2.0"
   },
