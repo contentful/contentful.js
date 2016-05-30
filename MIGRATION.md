@@ -1,3 +1,7 @@
+# Migration to contentful.js 3.x from previous versions
+
+__(March 8th, 2016)__
+
 contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.
 
 The two major changes you should look out for are the method renamings, and the way link resolution works.

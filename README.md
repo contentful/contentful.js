@@ -114,7 +114,7 @@ You can check the changelog on the [releases](https://github.com/contentful/cont
 
 contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.
 
-See the [migration guide](migration_from_2_x.md) for more information.
+See the [migration guide](MIGRATION.md) for more information.
 
 ## Support
 
