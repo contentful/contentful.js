@@ -1,5 +1,3 @@
-# contentful.js
-
 [![npm](https://img.shields.io/npm/v/contentful.svg)](https://www.npmjs.com/package/contentful)
 [![Build Status](https://travis-ci.org/contentful/contentful.js.svg?branch=master)](https://travis-ci.org/contentful/contentful.js)
 [![Coverage Status](https://coveralls.io/repos/github/contentful/contentful.js/badge.svg?branch=master)](https://coveralls.io/github/contentful/contentful.js?branch=master)
@@ -91,12 +89,25 @@ You can try and change the above example at [Tonic](https://tonicdev.com/npm/con
 
 ## Documentation/References
 
-In order to do more with this SDK, have a look at the various documentation links below:
+To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
 
-* [Contentful's JS SDK reference](https://contentful.github.io/contentful.js)
-  * From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
-* Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful
-* [Contentful's CDA REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/) for additional details on the Delivery API
+### Reference documentation
+
+The [Contentful's JS SDK reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
+
+Most methods also have examples which show you how to use them.
+
+You can start by looking at the top level [`contentful`](./contentful.html) namespace.
+
+    From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+
+### Contentful JavaScript resources
+
+Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful
+
+### REST API reference
+
+This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can also get a better understanding of how the requests look under the hood.
 
 ### Legacy contentful.js
 
