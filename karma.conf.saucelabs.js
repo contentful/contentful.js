@@ -6,25 +6,28 @@ var browsers = {
     browserName: 'chrome',
     platform: 'Windows 10',
     version: '50.0'
-  }/*,
+  },
+  /*
   sl_firefox: {
     base: 'SauceLabs',
     browserName: 'firefox',
     platform: 'Windows 10',
     version: '46.0'
   },
+  */
   sl_ie_11: {
     base: 'SauceLabs',
     browserName: 'internet explorer',
     platform: 'Windows 10',
     version: '11.103'
-  },
+  }/*,
   sl_edge: {
     base: 'SauceLabs',
     browserName: 'MicrosoftEdge',
     platform: 'Windows 10',
     version: '13.10586'
-  }*/
+  }
+  */
 }
 
 module.exports = function (config) {
