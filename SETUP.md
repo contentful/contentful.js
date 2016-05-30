@@ -12,14 +12,6 @@ See https://www.npmjs.com/package/in-publish and https://medium.com/greenkeeper-
 
 ## Vendored axios
 
-The `vendor-browser` and `vendor-node` directories contain a vendored builds of [axios](https://github.com/mzabriskie/axios) which are used respectively on the standalone browser build and on the published npm package.
+`index.js` is the entry point for the node.js package, and it requires a vendored version of Axios from the [contentful-sdk-core](https://github.com/contentful/contentful-sdk-core) package.
 
-Axios is vendored because it expects a native or polyfilled implementation of promises. In this particular case, we vendor axios using babel, which uses the babel-plugin-transform-runtime to transform any usage of promises to requires to `babel-runtime/core-js/promise`.
-
-Axios can be vendored with `npm run vendor:browser` and `npm run vendor:node`.
-
-The browser vendored version runs on top of the standalone Axios browser version which is already optimized for this use case (it's not a good idea to try and run babel on top of the normal axios commonjs package as it produces an unnecessarily large file)
-
-Because of this, the follow-redirects dependency of axios needs to be a dependency on this package as well, otherwise it won't be installed.
-
-The additional `npm run vendor:version` task is unrelated to axios vendoring and is used to build the library version into the code, to avoid having to bundle code for reading a json file in the browser build.
+`browser.js` is the entry point for the CommonJS package when required from a browser aware environment (webpack or browserify) and for the standalone `browser-dist` build which is generated with webpack. This version requires a different vendored version of Axios which contains no code that isn't necessary for browsers.
