@@ -18,14 +18,13 @@ var browsers = {
     browserName: 'internet explorer',
     platform: 'Windows 10',
     version: '11.103'
-  }/*,
+  },
   sl_edge: {
     base: 'SauceLabs',
     browserName: 'MicrosoftEdge',
     platform: 'Windows 10',
     version: '13.10586'
   }
-  */
 }
 
 module.exports = function (config) {
