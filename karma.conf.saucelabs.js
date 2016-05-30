@@ -6,7 +6,7 @@ var browsers = {
     browserName: 'chrome',
     platform: 'Windows 10',
     version: '50.0'
-  },
+  }/*,
   sl_firefox: {
     base: 'SauceLabs',
     browserName: 'firefox',
@@ -24,7 +24,7 @@ var browsers = {
     browserName: 'MicrosoftEdge',
     platform: 'Windows 10',
     version: '13.10586'
-  }
+  }*/
 }
 
 module.exports = function (config) {
@@ -32,7 +32,7 @@ module.exports = function (config) {
   karmaBaseConf.reporters.push('saucelabs')
   karmaBaseConf.logLevel = config.LOG_DEBUG
   karmaBaseConf.customLaunchers = browsers
-  karmaBaseConf.captureTimeout = 120000
+  karmaBaseConf.captureTimeout = 200000
   karmaBaseConf.browserDisconnectTolerance = 3
   karmaBaseConf.concurrency = 5
   karmaBaseConf.browsers = Object.keys(browsers)
