@@ -7,14 +7,12 @@ var browsers = {
     platform: 'Windows 10',
     version: '50.0'
   },
-  /*
   sl_firefox: {
     base: 'SauceLabs',
     browserName: 'firefox',
     platform: 'Windows 10',
     version: '46.0'
   },
-  */
   sl_ie_11: {
     base: 'SauceLabs',
     browserName: 'internet explorer',
