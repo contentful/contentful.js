@@ -87,6 +87,20 @@ client.getEntry('5PeGS2SoZGSa4GuiQsigQu')
 
 You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
 
+## Using this SDK with the Preview API
+
+This SDK can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
+
+```js
+var client = contentful.createClient({
+  space: 'developer_bookshelf',
+  accessToken: 'preview_0b7f6x59a0',
+  host: 'preview.contentful.com'
+})
+```
+
+You can check other options for the client on our reference documentation
+
 ## Documentation/References
 
 To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
