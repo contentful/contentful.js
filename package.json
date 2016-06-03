@@ -37,6 +37,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "browser": "./browser.js",
+  "node": "./browser.js",
   "files": [
     "browser.js",
     "index.js",
