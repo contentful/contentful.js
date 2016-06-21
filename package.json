@@ -12,7 +12,8 @@
   "tonicExampleFilename": "tonic-example.js",
   "scripts": {
     "clean": "rimraf dist && rimraf browser-dist && rimraf coverage && rimraf out",
-    "build": "npm run clean && npm run vendor:version && npm run build:dist && npm run build:standalone",
+    "build:ci": "npm run vendor:version && npm run build:dist && npm run build:standalone",
+    "build": "npm run clean && npm run build:ci",
     "build:dist": "babel lib --out-dir dist",
     "build:standalone": "webpack && webpack -p --output-filename contentful.min.js",
     "link-dev-deps": "mkdirp node_modules && ln -s ../../contentful-sdk-core/src node_modules/contentful-sdk-core",
