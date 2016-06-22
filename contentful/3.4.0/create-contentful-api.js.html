@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Contentful CDA SDK: Source: create-cda-api.js</title>
+    <title>Contentful JS SDK: Source: create-contentful-api.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -16,7 +16,7 @@
     <div class="content">
       <div id="main">
 
-          <h1 class="page-title">Source: create-cda-api.js</h1>
+          <h1 class="page-title">Source: create-contentful-api.js</h1>
 
           
 
@@ -30,76 +30,57 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = createCdaApi;
+exports.default = createContentfulApi;
 
-var _space = require('./entities/space');
-
-var _contentType = require('./entities/content-type');
-
-var _entry = require('./entities/entry');
-
-var _asset = require('./entities/asset');
-
-var _sync = require('./sync');
-
-var _sync2 = _interopRequireDefault(_sync);
-
-var _createRequestConfig = require('./create-request-config');
+var _createRequestConfig = require('contentful-sdk-core/create-request-config');
 
 var _createRequestConfig2 = _interopRequireDefault(_createRequestConfig);
+
+var _entities = require('./entities');
+
+var _entities2 = _interopRequireDefault(_entities);
+
+var _pagedSync = require('./paged-sync');
+
+var _pagedSync2 = _interopRequireDefault(_pagedSync);
 
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @memberof CDAClient
- * @typedef {Object} ClientAPI
- * @prop {function} getSpace
- * @prop {function} getContentType
- * @prop {function} getContentTypes
- * @prop {function} getEntry
- * @prop {function} getEntries
- * @prop {function} getAsset
- * @prop {function} getAssets
- * @prop {function} sync
- */
-/**
- * Contentful CDA API
- * @namespace CDAClient
- */
-
-/**
- * @namespace Entities
- */
-
-function errorHandler(error) {
-  if (error.data) {
-    throw error.data;
-  }
-  throw error;
-}
-
-/**
- * Link resolution can be turned off for the methods that use it, or it can
- * be turned off globally. The local setting overrides the global setting.
+ * Creates API object with methods to access functionality from Contentful's
+ * Delivery API
  * @private
- * @param {Object} query - regular query object used for collection endpoints
- * @param {boolean} globalSetting - Global library setting for link resolution
- */
-function shouldLinksResolve(query, globalSetting) {
-  return !!('resolveLinks' in query ? query.resolveLinks : globalSetting);
-}
-
-/**
- * Creates CDA API object
- * @private
- * @param {Object} http - HTTP client instance
- * @param {boolean} resolveLinksGlobalSetting - Global library setting for link resolution
+ * @param {Object} params - API initialization params
+ * @prop {Object} http - HTTP client instance
+ * @prop {Object} entities - Object with wrapper methods for each kind of entity
+ * @prop {Function} shouldLinksResolve - Link resolver preconfigured with global setting
  * @return {ClientAPI}
  */
-function createCdaApi(http, resolveLinksGlobalSetting) {
+function createContentfulApi(_ref) {
+  var http = _ref.http;
+  var shouldLinksResolve = _ref.shouldLinksResolve;
+  var wrapSpace = _entities2.default.space.wrapSpace;
+  var _entities$contentType = _entities2.default.contentType;
+  var wrapContentType = _entities$contentType.wrapContentType;
+  var wrapContentTypeCollection = _entities$contentType.wrapContentTypeCollection;
+  var _entities$entry = _entities2.default.entry;
+  var wrapEntry = _entities$entry.wrapEntry;
+  var wrapEntryCollection = _entities$entry.wrapEntryCollection;
+  var _entities$asset = _entities2.default.asset;
+  var wrapAsset = _entities$asset.wrapAsset;
+  var wrapAssetCollection = _entities$asset.wrapAssetCollection;
+
+
+  function errorHandler(error) {
+    if (error.data) {
+      throw error.data;
+    }
+    throw error;
+  }
+
   /**
    * Gets the Space which the client is currently configured to use
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @return {Promise&lt;Entities.Space>} Promise for a Space
    * @example
    * client.getSpace()
@@ -107,13 +88,13 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
    */
   function getSpace() {
     return http.get('').then(function (response) {
-      return (0, _space.wrapSpace)(response.data);
+      return wrapSpace(response.data);
     }, errorHandler);
   }
 
   /**
    * Gets a Content Type
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {string} id
    * @return {Promise&lt;Entities.ContentType>} Promise for a Content Type
    * @example
@@ -122,13 +103,13 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
    */
   function getContentType(id) {
     return http.get('content_types/' + id).then(function (response) {
-      return (0, _contentType.wrapContentType)(response.data);
+      return wrapContentType(response.data);
     }, errorHandler);
   }
 
   /**
    * Gets a collection of Content Types
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {Object=} query - Object with search parameters. Check the &lt;a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial&lt;/a> and the &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference&lt;/a> for more details.
    * @return {Promise&lt;Entities.ContentTypeCollection>} Promise for a collection of Content Types
    * @example
@@ -139,13 +120,13 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
     var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
 
     return http.get('content_types', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
-      return (0, _contentType.wrapContentTypeCollection)(response.data);
+      return wrapContentTypeCollection(response.data);
     }, errorHandler);
   }
 
   /**
    * Gets an Entry
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {string} id
    * @param  {Object=} query - Object with search parameters. In this method it's only useful for `locale`.
    * @return {Promise&lt;Entities.Entry>} Promise for an Entry
@@ -157,13 +138,13 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
     var query = arguments.length &lt;= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     return http.get('entries/' + id, (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
-      return (0, _entry.wrapEntry)(response.data);
+      return wrapEntry(response.data);
     }, errorHandler);
   }
 
   /**
    * Gets a collection of Entries
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {Object=} query - Object with search parameters. Check the &lt;a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial&lt;/a> and the &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference&lt;/a> for more details.
    * @param  {boolean=} query.resolveLinks - When true, links to other Entries or Assets are resolved. Default: true.
    * @return {Promise&lt;Entities.EntryCollection>} Promise for a collection of Entries
@@ -174,15 +155,15 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
   function getEntries() {
     var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-    var resolveLinks = shouldLinksResolve(query, resolveLinksGlobalSetting);
+    var resolveLinks = shouldLinksResolve(query);
     return http.get('entries', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
-      return (0, _entry.wrapEntryCollection)(response.data, resolveLinks);
+      return wrapEntryCollection(response.data, resolveLinks);
     }, errorHandler);
   }
 
   /**
    * Gets an Asset
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {string} id
    * @param  {Object=} query - Object with search parameters. In this method it's only useful for `locale`.
    * @return {Promise&lt;Entities.Asset>} Promise for an Asset
@@ -194,13 +175,13 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
     var query = arguments.length &lt;= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     return http.get('assets/' + id, (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
-      return (0, _asset.wrapAsset)(response.data);
+      return wrapAsset(response.data);
     }, errorHandler);
   }
 
   /**
    * Gets a collection of Assets
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {Object=} query - Object with search parameters. Check the &lt;a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial&lt;/a> and the &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference&lt;/a> for more details.
    * @return {Promise&lt;Entities.AssetCollection>} Promise for a collection of Assets
    * @example
@@ -211,14 +192,14 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
     var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
 
     return http.get('assets', (0, _createRequestConfig2.default)({ query: query })).then(function (response) {
-      return (0, _asset.wrapAssetCollection)(response.data);
+      return wrapAssetCollection(response.data);
     }, errorHandler);
   }
 
   /**
    * Synchronizes either all the content or only new content since last sync
    * See &lt;a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization&lt;/a> for more information.
-   * @memberof CDAClient
+   * @memberof ContentfulClientAPI
    * @param  {Object} query - Query object for the sync call. One of initial or nextSyncToken always needs to be specified, but not both.
    * @param  {boolean?} query.initial - Indicates if this is the first sync. Use it if you don't have a sync token.
    * @param  {string?} query.nextSyncToken - The token you got the last time you used this method. Ensures you only get changed content.
@@ -228,13 +209,13 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
    * @return {Promise&lt;Sync.SyncCollection>} Promise for the collection resulting of a sync operation
    * @example
    * client.sync()
-   * .then(response => console.log(response.entries, response.assets, response.nextSyncToken))
+   * .then((response) => console.log(response.entries, response.assets, response.nextSyncToken))
    */
   function sync() {
     var query = arguments.length &lt;= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-    var resolveLinks = shouldLinksResolve(query, resolveLinksGlobalSetting);
-    return (0, _sync2.default)(http, query, resolveLinks);
+    var resolveLinks = shouldLinksResolve(query);
+    return (0, _pagedSync2.default)(http, query, resolveLinks);
   }
 
   return {
@@ -247,7 +228,17 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
     getAssets: getAssets,
     sync: sync
   };
-}
+} /**
+   * Contentful Delivery API Client. Contains methods which allow access to the
+   * different kinds of entities present in Contentful (Entries, Assets, etc).
+   * @namespace ContentfulClientAPI
+   * @see Entities
+   */
+
+/**
+ * The different kinds of top level entities you can find in Contentful
+ * @namespace Entities
+ */
 
 /**
  * System metadata. See &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes">Common Resource Attributes&lt;/a> for more details.
@@ -271,57 +262,16 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
  */
 
 /**
- * @namespace EntryFields
- */
-
-/**
- * @memberof EntryFields
- * @typedef Symbol
- * @type string
- */
-
-/**
- * @memberof EntryFields
- * @typedef Text
- * @type string
- */
-
-/**
- * @memberof EntryFields
- * @typedef Integer
- * @type number
- */
-
-/**
- * @memberof EntryFields
- * @typedef Number
- * @type number
- */
-
-/**
- * @memberof EntryFields
- * @typedef Date
- * @type string
- */
-
-/**
- * @memberof EntryFields
- * @typedef Boolean
- * @type boolean
- */
-
-/**
- * @memberof EntryFields
- * @typedef Location
- * @prop {string} lat - latitude
- * @prop {string} lon - longitude
- */
-
-/**
- * A Field in an Entry can have one of the following types that can be defined in Contentful. See &lt;a href="https://www.contentful.com/developers/docs/references/field-type/">Field Types&lt;/a> for more details.
- * @memberof Entities
- * @typedef Field
- * @type EntryFields.Symbol | EntryFields.Text | EntryFields.Integer | EntryFields.Number | EntryFields.Date | EntryFields.Boolean | EntryFields.Location | Entities.Link | Array&lt;EntryFields.Symbol|Entities.Link> | Object
+ * @memberof ContentfulClientAPI
+ * @typedef {Object} ClientAPI
+ * @prop {function} getSpace
+ * @prop {function} getContentType
+ * @prop {function} getContentTypes
+ * @prop {function} getEntry
+ * @prop {function} getEntries
+ * @prop {function} getAsset
+ * @prop {function} getAssets
+ * @prop {function} sync
  */</code></pre>
         </article>
     </section>
@@ -332,14 +282,14 @@ function createCdaApi(http, resolveLinksGlobalSetting) {
       </div>
 
       <nav>
-          <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="CDAClient.html">CDAClient</a></li><li><a href="contentful.html">contentful</a></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+          <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="contentful.html">contentful</a></li><li><a href="ContentfulClientAPI.html">ContentfulClientAPI</a></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
       </nav>
     </div>
 
     <footer>
         Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
-         on Fri May 13 2016 13:48:56 GMT+0000 (UTC)
-        for contentful.js 3.3.6
+         on Wed Jun 22 2016 15:14:36 GMT+0000 (UTC)
+        for contentful.js 3.4.0
     </footer>
   </main>
 
