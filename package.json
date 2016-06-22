@@ -1,5 +1,6 @@
 {
   "name": "contentful",
+  "version": "1.0.0-determined-by-semantic-release",
   "description": "Client for Contentful's Content Delivery API",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
@@ -16,8 +17,6 @@
     "build": "npm run clean && npm run build:ci",
     "build:dist": "babel lib --out-dir dist",
     "build:standalone": "webpack && webpack -p --output-filename contentful.min.js",
-    "link-dev-deps": "mkdirp node_modules && ln -s ../../contentful-sdk-core/src node_modules/contentful-sdk-core",
-    "unlink-dev-deps": "rimraf node_modules/contentful-sdk-core",
     "docs:build": "jsdoc -r -c ./jsdoc.json dist",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib npm run docs:dev",
@@ -35,7 +34,11 @@
     "postpublish": "npm run docs:publish && npm run clean",
     "pretest": "standard lib/*.js && standard lib/**/*.js && standard test/**/*.js",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "devdep:build": "pushd ../contentful-sdk-core && npm run build && popd",
+    "devdep:clean": "pushd ../contentful-sdk-core && npm run clean && popd",
+    "devdep:install": "npm run devdep:build && rm -rf node_modules/contentful-sdk-core && npm install ../contentful-sdk-core && npm run devdep:clean",
+    "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core"
   },
   "browser": "./browser.js",
   "files": [
