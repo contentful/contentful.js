@@ -7,6 +7,11 @@ const params = {
   accessToken: 'b4c0n73n7fu1',
   space: 'cfexampleapi'
 }
+const previewParams = {
+  host: 'preview.contentful.com',
+  accessToken: 'e5e8d4c5c122cf28fc1af3ff77d28bef78a3952957f15067bbc29f2f0dde0b50',
+  space: 'cfexampleapi'
+}
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -14,6 +19,8 @@ if (process.env.API_INTEGRATION_TESTS) {
 }
 
 const client = contentful.createClient(params)
+
+const previewClient = contentful.createClient(previewParams)
 
 test('Gets space', (t) => {
   t.plan(3)
@@ -112,6 +119,19 @@ test('Gets entries with linked includes', (t) => {
     t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items')
     t.equal(response.items[0].fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
     t.ok(response.items[0].fields.bestFriend.fields, 'resolved entry has fields')
+  })
+})
+
+test('Gets entries with linked includes with preview', (t) => {
+  t.plan(5)
+  return previewClient.getEntries({locale: '*', include: 5, 'sys.id': 'nyancat'})
+  .then((response) => {
+    t.ok(response.includes, 'includes')
+    t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
+    t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
+    // testing the fiels needs to be done first because it will call the getters and fill in bestFriend['en-US'].sys.type
+    t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
+    t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
   })
 })
 
