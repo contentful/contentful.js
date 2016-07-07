@@ -1,6 +1,5 @@
 {
   "name": "contentful",
-  "version": "1.0.0-determined-by-semantic-release",
   "description": "Client for Contentful's Content Delivery API",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
