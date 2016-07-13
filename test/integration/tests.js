@@ -2,7 +2,6 @@ import test from 'blue-tape'
 import filter from 'lodash/filter'
 import map from 'lodash/map'
 import contentful from '../../'
-
 const params = {
   accessToken: 'b4c0n73n7fu1',
   space: 'cfexampleapi'
@@ -12,6 +11,10 @@ const previewParams = {
   accessToken: 'e5e8d4c5c122cf28fc1af3ff77d28bef78a3952957f15067bbc29f2f0dde0b50',
   space: 'cfexampleapi'
 }
+const localeSpaceParams = {
+  accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
+  space: '7dh3w86is8ls'
+}
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -19,8 +22,8 @@ if (process.env.API_INTEGRATION_TESTS) {
 }
 
 const client = contentful.createClient(params)
-
 const previewClient = contentful.createClient(previewParams)
+const localeClient = contentful.createClient(localeSpaceParams)
 
 test('Gets space', (t) => {
   t.plan(3)
@@ -66,6 +69,23 @@ test('Gets an entry with a specific locale', (t) => {
   })
   .then((entry) => {
     t.equal(entry.sys.locale, 'tlh')
+  })
+})
+
+test.only('Get entry with fallback locale', (t) => {
+  t.plan(5)
+  Promise.all([
+    localeClient.getEntry('no-af-and-no-zu-za', {locale: 'af'}),
+    localeClient.getEntry('no-af-and-no-zu-za', {locale: 'zu-ZA'}),
+    localeClient.getEntry('no-zu-ZA', {locale: 'zu-ZA'}),
+    localeClient.getEntry('no-ne-NP', {locale: 'ne-NP'}),
+    localeClient.getEntry('no-af', {locale: 'af'})
+  ]).then((entries) => {
+    t.notEqual(entries[0].fields.title, '')
+    t.notEqual(entries[1].fields.title, '')
+    t.notEqual(entries[2].fields.title, '')
+    t.notEqual(entries[3].fields.title, '')
+    t.notEqual(entries[4].fields.title, '')
   })
 })
 
