@@ -40,6 +40,7 @@
     "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core"
   },
   "browser": "./browser.js",
+  "node": "./browser.js",
   "files": [
     "browser.js",
     "index.js",
