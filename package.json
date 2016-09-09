@@ -29,7 +29,7 @@
     "test:browser-remote": "BABEL_ENV=test ./node_modules/.bin/karma start karma.conf.saucelabs.js",
     "vendor:version": "echo \"module.exports = '`cat package.json|json version`'\" > version.js",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
-    "prepublish": "in-publish && npm run build || not-in-publish",
+    "prepublish": "in-publish && npm run build:ci || not-in-publish",
     "postpublish": "npm run docs:publish && npm run clean",
     "pretest": "standard lib/*.js && standard lib/**/*.js && standard test/**/*.js",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
