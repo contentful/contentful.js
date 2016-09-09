@@ -362,27 +362,6 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
         animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
         anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
       }
-    },
-    {
-      sys: {type: 'Entry', locale: 'en-US'},
-      fields: {
-        birds: [
-          {sys: {type: 'Link', linkType: 'Animal', id: 'parrot'}},
-          {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}},
-          {sys: {type: 'Link', linkType: 'Animal', id: 'aussie-parrot'}}
-        ]
-      }
-    },
-    {
-      sys: {type: 'Entry'},
-      fields: {
-        animal: {
-          'en-US': {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}}
-        },
-        animals: {
-          'en-US': [{sys: {type: 'Link', linkType: 'Animal', id: 'oink'}}]
-        }
-      }
     }
   ],
   includes: {
@@ -393,18 +372,6 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
           name: 'Pig',
           friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
         }
-      },
-      {
-        sys: {type: 'Animal', id: 'groundhog', locale: 'en-US'},
-        fields: {name: 'Phil'}
-      },
-      {
-        sys: {type: 'Animal', id: 'parrot', locale: 'en-US'},
-        fields: {name: 'Parrot'}
-      },
-      {
-        sys: {type: 'Animal', id: 'aussie-parrot', locale: 'en-US'},
-        fields: {name: 'Aussie Parrot'}
       }
     ]
   }
