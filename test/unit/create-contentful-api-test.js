@@ -1,6 +1,6 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
-
+import contentful from '../../'
 import createContentfulApi, {__RewireAPI__ as createContentfulApiRewireApi} from '../../lib/create-contentful-api'
 import {contentTypeMock, assetMock, entryMock} from './mocks'
 
@@ -351,4 +351,66 @@ test('CDA call sync fails', (t) => {
     t.equal(r, 'error')
     teardown()
   })
+})
+
+test('Given json should be parsed correctly as a collection of entries', (t) => {
+  const client = contentful.createClient({accessToken: 'blablabla', space: 'bla'})
+  const data = {items: [
+    {
+      sys: {type: 'Entry', locale: 'en-US'},
+      fields: {
+        animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
+        anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
+      }
+    },
+    {
+      sys: {type: 'Entry', locale: 'en-US'},
+      fields: {
+        birds: [
+          {sys: {type: 'Link', linkType: 'Animal', id: 'parrot'}},
+          {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}},
+          {sys: {type: 'Link', linkType: 'Animal', id: 'aussie-parrot'}}
+        ]
+      }
+    },
+    {
+      sys: {type: 'Entry'},
+      fields: {
+        animal: {
+          'en-US': {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}}
+        },
+        animals: {
+          'en-US': [{sys: {type: 'Link', linkType: 'Animal', id: 'oink'}}]
+        }
+      }
+    }
+  ],
+  includes: {
+    Animal: [
+      {
+        sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+        fields: {
+          name: 'Pig',
+          friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
+        }
+      },
+      {
+        sys: {type: 'Animal', id: 'groundhog', locale: 'en-US'},
+        fields: {name: 'Phil'}
+      },
+      {
+        sys: {type: 'Animal', id: 'parrot', locale: 'en-US'},
+        fields: {name: 'Parrot'}
+      },
+      {
+        sys: {type: 'Animal', id: 'aussie-parrot', locale: 'en-US'},
+        fields: {name: 'Aussie Parrot'}
+      }
+    ]
+  }
+}
+  let parsedData = client.parseEntries(data)
+  t.ok(parsedData)
+  t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
+  t.end()
 })
