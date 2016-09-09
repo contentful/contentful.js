@@ -20,7 +20,7 @@
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib npm run docs:dev",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
-    "test:ci": "./node_modules/contentful-sdk-core/bin/test-ci.sh",
+    "test:ci": "npm run build && ./node_modules/contentful-sdk-core/bin/test-ci.sh",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
