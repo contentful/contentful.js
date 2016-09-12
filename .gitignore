@@ -6,3 +6,4 @@ dist
 browser-dist
 out
 gh-pages
+*.swp

@@ -1,8 +1,7 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
-
-import createContentfulApi, {__RewireAPI__ as createContentfulApiRewireApi} from '../../lib/create-contentful-api'
-import {contentTypeMock, assetMock, entryMock} from './mocks'
+import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
+import { contentTypeMock, assetMock, entryMock } from './mocks'
 
 let entitiesMock
 
@@ -55,10 +54,10 @@ test('API call getSpace', (t) => {
   entitiesMock.space.wrapSpace.returns(data)
 
   return api.getSpace('spaceid')
-  .then((r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then((r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getSpace fails', (t) => {
@@ -74,10 +73,11 @@ test('API call getSpace fails', (t) => {
   entitiesMock.space.wrapSpace.returns(data)
 
   return api.getSpace('spaceid')
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getContentType', (t) => {
@@ -88,10 +88,10 @@ test('API call getContentType', (t) => {
   entitiesMock.contentType.wrapContentType.returns(contentTypeMock)
 
   return api.getContentType('ctid')
-  .then((r) => {
-    t.looseEqual(r, contentTypeMock)
-    teardown()
-  })
+    .then((r) => {
+      t.looseEqual(r, contentTypeMock)
+      teardown()
+    })
 })
 
 test('API call getContentType fails', (t) => {
@@ -107,10 +107,11 @@ test('API call getContentType fails', (t) => {
   entitiesMock.contentType.wrapContentType.returns(data)
 
   return api.getContentType('ctid')
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getContentTypes', (t) => {
@@ -127,10 +128,10 @@ test('API call getContentTypes', (t) => {
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
   return api.getContentTypes()
-  .then((r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then((r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getContentTypes fails', (t) => {
@@ -146,10 +147,11 @@ test('API call getContentTypes fails', (t) => {
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
   return api.getContentTypes()
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getEntry', (t) => {
@@ -160,10 +162,10 @@ test('API call getEntry', (t) => {
   entitiesMock.entry.wrapEntry.returns(entryMock)
 
   return api.getEntry('eid')
-  .then((r) => {
-    t.looseEqual(r, entryMock)
-    teardown()
-  })
+    .then((r) => {
+      t.looseEqual(r, entryMock)
+      teardown()
+    })
 })
 
 test('API call getEntry fails', (t) => {
@@ -179,10 +181,11 @@ test('API call getEntry fails', (t) => {
   entitiesMock.entry.wrapEntry.returns(data)
 
   return api.getEntry('eid')
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getEntries', (t) => {
@@ -201,11 +204,11 @@ test('API call getEntries', (t) => {
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
-  .then((r) => {
-    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
-    t.looseEqual(r, data, 'returns expected data')
-    teardown()
-  })
+    .then((r) => {
+      t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
+      t.looseEqual(r, data, 'returns expected data')
+      teardown()
+    })
 })
 
 test('API call getEntries with global resolve links turned off', (t) => {
@@ -220,11 +223,11 @@ test('API call getEntries with global resolve links turned off', (t) => {
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
-  .then((r) => {
-    t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
-    t.looseEqual(r, data, 'returns expected data')
-    teardown()
-  })
+    .then((r) => {
+      t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
+      t.looseEqual(r, data, 'returns expected data')
+      teardown()
+    })
 })
 
 test('API call getEntries fails', (t) => {
@@ -240,10 +243,11 @@ test('API call getEntries fails', (t) => {
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getAsset', (t) => {
@@ -254,10 +258,10 @@ test('API call getAsset', (t) => {
   entitiesMock.asset.wrapAsset.returns(assetMock)
 
   return api.getAsset('aid')
-  .then((r) => {
-    t.looseEqual(r, assetMock)
-    teardown()
-  })
+    .then((r) => {
+      t.looseEqual(r, assetMock)
+      teardown()
+    })
 })
 
 test('API call getAsset fails', (t) => {
@@ -273,10 +277,11 @@ test('API call getAsset fails', (t) => {
   entitiesMock.asset.wrapAsset.returns(data)
 
   return api.getAsset('aid')
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getAssets', (t) => {
@@ -293,10 +298,10 @@ test('API call getAssets', (t) => {
   entitiesMock.asset.wrapAssetCollection.returns(data)
 
   return api.getAssets()
-  .then((r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then((r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('API call getAssets fails', (t) => {
@@ -312,10 +317,11 @@ test('API call getAssets fails', (t) => {
   entitiesMock.asset.wrapAssetCollection.returns(data)
 
   return api.getAssets()
-  .then(() => {}, (r) => {
-    t.looseEqual(r, data)
-    teardown()
-  })
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
 })
 
 test('CDA call sync', (t) => {
@@ -330,25 +336,58 @@ test('CDA call sync', (t) => {
   })
 
   return api.sync({initial: true})
-  .then((r) => {
-    t.ok(r.entries, 'entries')
-    t.ok(r.assets, 'assets')
-    t.ok(r.deletedEntries, 'deletedEntries')
-    t.ok(r.deletedAssets, 'deletedAssets')
-    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
-    teardown()
-  })
+    .then((r) => {
+      t.ok(r.entries, 'entries')
+      t.ok(r.assets, 'assets')
+      t.ok(r.deletedEntries, 'deletedEntries')
+      t.ok(r.deletedAssets, 'deletedAssets')
+      t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
+      teardown()
+    })
 })
 
 test('CDA call sync fails', (t) => {
   t.plan(1)
+
   const {api} = setupWithData({
     promise: Promise.reject({ data: 'error' })
   })
-
   return api.sync({initial: true})
-  .then(() => {}, (r) => {
-    t.equal(r, 'error')
-    teardown()
+    .then(() => {
+    }, (r) => {
+      t.equal(r, 'error')
+      teardown()
+    })
+})
+
+test('Given json should be parsed correctly as a collection of entries', (t) => {
+  const api = createContentfulApi({
+    http: {},
+    shouldLinksResolve: true
   })
+  const data = {items: [
+    {
+      sys: {type: 'Entry', locale: 'en-US'},
+      fields: {
+        animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
+        anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
+      }
+    }
+  ],
+    includes: {
+      Animal: [
+        {
+          sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+          fields: {
+            name: 'Pig',
+            friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
+          }
+        }
+      ]
+    }
+  }
+  let parsedData = api.parseEntries(data)
+  t.ok(parsedData)
+  t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
+  t.end()
 })
