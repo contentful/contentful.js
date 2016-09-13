@@ -7,3 +7,4 @@ browser-dist
 out
 gh-pages
 *.swp
+*.swo
