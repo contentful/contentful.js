@@ -72,7 +72,7 @@ test('Gets an entry with a specific locale', (t) => {
   })
 })
 
-test.only('Get entry with fallback locale', (t) => {
+test('Get entry with fallback locale', (t) => {
   t.plan(5)
   Promise.all([
     localeClient.getEntry('no-af-and-no-zu-za', {locale: 'af'}),
@@ -94,6 +94,16 @@ test('Gets entries', (t) => {
   return client.getEntries()
   .then((response) => {
     t.ok(response.items, 'items')
+  })
+})
+test('Gets entries with select', (t) => {
+  t.plan(4)
+  return client.getEntries({select: 'fields.name,fields.likes', content_type: 'cat'})
+  .then((response) => {
+    t.ok(response.items, 'items')
+    t.ok(response.items[0].fields.name, 'fields.name')
+    t.ok(response.items[0].fields.likes, 'fields.likes')
+    t.notOk(response.items[0].fields.color, 'no fields.color')
   })
 })
 
