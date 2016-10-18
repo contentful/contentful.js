@@ -1,29 +1,23 @@
 var karmaBaseConf = require('./karma.base.conf')
 
 var browsers = {
-  sl_chrome: {
+  'SL_Chrome': {
     base: 'SauceLabs',
+    platform: 'OS X 10.11',
     browserName: 'chrome',
-    platform: 'Windows 10',
-    version: '50.0'
+    customData: {
+      awesome: true
+    }
   },
-  sl_firefox: {
+  'SL_Firefox': {
     base: 'SauceLabs',
-    browserName: 'firefox',
-    platform: 'Windows 10',
-    version: '46.0'
+    platform: 'OS X 10.11',
+    browserName: 'firefox'
   },
-  sl_ie_11: {
+  'SL_Edge': {
     base: 'SauceLabs',
-    browserName: 'internet explorer',
     platform: 'Windows 10',
-    version: '11.103'
-  },
-  sl_edge: {
-    base: 'SauceLabs',
-    browserName: 'MicrosoftEdge',
-    platform: 'Windows 10',
-    version: '13.10586'
+    browserName: 'microsoftedge'
   }
 }
 
