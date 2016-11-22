@@ -68,6 +68,7 @@
     "contentful-sdk-jsdoc": "^1.2.0",
     "coveralls": "^2.11.6",
     "cz-conventional-changelog": "^1.1.5",
+    "ghooks": "^1.3.2",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
     "jsdoc": "^3.4.0",
@@ -94,6 +95,9 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    },
+    "ghooks": {
+      "pre-commit": "npm run test:only"
     }
   }
 }
