@@ -1,18 +1,5 @@
-// To understand why axios is vendored, check SETUP.md
-var axios = require('contentful-sdk-core/vendor-node/axios')
-var contentful
-try {
-  contentful = require('./dist/contentful').default
-} catch (err) {
-  if (err.code === 'MODULE_NOT_FOUND') {
-    require('babel-register')
-    contentful = require('./lib/contentful').default
-  } else {
-    console.log(err)
-    process.exit(1)
-  }
-}
-
+var axios = require('axios')
+var contentful = require('./dist/contentful').default
 module.exports = {
   createClient: function (params) {
     return contentful(axios, params)

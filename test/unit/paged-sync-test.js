@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import cloneDeep from 'lodash/cloneDeep'
 import {entryMock, assetMock} from './mocks'
 import pagedSync from '../../lib/paged-sync'
-
+import Promise from 'es6-promise'
 function createEntry (id, deleted) {
   const entry = cloneDeep(entryMock)
   entry.sys.id = id

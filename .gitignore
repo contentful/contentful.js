@@ -8,3 +8,6 @@ out
 gh-pages
 *.swp
 *.swo
+*.dockerfile 
+*.dockerignore
+.npmrc
