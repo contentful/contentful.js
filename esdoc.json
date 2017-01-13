@@ -1,0 +1,7 @@
+{
+  "source": "./lib",
+  "destination": "./out",
+  "index": "./README.md",
+  "package": "./package.json",
+  "title": "contentful.js"
+}

@@ -388,6 +388,6 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
   }
   let parsedData = api.parseEntries(data)
   t.ok(parsedData)
-  t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
+  t.looseEquals(parsedData.items[0].fields.animal.sys.id, data.includes.Animal[0].sys.id, 'oink')
   t.end()
 })

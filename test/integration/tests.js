@@ -2,6 +2,7 @@ import test from 'blue-tape'
 import filter from 'lodash/filter'
 import map from 'lodash/map'
 import contentful from '../../'
+import Promise from 'es6-promise'
 const params = {
   accessToken: 'b4c0n73n7fu1',
   space: 'cfexampleapi'
@@ -144,6 +145,7 @@ test('Gets entries with linked includes', (t) => {
   t.plan(5)
   return client.getEntries({include: 2, 'sys.id': 'nyancat'})
   .then((response) => {
+    debugger
     t.ok(response.includes, 'includes')
     t.ok(response.includes.Asset, 'includes for Assets')
     t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items')

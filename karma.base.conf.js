@@ -1,9 +1,7 @@
 // This file is just a base configuration for karma and not directly usable
 // Use karma.conf.local.js for local tests
 // Use karma.conf.saucelabs.js for saucelabs tests
-
 var _ = require('lodash')
-var webpack = require('webpack')
 var webpackConfig = _.cloneDeep(require('./webpack.config.js'))
 delete webpackConfig.entry
 delete webpackConfig.output
@@ -14,7 +12,6 @@ webpackConfig.devtool = 'inline-source-map'
 webpackConfig.node = {
   fs: 'empty'
 }
-webpackConfig.plugins.push(new webpack.NormalModuleReplacementPlugin(/\.\/dist\/contentful/g, './lib/contentful'))
 
 module.exports = {
   plugins: [
