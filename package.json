@@ -50,7 +50,7 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "babel-runtime": "~6.3.19",
+    "babel-runtime": "~6.22.0",
     "contentful-sdk-core": "~2.5.0",
     "json-stringify-safe": "~5.0.1",
     "lodash": "~4.2.0"
