@@ -1,6 +1,6 @@
 We appreciate any community contributions to this project, whether in the form of issues or Pull Requests.
 
-This document outlines the we'd like you to follow in terms of commit messages and code style.
+This document outlines what we'd like you to follow in terms of commit messages and code style.
 
 It also explains what to do in case you want to setup the project locally and run tests.
 
