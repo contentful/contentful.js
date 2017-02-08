@@ -61,7 +61,7 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 
 ## Authentication
 
-To get content from Contentful, an app should authenticate with an with an OAuth bearer token.
+To get content from Contentful, an app should authenticate with an OAuth bearer token.
 
 You can create API keys using [Contentful's web interface](https://app.contentful.com). Go to the app, open the space that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section and create your first token. Done.
 
