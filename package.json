@@ -41,6 +41,7 @@
   },
   "browser": "./browser.js",
   "node": "./browser.js",
+  "types": "./index.d.ts",
   "files": [
     "browser.js",
     "index.js",
