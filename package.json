@@ -40,7 +40,9 @@
     "devdep:build": "pushd ../contentful-sdk-core && npm run build && popd",
     "devdep:clean": "pushd ../contentful-sdk-core && npm run clean && popd",
     "devdep:install": "npm run devdep:build && rm -rf node_modules/contentful-sdk-core && npm install ../contentful-sdk-core && npm run devdep:clean",
-    "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core"
+    "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core",
+    "precommit": "npm run lint",
+    "prepush": "npm run test:only"
   },
   "types": "./index.d.ts",
   "files": [
