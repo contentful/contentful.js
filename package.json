@@ -27,6 +27,7 @@
     "test:only": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
     "test:integration": "BABEL_ENV=test babel-node ./test/integration/tests.js",
+    "test:integration-debug": "BABEL_ENV=test babel-node debug ./test/integration/tests.js",
     "test:browser-local": "BABEL_ENV=test karma start karma.conf.local.js",
     "test:browser-remote": "BABEL_ENV=test karma start karma.conf.saucelabs.js",
     "test:simulate-ci": "trevor",
