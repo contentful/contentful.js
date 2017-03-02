@@ -1,5 +1,6 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
+import Promise from 'es6-promise'
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
 import { contentTypeMock, assetMock, entryMock } from './mocks'
 
@@ -388,6 +389,6 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
   }
   let parsedData = api.parseEntries(data)
   t.ok(parsedData)
-  t.looseEquals(parsedData.items[0].fields.animal.sys.id, data.includes.Animal[0].sys.id, 'oink')
+  t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
   t.end()
 })
