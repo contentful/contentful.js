@@ -9,7 +9,7 @@ var plugins = [
     'currying': true,
     'caching': true,
     'collections': true,
-    'exotics': true,
+    'paths': true,
     'guards': true,
     'unicode': true,
     'placeholders': true
