@@ -2,6 +2,8 @@ dist: trusty
 before_install:
   - npm install -g npm@latest
   - npm set progress=false
+install:
+  - npm install
 language: node_js
 node_js:
   - "6.9"
