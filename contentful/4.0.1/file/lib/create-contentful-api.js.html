@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/create-contentful-api.js | contentful.js API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/contentful/contentful.js.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createClient">createClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ClientAPI">ClientAPI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Link">Link</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Sys">Sys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DeletedAsset">DeletedAsset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DeletedEntry">DeletedEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SyncCollection">SyncCollection</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">entities</div><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Asset">Asset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AssetCollection">AssetCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ContentType">ContentType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ContentTypeCollection">ContentTypeCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Boolean">Boolean</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Date">Date</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Entry">Entry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-EntryCollection">EntryCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Field">Field</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Integer">Integer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Location">Location</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Number">Number</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Symbol">Symbol</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Text">Text</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Space">Space</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">mixins</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mixinStringifySafe">mixinStringifySafe</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/create-contentful-api.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Contentful Delivery API Client. Contains methods which allow access to the
+ * different kinds of entities present in Contentful (Entries, Assets, etc).
+ * @namespace ContentfulClientAPI
+ * @see Entities
+ */
+
+/**
+ * The different kinds of top level entities you can find in Contentful
+ * @namespace Entities
+ */
+
+/**
+ * System metadata. See &lt;a href=&quot;https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes&quot;&gt;Common Resource Attributes&lt;/a&gt; for more details.
+ * @memberof Entities
+ * @typedef Sys
+ * @prop {string} type
+ * @prop {string} id
+ * @prop {Entities.Link} space
+ * @prop {string} createdAt
+ * @prop {string} updatedAt
+ * @prop {number} revision
+ */
+
+/**
+ * Link to another entity. See &lt;a href=&quot;https://www.contentful.com/developers/docs/concepts/links/&quot;&gt;Links&lt;/a&gt; for more details.
+ * @memberof Entities
+ * @typedef Link
+ * @prop {string} type - type of this entity. Always link.
+ * @prop {string} id
+ * @prop {string} linkType - type of this link. If defined, either Entry or Asset
+ */
+
+/**
+ * @memberof ContentfulClientAPI
+ * @typedef {Object} ClientAPI
+ * @prop {function} getSpace
+ * @prop {function} getContentType
+ * @prop {function} getContentTypes
+ * @prop {function} getEntry
+ * @prop {function} getEntries
+ * @prop {function} getAsset
+ * @prop {function} getAssets
+ * @prop {function} parseEntries
+ * @prop {function} sync
+ */
+
+import {createRequestConfig} from &apos;contentful-sdk-core&apos;
+import entities from &apos;./entities&apos;
+import pagedSync from &apos;./paged-sync&apos;
+
+/**
+ * Creates API object with methods to access functionality from Contentful&apos;s
+ * Delivery API
+ * @private
+ * @param {Object} params - API initialization params
+ * @prop {Object} http - HTTP client instance
+ * @prop {Object} entities - Object with wrapper methods for each kind of entity
+ * @prop {Function} shouldLinksResolve - Link resolver preconfigured with global setting
+ * @return {ClientAPI}
+ */
+export default function createContentfulApi ({http, shouldLinksResolve}) {
+  const {wrapSpace} = entities.space
+  const {wrapContentType, wrapContentTypeCollection} = entities.contentType
+  const {wrapEntry, wrapEntryCollection} = entities.entry
+  const {wrapAsset, wrapAssetCollection} = entities.asset
+
+  function errorHandler (error) {
+    if (error.data) {
+      throw error.data
+    }
+    throw error
+  }
+
+  /**
+   * Gets the Space which the client is currently configured to use
+   * @memberof ContentfulClientAPI
+   * @return {Promise&lt;Entities.Space&gt;} Promise for a Space
+   * @example
+   * client.getSpace()
+   * .then(space =&gt; console.log(space))
+   */
+  function getSpace () {
+    return http.get(&apos;&apos;)
+      .then((response) =&gt; wrapSpace(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a Content Type
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @return {Promise&lt;Entities.ContentType&gt;} Promise for a Content Type
+   * @example
+   * client.getContentType(&apos;contentTypeId&apos;)
+   * .then(contentType =&gt; console.log(contentType))
+   */
+  function getContentType (id) {
+    return http.get(&apos;content_types/&apos; + id)
+      .then((response) =&gt; wrapContentType(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a collection of Content Types
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters. Check the &lt;a href=&quot;https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters&quot;&gt;JS SDK tutorial&lt;/a&gt; and the &lt;a href=&quot;https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters&quot;&gt;REST API reference&lt;/a&gt; for more details.
+   * @return {Promise&lt;Entities.ContentTypeCollection&gt;} Promise for a collection of Content Types
+   * @example
+   * client.getContentTypes()
+   * .then(contentTypes =&gt; console.log(contentTypes.items))
+   */
+  function getContentTypes (query = {}) {
+    return http.get(&apos;content_types&apos;, createRequestConfig({query: query}))
+      .then((response) =&gt; wrapContentTypeCollection(response.data), errorHandler)
+  }
+
+  /**
+   * Gets an Entry
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @param  {Object=} query - Object with search parameters. In this method it&apos;s only useful for `locale`.
+   * @return {Promise&lt;Entities.Entry&gt;} Promise for an Entry
+   * @example
+   * client.getEntry(&apos;entryId&apos;)
+   * .then(entry =&gt; console.log(entry))
+   */
+  function getEntry (id, query = {}) {
+    normalizeSelect(query)
+    return http.get(&apos;entries/&apos; + id, createRequestConfig({query: query}))
+      .then((response) =&gt; wrapEntry(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a collection of Entries
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters. Check the &lt;a href=&quot;https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters&quot;&gt;JS SDK tutorial&lt;/a&gt; and the &lt;a href=&quot;https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters&quot;&gt;REST API reference&lt;/a&gt; for more details.
+   * @param  {boolean=} query.resolveLinks - When true, links to other Entries or Assets are resolved. Default: true.
+   * @return {Promise&lt;Entities.EntryCollection&gt;} Promise for a collection of Entries
+   * @example
+   * client.getEntries({content_type: &apos;contentTypeId&apos;})
+   * .then(entries =&gt; console.log(entries.items))
+   */
+  function getEntries (query = {}) {
+    const resolveLinks = shouldLinksResolve(query)
+    const resolveForAllLocales = (query.locale &amp;&amp; query.locale === &apos;*&apos;)
+    normalizeSelect(query)
+    return http.get(&apos;entries&apos;, createRequestConfig({query: query}))
+      .then((response) =&gt; wrapEntryCollection(response.data, resolveLinks, resolveForAllLocales), errorHandler)
+  }
+  /**
+   * Gets an Asset
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @param  {Object=} query - Object with search parameters. In this method it&apos;s only useful for `locale`.
+   * @return {Promise&lt;Entities.Asset&gt;} Promise for an Asset
+   * @example
+   * client.getAsset(&apos;assetId&apos;)
+   * .then(asset =&gt; console.log(asset))
+   */
+  function getAsset (id, query = {}) {
+    normalizeSelect(query)
+    return http.get(&apos;assets/&apos; + id, createRequestConfig({query: query}))
+      .then((response) =&gt; wrapAsset(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a collection of Assets
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters. Check the &lt;a href=&quot;https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters&quot;&gt;JS SDK tutorial&lt;/a&gt; and the &lt;a href=&quot;https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters&quot;&gt;REST API reference&lt;/a&gt; for more details.
+   * @return {Promise&lt;Entities.AssetCollection&gt;} Promise for a collection of Assets
+   * @example
+   * client.getAssets()
+   * .then(assets =&gt; console.log(assets.items))
+   */
+  function getAssets (query = {}) {
+    normalizeSelect(query)
+    return http.get(&apos;assets&apos;, createRequestConfig({query: query}))
+      .then((response) =&gt; wrapAssetCollection(response.data), errorHandler)
+  }
+
+  /**
+   * Synchronizes either all the content or only new content since last sync
+   * See &lt;a href=&quot;https://www.contentful.com/developers/docs/concepts/sync/&quot;&gt;Synchronization&lt;/a&gt; for more information.
+   * &lt;strong&gt; Important note: &lt;/strong&gt; The the sync api endpoint does not support include or link resolution.
+   * However contentful.js is doing link resolution client side if you only make an initial sync.
+   * For the delta sync (using nextSyncToken) it is not possible since the sdk wont have access to all the data to make such an operation.
+   * @memberof ContentfulClientAPI
+   * @param  {Object} query - Query object for the sync call. One of initial or nextSyncToken always needs to be specified, but not both.
+   * @param  {boolean?} query.initial - Indicates if this is the first sync. Use it if you don&apos;t have a sync token.
+   * @param  {string?} query.nextSyncToken - The token you got the last time you used this method. Ensures you only get changed content.
+   * @param  {string=} query.type - Filter by this type (Entry or Asset)
+   * @param  {string=} query.content_type - Filter by this content type id
+   * @param  {boolean=} query.resolveLinks - When true, links to other Entries or Assets are resolved. Default: true.
+   * @return {Promise&lt;Sync.SyncCollection&gt;} Promise for the collection resulting of a sync operation
+   * @example
+   * client.sync()
+   * .then((response) =&gt; console.log(response.entries, response.assets, response.nextSyncToken))
+   */
+  function sync (query = {}) {
+    const resolveLinks = shouldLinksResolve(query)
+    return pagedSync(http, query, resolveLinks)
+  }
+
+  /**
+  * Parse raw json data into collection of entry objects.Links will be resolved also
+  * @memberof ContentfulClientAPI
+  * @param {Object} raw json data
+  * @example
+  * let data = {items: [
+  *    {
+  *    sys: {type: &apos;Entry&apos;, locale: &apos;en-US&apos;},
+  *    fields: {
+  *      animal: {sys: {type: &apos;Link&apos;, linkType: &apos;Animal&apos;, id: &apos;oink&apos;}},
+  *      anotheranimal: {sys: {type: &apos;Link&apos;, linkType: &apos;Animal&apos;, id: &apos;middle-parrot&apos;}}
+  *    }
+  *  }
+  * ],
+  * includes: {
+  *  Animal: [
+  *    {
+  *      sys: {type: &apos;Animal&apos;, id: &apos;oink&apos;, locale: &apos;en-US&apos;},
+  *      fields: {
+  *        name: &apos;Pig&apos;,
+  *        friend: {sys: {type: &apos;Link&apos;, linkType: &apos;Animal&apos;, id: &apos;groundhog&apos;}}
+  *      }
+  *    }
+  *   ]
+  *  }
+  * }
+  * console.log( data.items[0].fields.foo ); // undefined
+  * let parsedData = client.parseEntries(data);
+  * console.log( parsedData.items[0].fields.foo ); // foo
+  */
+  function parseEntries (data) {
+    return wrapEntryCollection(data, true, false)
+  }
+  /*
+   * sdk relies heavily on sys metadata
+   * so we cannot omit the sys property on sdk level
+   * */
+  function normalizeSelect (query) {
+    if (query.select &amp;&amp; !/sys/i.test(query.select)) {
+      query.select += &apos;,sys&apos;
+    }
+  }
+
+  return {
+    getSpace: getSpace,
+    getContentType: getContentType,
+    getContentTypes: getContentTypes,
+    getEntry: getEntry,
+    getEntries: getEntries,
+    getAsset: getAsset,
+    getAssets: getAssets,
+    parseEntries: parseEntries,
+    sync: sync
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
