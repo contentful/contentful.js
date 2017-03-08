@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/contentful.js | contentful.js API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/contentful/contentful.js.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createClient">createClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ClientAPI">ClientAPI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Link">Link</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Sys">Sys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DeletedAsset">DeletedAsset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DeletedEntry">DeletedEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SyncCollection">SyncCollection</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">entities</div><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Asset">Asset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AssetCollection">AssetCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ContentType">ContentType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ContentTypeCollection">ContentTypeCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Boolean">Boolean</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Date">Date</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Entry">Entry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-EntryCollection">EntryCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Field">Field</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Integer">Integer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Location">Location</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Number">Number</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Symbol">Symbol</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Text">Text</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Space">Space</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">mixins</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mixinStringifySafe">mixinStringifySafe</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/contentful.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Contentful Delivery API SDK. Allows you to create instances of a client
+ * with access to the Contentful Content Delivery API.
+ * @namespace contentful
+ * @see ContentfulClientAPI
+ */
+
+import defaults from &apos;lodash/defaults&apos;
+import assign from &apos;lodash/assign&apos;
+import cloneDeep from &apos;lodash/cloneDeep&apos;
+import version from &apos;../version&apos;
+import {createHttpClient, wrapHttpClient} from &apos;contentful-sdk-core&apos;
+import createContentfulApi from &apos;./create-contentful-api&apos;
+import createLinkResolver from &apos;./create-link-resolver&apos;
+
+/**
+ * Create a client instance
+ * @func
+ * @name createClient
+ * @memberof contentful
+ * @param {Object} params - Client initialization parameters
+ * @prop {string} params.space - Space ID
+ * @prop {string} params.accessToken - Contentful CDA Access Token
+ * @prop {boolean=} params.insecure - Requests will be made over http instead of the default https (default: true)
+ * @prop {string=} params.host - API host (default: cdn.contentful.com). Also usable with preview.contentful.com.
+ * @prop {Object=} params.agent - Optional Node.js HTTP agent for proxying (see &lt;a href=&quot;https://nodejs.org/api/http.html#http_class_http_agent&quot;&gt;Node.js docs&lt;/a&gt; and &lt;a href=&quot;https://www.npmjs.com/package/https-proxy-agent&quot;&gt;https-proxy-agent&lt;/a&gt;)
+ * @prop {Object=} params.headers - Optional additional headers
+ * @prop {number=} params.concurrency - Number of allowed concurrent requests. Changing this value is not recommended. (default: 6)
+ * @prop {number=} params.delay - Delay in milliseconds for waiting after hitting the allowed number of concurrent requests. Changing this value is not recommended. (default: 1000)
+ * @prop {number=} params.maxRetries - Maximum number of retries when a 429 is received (default: 5)
+ * @prop {boolean=} params.retryOnTooManyRequests - If we should retry on 429s (default: true)
+ * @prop {boolean=} params.resolveLinks - If we should resolve links between entries
+ * @returns {ContentfulClientAPI.ClientAPI}
+ * @example
+ * const client = contentful.createClient({
+ *  accessToken: &apos;myAccessToken&apos;,
+ *  space: &apos;mySpaceId&apos;
+ * })
+ */
+export default function createClient (axios, params) {
+  params = defaults(cloneDeep(params), {
+    rateLimit: 9,
+    rateLimitPeriod: 1000,
+    maxRetries: 5,
+    retryOnTooManyRequests: true
+  })
+
+  if (!params.accessToken) {
+    throw new TypeError(&apos;Expected parameter accessToken&apos;)
+  }
+
+  if (!params.space) {
+    throw new TypeError(&apos;Expected parameter space&apos;)
+  }
+
+  // Use resolveLinks param if specified, otherwise default to true
+  const resolveLinks = !!(&apos;resolveLinks&apos; in params ? params.resolveLinks : true)
+  const shouldLinksResolve = createLinkResolver(resolveLinks)
+
+  params.defaultHostname = &apos;cdn.contentful.com&apos;
+  params.headers = assign(params.headers, {
+    &apos;Content-Type&apos;: &apos;application/vnd.contentful.delivery.v1+json&apos;,
+    &apos;X-Contentful-User-Agent&apos;: &apos;contentful.js/&apos; + version
+  })
+
+  const http = wrapHttpClient(createHttpClient(axios, params), {
+    concurrency: params.rateLimit,
+    delay: params.rateLimitPeriod,
+    maxRetries: params.maxRetries,
+    retryOnTooManyRequests: params.retryOnTooManyRequests
+  })
+
+  return createContentfulApi({
+    http: http,
+    shouldLinksResolve: shouldLinksResolve
+  })
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
