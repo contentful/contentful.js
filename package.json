@@ -49,6 +49,7 @@
   "files": [
     "index.js",
     "version.js",
+    "index.d.ts",
     "dist",
     "tonic-example.js"
   ],
