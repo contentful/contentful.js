@@ -8,10 +8,6 @@ export interface CreateClientParams {
     host?: string;
     agent?: any;
     headers?: any;
-    concurrency?: number;
-    delay?: number;
-    maxRetries?: number;
-    retryOnTooManyRequests?: boolean;
     resolveLinks?: boolean;
 }
 
