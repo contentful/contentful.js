@@ -1385,13 +1385,14 @@ content-type@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.2.tgz#b7d113aee7a8dd27bd21133c4dc2529df1721eed"
 
-contentful-sdk-core@^3.5.10:
-  version "3.5.10"
-  resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-3.5.10.tgz#d32b01ab2429733971214f4f51164144295bb903"
+contentful-sdk-core@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-3.7.0.tgz#1573d6e04d55d6e414a271e8759a986af95e322b"
   dependencies:
     axios "^0.15.3"
     es6-promise "^4.0.5"
     lodash "^4.17.4"
+    npmlog "^4.0.2"
     qs "^6.1.0"
 
 contentful-sdk-jsdoc@^1.2.2:
@@ -3810,7 +3811,7 @@ npmconf@^2.1.2:
     semver "2 || 3 || 4"
     uid-number "0.0.5"
 
-"npmlog@2 || ^3.1.0 || ^4.0.0", npmlog@^4.0.0, npmlog@^4.0.1:
+"npmlog@2 || ^3.1.0 || ^4.0.0", npmlog@^4.0.0, npmlog@^4.0.1, npmlog@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.0.2.tgz#d03950e0e78ce1527ba26d2a7592e9348ac3e75f"
   dependencies:
