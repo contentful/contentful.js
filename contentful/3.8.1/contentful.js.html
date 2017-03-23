@@ -78,8 +78,8 @@ function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? ob
  * @prop {string=} params.host - API host (default: cdn.contentful.com). Also usable with preview.contentful.com.
  * @prop {Object=} params.agent - Optional Node.js HTTP agent for proxying (see &lt;a href="https://nodejs.org/api/http.html#http_class_http_agent">Node.js docs&lt;/a> and &lt;a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent&lt;/a>)
  * @prop {Object=} params.headers - Optional additional headers
- * @prop {number=} params.concurrency - Number of allowed concurrent requests. Changing this value is not recommended. (default: 6)
- * @prop {number=} params.delay - Delay in milliseconds for waiting after hitting the allowed number of concurrent requests. Changing this value is not recommended. (default: 1000)
+ * @prop {number=} params.rateLimit - Number of allowed concurrent requests. Changing this value is not recommended. (default: 6)
+ * @prop {number=} params.rateLimitPeriod - Delay in milliseconds for waiting after hitting the allowed number of concurrent requests. Changing this value is not recommended. (default: 1000)
  * @prop {number=} params.maxRetries - Maximum number of retries when a 429 is received (default: 5)
  * @prop {boolean=} params.retryOnTooManyRequests - If we should retry on 429s (default: true)
  * @prop {boolean=} params.resolveLinks - If we should resolve links between entries  
