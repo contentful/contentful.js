@@ -128,15 +128,13 @@ const client = contentful.createClient({
 
 Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by doing  intial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with query param `'sys.id': '<your-entry-id>'`.
 
-**e.g.**
-assuming that you have a contentType `post` that has a reference field `author`
+**e.g.** assuming that you have a contentType `post` that has a reference field `author`
 
 ```js
 const contentful = require('contentful)
 const client = contentful.createClient({
   accessToken:'<you-access-token>',
   space: '<your-space-id>',
-  resolveLinks: false
 })
 // getting a specific Post
 client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
@@ -144,7 +142,53 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 	console.log(response.items[0].fields.author.fields.name)
 })
 ```
-The link resolution is by default one level deep if you have more you can specify the `include` param in the query when fetching your entries like so `client.getEntries({include: <value>})`, you can specify up to 10.
+The link resolution resolves by default one level deep if you have more you can specify the `include` param in the query when fetching your entries like so `client.getEntries({include: <value>})`, you can specify up to 10.
+
+### Sync
+
+The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, or content that has changed.
+Whenever you perform a sync operation the enpoint will send back a `syncToken` which you can use in the following sync to get only the changed data (update, deletion etc..).
+**e.g.**
+
+```js
+const contentful = require('contentful')
+const contentful = require('contentful)
+const client = contentful.createClient({
+  accessToken:'<you-access-token>',
+  space: '<your-space-id>',
+})
+// first time you are syncing make sure to spcify `initial: true`
+client.sync({initial: true}).then((response) => {
+	// You should save the `nextSyncToken` to use in the following sync
+	console.log(response.nextSyncToken)
+})
+```
+The SDK will go through all the pages for you and gives you back a response object with the full data so you don't need to handle pagination.
+
+### Querying & Search parameters
+
+You can pass your query params as `key: value` pairs in the query object whenever request a resource.
+**e.g.**
+
+```js
+const contentful = require('contentful')
+const contentful = require('contentful)
+const client = contentful.createClient({
+  accessToken:'<you-access-token>',
+  space: '<your-space-id>',
+})
+
+// getting a specific Post
+client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
+	// output the author name
+	console.log(response.items[0].fields.author.fields.name)
+})
+
+// you can pass a query when requesting a single entity
+client.getEntry('<entry-id>', {key: value})
+``` 
+
+for mor infos about the search paramaters check this [link](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
 
 ## Troubleshooting
 
