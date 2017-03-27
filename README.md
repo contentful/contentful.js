@@ -183,7 +183,7 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 	console.log(response.items[0].fields.author.fields.name)
 })
 
-// you can pass a query when requesting a single entity
+// You can pass a query when requesting a single entity
 client.getEntry('<entry-id>', {key: value})
 ``` 
 
