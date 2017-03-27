@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">lib/contentful.js | contentful.js API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/mixins/link-getters.js | contentful.js API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -59,65 +59,123 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">lib/contentful.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * Contentful Delivery API SDK. Allows you to create instances of a client
- * with access to the Contentful Content Delivery API.
- * @namespace contentful
- * @see ContentfulClientAPI
- */
+<div class="content" data-ice="content"><h1 data-ice="title">lib/mixins/link-getters.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import map from &apos;lodash/map&apos;
+import each from &apos;lodash/each&apos;
+import find from &apos;lodash/find&apos;
+import get from &apos;lodash/get&apos;
+import partial from &apos;lodash/partial&apos;
+import memoize from &apos;lodash/memoize&apos;
 
-import assign from &apos;lodash/assign&apos;
-import version from &apos;../version&apos;
-import {createHttpClient} from &apos;contentful-sdk-core&apos;
-import createContentfulApi from &apos;./create-contentful-api&apos;
-import createLinkResolver from &apos;./create-link-resolver&apos;
-
+let resolveAllLocales = false
 /**
- * Create a client instance
- * @func
- * @name createClient
- * @memberof contentful
- * @param {Object} params - Client initialization parameters
- * @prop {string} params.space - Space ID
- * @prop {string} params.accessToken - Contentful CDA Access Token
- * @prop {boolean=} params.insecure - Requests will be made over http instead of the default https (default: true)
- * @prop {string=} params.host - API host (default: cdn.contentful.com). Also usable with preview.contentful.com.
- * @prop {Object=} params.agent - Optional Node.js HTTP agent for proxying (see &lt;a href=&quot;https://nodejs.org/api/http.html#http_class_http_agent&quot;&gt;Node.js docs&lt;/a&gt; and &lt;a href=&quot;https://www.npmjs.com/package/https-proxy-agent&quot;&gt;https-proxy-agent&lt;/a&gt;)
- * @prop {Object=} params.headers - Optional additional headers
- * @prop {boolean=} params.resolveLinks - If we should resolve links between entries
- * @returns {ContentfulClientAPI.ClientAPI}
- * @example
- * const client = contentful.createClient({
- *  accessToken: &apos;myAccessToken&apos;,
- *  space: &apos;mySpaceId&apos;
- * })
+ * Sets getters on links for a given response
+ * @private
+ * @param {Array&lt;Entry|Asset|DeletedEntry|DeletedAsset&gt;} items
+ * @param {Object} includes - Object with lists of Entry, Asset, DeletedEntry and DeletedAsset
  */
-export default function createClient (axios, params) {
-  if (!params.accessToken) {
-    throw new TypeError(&apos;Expected parameter accessToken&apos;)
-  }
-
-  if (!params.space) {
-    throw new TypeError(&apos;Expected parameter space&apos;)
-  }
-
-  // Use resolveLinks param if specified, otherwise default to true
-  const resolveLinks = !!(&apos;resolveLinks&apos; in params ? params.resolveLinks : true)
-  const shouldLinksResolve = createLinkResolver(resolveLinks)
-
-  params.defaultHostname = &apos;cdn.contentful.com&apos;
-  params.headers = assign(params.headers, {
-    &apos;Content-Type&apos;: &apos;application/vnd.contentful.delivery.v1+json&apos;,
-    &apos;X-Contentful-User-Agent&apos;: &apos;contentful.js/&apos; + version
+export default function mixinLinkGetters (items, includes, resolveForAllLocales) {
+  resolveAllLocales = resolveForAllLocales
+  const linkGetter = memoize(getLinksFromIncludes, memoizationResolver)
+  each(items, (item) =&gt; {
+    // TODO: workaround the preview endpoint extra locale this should be removed when
+    // it is fixed on the backend
+    if (resolveForAllLocales &amp;&amp; item.sys.locale) {
+      delete item.sys.locale
+    }
+    setLocalizedFieldGetters(item.fields, !!item.sys.locale)
   })
 
-  const http = createHttpClient(axios, params)
+  /**
+   * If a field does not have a locale defined in sys, the content of that field
+   * is an object where the keys are each available locale, and we need to iterate
+   * over each of those
+   * @private
+   * @param {Object} fields - Fields object
+   * @param {boolean} hasLocale - If entry has been requested with a locale
+   */
+  function setLocalizedFieldGetters (fields, hasLocale) {
+    if (hasLocale) {
+      setFieldGettersForFields(fields)
+    } else {
+      each(fields, (localizedField) =&gt; setFieldGettersForFields(localizedField))
+    }
+  }
 
-  return createContentfulApi({
-    http: http,
-    shouldLinksResolve: shouldLinksResolve
-  })
+  /**
+   * Sets getters on each link field or list of link fields for each item
+   * @private
+   * @param {Object} fields - Fields object
+   */
+  function setFieldGettersForFields (fields) {
+    each(fields, (field, fieldKey) =&gt; {
+      if (Array.isArray(field)) {
+        addGetterForLinkArray(field, fieldKey, fields)
+      } else {
+        addGetterForLink(field, fieldKey, fields)
+      }
+    })
+  }
+
+  /**
+   * Sets a getter which resolves the link of the given fieldKey in fields
+   * @private
+   * @param {Object} field - Field object
+   * @param {string} fieldKey
+   * @param {Object} fields - Fields object
+   */
+  function addGetterForLink (field, fieldKey, fields) {
+    if (get(field, &apos;sys.type&apos;) === &apos;Link&apos;) {
+      Object.defineProperty(fields, fieldKey, {
+        get: partial(linkGetter, field)
+      })
+    }
+  }
+
+  /**
+   * Sets a getter which resolves the array of links of the given fieldKey in fields
+   * @private
+   * @param {Array&lt;Object&gt;} field - List field array
+   * @param {string} fieldKey
+   * @param {Object} fields - Fields object
+   */
+  function addGetterForLinkArray (listField, fieldKey, fields) {
+    if (get(listField[0], &apos;sys.type&apos;) === &apos;Link&apos;) {
+      Object.defineProperty(fields, fieldKey, {
+        get: function () {
+          return map(listField, partial(linkGetter))
+        }
+      })
+    }
+  }
+
+  /**
+   * Looks for given link field in includes.
+   * If linked entity is not found, it returns the original link.
+   * This method shouldn&apos;t be used directly, and it&apos;s memoized whenever this
+   * module&apos;s main method is used.
+   * This is done to prevent the same link being resolved multiple times.
+   * @private
+   * @param {Object} field - Field object
+   * @return {Object} Field, or link if field not resolved
+   */
+  function getLinksFromIncludes (field) {
+    var link = find(includes[field.sys.linkType], [&apos;sys.id&apos;, field.sys.id])
+    if (link &amp;&amp; link.fields) {
+      // TODO: workaround the preview endpoint extra locale this should be removed when
+      // it is fixed on the backend
+      if (resolveAllLocales &amp;&amp; link.sys.locale) {
+        delete link.sys.locale
+      }
+      setLocalizedFieldGetters(link.fields, !!link.sys.locale)
+      return link
+    }
+    return field
+  }
+
+  function memoizationResolver (link) {
+    return link.sys.id
+  }
 }
 </code></pre>
 

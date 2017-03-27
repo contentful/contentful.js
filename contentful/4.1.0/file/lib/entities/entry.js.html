@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">lib/contentful.js | contentful.js API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/entities/entry.js | contentful.js API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -59,65 +59,119 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">lib/contentful.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * Contentful Delivery API SDK. Allows you to create instances of a client
- * with access to the Contentful Content Delivery API.
- * @namespace contentful
- * @see ContentfulClientAPI
- */
-
-import assign from &apos;lodash/assign&apos;
-import version from &apos;../version&apos;
-import {createHttpClient} from &apos;contentful-sdk-core&apos;
-import createContentfulApi from &apos;./create-contentful-api&apos;
-import createLinkResolver from &apos;./create-link-resolver&apos;
+<div class="content" data-ice="content"><h1 data-ice="title">lib/entities/entry.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import cloneDeep from &apos;lodash/cloneDeep&apos;
+import uniq from &apos;lodash/uniq&apos;
+import {toPlainObject, freezeSys} from &apos;contentful-sdk-core&apos;
+import mixinLinkGetters from &apos;../mixins/link-getters&apos;
+import mixinStringifySafe from &apos;../mixins/stringify-safe&apos;
 
 /**
- * Create a client instance
- * @func
- * @name createClient
- * @memberof contentful
- * @param {Object} params - Client initialization parameters
- * @prop {string} params.space - Space ID
- * @prop {string} params.accessToken - Contentful CDA Access Token
- * @prop {boolean=} params.insecure - Requests will be made over http instead of the default https (default: true)
- * @prop {string=} params.host - API host (default: cdn.contentful.com). Also usable with preview.contentful.com.
- * @prop {Object=} params.agent - Optional Node.js HTTP agent for proxying (see &lt;a href=&quot;https://nodejs.org/api/http.html#http_class_http_agent&quot;&gt;Node.js docs&lt;/a&gt; and &lt;a href=&quot;https://www.npmjs.com/package/https-proxy-agent&quot;&gt;https-proxy-agent&lt;/a&gt;)
- * @prop {Object=} params.headers - Optional additional headers
- * @prop {boolean=} params.resolveLinks - If we should resolve links between entries
- * @returns {ContentfulClientAPI.ClientAPI}
- * @example
- * const client = contentful.createClient({
- *  accessToken: &apos;myAccessToken&apos;,
- *  space: &apos;mySpaceId&apos;
- * })
+ * Types of fields found in an Entry
+ * @namespace EntryFields
  */
-export default function createClient (axios, params) {
-  if (!params.accessToken) {
-    throw new TypeError(&apos;Expected parameter accessToken&apos;)
+
+/**
+ * @memberof EntryFields
+ * @typedef Symbol
+ * @type string
+ */
+
+/**
+ * @memberof EntryFields
+ * @typedef Text
+ * @type string
+ */
+
+/**
+ * @memberof EntryFields
+ * @typedef Integer
+ * @type number
+ */
+
+/**
+ * @memberof EntryFields
+ * @typedef Number
+ * @type number
+ */
+
+/**
+ * @memberof EntryFields
+ * @typedef Date
+ * @type string
+ */
+
+/**
+ * @memberof EntryFields
+ * @typedef Boolean
+ * @type boolean
+ */
+
+/**
+ * @memberof EntryFields
+ * @typedef Location
+ * @prop {string} lat - latitude
+ * @prop {string} lon - longitude
+ */
+
+/**
+ * A Field in an Entry can have one of the following types that can be defined in Contentful. See &lt;a href=&quot;https://www.contentful.com/developers/docs/references/field-type/&quot;&gt;Field Types&lt;/a&gt; for more details.
+ * @memberof Entities
+ * @typedef Field
+ * @type EntryFields.Symbol | EntryFields.Text | EntryFields.Integer | EntryFields.Number | EntryFields.Date | EntryFields.Boolean | EntryFields.Location | Entities.Link | Array&lt;EntryFields.Symbol|Entities.Link&gt; | Object
+ */
+
+/**
+ * @memberof Entities
+ * @typedef Entry
+ * @prop {Entities.Sys} sys - Standard system metadata with additional entry specific properties
+ * @prop {Entities.Link} sys.contentType - Content Type used by this Entry
+ * @prop {string=} sys.locale - If present, indicates the locale which this entry uses
+ * @prop {Object&lt;EntryFields.Field&gt;} fields - Object with content for each field
+ * @prop {function(): Object} toPlainObject() - Returns this Entry as a plain JS object
+ */
+
+/**
+ * @private
+ * @param {Object} data - Raw entry data
+ * @return {Entry} Wrapped entry data
+ */
+export function wrapEntry (data) {
+  return freezeSys(toPlainObject(cloneDeep(data)))
+}
+
+/**
+ * @memberof Entities
+ * @typedef EntryCollection
+ * @prop {number} total
+ * @prop {number} skip
+ * @prop {number} limit
+ * @prop {Array&lt;Entities.Entry&gt;} items
+ * @prop {Array&lt;Object&gt;=} errors - Array of errors that might occur when retrieving entries.
+ * @prop {Object&lt;Array&gt;=} includes - Object with arrays of includes for Entries and Assets. This will be present if resolveLinks is on, and any linked entries or assets exist. Those links will be resolved in the Entries present in the items array, but they are also present here in raw form.
+ * @prop {function(): Object} toPlainObject() - Returns this Entry collection as a plain JS object
+ * @prop {function(?function=, space=): Object} stringifySafe(replacer,space) - Stringifies the entry collection, accounting for circular references. Circular references will be replaced with just a Link object, with a &lt;code&gt;circular&lt;/code&gt; property set to &lt;code&gt;true&lt;/code&gt;. See &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify&quot;&gt;MDN&lt;/a&gt; and &lt;a href=&quot;https://www.npmjs.com/package/json-stringify-safe&quot;&gt;json-stringify-safe&lt;/a&gt; for more details on the arguments this method can take.
+ */
+
+/**
+ * Data is also mixed in with link getters if links exist and includes were requested
+ * @private
+ * @param {Object} data - Raw entry collection data
+ * @return {EntryCollection} Wrapped entry collection data
+ */
+export function wrapEntryCollection (data, resolveLinks, resolveForAllLocales) {
+  const wrappedData = mixinStringifySafe(toPlainObject(cloneDeep(data)))
+  if (resolveLinks) {
+    const includes = prepareIncludes(wrappedData.includes, wrappedData.items)
+    mixinLinkGetters(wrappedData.items, includes, resolveForAllLocales)
   }
+  return freezeSys(wrappedData)
+}
 
-  if (!params.space) {
-    throw new TypeError(&apos;Expected parameter space&apos;)
-  }
-
-  // Use resolveLinks param if specified, otherwise default to true
-  const resolveLinks = !!(&apos;resolveLinks&apos; in params ? params.resolveLinks : true)
-  const shouldLinksResolve = createLinkResolver(resolveLinks)
-
-  params.defaultHostname = &apos;cdn.contentful.com&apos;
-  params.headers = assign(params.headers, {
-    &apos;Content-Type&apos;: &apos;application/vnd.contentful.delivery.v1+json&apos;,
-    &apos;X-Contentful-User-Agent&apos;: &apos;contentful.js/&apos; + version
-  })
-
-  const http = createHttpClient(axios, params)
-
-  return createContentfulApi({
-    http: http,
-    shouldLinksResolve: shouldLinksResolve
-  })
+function prepareIncludes (includes = {}, items) {
+  includes.Entry = includes.Entry || []
+  includes.Entry = uniq(includes.Entry.concat(cloneDeep(items)))
+  return includes
 }
 </code></pre>
 
