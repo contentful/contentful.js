@@ -36,6 +36,14 @@ Other browsers should also work, but at the moment we're only running automated 
 
 In order to get started with the Contentful JS SDK you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.
 
+- [Installation](#installation)
+- [Authentication](#authentication)
+- [Your first request](#your-first-request)
+- [Using this SDK with the Preview API](#using-this-SDK-with-the-Preview-API)
+- [Advanced features](#advanced-features)
+- [Troubleshooting](#troubleshooting)
+- [Documentation/References](#documentationreferences)
+
 ## Installation
 
 In node, using [npm](http://npmjs.org):
@@ -93,7 +101,7 @@ You can try and change the above example at [Tonic](https://tonicdev.com/npm/con
 This SDK can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
-var client = contentful.createClient({
+const client = contentful.createClient({
   space: 'developer_bookshelf',
   accessToken: 'preview_0b7f6x59a0',
   host: 'preview.contentful.com'
@@ -101,6 +109,45 @@ var client = contentful.createClient({
 ```
 
 You can check other options for the client on our reference documentation
+
+## Advanced features
+
+### Link resolution
+
+contentful.js does by default link resolution unless specified otherwise.
+To disable it just set `resolveLinks` to `false` when creating the Contentful client. Like so
+
+```js
+const contentful = require('contentful)
+const client = contentful.createClient({
+  accessToken:'<you-access-token>',
+  space: '<your-space-id>',
+  resolveLinks: false
+})
+```
+
+Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by doing  intial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with query param `'sys.id': '<your-entry-id>'`.
+
+**e.g.**
+assuming that you have a contentType `post` that has a reference field `author`
+
+```js
+const contentful = require('contentful)
+const client = contentful.createClient({
+  accessToken:'<you-access-token>',
+  space: '<your-space-id>',
+  resolveLinks: false
+})
+// getting a specific Post
+client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
+	// output the author name
+	console.log(response.items[0].fields.author.fields.name)
+})
+```
+The link resolution is by default one level deep if you have more you can specify the `include` param in the query when fetching your entries like so `client.getEntries({include: <value>})`, you can specify up to 10.
+
+## Troubleshooting
+
 
 ## Documentation/References
 
