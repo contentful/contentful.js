@@ -101,6 +101,7 @@ You can try and change the above example at [Tonic](https://tonicdev.com/npm/con
 This SDK can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
+const contentful = require('contentful')
 const client = contentful.createClient({
   space: 'developer_bookshelf',
   accessToken: 'preview_0b7f6x59a0',
@@ -118,7 +119,7 @@ contentful.js does by default link resolution unless specified otherwise.
 To disable it just set `resolveLinks` to `false` when creating the Contentful client. Like so
 
 ```js
-const contentful = require('contentful)
+const contentful = require('contentful')
 const client = contentful.createClient({
   accessToken:'<you-access-token>',
   space: '<your-space-id>',
@@ -131,7 +132,7 @@ Please note that the link resolution is only possible when requesting records fr
 **e.g.** assuming that you have a contentType `post` that has a reference field `author`
 
 ```js
-const contentful = require('contentful)
+const contentful = require('contentful')
 const client = contentful.createClient({
   accessToken:'<you-access-token>',
   space: '<your-space-id>',
@@ -152,7 +153,6 @@ Whenever you perform a sync operation the enpoint will send back a `syncToken` w
 
 ```js
 const contentful = require('contentful')
-const contentful = require('contentful)
 const client = contentful.createClient({
   accessToken:'<you-access-token>',
   space: '<your-space-id>',
@@ -172,7 +172,6 @@ You can pass your query params as `key: value` pairs in the query object wheneve
 
 ```js
 const contentful = require('contentful')
-const contentful = require('contentful)
 const client = contentful.createClient({
   accessToken:'<you-access-token>',
   space: '<your-space-id>',
