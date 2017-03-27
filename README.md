@@ -191,6 +191,17 @@ for mor infos about the search paramaters check this [link](https://www.contentf
 
 ## Troubleshooting
 
+- **I can't import contentful in to react native project**
+	- You can check this boilerplate project [here](https://github.com/Khaledgarbaya/ContentfulReactNative-boilerplate) to help getting started
+- **Link resolution does not work when using `client.getEntry('<entry-id>')`**
+	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
+- **I Can't Install the package via npm**
+	- Check your internet connection
+	- It is called `contentful` and not `contenful` ¯\_(ツ)_/¯
+- **Can I use it with typescript?**
+	- Yes, there is also a type definition file
+- **Is there a caching done by the SDK ?**
+	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos 
 
 ## Documentation/References
 
