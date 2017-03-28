@@ -1,6 +1,7 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
+  "version": "4.1.0",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "index.js",
   "repository": {
@@ -105,9 +106,6 @@
   },
   "engines": {
     "node": ">=4.7.2"
-  },
-  "publishConfig": {
-    "tag": "beta"
   },
   "config": {
     "commitizen": {
