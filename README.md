@@ -21,14 +21,12 @@ Javascript SDK for [Contentful's](https://www.contentful.com) Content Delivery A
 - [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
 - [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
 
-## Supported environments
-
 Browsers and Node.js:
 - Chrome
 - Firefox
 - IE11 / Edge
 - Safari
-- node.js (0.10, iojs-3.x, 4.x, 5.x)
+- node.js (4.x, 6.x)
 
 Other browsers should also work, but at the moment we're only running automated tests on the browsers and Node.js versions specified above.
 
