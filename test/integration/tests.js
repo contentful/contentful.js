@@ -1,7 +1,7 @@
 import test from 'blue-tape'
 import filter from 'lodash/filter'
 import map from 'lodash/map'
-import contentful from '../../'
+import * as contentful from '../../lib/contentful'
 import Promise from 'es6-promise'
 const params = {
   accessToken: 'b4c0n73n7fu1',
