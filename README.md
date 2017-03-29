@@ -50,7 +50,7 @@ In node, using [npm](http://npmjs.org):
 npm install contentful
 ```
 
-Or, if you'd like to use a standalone built file you can use the following script tag or just download it from [unpkg](https://unpkg.com), under the `browser-dist` directory:
+Or, if you'd like to use a standalone built file you can use the following script tag or just download it from [unpkg](https://unpkg.com), under the `dist` directory:
 
 ``` html
 <script src="https://unpkg.com/contentful@latest/dist/contentful.min.js"></script>
