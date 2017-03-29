@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">lib/contentful.js | contentful.js API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/entities/content-type.js | contentful.js API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -59,66 +59,47 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">lib/contentful.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * Contentful Delivery API SDK. Allows you to create instances of a client
- * with access to the Contentful Content Delivery API.
- * @namespace contentful
- * @see ContentfulClientAPI
- */
-
-import assign from &apos;lodash/assign&apos;
-import axios from &apos;axios&apos;
-import version from &apos;../version&apos;
-import {createHttpClient} from &apos;contentful-sdk-core&apos;
-import createContentfulApi from &apos;./create-contentful-api&apos;
-import createLinkResolver from &apos;./create-link-resolver&apos;
+<div class="content" data-ice="content"><h1 data-ice="title">lib/entities/content-type.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import cloneDeep from &apos;lodash/cloneDeep&apos;
+import {toPlainObject, freezeSys} from &apos;contentful-sdk-core&apos;
 
 /**
- * Create a client instance
- * @func
- * @name createClient
- * @memberof contentful
- * @param {Object} params - Client initialization parameters
- * @prop {string} params.space - Space ID
- * @prop {string} params.accessToken - Contentful CDA Access Token
- * @prop {boolean=} params.insecure - Requests will be made over http instead of the default https (default: true)
- * @prop {string=} params.host - API host (default: cdn.contentful.com). Also usable with preview.contentful.com.
- * @prop {Object=} params.agent - Optional Node.js HTTP agent for proxying (see &lt;a href=&quot;https://nodejs.org/api/http.html#http_class_http_agent&quot;&gt;Node.js docs&lt;/a&gt; and &lt;a href=&quot;https://www.npmjs.com/package/https-proxy-agent&quot;&gt;https-proxy-agent&lt;/a&gt;)
- * @prop {Object=} params.headers - Optional additional headers
- * @prop {boolean=} params.resolveLinks - If we should resolve links between entries
- * @returns {ContentfulClientAPI.ClientAPI}
- * @example
- * const client = contentful.createClient({
- *  accessToken: &apos;myAccessToken&apos;,
- *  space: &apos;mySpaceId&apos;
- * })
+ * @memberof Entities
+ * @typedef ContentType
+ * @prop {Entities.Sys} sys - System metadata
+ * @prop {string} name
+ * @prop {string} description
+ * @prop {string} displayField - Field used as the main display field for Entries
+ * @prop {string} Array&lt;Field&gt; - All the fields contained in this Content Type
+ * @prop {function(): Object} toPlainObject() - Returns this Content Type as a plain JS object
  */
-export function createClient (params) {
-  if (!params.accessToken) {
-    throw new TypeError(&apos;Expected parameter accessToken&apos;)
-  }
 
-  if (!params.space) {
-    throw new TypeError(&apos;Expected parameter space&apos;)
-  }
+/**
+ * @private
+ * @param {Object} data - Raw content type data
+ * @return {ContentType} Wrapped content type data
+ */
+export function wrapContentType (data) {
+  return freezeSys(toPlainObject(cloneDeep(data)))
+}
 
-  // Use resolveLinks param if specified, otherwise default to true
-  const resolveLinks = !!(&apos;resolveLinks&apos; in params ? params.resolveLinks : true)
-  const shouldLinksResolve = createLinkResolver(resolveLinks)
+/**
+ * @memberof Entities
+ * @typedef ContentTypeCollection
+ * @prop {number} total
+ * @prop {number} skip
+ * @prop {number} limit
+ * @prop {Array&lt;Entities.ContentType&gt;} items
+ * @prop {function(): Object} toPlainObject() - Returns this Content Type collection as a plain JS object
+ */
 
-  params.defaultHostname = &apos;cdn.contentful.com&apos;
-  params.headers = assign(params.headers, {
-    &apos;Content-Type&apos;: &apos;application/vnd.contentful.delivery.v1+json&apos;,
-    &apos;X-Contentful-User-Agent&apos;: &apos;contentful.js/&apos; + version
-  })
-
-  const http = createHttpClient(axios, params)
-
-  return createContentfulApi({
-    http: http,
-    shouldLinksResolve: shouldLinksResolve
-  })
+/**
+ * @private
+ * @param {Object} data - Raw content type collection data
+ * @return {ContentTypeCollection} Wrapped content type collection data
+ */
+export function wrapContentTypeCollection (data) {
+  return freezeSys(toPlainObject(cloneDeep(data)))
 }
 </code></pre>
 
