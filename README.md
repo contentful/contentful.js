@@ -200,7 +200,7 @@ for more infos about the search paramaters check the [documentation](https://www
 	- Yes, there is also a type definition file
 - **Is there a caching done by the SDK ?**
 	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos 
-- 😱 something is wrong what should I do 
+- 😱 **something is wrong what should I do?** 
 	- If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it.
 	- If you need to share your credentials, for example you have an issue with your space, please create a support ticket.
 	
