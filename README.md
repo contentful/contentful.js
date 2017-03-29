@@ -60,7 +60,7 @@ Or, if you'd like to use a standalone built file you can use the following scrip
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
 ``` html
-<script src="https://unpkg.com/contentful@4.1.0/dist/contentful.min.js"></script>
+<script src="https://unpkg.com/contentful@4.1.1/dist/contentful.min.js"></script>
 ```
 
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
