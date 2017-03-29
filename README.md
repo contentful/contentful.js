@@ -113,7 +113,7 @@ You can check other options for the client on our reference documentation
 
 ### Link resolution
 
-contentful.js does by default link resolution unless specified otherwise.
+contentful.js does, by default, resolve links unless specified otherwise.
 To disable it just set `resolveLinks` to `false` when creating the Contentful client. Like so
 
 ```js
@@ -125,7 +125,7 @@ const client = contentful.createClient({
 })
 ```
 
-Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by doing  intial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with query param `'sys.id': '<your-entry-id>'`.
+Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by doing  initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with query param `'sys.id': '<your-entry-id>'`.
 
 **e.g.** assuming that you have a contentType `post` that has a reference field `author`
 
@@ -141,12 +141,12 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 	console.log(response.items[0].fields.author.fields.name)
 })
 ```
-The link resolution resolves by default one level deep if you have more you can specify the `include` param in the query when fetching your entries like so `client.getEntries({include: <value>})`, you can specify up to 10.
+The link resolution resolves, by default, one level deep. If you need more you can specify the `include` param in the query when fetching your entries like so `client.getEntries({include: <value>})`, you can specify up to 10.
 
 ### Sync
 
 The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, or content that has changed.
-Whenever you perform a sync operation the enpoint will send back a `syncToken` which you can use in the following sync to get only the changed data (update, deletion etc..).
+Whenever you perform a sync operation the endpoint will send back a `syncToken` which you can use in a subsequent sync to get only the changed data (update, deletion etc..).
 **e.g.**
 
 ```js
@@ -185,11 +185,11 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 client.getEntry('<entry-id>', {key: value})
 ``` 
 
-for mor infos about the search paramaters check this [link](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
+for more infos about the search paramaters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
 
 ## Troubleshooting
 
-- **I can't import contentful in to react native project**
+- **I can't import contentful into react native projects**
 	- You can check this boilerplate project [here](https://github.com/Khaledgarbaya/ContentfulReactNative-boilerplate) to help getting started
 - **Link resolution does not work when using `client.getEntry('<entry-id>')`**
 	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
