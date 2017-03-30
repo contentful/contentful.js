@@ -2,7 +2,7 @@
 // Use karma.conf.local.js for local tests
 // Use karma.conf.saucelabs.js for saucelabs tests
 var _ = require('lodash')
-var webpackConfig = _.cloneDeep(require('./webpack.config.js'))
+var webpackConfig = _.cloneDeep(require('./webpack.config.js')[0])
 delete webpackConfig.entry
 delete webpackConfig.output
 webpackConfig.devtool = 'inline-source-map'
