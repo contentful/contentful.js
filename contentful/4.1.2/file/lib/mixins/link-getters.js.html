@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/mixins/link-getters.js | contentful.js API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/contentful/contentful.js.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createClient">createClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ClientAPI">ClientAPI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Link">Link</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Sys">Sys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DeletedAsset">DeletedAsset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DeletedEntry">DeletedEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SyncCollection">SyncCollection</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">entities</div><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Asset">Asset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AssetCollection">AssetCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ContentType">ContentType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ContentTypeCollection">ContentTypeCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Boolean">Boolean</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Date">Date</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Entry">Entry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-EntryCollection">EntryCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Field">Field</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Integer">Integer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Location">Location</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Number">Number</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Symbol">Symbol</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Text">Text</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Space">Space</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">mixins</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mixinStringifySafe">mixinStringifySafe</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/mixins/link-getters.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import map from &apos;lodash/map&apos;
+import each from &apos;lodash/each&apos;
+import find from &apos;lodash/find&apos;
+import get from &apos;lodash/get&apos;
+import partial from &apos;lodash/partial&apos;
+import memoize from &apos;lodash/memoize&apos;
+
+let resolveAllLocales = false
+/**
+ * Sets getters on links for a given response
+ * @private
+ * @param {Array&lt;Entry|Asset|DeletedEntry|DeletedAsset&gt;} items
+ * @param {Object} includes - Object with lists of Entry, Asset, DeletedEntry and DeletedAsset
+ */
+export default function mixinLinkGetters (items, includes, resolveForAllLocales) {
+  resolveAllLocales = resolveForAllLocales
+  const linkGetter = memoize(getLinksFromIncludes, memoizationResolver)
+  each(items, (item) =&gt; {
+    // TODO: workaround the preview endpoint extra locale this should be removed when
+    // it is fixed on the backend
+    if (resolveForAllLocales &amp;&amp; item.sys.locale) {
+      delete item.sys.locale
+    }
+    setLocalizedFieldGetters(item.fields, !!item.sys.locale)
+  })
+
+  /**
+   * If a field does not have a locale defined in sys, the content of that field
+   * is an object where the keys are each available locale, and we need to iterate
+   * over each of those
+   * @private
+   * @param {Object} fields - Fields object
+   * @param {boolean} hasLocale - If entry has been requested with a locale
+   */
+  function setLocalizedFieldGetters (fields, hasLocale) {
+    if (hasLocale) {
+      setFieldGettersForFields(fields)
+    } else {
+      each(fields, (localizedField) =&gt; setFieldGettersForFields(localizedField))
+    }
+  }
+
+  /**
+   * Sets getters on each link field or list of link fields for each item
+   * @private
+   * @param {Object} fields - Fields object
+   */
+  function setFieldGettersForFields (fields) {
+    each(fields, (field, fieldKey) =&gt; {
+      if (Array.isArray(field)) {
+        addGetterForLinkArray(field, fieldKey, fields)
+      } else {
+        addGetterForLink(field, fieldKey, fields)
+      }
+    })
+  }
+
+  /**
+   * Sets a getter which resolves the link of the given fieldKey in fields
+   * @private
+   * @param {Object} field - Field object
+   * @param {string} fieldKey
+   * @param {Object} fields - Fields object
+   */
+  function addGetterForLink (field, fieldKey, fields) {
+    if (get(field, &apos;sys.type&apos;) === &apos;Link&apos;) {
+      Object.defineProperty(fields, fieldKey, {
+        get: partial(linkGetter, field)
+      })
+    }
+  }
+
+  /**
+   * Sets a getter which resolves the array of links of the given fieldKey in fields
+   * @private
+   * @param {Array&lt;Object&gt;} field - List field array
+   * @param {string} fieldKey
+   * @param {Object} fields - Fields object
+   */
+  function addGetterForLinkArray (listField, fieldKey, fields) {
+    if (get(listField[0], &apos;sys.type&apos;) === &apos;Link&apos;) {
+      Object.defineProperty(fields, fieldKey, {
+        get: function () {
+          return map(listField, partial(linkGetter))
+        }
+      })
+    }
+  }
+
+  /**
+   * Looks for given link field in includes.
+   * If linked entity is not found, it returns the original link.
+   * This method shouldn&apos;t be used directly, and it&apos;s memoized whenever this
+   * module&apos;s main method is used.
+   * This is done to prevent the same link being resolved multiple times.
+   * @private
+   * @param {Object} field - Field object
+   * @return {Object} Field, or link if field not resolved
+   */
+  function getLinksFromIncludes (field) {
+    var link = find(includes[field.sys.linkType], [&apos;sys.id&apos;, field.sys.id])
+    if (link &amp;&amp; link.fields) {
+      // TODO: workaround the preview endpoint extra locale this should be removed when
+      // it is fixed on the backend
+      if (resolveAllLocales &amp;&amp; link.sys.locale) {
+        delete link.sys.locale
+      }
+      setLocalizedFieldGetters(link.fields, !!link.sys.locale)
+      return link
+    }
+    return field
+  }
+
+  function memoizationResolver (link) {
+    return link.sys.id
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
