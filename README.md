@@ -20,6 +20,7 @@ Javascript SDK for [Contentful's](https://www.contentful.com) Content Delivery A
 - [Synchronization](https://www.contentful.com/developers/docs/concepts/sync/)
 - [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
 - [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
+- Built in rate limiting with recovery procedures
 
 Browsers and Node.js:
 - Chrome
