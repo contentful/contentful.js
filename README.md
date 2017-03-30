@@ -114,7 +114,7 @@ You can check other options for the client on our reference documentation
 
 ### Link resolution
 
-contentful.js does, by default, resolve links unless specified otherwise.
+contentful.js does resolve links by default unless specified otherwise.
 To disable it just set `resolveLinks` to `false` when creating the Contentful client. Like so
 
 ```js
@@ -126,7 +126,7 @@ const client = contentful.createClient({
 })
 ```
 
-Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by doing  initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with query param `'sys.id': '<your-entry-id>'`.
+Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing and initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
 
 **e.g.** assuming that you have a contentType `post` that has a reference field `author`
 
@@ -142,12 +142,12 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 	console.log(response.items[0].fields.author.fields.name)
 })
 ```
-The link resolution resolves, by default, one level deep. If you need more you can specify the `include` param in the query when fetching your entries like so `client.getEntries({include: <value>})`, you can specify up to 10.
+The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
 
 ### Sync
 
-The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, or content that has changed.
-Whenever you perform a sync operation the endpoint will send back a `syncToken` which you can use in a subsequent sync to get only the changed data (update, deletion etc..).
+The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, meaning only changes that occurred since last sync call.
+Whenever you perform a sync operation the endpoint will send back a `syncToken` which you can use in a subsequent sync to only retrieve data which changed since the last call.
 **e.g.**
 
 ```js
@@ -186,24 +186,21 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 client.getEntry('<entry-id>', {key: value})
 ``` 
 
-for more infos about the search paramaters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
+for more infos about the search parameters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
 
 ## Troubleshooting
 
-- **I can't import contentful into react native projects**
-	- You can check this boilerplate project [here](https://github.com/Khaledgarbaya/ContentfulReactNative-boilerplate) to help getting started
+- **Can I use the SDK in react native projects**
+	- Yes it is possible
 - **Link resolution does not work when using `client.getEntry('<entry-id>')`**
 	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
-- **I Can't Install the package via npm**
-	- Check your internet connection
-	- It is called `contentful` and not `contenful` ¯\_(ツ)_/¯
 - **Can I use it with typescript?**
 	- Yes, there is also a type definition file
 - **Is there a caching done by the SDK ?**
 	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos 
 - 😱 **something is wrong what should I do?** 
 	- If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it.
-	- If you need to share your credentials, for example you have an issue with your space, please create a support ticket.
+	- If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the [support page](parameters).
 	
 
 ## Documentation/References
