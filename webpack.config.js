@@ -37,23 +37,42 @@ if (process.env.NODE_ENV === 'production') {
   )
 }
 
-module.exports = {
-  context: path.join(__dirname, 'lib'),
-  entry: './contentful.js',
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'contentful.js',
-    libraryTarget: 'umd',
-    library: 'contentful'
+const loaders = [
+  {
+    test: /\.js?$/,
+    exclude: /(node_modules|bower_components|dist)/,
+    loader: 'babel-loader'
+  }
+]
+
+module.exports = [
+  {
+    context: path.join(__dirname, 'lib'),
+    entry: './contentful.js',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: `contentful${process.env.NODE_ENV === 'production' ? '.min' : ''}.js`,
+      libraryTarget: 'umd',
+      library: 'contentful'
+    },
+    module: {
+      loaders
+    },
+    plugins
   },
-  module: {
-    loaders: [
-      {
-        test: /\.js?$/,
-        exclude: /(node_modules|bower_components|dist)/,
-        loader: 'babel-loader'
-      }
-    ]
-  },
-  plugins: plugins
-}
+  {
+    context: path.join(__dirname, 'lib'),
+    entry: './contentful.js',
+    target: 'node',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: `contentful.node${process.env.NODE_ENV === 'production' ? '.min' : ''}.js`,
+      libraryTarget: 'commonjs2',
+      library: 'contentful'
+    },
+    module: {
+      loaders
+    },
+    plugins
+  }
+]

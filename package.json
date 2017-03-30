@@ -3,7 +3,8 @@
   "description": "Client for Contentful's Content Delivery API",
   "version": "4.1.0",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
-  "main": "./dist/contentful.js",
+  "main": "./dist/contentful.node.js",
+  "browser": "./dist/contentful.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/contentful/contentful.js.git"
@@ -15,8 +16,8 @@
     "clean": "rimraf dist && rimraf coverage",
     "build": "npm run clean && npm run build:ci",
     "build:ci": "npm run vendor:version && npm run build:standalone",
-    "build:standalone": "BABEL_ENV=webpack webpack && BABEL_ENV=webpack webpack -p --output-filename contentful.min.js",
-    "build:standalone:log": "BABEL_ENV=webpack npm run build && webpack -p --json --profile --output-filename contentful.min.js > webpack-build-log.json",
+    "build:standalone": "BABEL_ENV=webpack webpack && BABEL_ENV=webpack NODE_ENV=production webpack -p",
+    "build:standalone:log": "BABEL_ENV=webpack npm run build && BABEL_ENV=webpack NODE_ENV=production webpack -p --json --profile > webpack-build-log.json",
     "docs:build": "esdoc -c esdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib npm run docs:dev",
@@ -47,7 +48,6 @@
   },
   "types": "./index.d.ts",
   "files": [
-    "index.js",
     "version.js",
     "index.d.ts",
     "dist",
