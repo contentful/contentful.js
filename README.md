@@ -164,8 +164,8 @@ const client = contentful.createClient({
 })
 // getting a specific Post
 client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
-	// output the author name
-	console.log(response.items[0].fields.author.fields.name)
+  // output the author name
+  console.log(response.items[0].fields.author.fields.name)
 })
 ```
 The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
@@ -184,8 +184,8 @@ const client = contentful.createClient({
 })
 // first time you are syncing make sure to spcify `initial: true`
 client.sync({initial: true}).then((response) => {
-	// You should save the `nextSyncToken` to use in the following sync
-	console.log(response.nextSyncToken)
+  // You should save the `nextSyncToken` to use in the following sync
+  console.log(response.nextSyncToken)
 })
 ```
 The SDK will go through all the pages for you and gives you back a response object with the full data so you don't need to handle pagination.
@@ -204,8 +204,8 @@ const client = contentful.createClient({
 
 // getting a specific Post
 client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
-	// output the author name
-	console.log(response.items[0].fields.author.fields.name)
+  // output the author name
+  console.log(response.items[0].fields.author.fields.name)
 })
 
 // You can pass a query when requesting a single entity
