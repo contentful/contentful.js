@@ -37,6 +37,7 @@ In order to get started with the Contentful JS SDK you'll need not only to insta
 
 - [Installation](#installation)
 - [Authentication](#authentication)
+- [Using ES6 import](#using-es6-import)
 - [Your first request](#your-first-request)
 - [Using this SDK with the Preview API](#using-this-SDK-with-the-Preview-API)
 - [Advanced features](#advanced-features)
@@ -75,7 +76,32 @@ You can create API keys using [Contentful's web interface](https://app.contentfu
 Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
+## Using ES6 import
+You can use the es6 import with the SDK as follow
 
+```js
+// import createClient directly
+import {createClient} from 'contentful'
+var client = createClient({
+  // This is the space ID. A space is like a project folder in Contentful terms
+  space: 'developer_bookshelf',
+  // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+  accessToken: '0b7f6x59a0'
+})
+//....
+```
+OR
+```js
+// import everything from contentful
+import * as contentful from 'contentful'
+var client = contentful.createClient({
+  // This is the space ID. A space is like a project folder in Contentful terms
+  space: 'developer_bookshelf',
+  // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+  accessToken: '0b7f6x59a0'
+})
+// ....
+```
 ## Your first request
 
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
