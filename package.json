@@ -79,7 +79,7 @@
     "babel-template": "^6.22.0",
     "babel-types": "^6.22.0",
     "blue-tape": "^1.0.0",
-    "contentful-sdk-jsdoc": "^2.0.0",
+    "contentful-sdk-jsdoc": "^2.1.0",
     "coveralls": "^2.11.9",
     "cz-conventional-changelog": "^1.1.6",
     "eslint": "^3.16.0",
