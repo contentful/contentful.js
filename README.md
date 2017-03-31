@@ -77,7 +77,7 @@ Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
 ## Using ES6 import
-You can use the es6 import as follow
+You can use the es6 import with the SDK as follow
 
 ```js
 // import createClient directly
