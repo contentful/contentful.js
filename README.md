@@ -25,7 +25,8 @@ Javascript SDK for [Contentful's](https://www.contentful.com) Content Delivery A
 Browsers and Node.js:
 - Chrome
 - Firefox
-- IE11 / Edge
+- Edge
+- IE11 (with [es6-promise](https://github.com/stefanpenner/es6-promise) polyfill applied)
 - Safari
 - node.js (4.x, 6.x)
 
