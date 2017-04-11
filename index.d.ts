@@ -64,7 +64,7 @@ export interface ContentType {
     name: string;
     description: string;
     displayField: string;
-    Array: string;
+    fields: Array;
     toPlainObject(): ContentType;
 }
 
