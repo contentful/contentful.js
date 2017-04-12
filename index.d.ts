@@ -107,6 +107,7 @@ export interface ContentTypeLink {
 export interface Field {
     disabled: boolean;
     id: string;
+    linkType?: string;
     localized: boolean;
     name: string;
     omitted: boolean;
