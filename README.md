@@ -153,7 +153,7 @@ const client = contentful.createClient({
 })
 ```
 
-Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing and initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
+Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing an initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
 
 **e.g.** assuming that you have a contentType `post` that has a reference field `author`
 
