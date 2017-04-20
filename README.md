@@ -223,9 +223,9 @@ for more infos about the search parameters check the [documentation](https://www
 	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?**
 	- Yes, there is also a type definition file
-- **Is there a caching done by the SDK ?**
+- **Is the SDK doing any caching?**
 	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos 
-- 😱 **something is wrong what should I do?** 
+- 😱 **Something is wrong what should I do?** 
 	- If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it.
 	- If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the [support page](parameters).
 	
