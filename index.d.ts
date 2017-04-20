@@ -1,12 +1,23 @@
 // Type definitions for contentful
 // Definitions by: Miika Hänninen <https://github.com/googol>
 
+export interface AxiosProxyConfig {
+    host: string;
+    port?: number;
+    auth?: {
+        username: string;
+        password: string;
+    };
+}
+
 export interface CreateClientParams {
     space: string;
     accessToken: string;
     insecure?: boolean;
     host?: string;
-    agent?: any;
+    httpAgent?: any;
+    httpsAgent?: any;
+    proxy?: AxiosProxyConfig;
     headers?: any;
     resolveLinks?: boolean;
 }
