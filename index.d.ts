@@ -75,7 +75,7 @@ export interface ContentType {
     name: string;
     description: string;
     displayField: string;
-    Array: string;
+    fields: Array<Field>;
     toPlainObject(): ContentType;
 }
 
@@ -113,6 +113,17 @@ export interface ContentTypeLink {
     type: 'Link';
     linkType: 'ContentType';
     id: string;
+}
+
+export interface Field {
+    disabled: boolean;
+    id: string;
+    linkType?: string;
+    localized: boolean;
+    name: string;
+    omitted: boolean;
+    required: boolean;
+    type: string;
 }
 
 export function createClient(params: CreateClientParams): ContentfulClientApi;
