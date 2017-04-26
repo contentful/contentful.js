@@ -4,6 +4,8 @@
   "version": "4.1.0",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
+  "module": "./dist/es6-modules/contentful.js",
+  "jsnext:main": "./dist/es6-modules/contentful.js",
   "browser": "./dist/contentful.js",
   "repository": {
     "type": "git",
@@ -15,9 +17,10 @@
   "scripts": {
     "clean": "rimraf dist && rimraf coverage",
     "build": "npm run clean && npm run build:ci",
-    "build:ci": "npm run vendor:version && npm run build:standalone",
+    "build:ci": "npm run vendor:version && npm run build:standalone && npm run build:modules",
     "build:standalone": "BABEL_ENV=webpack webpack && BABEL_ENV=webpack NODE_ENV=production webpack -p",
     "build:standalone:log": "BABEL_ENV=webpack npm run build && BABEL_ENV=webpack NODE_ENV=production webpack -p --json --profile > webpack-build-log.json",
+    "build:modules": "BABEL_ENV=webpack babel lib -d dist/es6-modules",
     "docs:build": "esdoc -c esdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "watchy -w lib npm run docs:dev",
