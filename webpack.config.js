@@ -15,6 +15,7 @@ var plugins = [
     'placeholders': true
   }),
   new webpack.optimize.OccurrenceOrderPlugin(),
+  new webpack.IgnorePlugin(/vertx/),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
   })
@@ -58,6 +59,7 @@ module.exports = [
     module: {
       loaders
     },
+    devtool: 'source-map',
     plugins
   },
   {
