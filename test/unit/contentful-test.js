@@ -25,7 +25,6 @@ test('Passes along HTTP client parameters', (t) => {
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
   createClient({accessToken: 'accesstoken', space: 'spaceid'})
   t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
-  t.equals(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'], 'contentful.js/version')
   createClientRewireApi.__ResetDependency__('rateLimit')
   createClientRewireApi.__ResetDependency__('createHttpClient')
   createClientRewireApi.__ResetDependency__('axios')
