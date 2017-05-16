@@ -15,7 +15,25 @@ test('Throws if no space is defined', (t) => {
   }, /Expected parameter space/)
   t.end()
 })
+test('Generate the correct User Agent Header', (t) => {
+  const headerRegEx = /(app|sdk|platform|integration|os) (\S+\/\d.\d.\d)(-\w+)?/igm
+  createClientRewireApi.__Rewire__('axios', sinon.stub)
+  createClientRewireApi.__Rewire__('version', 'version')
+  const createHttpClientStub = sinon.stub()
+  const rateLimitStub = sinon.stub()
+  createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
+  createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
 
+  createClient({accessToken: 'accesstoken', space: 'spaceid', application: 'myApplication/1.0.0', integration: 'myIntegration/1.0.0'})
+  t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
+  t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
+  t.equal(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'].match(headerRegEx).length, 5)
+
+  createClientRewireApi.__ResetDependency__('rateLimit')
+  createClientRewireApi.__ResetDependency__('createHttpClient')
+  createClientRewireApi.__ResetDependency__('axios')
+  t.end()
+})
 test('Passes along HTTP client parameters', (t) => {
   createClientRewireApi.__Rewire__('axios', sinon.stub)
   createClientRewireApi.__Rewire__('version', 'version')
@@ -25,6 +43,7 @@ test('Passes along HTTP client parameters', (t) => {
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
   createClient({accessToken: 'accesstoken', space: 'spaceid'})
   t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
+  t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
   createClientRewireApi.__ResetDependency__('rateLimit')
   createClientRewireApi.__ResetDependency__('createHttpClient')
   createClientRewireApi.__ResetDependency__('axios')
