@@ -18,13 +18,13 @@ test('Throws if no space is defined', (t) => {
 test('Generate the correct User Agent Header', (t) => {
   const headerRegEx = /(app|sdk|platform|integration|os) (\S+\/\d.\d.\d)(-\w+)?/igm
   createClientRewireApi.__Rewire__('axios', sinon.stub)
-  createClientRewireApi.__Rewire__('version', 'version')
+  createClientRewireApi.__Rewire__('version', '1.0.0')
   const createHttpClientStub = sinon.stub()
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
 
-  createClient({accessToken: 'accesstoken', space: 'spaceid', application: 'myApplication/1.0.0', integration: 'myIntegration/1.0.0'})
+  createClient({accessToken: 'accesstoken', space: 'spaceid', application: 'myApplication/1.1.1', integration: 'myIntegration/1.0.0'})
   t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
   t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
   t.equal(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'].match(headerRegEx).length, 5)
