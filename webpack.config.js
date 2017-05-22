@@ -59,7 +59,7 @@ module.exports = [
     module: {
       loaders
     },
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     plugins
   },
   {
