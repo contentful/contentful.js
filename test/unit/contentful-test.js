@@ -1,6 +1,7 @@
 import test from 'tape'
 import sinon from 'sinon'
 import {createClient, __RewireAPI__ as createClientRewireApi} from '../../lib/contentful'
+import version from '../../version'
 
 test('Throws if no accessToken is defined', (t) => {
   t.throws(() => {
@@ -16,9 +17,7 @@ test('Throws if no space is defined', (t) => {
   t.end()
 })
 test('Generate the correct User Agent Header', (t) => {
-  const headerRegEx = /(app|sdk|platform|integration|os) (\S+\/\d.\d.\d)(-\w+)?/igm
   createClientRewireApi.__Rewire__('axios', sinon.stub)
-  createClientRewireApi.__Rewire__('version', '1.0.0')
   const createHttpClientStub = sinon.stub()
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
@@ -27,7 +26,11 @@ test('Generate the correct User Agent Header', (t) => {
   createClient({accessToken: 'accesstoken', space: 'spaceid', application: 'myApplication/1.1.1', integration: 'myIntegration/1.0.0'})
   t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
   t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
-  t.equal(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'].match(headerRegEx).length, 5)
+  const headerParts = createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'].split('; ')
+  t.equal(headerParts.length, 5)
+  t.equal(headerParts[0], 'app myApplication/1.1.1')
+  t.equal(headerParts[1], 'integration myIntegration/1.0.0')
+  t.equal(headerParts[2], `sdk contentful.js/${version}`)
 
   createClientRewireApi.__ResetDependency__('rateLimit')
   createClientRewireApi.__ResetDependency__('createHttpClient')
