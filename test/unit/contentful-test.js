@@ -1,6 +1,7 @@
 import test from 'tape'
 import sinon from 'sinon'
 import {createClient, __RewireAPI__ as createClientRewireApi} from '../../lib/contentful'
+import version from '../../version'
 
 test('Throws if no accessToken is defined', (t) => {
   t.throws(() => {
@@ -15,7 +16,27 @@ test('Throws if no space is defined', (t) => {
   }, /Expected parameter space/)
   t.end()
 })
+test('Generate the correct User Agent Header', (t) => {
+  createClientRewireApi.__Rewire__('axios', sinon.stub)
+  const createHttpClientStub = sinon.stub()
+  const rateLimitStub = sinon.stub()
+  createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
+  createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
 
+  createClient({accessToken: 'accesstoken', space: 'spaceid', application: 'myApplication/1.1.1', integration: 'myIntegration/1.0.0'})
+  t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
+  t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
+  const headerParts = createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'].split('; ')
+  t.equal(headerParts.length, 5)
+  t.equal(headerParts[0], 'app myApplication/1.1.1')
+  t.equal(headerParts[1], 'integration myIntegration/1.0.0')
+  t.equal(headerParts[2], `sdk contentful.js/${version}`)
+
+  createClientRewireApi.__ResetDependency__('rateLimit')
+  createClientRewireApi.__ResetDependency__('createHttpClient')
+  createClientRewireApi.__ResetDependency__('axios')
+  t.end()
+})
 test('Passes along HTTP client parameters', (t) => {
   createClientRewireApi.__Rewire__('axios', sinon.stub)
   createClientRewireApi.__Rewire__('version', 'version')
@@ -25,7 +46,7 @@ test('Passes along HTTP client parameters', (t) => {
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
   createClient({accessToken: 'accesstoken', space: 'spaceid'})
   t.ok(createHttpClientStub.args[0][1].headers['Content-Type'])
-  t.equals(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'], 'contentful.js/version')
+  t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
   createClientRewireApi.__ResetDependency__('rateLimit')
   createClientRewireApi.__ResetDependency__('createHttpClient')
   createClientRewireApi.__ResetDependency__('axios')
