@@ -22,6 +22,7 @@ export interface CreateClientParams {
     application?: string;
     integration?: string;
     resolveLinks?: boolean;
+    retryOnError?: boolean;
 }
 
 export interface ContentfulClientApi {
