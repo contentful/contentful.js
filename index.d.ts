@@ -43,7 +43,7 @@ export interface Asset {
         file: {
             url: string;
             details: any;
-            fileNmae: string;
+            fileName: string;
             contentType: string;
         };
     };
