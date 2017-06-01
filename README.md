@@ -1,3 +1,7 @@
+# contentful.js
+
+> JavaScript SDK for [Contentful's](https://www.contentful.com) Content Delivery API.
+
 [![npm](https://img.shields.io/npm/v/contentful.svg)](https://www.npmjs.com/package/contentful)
 [![Build Status](https://travis-ci.org/contentful/contentful.js.svg?branch=master)](https://travis-ci.org/contentful/contentful.js)
 [![Coverage Status](https://coveralls.io/repos/github/contentful/contentful.js/badge.svg?branch=master)](https://coveralls.io/github/contentful/contentful.js?branch=master)
@@ -7,10 +11,6 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![npm downloads](https://img.shields.io/npm/dm/contentful.svg)](http://npm-stat.com/charts.html?package=contentful)
-
-Javascript SDK for [Contentful's](https://www.contentful.com) Content Delivery API.
-
-# About
 
 [Contentful](https://www.contentful.com) is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit & manage content in the cloud and publish it anywhere via a powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.
 
@@ -155,7 +155,7 @@ const client = contentful.createClient({
 
 Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing an initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
 
-**e.g.** assuming that you have a contentType `post` that has a reference field `author`
+**e.g.** assuming that you have a Content Type `post` that has a reference field `author`
 
 ```js
 const contentful = require('contentful')
@@ -193,7 +193,7 @@ The SDK will go through all the pages for you and gives you back a response obje
 
 ### Querying & Search parameters
 
-You can pass your query params as `key: value` pairs in the query object whenever request a resource.
+You can pass your query parameters as `key: value` pairs in the query object whenever request a resource.
 **e.g.**
 
 ```js
@@ -211,9 +211,9 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 
 // You can pass a query when requesting a single entity
 client.getEntry('<entry-id>', {key: value})
-``` 
+```
 
-for more infos about the search parameters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
+for more information about the search parameters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
 
 ## Troubleshooting
 
@@ -224,15 +224,51 @@ for more infos about the search parameters check the [documentation](https://www
 - **Can I use it with typescript?**
 	- Yes, there is also a type definition file
 - **Is the SDK doing any caching?**
-	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos 
-- 😱 **Something is wrong what should I do?** 
+	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
+- 😱 **Something is wrong what should I do?**
 	- If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it.
 	- If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the [support page](parameters).
-	
+
 
 ## Documentation/References
 
 To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
+
+### Configuration
+
+The `createClient` method supports several options you may set to achieve the expected behavior:
+
+```js
+contentful.createClient({
+  ... your config here ...
+})
+```
+
+#### accessToken (required)
+Your CDA access token.
+
+#### space (required)
+Your Space ID.
+
+#### host (default: `'cdn.contentful.com'`)
+Set the host used to build the request URI's.
+
+#### httpAgent (default: `undefined`)
+Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+
+#### headers (default: `[]`)
+Additional headers to attach to the requests. We add/overwrite the following headers:
+
+* Content-Type: `application/vnd.contentful.management.v1+json`
+* X-Contentful-User-Agent: `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3`
+ (Automatically generated)
+
+#### resolveLinks (default: `true`)
+Turn off to disable link resolving.
+
+#### retryOnError (default: `true`)
+By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.
+
 
 ### Reference documentation
 
@@ -275,7 +311,7 @@ See the [migration guide](MIGRATION.md) for more information.
 
 ## Support
 
-If you have a problem with this library, please file an [issue](https://github.com/contentful/contentful.js/issues/new) here on Github.
+If you have a problem with this library, please file an [issue](https://github.com/contentful/contentful.js/issues/new) here on GitHub.
 
 If you have other problems with Contentful not related to this library, you can contact [Customer Support](https://support.contentful.com).
 
