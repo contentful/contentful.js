@@ -114,3 +114,30 @@ test('links in response, with circular references', (t) => {
   t.equals(items[0].fields.animal.fields.friend.fields.friend.sys.id, 'oink', 'sub sub link id')
   t.end()
 })
+
+test('links in response with locale: *', (t) => {
+  const items = [
+    {
+      sys: {type: 'Entry'},
+      fields: {
+        animal: { 'en': {sys: {type: 'Link', linkType: 'Entry', id: 'oink'}} },
+        animals: { 'en': [{sys: {type: 'Link', linkType: 'Entry', id: 'oink'}}] }
+      }
+    }
+  ]
+  const includes = {
+    Entry: [
+      {
+        sys: {type: 'Entry', id: 'oink'},
+        fields: {
+          name: {
+            'en': 'Pig'
+          }
+        }
+      }
+    ]
+  }
+  mixinLinkGetters(items, includes)
+  t.equals(items[0].fields.animal['en'].fields.name['en'], includes.Entry[0].fields.name['en'])
+  t.end()
+})
