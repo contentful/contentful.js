@@ -15,6 +15,7 @@ after_success:
   - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
   - export $(cat .to_export_back) &> /dev/null
   - npm run semantic-release
+  - ./bin/coverage-test.sh 
 addons:
   sauce_connect: true
 branches:
