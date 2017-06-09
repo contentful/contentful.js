@@ -1,8 +1,30 @@
 {
-  "opts": {
-    "mainpagetitle": "contentful.js",
-    "template": "node_modules/contentful-sdk-jsdoc/jsdoc-template",
-    "readme": "README.md",
-    "package": "package.json"
-  }
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": [
+            "lib/",
+            "./README.md"
+        ]
+    },
+    "opts": {
+        "encoding": "utf8",
+        "template": "node_modules/contentful-sdk-jsdoc/jsdoc-template",
+        "destination": "out/",
+        "recurse": true,
+        "verbose": true
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": true,
+            "includeDate": false
+        }
+    },
+    "docdash": {
+        "static": false,
+        "sort": true
+    }
 }
