@@ -83,7 +83,7 @@ You can use the es6 import with the SDK as follow
 ```js
 // import createClient directly
 import {createClient} from 'contentful'
-var client = createClient({
+const client = createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
@@ -95,7 +95,7 @@ OR
 ```js
 // import everything from contentful
 import * as contentful from 'contentful'
-var client = contentful.createClient({
+const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
@@ -108,8 +108,8 @@ var client = contentful.createClient({
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
 
 ```js
-var contentful = require('contentful')
-var client = contentful.createClient({
+const contentful = require('contentful')
+const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
