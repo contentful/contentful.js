@@ -20,7 +20,7 @@
     "build:ci": "npm run vendor:version && npm run build:standalone && npm run build:modules",
     "build:standalone": "BABEL_ENV=webpack webpack && BABEL_ENV=webpack NODE_ENV=production webpack",
     "build:standalone:log": "BABEL_ENV=webpack npm run build && BABEL_ENV=webpack NODE_ENV=production webpack --json --profile > webpack-build-log.json",
-    "build:modules": "BABEL_ENV=webpack babel lib -d dist/es6-modules",
+    "build:modules": "BABEL_ENV=webpack babel lib -d dist/es6-modules && cp ./version.js ./dist/version.js",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
