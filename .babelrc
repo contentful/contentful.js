@@ -1,10 +1,9 @@
 {
   "env": {
-    "webpack": {
+    "browser": {
       "presets": [
         ["env", {
           "targets": {
-            "node": "4.7",
             "browsers": [
               "last 3 versions",
               "ie >= 11"
@@ -14,6 +13,16 @@
         }]
       ],
       "plugins": ["transform-object-assign"]
+    },
+    "node": {
+      "presets": [
+        ["env", {
+          "targets": {
+            "node": "4.7"
+          },
+          "modules": false
+        }]
+      ]
     },
     "test": {
       "presets": [
@@ -27,7 +36,7 @@
           }
         }]
       ],
-      "plugins": ["rewire", "transform-object-assign"],
+      "plugins": ["rewire"],
       "sourceMaps": "inline"
     }
   }
