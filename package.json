@@ -18,9 +18,9 @@
     "clean": "rimraf dist && rimraf coverage",
     "build": "npm run clean && npm run build:ci",
     "build:ci": "npm run vendor:version && npm run build:standalone && npm run build:modules",
-    "build:standalone": "BABEL_ENV=webpack webpack && BABEL_ENV=webpack NODE_ENV=production webpack",
-    "build:standalone:log": "BABEL_ENV=webpack npm run build && BABEL_ENV=webpack NODE_ENV=production webpack --json --profile > webpack-build-log.json",
-    "build:modules": "BABEL_ENV=webpack babel lib -d dist/es6-modules && cp ./version.js ./dist/version.js",
+    "build:standalone": "webpack && NODE_ENV=production webpack",
+    "build:standalone:log": "NODE_ENV=production webpack --json --profile > webpack-build-log.json",
+    "build:modules": "BABEL_ENV=node babel lib -d dist/es6-modules && cp ./version.js ./dist/version.js",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
@@ -68,7 +68,7 @@
     "babel-cli": "^6.7.5",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.2.4",
+    "babel-loader": "^7.1.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-rewire": "^1.0.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
@@ -78,6 +78,7 @@
     "babel-register": "^6.7.2",
     "babel-template": "^6.22.0",
     "babel-types": "^6.22.0",
+    "babili-webpack-plugin": "^0.1.2",
     "blue-tape": "^1.0.0",
     "contentful-sdk-jsdoc": "^2.2.0",
     "coveralls": "^2.11.9",
@@ -107,7 +108,7 @@
     "semantic-release": "^6.3.2",
     "sinon": "^2.0.0-pre",
     "trevor": "^2.2.0",
-    "webpack": "^2.2.1"
+    "webpack": "^3.3.0"
   },
   "engines": {
     "node": ">=4.7.2"
