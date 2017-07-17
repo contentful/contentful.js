@@ -72,15 +72,15 @@ test('Initial sync with one page', (t) => {
   }))
 
   return pagedSync(http, {initial: true}, true)
-  .then((response) => {
-    t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
-    t.equal(response.entries.length, 3, 'entries length')
-    t.equal(response.deletedEntries.length, 2, 'deleted entries length')
-    t.equal(response.assets.length, 3, 'entries length')
-    t.equal(response.deletedAssets.length, 1, 'deleted assets length')
-    t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
-    t.equal(response.entries[0].fields.linked.sys.type, 'Entry', 'linked entry is resolved')
-  })
+    .then((response) => {
+      t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
+      t.equal(response.entries.length, 3, 'entries length')
+      t.equal(response.deletedEntries.length, 2, 'deleted entries length')
+      t.equal(response.assets.length, 3, 'entries length')
+      t.equal(response.deletedAssets.length, 1, 'deleted assets length')
+      t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
+      t.equal(response.entries[0].fields.linked.sys.type, 'Entry', 'linked entry is resolved')
+    })
 })
 
 test('Initial sync with one page and filter', (t) => {
@@ -102,13 +102,13 @@ test('Initial sync with one page and filter', (t) => {
   }))
 
   return pagedSync(http, {initial: true, content_type: 'cat'}, true)
-  .then((response) => {
-    t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
-    t.equal(http.get.args[0][1].params.content_type, 'cat', 'http request has content type filter param')
-    t.equal(http.get.args[0][1].params.type, 'Entry', 'http request has entity type filter param')
-    t.equal(response.entries.length, 3, 'entries length')
-    t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
-  })
+    .then((response) => {
+      t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
+      t.equal(http.get.args[0][1].params.content_type, 'cat', 'http request has content type filter param')
+      t.equal(http.get.args[0][1].params.type, 'Entry', 'http request has entity type filter param')
+      t.equal(response.entries.length, 3, 'entries length')
+      t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
+    })
 })
 
 test('Initial sync with multiple pages', (t) => {
@@ -148,18 +148,18 @@ test('Initial sync with multiple pages', (t) => {
   }))
 
   return pagedSync(http, {initial: true}, true)
-  .then((response) => {
-    const objResponse = response.toPlainObject()
-    t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
-    t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
-    t.equal(http.get.args[2][1].params.sync_token, 'nextpage2', 'http request param for second page')
-    t.equal(objResponse.entries.length, 3, 'entries length')
-    t.equal(objResponse.deletedEntries.length, 2, 'deleted entries length')
-    t.equal(objResponse.assets.length, 3, 'entries length')
-    t.equal(objResponse.deletedAssets.length, 1, 'deleted assets length')
-    t.equal(objResponse.nextSyncToken, 'nextsynctoken', 'next sync token')
-    t.ok(response.stringifySafe(), 'stringifies response')
-  })
+    .then((response) => {
+      const objResponse = response.toPlainObject()
+      t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
+      t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
+      t.equal(http.get.args[2][1].params.sync_token, 'nextpage2', 'http request param for second page')
+      t.equal(objResponse.entries.length, 3, 'entries length')
+      t.equal(objResponse.deletedEntries.length, 2, 'deleted entries length')
+      t.equal(objResponse.assets.length, 3, 'entries length')
+      t.equal(objResponse.deletedAssets.length, 1, 'deleted assets length')
+      t.equal(objResponse.nextSyncToken, 'nextsynctoken', 'next sync token')
+      t.ok(response.stringifySafe(), 'stringifies response')
+    })
 })
 
 test('Sync with existing token', (t) => {
@@ -178,12 +178,12 @@ test('Sync with existing token', (t) => {
   }))
 
   return pagedSync(http, {nextSyncToken: 'nextsynctoken'}, true)
-  .then((response) => {
-    t.equal(http.get.args[0][1].params.sync_token, 'nextsynctoken', 'http request param for sync')
-    t.equal(response.entries.length, 1, 'entries length')
-    t.equal(response.deletedEntries.length, 1, 'deleted entries length')
-    t.equal(response.assets.length, 1, 'entries length')
-    t.equal(response.deletedAssets.length, 1, 'deleted assets length')
-    t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
-  })
+    .then((response) => {
+      t.equal(http.get.args[0][1].params.sync_token, 'nextsynctoken', 'http request param for sync')
+      t.equal(response.entries.length, 1, 'entries length')
+      t.equal(response.deletedEntries.length, 1, 'deleted entries length')
+      t.equal(response.assets.length, 1, 'entries length')
+      t.equal(response.deletedAssets.length, 1, 'deleted assets length')
+      t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
+    })
 })
