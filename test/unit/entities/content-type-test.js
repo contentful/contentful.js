@@ -1,12 +1,11 @@
 import test from 'tape'
-import assign from 'lodash/assign'
-import cloneDeep from 'lodash/cloneDeep'
-import {sysMock} from '../mocks'
+import cloneDeep from 'clone'
 
+import {sysMock} from '../mocks'
 import {wrapContentType, wrapContentTypeCollection} from '../../../lib/entities/content-type'
 
 const contentType = {
-  sys: assign(cloneDeep(sysMock), {
+  sys: Object.assign(cloneDeep(sysMock), {
     type: 'ContentType'
   }),
   name: 'ct',

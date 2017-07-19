@@ -2,22 +2,10 @@ const path = require('path')
 
 const webpack = require('webpack')
 const BabiliPlugin = require('babili-webpack-plugin')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const PROD = process.env.NODE_ENV === 'production'
 
 const plugins = [
-  new LodashModuleReplacementPlugin({
-    'shorthands': true,
-    'cloning': true,
-    'currying': true,
-    'caching': true,
-    'collections': true,
-    'paths': true,
-    'guards': true,
-    'unicode': true,
-    'placeholders': true
-  }),
   new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.IgnorePlugin(/vertx/),
   new webpack.DefinePlugin({
@@ -37,6 +25,12 @@ if (PROD) {
   )
 }
 
+const jsLoaderIncludes = [
+  path.resolve(__dirname, 'lib'),
+  path.resolve(__dirname, 'node_modules', 'mem'),
+  path.resolve(__dirname, 'node_modules', 'mimic-fn')
+]
+
 module.exports = [
   {
     // Browser
@@ -52,7 +46,7 @@ module.exports = [
       loaders: [
         {
           test: /\.js?$/,
-          exclude: /(node_modules|bower_components|dist)/,
+          include: jsLoaderIncludes,
           loader: 'babel-loader',
           options: {
             env: 'browser'
@@ -78,7 +72,7 @@ module.exports = [
       loaders: [
         {
           test: /\.js?$/,
-          exclude: /(node_modules|bower_components|dist)/,
+          include: jsLoaderIncludes,
           loader: 'babel-loader',
           options: {
             env: 'node'

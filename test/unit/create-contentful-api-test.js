@@ -1,6 +1,6 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
-import Promise from 'es6-promise'
+
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
 import { contentTypeMock, assetMock, entryMock } from './mocks'
 
