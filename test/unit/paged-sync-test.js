@@ -1,7 +1,7 @@
 import test from 'blue-tape'
+import cloneDeep from 'clone'
 import sinon from 'sinon'
-import Promise from 'es6-promise'
-import cloneDeep from 'lodash/cloneDeep'
+
 import {entryMock, assetMock} from './mocks'
 import pagedSync from '../../lib/paged-sync'
 
