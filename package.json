@@ -19,7 +19,7 @@
     "build": "npm run clean && npm run build:ci",
     "build:ci": "npm run vendor:version && npm run build:standalone && npm run build:modules",
     "build:standalone": "webpack && NODE_ENV=production webpack",
-    "build:standalone:log": "NODE_ENV=production webpack --json --profile > webpack-build-log.json",
+    "build:standalone:log": "NODE_ENV=production webpack --json --profile > webpack-build-log.json && webpack-bundle-analyzer webpack-build-log.json",
     "build:modules": "BABEL_ENV=node babel lib -d dist/es6-modules && cp ./version.js ./dist/version.js",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
@@ -109,7 +109,8 @@
     "sinon": "^2.0.0-pre",
     "tap-spec": "^4.1.1",
     "trevor": "^2.2.0",
-    "webpack": "^3.3.0"
+    "webpack": "^3.3.0",
+    "webpack-bundle-analyzer": "^2.8.3"
   },
   "engines": {
     "node": ">=4.7.2"
