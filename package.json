@@ -28,8 +28,8 @@
     "lint": "eslint lib test",
     "pretest": "npm run lint",
     "test:ci": "npm run build && ./node_modules/contentful-sdk-core/bin/test-ci.sh",
-    "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
-    "test:only": "BABEL_ENV=test babel-node ./test/runner",
+    "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover ./test/runner | tap-spec",
+    "test:unit": "BABEL_ENV=test babel-node ./test/runner | tap-spec",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
     "test:integration": "BABEL_ENV=test babel-node ./test/integration/tests.js",
     "test:integration-debug": "BABEL_ENV=test babel-node debug ./test/integration/tests.js",
@@ -47,7 +47,7 @@
     "devdep:install": "npm run devdep:build && rm -rf node_modules/contentful-sdk-core && npm install ../contentful-sdk-core && npm run devdep:clean",
     "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core",
     "precommit": "npm run lint",
-    "prepush": "npm run test:only"
+    "prepush": "npm run test:unit"
   },
   "types": "./index.d.ts",
   "files": [
@@ -107,6 +107,7 @@
     "rimraf": "^2.6.0",
     "semantic-release": "^6.3.2",
     "sinon": "^2.0.0-pre",
+    "tap-spec": "^4.1.1",
     "trevor": "^2.2.0",
     "webpack": "^3.3.0"
   },
