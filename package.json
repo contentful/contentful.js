@@ -60,7 +60,7 @@
   ],
   "dependencies": {
     "axios": "contentful/axios#fix/https-via-http-proxy",
-    "contentful-sdk-core": "^3.11.0",
+    "contentful-sdk-core": "^3.13.2",
     "es6-promise": "^4.0.5",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.4"
