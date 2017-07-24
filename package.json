@@ -61,7 +61,7 @@
   "dependencies": {
     "axios": "contentful/axios#fix/https-via-http-proxy",
     "clone": "^2.1.1",
-    "contentful-sdk-core": "^3.13.2",
+    "contentful-sdk-core": "^3.13.3",
     "deep-get-set": "^1.1.0",
     "json-stringify-safe": "^5.0.1",
     "mem": "^1.1.0"
