@@ -125,11 +125,11 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.js",
-      "maxSize": "75Kb"
+      "maxSize": "54Kb"
     },
     {
       "path": "./dist/contentful.min.js",
-      "maxSize": "26Kb"
+      "maxSize": "24Kb"
     }
   ]
 }
