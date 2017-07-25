@@ -52,7 +52,10 @@ module.exports = [
             env: 'browser'
           }
         }
-      ]
+      ],
+      noParse: (content) => {
+        return /clone/.test(content)
+      }
     },
     devtool: PROD ? false : 'source-map',
     plugins: plugins
@@ -78,7 +81,10 @@ module.exports = [
             env: 'node'
           }
         }
-      ]
+      ],
+      noParse: (content) => {
+        return /clone/.test(content)
+      }
     },
     devtool: PROD ? false : 'source-map',
     plugins: plugins
