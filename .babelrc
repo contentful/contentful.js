@@ -8,14 +8,28 @@
         ["env", {
           "targets": {
             "browsers": [
-              "last 3 versions",
+              "last 2 versions"
+            ]
+          },
+          "modules": false
+        }]
+      ]
+    },
+    "legacy": {
+      "presets": [
+        ["env", {
+          "targets": {
+            "browsers": [
+              "last 5 versions",
               "ie >= 11"
             ]
           },
           "modules": false
         }]
       ],
-      "plugins": ["transform-object-assign"]
+      "plugins": [
+        "transform-object-assign"
+      ]
     },
     "node": {
       "presets": [
@@ -33,13 +47,16 @@
           "targets": {
             "node": "4.7",
             "browsers": [
-              "last 3 versions",
+              "last 5 versions",
               "ie >= 11"
             ]
           }
         }]
       ],
-      "plugins": ["rewire"],
+      "plugins": [
+        "transform-object-assign",
+        "rewire"
+      ],
       "sourceMaps": "inline"
     }
   }
