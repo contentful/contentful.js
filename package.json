@@ -130,7 +130,7 @@
     },
     {
       "path": "./dist/contentful.min.js",
-      "maxSize": "24Kb"
+      "maxSize": "17Kb"
     }
   ]
 }
