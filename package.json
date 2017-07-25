@@ -73,6 +73,7 @@
     "babel-loader": "^7.1.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-rewire": "^1.0.0",
+    "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-runtime": "^6.7.5",
     "babel-preset-env": "^1.1.8",
@@ -126,11 +127,27 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.js",
-      "maxSize": "54Kb"
+      "maxSize": "41Kb"
     },
     {
       "path": "./dist/contentful.min.js",
       "maxSize": "17Kb"
+    },
+    {
+      "path": "./dist/contentful.legacy.js",
+      "maxSize": "53Kb"
+    },
+    {
+      "path": "./dist/contentful.legacy.min.js",
+      "maxSize": "23Kb"
+    },
+    {
+      "path": "./dist/contentful.node.js",
+      "maxSize": "57Kb"
+    },
+    {
+      "path": "./dist/contentful.node.min.js",
+      "maxSize": "28Kb"
     }
   ]
 }

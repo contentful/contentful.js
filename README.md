@@ -28,7 +28,7 @@ Browsers and Node.js:
 - Chrome
 - Firefox
 - Edge
-- IE11 (with [es6-promise](https://github.com/stefanpenner/es6-promise) polyfill applied)
+- IE11 (with [legacy version](#legacy-browsers) of the library)
 - Safari
 - node.js (4.x, 6.x)
 
@@ -46,21 +46,30 @@ In order to get started with the Contentful JS SDK you'll need not only to insta
 - [Advanced features](#advanced-features)
 - [Troubleshooting](#troubleshooting)
 - [Documentation/References](#documentationreferences)
-
 ## Installation
 
-In node, using [npm](http://npmjs.org):
+### Node:
+
+Using [npm](http://npmjs.org):
 
 ``` sh
 npm install contentful
 ```
 
-Or, if you'd like to use a standalone built file you can use the following script tag or just download it from [unpkg](https://unpkg.com), under the `dist` directory:
+Using [yarn](https://yarnpkg.com/lang/en/):
+
+``` sh
+yarn add contentful
+```
+
+### Browser:
+
+If you'd like to use a standalone built file you can use the following script tag or download it from [unpkg](https://unpkg.com), under the `dist` directory:
 
 ``` html
 <script src="https://unpkg.com/contentful@latest/dist/contentful.min.js"></script>
 ```
-**It is not recommended to use the above URL for production.**
+**It's not recommended to use the above URL for production.**
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
@@ -68,7 +77,15 @@ Using `contentful@latest` will always get you the latest version, but you can al
 <script src="https://unpkg.com/contentful@4.1.1/dist/contentful.min.js"></script>
 ```
 
+The Contentful Delivery SDK will be accessible via the `contentful` global variable.
+
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
+
+### Legacy browsers:
+
+This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
+
+To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.min.js`
 
 ## Authentication
 
