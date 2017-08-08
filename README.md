@@ -253,6 +253,9 @@ Your Space ID.
 #### host (default: `'cdn.contentful.com'`)
 Set the host used to build the request URI's.
 
+#### basePath (default: ``)
+This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.
+
 #### httpAgent (default: `undefined`)
 Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
 
