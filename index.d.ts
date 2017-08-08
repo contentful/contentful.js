@@ -15,6 +15,7 @@ export interface CreateClientParams {
     accessToken: string;
     insecure?: boolean;
     host?: string;
+    basePath?: string;
     httpAgent?: any;
     httpsAgent?: any;
     proxy?: AxiosProxyConfig;
