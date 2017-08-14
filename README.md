@@ -40,7 +40,7 @@ In order to get started with the Contentful JS SDK you'll need not only to insta
 - [Authentication](#authentication)
 - [Using ES6 import](#using-es6-import)
 - [Your first request](#your-first-request)
-- [Using this SDK with the Preview API](#using-this-SDK-with-the-Preview-API)
+- [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
 - [Advanced features](#advanced-features)
 - [Troubleshooting](#troubleshooting)
 - [Documentation/References](#documentationreferences)
