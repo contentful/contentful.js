@@ -1,5 +1,5 @@
 import test from 'tape'
-import cloneDeep from 'clone'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {entryMock, assetMock} from '../mocks'
 import {wrapEntry, wrapEntryCollection} from '../../../lib/entities/entry'

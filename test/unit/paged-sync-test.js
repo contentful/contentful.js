@@ -1,5 +1,5 @@
 import test from 'blue-tape'
-import cloneDeep from 'clone'
+import cloneDeep from 'lodash/cloneDeep'
 import sinon from 'sinon'
 
 import {entryMock, assetMock} from './mocks'
