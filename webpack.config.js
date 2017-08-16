@@ -2,7 +2,7 @@ const path = require('path')
 
 const webpack = require('webpack')
 const BabiliPlugin = require('babili-webpack-plugin')
-const clone = require('clone')
+const clone = require('lodash/cloneDeep')
 
 const PROD = process.env.NODE_ENV === 'production'
 
@@ -10,6 +10,11 @@ const plugins = [
   new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  }),
+  new LodashModuleReplacementPlugin({
+    caching: true,
+    cloning: true,
+    memoizing: true
   })
 ]
 
@@ -43,10 +48,7 @@ const baseBundleConfig = {
     library: 'contentful'
   },
   module: {
-    loaders: [],
-    noParse: (content) => {
-      return /clone/.test(content)
-    }
+    loaders: []
   },
   devtool: PROD ? false : 'source-map',
   plugins

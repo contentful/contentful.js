@@ -30,7 +30,7 @@
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local && npm run test:size",
     "test:ci": "npm run build && ./node_modules/contentful-sdk-core/bin/test-ci.sh",
     "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover ./test/runner | tap-spec",
-    "test:unit": "BABEL_ENV=test babel-node ./test/runner | tap-spec",
+    "test:unit": "BABEL_ENV=test babel-node ./test/runner",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
     "test:integration": "BABEL_ENV=test babel-node ./test/integration/tests.js | tap-spec",
     "test:integration-debug": "BABEL_ENV=test babel-node debug ./test/integration/tests.js",
@@ -60,11 +60,9 @@
   ],
   "dependencies": {
     "axios": "contentful/axios#fix/https-via-http-proxy",
-    "clone": "^2.1.1",
     "contentful-sdk-core": "^3.14.1",
-    "deep-get-set": "^1.1.0",
     "json-stringify-safe": "^5.0.1",
-    "mem": "^1.1.0"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
@@ -126,28 +124,28 @@
   },
   "bundlesize": [
     {
-      "path": "./dist/contentful.js",
-      "maxSize": "41Kb"
+      "path": "./dist/contentful.browser.js",
+      "maxSize": "38Kb"
     },
     {
-      "path": "./dist/contentful.min.js",
-      "maxSize": "17Kb"
+      "path": "./dist/contentful.browser.min.js",
+      "maxSize": "14Kb"
     },
     {
       "path": "./dist/contentful.legacy.js",
-      "maxSize": "53Kb"
+      "maxSize": "51Kb"
     },
     {
       "path": "./dist/contentful.legacy.min.js",
-      "maxSize": "23Kb"
+      "maxSize": "20Kb"
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "57Kb"
+      "maxSize": "48Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "28Kb"
+      "maxSize": "18Kb"
     }
   ]
 }

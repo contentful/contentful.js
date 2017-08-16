@@ -1,4 +1,4 @@
-import cloneDeep from 'clone'
+import cloneDeep from 'lodash/cloneDeep'
 
 const linkMock = {
   id: 'linkid',
