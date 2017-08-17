@@ -3,6 +3,7 @@ const path = require('path')
 const webpack = require('webpack')
 const BabiliPlugin = require('babili-webpack-plugin')
 const clone = require('lodash/cloneDeep')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const PROD = process.env.NODE_ENV === 'production'
 
@@ -31,17 +32,10 @@ if (PROD) {
 }
 
 const baseFileName = `contentful`
-const include = [
-  path.resolve(__dirname, 'lib'),
-  path.resolve(__dirname, 'test'),
-  // Include mem and it's dependencies since they use ES6 code
-  path.resolve(__dirname, 'node_modules', 'mem'),
-  path.resolve(__dirname, 'node_modules', 'mimic-fn')
-]
 
 const baseBundleConfig = {
   context: path.join(__dirname, 'lib'),
-  entry: ['./contentful.js'],
+  entry: [`./${baseFileName}.js`],
   output: {
     path: path.join(__dirname, 'dist'),
     libraryTarget: 'umd',
@@ -51,56 +45,91 @@ const baseBundleConfig = {
     loaders: []
   },
   devtool: PROD ? false : 'source-map',
-  plugins
+  plugins,
+  node: {
+    os: 'empty'
+  },
+  // Show minimal information, but all errors and warnings
+  // Except for log generation which have to contain all information
+  stats: process.env.WEBPACK_MODE === 'log' ? 'detailed' : {
+    assets: true,
+    cached: false,
+    children: false,
+    chunks: true,
+    chunkModules: true,
+    colors: true,
+    errors: true,
+    errorDetails: true,
+    exclude: [],
+    hash: false,
+    maxModules: 0,
+    modules: false,
+    moduleTrace: false,
+    performance: true,
+    providedExports: true,
+    publicPath: false,
+    reasons: false,
+    source: false,
+    timings: true,
+    usedExports: false,
+    version: true,
+    warnings: true
+  }
+}
+
+const defaultBabelLoader = {
+  test: /\.js?$/,
+  include: [
+    path.resolve(__dirname, 'lib'),
+    path.resolve(__dirname, 'test')
+  ],
+  loader: 'babel-loader',
+  options: {}
 }
 
 // Browsers
 const browserBundle = clone(baseBundleConfig)
 browserBundle.module.loaders = [
-  {
-    test: /\.js?$/,
-    include,
-    loader: 'babel-loader',
-    options: {
-      env: 'browser'
-    }
-  }
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      forceEnv: 'browser'
+    })
+  })
 ]
-browserBundle.output.filename = `${baseFileName}${PROD ? '.min' : ''}.js`
+browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
 // Legacy browsers like IE11
-const legacyInclude = include.slice()
-legacyInclude.push(path.resolve(__dirname, 'node_modules', 'follow-redirects')) // follow-redirects uses Object.assign
-
 const legacyBundle = clone(baseBundleConfig)
 legacyBundle.module.loaders = [
-  {
-    test: /\.js?$/,
-    include: legacyInclude,
-    loader: 'babel-loader',
-    options: {
-      env: 'legacy'
-    }
-  }
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      forceEnv: 'legacy'
+    })
+  })
 ]
-legacyBundle.entry = ['core-js/fn/promise'].concat(legacyBundle.entry) // Promise polyfill
+// To be replaced with babel-polyfill with babel-preset-env 2.0:
+// https://github.com/babel/babel-preset-env#usebuiltins
+// https://github.com/babel/babel-preset-env/pull/241
+legacyBundle.entry = [
+  'core-js/fn/promise',
+  'core-js/fn/object/assign'
+].concat(legacyBundle.entry)
+
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
 
 // Node
 const nodeBundle = clone(baseBundleConfig)
 nodeBundle.module.loaders = [
-  {
-    test: /\.js?$/,
-    include,
-    loader: 'babel-loader',
-    options: {
-      env: 'node'
-    }
-  }
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      forceEnv: 'node'
+    })
+  })
 ]
 nodeBundle.target = 'node'
 nodeBundle.output.libraryTarget = 'commonjs2'
 nodeBundle.output.filename = `${baseFileName}.node${PROD ? '.min' : ''}.js`
+delete nodeBundle.node
 
 module.exports = [
   browserBundle,
