@@ -1,7 +1,7 @@
 import test from 'tape'
 import sinon from 'sinon'
 import {createClient, __RewireAPI__ as createClientRewireApi} from '../../lib/contentful'
-import version from '../../version'
+import {version} from '../../package.json'
 
 test('Throws if no accessToken is defined', (t) => {
   t.throws(() => {
