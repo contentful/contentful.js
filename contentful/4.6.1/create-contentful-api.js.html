@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>create-contentful-api.js - Documentation</title>
+
+    <script src="scripts/hljs/highlight.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/hljs.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="contentful.html">contentful</a><ul class='methods'><li data-type='method'><a href="contentful.html#.createClient">createClient</a></li></ul></li><li><a href="ContentfulClientAPI.html">ContentfulClientAPI</a><ul class='methods'><li data-type='method'><a href="ContentfulClientAPI.html#.getAsset">getAsset</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getAssets">getAssets</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getContentType">getContentType</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getContentTypes">getContentTypes</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getEntries">getEntries</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getEntry">getEntry</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getSpace">getSpace</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.parseEntries">parseEntries</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.sync">sync</a></li></ul></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">create-contentful-api.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Contentful Delivery API Client. Contains methods which allow access to the
+ * different kinds of entities present in Contentful (Entries, Assets, etc).
+ * @namespace ContentfulClientAPI
+ * @see Entities
+ */
+
+/**
+ * The different kinds of top level entities you can find in Contentful
+ * @namespace Entities
+ */
+
+/**
+ * System metadata. See &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes">Common Resource Attributes&lt;/a> for more details.
+ * @memberof Entities
+ * @typedef Sys
+ * @prop {string} type
+ * @prop {string} id
+ * @prop {Entities.Link} space
+ * @prop {string} createdAt
+ * @prop {string} updatedAt
+ * @prop {number} revision
+ */
+
+/**
+ * Link to another entity. See &lt;a href="https://www.contentful.com/developers/docs/concepts/links/">Links&lt;/a> for more details.
+ * @memberof Entities
+ * @typedef Link
+ * @prop {string} type - type of this entity. Always link.
+ * @prop {string} id
+ * @prop {string} linkType - type of this link. If defined, either Entry or Asset
+ */
+
+/**
+ * @memberof ContentfulClientAPI
+ * @typedef {Object} ClientAPI
+ * @prop {function} getSpace
+ * @prop {function} getContentType
+ * @prop {function} getContentTypes
+ * @prop {function} getEntry
+ * @prop {function} getEntries
+ * @prop {function} getAsset
+ * @prop {function} getAssets
+ * @prop {function} parseEntries
+ * @prop {function} sync
+ */
+
+import {createRequestConfig} from 'contentful-sdk-core'
+import entities from './entities'
+import pagedSync from './paged-sync'
+
+/**
+ * Creates API object with methods to access functionality from Contentful's
+ * Delivery API
+ * @private
+ * @param {Object} params - API initialization params
+ * @prop {Object} http - HTTP client instance
+ * @prop {Object} entities - Object with wrapper methods for each kind of entity
+ * @prop {Function} shouldLinksResolve - Link resolver preconfigured with global setting
+ * @return {ClientAPI}
+ */
+export default function createContentfulApi ({http, shouldLinksResolve}) {
+  const {wrapSpace} = entities.space
+  const {wrapContentType, wrapContentTypeCollection} = entities.contentType
+  const {wrapEntry, wrapEntryCollection} = entities.entry
+  const {wrapAsset, wrapAssetCollection} = entities.asset
+
+  function errorHandler (error) {
+    if (error.data) {
+      throw error.data
+    }
+    throw error
+  }
+
+  /**
+   * Gets the Space which the client is currently configured to use
+   * @memberof ContentfulClientAPI
+   * @return {Promise&lt;Entities.Space>} Promise for a Space
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   * // returns the space object with the above &lt;space-id>
+   * client.getSpace()
+   * .then((space) => console.log(space))
+   * .catch(console.error)
+   */
+  function getSpace () {
+    return http.get('')
+      .then((response) => wrapSpace(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a Content Type
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @return {Promise&lt;Entities.ContentType>} Promise for a Content Type
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.getContentType('&lt;content_type_id>')
+   * .then((contentType) => console.log(contentType))
+   * .catch(console.error)
+   */
+  function getContentType (id) {
+    return http.get('content_types/' + id)
+      .then((response) => wrapContentType(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a collection of Content Types
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters. Check the &lt;a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial&lt;/a> and the &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference&lt;/a> for more details.
+   * @return {Promise&lt;Entities.ContentTypeCollection>} Promise for a collection of Content Types
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.getContentTypes()
+   * .then((response) => console.log(response.items))
+   * .catch(console.error)
+   */
+  function getContentTypes (query = {}) {
+    return http.get('content_types', createRequestConfig({query: query}))
+      .then((response) => wrapContentTypeCollection(response.data), errorHandler)
+  }
+
+  /**
+   * Gets an Entry
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @param  {Object=} query - Object with search parameters. In this method it's only useful for `locale`.
+   * @return {Promise&lt;Entities.Entry>} Promise for an Entry
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.getEntry('&lt;entry_id>')
+   * .then((entry) => console.log(entry))
+   * .catch(console.error)
+   */
+  function getEntry (id, query = {}) {
+    normalizeSelect(query)
+    return http.get('entries/' + id, createRequestConfig({query: query}))
+      .then((response) => wrapEntry(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a collection of Entries
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters. Check the &lt;a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial&lt;/a> and the &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference&lt;/a> for more details.
+   * @return {Promise&lt;Entities.EntryCollection>} Promise for a collection of Entries
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.getEntries()
+   * .then((response) => console.log(response.items))
+   * .catch(console.error)
+   */
+  function getEntries (query = {}) {
+    const resolveLinks = shouldLinksResolve(query)
+    const resolveForAllLocales = (query.locale &amp;&amp; query.locale === '*')
+    normalizeSelect(query)
+    return http.get('entries', createRequestConfig({query: query}))
+      .then((response) => wrapEntryCollection(response.data, resolveLinks, resolveForAllLocales), errorHandler)
+  }
+  /**
+   * Gets an Asset
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @param  {Object=} query - Object with search parameters. In this method it's only useful for `locale`.
+   * @return {Promise&lt;Entities.Asset>} Promise for an Asset
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.getAsset('&lt;asset_id>')
+   * .then((asset) => console.log(asset))
+   * .catch(console.error)
+   */
+  function getAsset (id, query = {}) {
+    normalizeSelect(query)
+    return http.get('assets/' + id, createRequestConfig({query: query}))
+      .then((response) => wrapAsset(response.data), errorHandler)
+  }
+
+  /**
+   * Gets a collection of Assets
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters. Check the &lt;a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial&lt;/a> and the &lt;a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference&lt;/a> for more details.
+   * @return {Promise&lt;Entities.AssetCollection>} Promise for a collection of Assets
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.getAssets()
+   * .then((response) => console.log(response.items))
+   * .catch(console.error)
+   */
+  function getAssets (query = {}) {
+    normalizeSelect(query)
+    return http.get('assets', createRequestConfig({query: query}))
+      .then((response) => wrapAssetCollection(response.data), errorHandler)
+  }
+
+  /**
+   * Synchronizes either all the content or only new content since last sync
+   * See &lt;a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization&lt;/a> for more information.
+   * &lt;strong> Important note: &lt;/strong> The the sync api endpoint does not support include or link resolution.
+   * However contentful.js is doing link resolution client side if you only make an initial sync.
+   * For the delta sync (using nextSyncToken) it is not possible since the sdk wont have access to all the data to make such an operation.
+   * @memberof ContentfulClientAPI
+   * @param  {Object} query - Query object for the sync call. One of initial or nextSyncToken always needs to be specified, but not both.
+   * @param  {boolean?} query.initial - Indicates if this is the first sync. Use it if you don't have a sync token.
+   * @param  {string?} query.nextSyncToken - The token you got the last time you used this method. Ensures you only get changed content.
+   * @param  {string=} query.type - Filter by this type (Entry or Asset)
+   * @param  {string=} query.content_type - Filter by this content type id
+   * @param  {boolean=} query.resolveLinks - When true, links to other Entries or Assets are resolved. Default: true.
+   * @return {Promise&lt;Sync.SyncCollection>} Promise for the collection resulting of a sync operation
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '&lt;space_id>',
+   *   accessToken: '&lt;content_delivery_api_key>'
+   * })
+   *
+   * client.sync({
+   *   initial: true
+   * })
+   * .then((response) => console.log({
+   *   entries: response.entries,
+   *   assets: response.assets,
+   *   nextSyncToken: response.nextSyncToken
+   * }))
+   * .catch(console.error)
+   */
+  function sync (query = {}) {
+    const resolveLinks = shouldLinksResolve(query)
+    return pagedSync(http, query, resolveLinks)
+  }
+
+  /**
+  * Parse raw json data into collection of entry objects.Links will be resolved also
+  * @memberof ContentfulClientAPI
+  * @param {Object} raw json data
+  * @example
+  * let data = {items: [
+  *    {
+  *    sys: {type: 'Entry', locale: 'en-US'},
+  *    fields: {
+  *      animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
+  *      anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
+  *    }
+  *  }
+  * ],
+  * includes: {
+  *  Animal: [
+  *    {
+  *      sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+  *      fields: {
+  *        name: 'Pig',
+  *        friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
+  *      }
+  *    }
+  *   ]
+  *  }
+  * }
+  * console.log( data.items[0].fields.foo ); // undefined
+  * let parsedData = client.parseEntries(data);
+  * console.log( parsedData.items[0].fields.foo ); // foo
+  */
+  function parseEntries (data) {
+    return wrapEntryCollection(data, true, false)
+  }
+  /*
+   * sdk relies heavily on sys metadata
+   * so we cannot omit the sys property on sdk level
+   * */
+  function normalizeSelect (query) {
+    if (query.select &amp;&amp; !/sys/i.test(query.select)) {
+      query.select += ',sys'
+    }
+  }
+
+  return {
+    getSpace: getSpace,
+    getContentType: getContentType,
+    getContentTypes: getContentTypes,
+    getEntry: getEntry,
+    getEntries: getEntries,
+    getAsset: getAsset,
+    getAssets: getAssets,
+    parseEntries: parseEntries,
+    sync: sync
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> using the <a href="https://github.com/contentful/contentful-sdk-jsdoc">contentful-sdk-jsdoc</a> theme.
+</footer>
+
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
