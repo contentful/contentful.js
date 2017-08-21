@@ -12,7 +12,8 @@
           },
           "modules": false
         }]
-      ]
+      ],
+      "plugins": ["transform-object-assign"]
     },
     "test": {
       "presets": [
@@ -26,8 +27,8 @@
           }
         }]
       ],
-      "plugins": ["rewire"],
-      "sourceMaps": "inline",
+      "plugins": ["rewire", "transform-object-assign"],
+      "sourceMaps": "inline"
     }
   }
 }

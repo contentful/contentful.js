@@ -41,7 +41,10 @@ if (process.env.NODE_ENV === 'production') {
 const loaders = [
   {
     test: /\.js?$/,
-    exclude: /(node_modules|bower_components|dist)/,
+    include: [
+      path.resolve(__dirname, 'node_modules', 'contentful-sdk-core'),
+      path.resolve(__dirname, 'lib')
+    ],
     loader: 'babel-loader'
   }
 ]
