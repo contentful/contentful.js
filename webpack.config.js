@@ -113,7 +113,8 @@ legacyBundle.module.loaders = [
 legacyBundle.entry = [
   'core-js/fn/promise',
   'core-js/fn/object/assign',
-  'core-js/fn/array/from'
+  'core-js/fn/array/from',
+  'core-js/fn/array/find'
 ].concat(legacyBundle.entry)
 
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
