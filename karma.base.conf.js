@@ -1,8 +1,9 @@
 // This file is just a base configuration for karma and not directly usable
 // Use karma.conf.local.js for local tests
 // Use karma.conf.saucelabs.js for saucelabs tests
-var _ = require('lodash')
-var webpackConfig = _.cloneDeep(require('./webpack.config.js')[1])
+
+const cloneDeep = require('lodash/cloneDeep')
+const webpackConfig = cloneDeep(require('./webpack.config.js')[1])
 delete webpackConfig.entry
 delete webpackConfig.output
 webpackConfig.devtool = 'inline-source-map'
@@ -12,6 +13,13 @@ webpackConfig.devtool = 'inline-source-map'
 webpackConfig.node = {
   fs: 'empty'
 }
+
+webpackConfig.module.loaders = webpackConfig.module.loaders.map((loader) => {
+  if (loader.loader === 'babel-loader') {
+    loader.options.forceEnv = 'test'
+  }
+  return loader
+})
 
 console.log('Karma webpack config:')
 console.log(JSON.stringify(webpackConfig, null, 2))
@@ -34,7 +42,10 @@ module.exports = {
   },
 
   webpack: webpackConfig,
-
+  browserDisconnectTolerance: 5,
+  browserNoActivityTimeout: 4 * 60 * 1000,
+  browserDisconnectTimeout: 10000,
+  captureTimeout: 4 * 60 * 1000,
   reporters: [ 'dots' ],
   port: 9876,
   colors: true,
