@@ -11,8 +11,8 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![npm downloads](https://img.shields.io/npm/dm/contentful.svg)](http://npm-stat.com/charts.html?package=contentful)
-[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.min.js?compression=gzip
-)](https://unpkg.com/contentful/dist/contentful.min.js)
+[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip
+)](https://unpkg.com/contentful/dist/contentful.browser.min.js)
 
 [Contentful](https://www.contentful.com) is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit & manage content in the cloud and publish it anywhere via a powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.
 
@@ -67,14 +67,14 @@ yarn add contentful
 If you'd like to use a standalone built file you can use the following script tag or download it from [unpkg](https://unpkg.com), under the `dist` directory:
 
 ``` html
-<script src="https://unpkg.com/contentful@latest/dist/contentful.min.js"></script>
+<script src="https://unpkg.com/contentful@latest/dist/contentful.browser.min.js"></script>
 ```
 **It's not recommended to use the above URL for production.**
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
 ``` html
-<script src="https://unpkg.com/contentful@4.1.1/dist/contentful.min.js"></script>
+<script src="https://unpkg.com/contentful@4.1.1/dist/contentful.browser.min.js"></script>
 ```
 
 The Contentful Delivery SDK will be accessible via the `contentful` global variable.
@@ -85,7 +85,7 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 
 This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
 
-To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.min.js`
+To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
 ## Authentication
 
@@ -278,6 +278,9 @@ This path gets appended to the host to allow request urls like `https://gateway.
 #### httpAgent (default: `undefined`)
 Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
 
+#### httpsAgent (default: `undefined`)
+Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+
 #### headers (default: `[]`)
 Additional headers to attach to the requests. We add/overwrite the following headers:
 
@@ -285,12 +288,17 @@ Additional headers to attach to the requests. We add/overwrite the following hea
 * X-Contentful-User-Agent: `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3`
  (Automatically generated)
 
+ #### proxy (default: `undefined`)
+Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.
+
 #### resolveLinks (default: `true`)
 Turn off to disable link resolving.
 
 #### retryOnError (default: `true`)
 By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.
 
+#### logHandler (default: `function (level, data) {}`)
+Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
 
 ### Reference documentation
 
@@ -321,6 +329,12 @@ This project strictly follows [Semantic Versioning](http://semver.org/) by use o
 This means that new versions are released automatically as fixes, features or breaking changes are released.
 
 You can check the changelog on the [releases](https://github.com/contentful/contentful.js/releases) page.
+
+## Migration from contentful.js 4.x
+
+The bundle for browsers is now called `contentful.browser.min.js` to mark it clearly as browser only bundle. If you need to support IE 11 or other old browsers, you may use the `contentful.legacy.min.js`. Node will automatically use the `contentful.node.min.js` while bundlers like Webpack will resolve to the new ES-modules version of the library.
+
+No changes to the API of the library were made.
 
 ## Migration from contentful.js 3.x
 
