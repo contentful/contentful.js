@@ -112,7 +112,8 @@ legacyBundle.module.loaders = [
 // https://github.com/babel/babel-preset-env/pull/241
 legacyBundle.entry = [
   'core-js/fn/promise',
-  'core-js/fn/object/assign'
+  'core-js/fn/object/assign',
+  'core-js/fn/array/from'
 ].concat(legacyBundle.entry)
 
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
