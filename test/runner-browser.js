@@ -2,6 +2,7 @@
 require('core-js/fn/promise')
 require('core-js/fn/object/assign')
 require('core-js/fn/array/from')
+require('core-js/fn/array/find')
 
 // This file is required due to an issue with karma-tap
 // https://github.com/tmcw-up-for-adoption/karma-tap/issues/10
