@@ -52,7 +52,7 @@ var plugins = [
   'lodash',
   ['inline-replace-variables', {
     // Inject version number into code
-    '__VERSION__': require('./package.json').version || "version"
+    '__VERSION__': require('./package.json').version
   }]
 ]
 
