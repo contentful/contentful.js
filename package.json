@@ -6,7 +6,6 @@
   "main": "./dist/contentful.node.js",
   "module": "./dist/es6-modules/contentful.js",
   "jsnext:main": "./dist/es6-modules/contentful.js",
-  "browser": "./dist/contentful.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/contentful/contentful.js.git"
@@ -39,7 +38,7 @@
     "test:simulate-ci": "trevor",
     "test:size": "bundlesize",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
-    "prepublish": "in-publish && npm run build:ci || not-in-publish",
+    "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "devdep:build": "pushd ../contentful-sdk-core && npm run build && popd",
