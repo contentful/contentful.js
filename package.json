@@ -4,8 +4,8 @@
   "version": "5.0.0-rc2",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
-  "module": "./dist/es6-modules/contentful.js",
-  "jsnext:main": "./dist/es6-modules/contentful.js",
+  "module": "./dist/es-modules/contentful.js",
+  "jsnext:main": "./dist/es-modules/contentful.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/contentful/contentful.js.git"
