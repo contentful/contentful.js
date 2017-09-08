@@ -281,7 +281,7 @@ Custom agent to perform HTTP requests. Find further information in the [axios re
 #### httpsAgent (default: `undefined`)
 Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
 
-#### headers (default: `[]`)
+#### headers (default: `{}`)
 Additional headers to attach to the requests. We add/overwrite the following headers:
 
 * Content-Type: `application/vnd.contentful.management.v1+json`
