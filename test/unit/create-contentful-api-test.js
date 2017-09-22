@@ -356,7 +356,7 @@ test('CDA call sync fails', (t) => {
   return api.sync({initial: true})
     .then(() => {
     }, (r) => {
-      t.equal(r, 'error')
+      t.equal(r.data, 'error')
       teardown()
     })
 })
