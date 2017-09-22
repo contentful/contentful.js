@@ -112,9 +112,9 @@ test('Initial sync with one page and filter', (t) => {
 })
 
 test('Initial sync with multiple pages', (t) => {
-  t.plan(9)
+  t.plan(12)
   const http = {get: sinon.stub()}
-  http.get.withArgs('sync', {params: {initial: true}}).returns(Promise.resolve({
+  http.get.withArgs('sync', {params: {initial: true, type: 'Entries'}}).returns(Promise.resolve({
     data: {
       items: [
         createEntry('1'),
@@ -147,10 +147,13 @@ test('Initial sync with multiple pages', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true}, true)
+  return pagedSync(http, {initial: true, type: 'Entries'}, true)
   .then((response) => {
     const objResponse = response.toPlainObject()
     t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
+    t.equal(http.get.args[0][1].params.type, 'Entries', 'http request has type param')
+    t.notOk(http.get.args[1][1].params.initial, 'second http request does not have initial param')
+    t.notOk(http.get.args[1][1].params.type, 'second http request does not have type param')
     t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
     t.equal(http.get.args[2][1].params.sync_token, 'nextpage2', 'http request param for second page')
     t.equal(objResponse.entries.length, 3, 'entries length')
