@@ -1,12 +1,11 @@
 dist: trusty
-before_install:
-  - npm install -g npm@latest
-  - npm set progress=false
-install:
-  - npm install
+cache:
+  directories:
+    - "node_modules"
+    - "~/.npm"
 language: node_js
 node_js:
-  - "6.9"
+  - "8"
   - "4.7"
 script: npm run test:ci
 after_success:
