@@ -1,4 +1,4 @@
-import test from 'tape'
+import test from 'blue-tape'
 import sinon from 'sinon'
 import {createClient, __RewireAPI__ as createClientRewireApi} from '../../lib/contentful'
 import {version} from '../../package.json'

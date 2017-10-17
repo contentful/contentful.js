@@ -1,4 +1,4 @@
-import test from 'tape'
+import test from 'blue-tape'
 import mixinLinkGetters from '../../../lib/mixins/link-getters'
 
 test('links in response, without matching include should remain', (t) => {

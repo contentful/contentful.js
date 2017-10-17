@@ -1,4 +1,4 @@
-import test from 'tape'
+import test from 'blue-tape'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {entryMock, assetMock} from '../mocks'
