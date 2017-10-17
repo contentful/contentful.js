@@ -51,30 +51,7 @@ const baseBundleConfig = {
   },
   // Show minimal information, but all errors and warnings
   // Except for log generation which have to contain all information
-  stats: process.env.WEBPACK_MODE === 'log' ? 'detailed' : {
-    assets: true,
-    cached: false,
-    children: false,
-    chunks: true,
-    chunkModules: true,
-    colors: true,
-    errors: true,
-    errorDetails: true,
-    exclude: [],
-    hash: false,
-    maxModules: 0,
-    modules: false,
-    moduleTrace: false,
-    performance: true,
-    providedExports: true,
-    publicPath: false,
-    reasons: false,
-    source: false,
-    timings: true,
-    usedExports: false,
-    version: true,
-    warnings: true
-  }
+  stats: process.env.WEBPACK_MODE === 'log' ? 'verbose' : 'normal'
 }
 
 const defaultBabelLoader = {
