@@ -64,9 +64,12 @@ yarn add contentful
 
 ### Browser:
 
+For browsers, we recommend to download the SDK via npm or yarn to ensure 100% availability.
+
 If you'd like to use a standalone built file you can use the following script tag or download it from [unpkg](https://unpkg.com), under the `dist` directory:
 
 ``` html
+<!-- Avoid using the following url for production. You can not rely on its availability. -->
 <script src="https://unpkg.com/contentful@latest/dist/contentful.browser.min.js"></script>
 ```
 **It's not recommended to use the above URL for production.**
@@ -74,7 +77,8 @@ If you'd like to use a standalone built file you can use the following script ta
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
 ``` html
-<script src="https://unpkg.com/contentful@4.1.1/dist/contentful.browser.min.js"></script>
+<!-- Avoid using the following url for production. You can not rely on its availability. -->
+<script src="https://unpkg.com/contentful@5.0.1/dist/contentful.browser.min.js"></script>
 ```
 
 The Contentful Delivery SDK will be accessible via the `contentful` global variable.
@@ -87,6 +91,14 @@ This library also comes with a legacy version to support Internet Explorer 11 an
 
 To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
+### Other environments:
+
+Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via:
+
+```
+const { createClient } = require('contentful/dist/contentful.browser.min.js')
+```
+
 ## Authentication
 
 To get content from Contentful, an app should authenticate with an OAuth bearer token.
@@ -96,6 +108,7 @@ You can create API keys using [Contentful's web interface](https://app.contentfu
 Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
+
 ## Using ES6 import
 You can use the es6 import with the SDK as follow
 
