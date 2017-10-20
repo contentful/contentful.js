@@ -77,7 +77,6 @@ If you'd like to use a standalone built file you can use the following script ta
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
 ``` html
-<!-- Avoid using the following url for production. You can not rely on its availability. -->
 <script src="https://unpkg.com/contentful@5.0.1/dist/contentful.browser.min.js"></script>
 ```
 
@@ -90,14 +89,6 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
 
 To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
-
-### Other environments:
-
-Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via:
-
-```
-const { createClient } = require('contentful/dist/contentful.browser.min.js')
-```
 
 ## Authentication
 
@@ -251,6 +242,9 @@ for more information about the search parameters check the [documentation](https
 
 - **Can I use the SDK in react native projects**
 	- Yes it is possible
+- **I get the error: Unable to resolve module `http`**
+	- Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
+	
 - **Link resolution does not work when using `client.getEntry('<entry-id>')`**
 	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?**
