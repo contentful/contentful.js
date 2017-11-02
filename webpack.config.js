@@ -14,8 +14,7 @@ const plugins = [
   }),
   new LodashModuleReplacementPlugin({
     caching: true,
-    cloning: true,
-    memoizing: true
+    cloning: true
   })
 ]
 
