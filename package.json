@@ -58,6 +58,7 @@
   ],
   "dependencies": {
     "axios": "https://github.com/contentful/axios/archive/fix/https-via-http-proxy.tar.gz",
+    "contentful-resolve-response": "^0.1.2",
     "contentful-sdk-core": "^5.0.0",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.4"
@@ -121,7 +122,7 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "38Kb"
+      "maxSize": "37Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
@@ -129,7 +130,7 @@
     },
     {
       "path": "./dist/contentful.legacy.js",
-      "maxSize": "56Kb"
+      "maxSize": "54Kb"
     },
     {
       "path": "./dist/contentful.legacy.min.js",
@@ -137,11 +138,11 @@
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "48Kb"
+      "maxSize": "46Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "19Kb"
+      "maxSize": "18Kb"
     }
   ]
 }
