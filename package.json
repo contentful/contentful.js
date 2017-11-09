@@ -58,7 +58,7 @@
   ],
   "dependencies": {
     "axios": "https://github.com/contentful/axios/archive/fix/https-via-http-proxy.tar.gz",
-    "contentful-sdk-core": "^5.0.0",
+    "contentful-sdk-core": "^5.0.1",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.4"
   },
