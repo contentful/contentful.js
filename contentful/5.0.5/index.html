@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/hljs/highlight.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/hljs.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="contentful.html">contentful</a><ul class='methods'><li data-type='method'><a href="contentful.html#.createClient">createClient</a></li></ul></li><li><a href="ContentfulClientAPI.html">ContentfulClientAPI</a><ul class='methods'><li data-type='method'><a href="ContentfulClientAPI.html#.getAsset">getAsset</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getAssets">getAssets</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getContentType">getContentType</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getContentTypes">getContentTypes</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getEntries">getEntries</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getEntry">getEntry</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getSpace">getSpace</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.parseEntries">parseEntries</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.sync">sync</a></li></ul></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>contentful.js</h1><blockquote>
+<p>JavaScript SDK for <a href="https://www.contentful.com">Contentful's</a> Content Delivery API.</p>
+</blockquote>
+<p><a href="https://www.npmjs.com/package/contentful"><img src="https://img.shields.io/npm/v/contentful.svg" alt="npm"></a>
+<a href="https://travis-ci.org/contentful/contentful.js"><img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/contentful/contentful.js?branch=master"><img src="https://coveralls.io/repos/github/contentful/contentful.js/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="https://david-dm.org/contentful/contentful.js"><img src="https://img.shields.io/david/contentful/contentful.js.svg" alt="Dependency Status"></a>
+<a href="https://david-dm.org/contentful/contentful.js#info=devDependencies"><img src="https://img.shields.io/david/dev/contentful/contentful.js.svg" alt="devDependency Status"></a></p>
+<p><a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release"></a>
+<a href="http://standardjs.com/"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="js-standard-style"></a>
+<a href="http://npm-stat.com/charts.html?package=contentful"><img src="https://img.shields.io/npm/dm/contentful.svg" alt="npm downloads"></a>
+<a href="https://unpkg.com/contentful/dist/contentful.browser.min.js"><img src="http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="gzip bundle size"></a></p>
+<p><a href="https://www.contentful.com">Contentful</a> is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit &amp; manage content in the cloud and publish it anywhere via a powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.</p>
+<h2>Features</h2><ul>
+<li>Content retrieval through Contentful's <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">Content Delivery API</a>.</li>
+<li><a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a></li>
+<li><a href="https://www.contentful.com/developers/docs/concepts/locales/">Localization support</a></li>
+<li><a href="https://www.contentful.com/developers/docs/concepts/links/">Link resolution</a></li>
+<li>Built in rate limiting with recovery procedures</li>
+</ul>
+<p>Browsers and Node.js:</p>
+<ul>
+<li>Chrome</li>
+<li>Firefox</li>
+<li>Edge</li>
+<li>IE11 (with <a href="#legacy-browsers">legacy version</a> of the library)</li>
+<li>Safari</li>
+<li>node.js (4.x, 6.x)</li>
+</ul>
+<p>Other browsers should also work, but at the moment we're only running automated tests on the browsers and Node.js versions specified above.</p>
+<h1>Getting started</h1><p>In order to get started with the Contentful JS SDK you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.</p>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#using-es6-import">Using ES6 import</a></li>
+<li><a href="#your-first-request">Your first request</a></li>
+<li><a href="#using-this-sdk-with-the-preview-api">Using this SDK with the Preview API</a></li>
+<li><a href="#advanced-features">Advanced features</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#documentationreferences">Documentation/References</a><h2>Installation</h2></li>
+</ul>
+<h3>Node:</h3><p>Using <a href="http://npmjs.org">npm</a>:</p>
+<pre class="prettyprint source lang-sh"><code>npm install contentful</code></pre><p>Using <a href="https://yarnpkg.com/lang/en/">yarn</a>:</p>
+<pre class="prettyprint source lang-sh"><code>yarn add contentful</code></pre><h3>Browser:</h3><p>For browsers, we recommend to download the SDK via npm or yarn to ensure 100% availability.</p>
+<p>If you'd like to use a standalone built file you can use the following script tag or download it from <a href="https://unpkg.com">unpkg</a>, under the <code>dist</code> directory:</p>
+<pre class="prettyprint source lang-html"><code>&lt;!-- Avoid using the following url for production. You can not rely on its availability. -->
+&lt;script src=&quot;https://unpkg.com/contentful@latest/dist/contentful.browser.min.js&quot;>&lt;/script></code></pre><p><strong>It's not recommended to use the above URL for production.</strong></p>
+<p>Using <code>contentful@latest</code> will always get you the latest version, but you can also specify a specific version number:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/contentful@5.0.1/dist/contentful.browser.min.js&quot;>&lt;/script></code></pre><p>The Contentful Delivery SDK will be accessible via the <code>contentful</code> global variable.</p>
+<p>Check the <a href="https://github.com/contentful/contentful.js/releases">releases</a> page to know which versions are available.</p>
+<h3>Legacy browsers:</h3><p>This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.</p>
+<p>To support legacy browsers in your application, use <code>contentful.legacy.min.js</code> instead of <code>contentful.browser.min.js</code></p>
+<h2>Authentication</h2><p>To get content from Contentful, an app should authenticate with an OAuth bearer token.</p>
+<p>You can create API keys using <a href="https://app.contentful.com">Contentful's web interface</a>. Go to the app, open the space that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section and create your first token. Done.</p>
+<p>Don't forget to also get your Space ID.</p>
+<p>For more information, check the Contentful's REST API reference on <a href="https://www.contentful.com/developers/docs/references/authentication/">Authentication</a>.</p>
+<h2>Using ES6 import</h2><p>You can use the es6 import with the SDK as follow</p>
+<pre class="prettyprint source lang-js"><code>// import createClient directly
+import {createClient} from 'contentful'
+const client = createClient({
+  // This is the space ID. A space is like a project folder in Contentful terms
+  space: 'developer_bookshelf',
+  // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+  accessToken: '0b7f6x59a0'
+})
+//....</code></pre><p>OR</p>
+<pre class="prettyprint source lang-js"><code>// import everything from contentful
+import * as contentful from 'contentful'
+const client = contentful.createClient({
+  // This is the space ID. A space is like a project folder in Contentful terms
+  space: 'developer_bookshelf',
+  // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+  accessToken: '0b7f6x59a0'
+})
+// ....</code></pre><h2>Your first request</h2><p>The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:</p>
+<pre class="prettyprint source lang-js"><code>const contentful = require('contentful')
+const client = contentful.createClient({
+  // This is the space ID. A space is like a project folder in Contentful terms
+  space: 'developer_bookshelf',
+  // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+  accessToken: '0b7f6x59a0'
+})
+// This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
+client.getEntry('5PeGS2SoZGSa4GuiQsigQu')
+.then((entry) => console.log(entry))</code></pre><p>You can try and change the above example at <a href="https://tonicdev.com/npm/contentful">Tonic</a>, or if you'd prefer a more Browser oriented example, check out this <a href="https://jsfiddle.net/contentful/kefaj4s8/">JSFiddle</a> version of our Product Catalogue demo app.</p>
+<h2>Using this SDK with the Preview API</h2><p>This SDK can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:</p>
+<pre class="prettyprint source lang-js"><code>const contentful = require('contentful')
+const client = contentful.createClient({
+  space: 'developer_bookshelf',
+  accessToken: 'preview_0b7f6x59a0',
+  host: 'preview.contentful.com'
+})</code></pre><p>You can check other options for the client on our reference documentation</p>
+<h2>Advanced features</h2><h3>Link resolution</h3><p>contentful.js does resolve links by default unless specified otherwise.
+To disable it just set <code>resolveLinks</code> to <code>false</code> when creating the Contentful client. Like so</p>
+<pre class="prettyprint source lang-js"><code>const contentful = require('contentful')
+const client = contentful.createClient({
+  accessToken:'&lt;you-access-token>',
+  space: '&lt;your-space-id>',
+  resolveLinks: false
+})</code></pre><p>Please note that the link resolution is only possible when requesting records from the collection endpoint using <code>client.getEntries()</code> or by performing an initial sync <code>client.sync({initial: true})</code>. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter <code>'sys.id': '&lt;your-entry-id&gt;'</code>.</p>
+<p><strong>e.g.</strong> assuming that you have a Content Type <code>post</code> that has a reference field <code>author</code></p>
+<pre class="prettyprint source lang-js"><code>const contentful = require('contentful')
+const client = contentful.createClient({
+  accessToken:'&lt;you-access-token>',
+  space: '&lt;your-space-id>',
+})
+// getting a specific Post
+client.getEntries({'sys.id': '&lt;entry-id>'}).then((response) => {
+  // output the author name
+  console.log(response.items[0].fields.author.fields.name)
+})</code></pre><p>The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the <code>include</code> parameter when fetching your entries as follows <code>client.getEntries({include: &lt;value&gt;})</code>. The <code>include</code> parameter can be set to a number up to 10..</p>
+<h3>Sync</h3><p>The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, meaning only changes that occurred since last sync call.
+Whenever you perform a sync operation the endpoint will send back a <code>syncToken</code> which you can use in a subsequent sync to only retrieve data which changed since the last call.
+<strong>e.g.</strong></p>
+<pre class="prettyprint source lang-js"><code>const contentful = require('contentful')
+const client = contentful.createClient({
+  accessToken:'&lt;you-access-token>',
+  space: '&lt;your-space-id>',
+})
+// first time you are syncing make sure to spcify `initial: true`
+client.sync({initial: true}).then((response) => {
+  // You should save the `nextSyncToken` to use in the following sync
+  console.log(response.nextSyncToken)
+})</code></pre><p>The SDK will go through all the pages for you and gives you back a response object with the full data so you don't need to handle pagination.</p>
+<h3>Querying &amp; Search parameters</h3><p>You can pass your query parameters as <code>key: value</code> pairs in the query object whenever request a resource.
+<strong>e.g.</strong></p>
+<pre class="prettyprint source lang-js"><code>const contentful = require('contentful')
+const client = contentful.createClient({
+  accessToken:'&lt;you-access-token>',
+  space: '&lt;your-space-id>',
+})
+
+// getting a specific Post
+client.getEntries({'sys.id': '&lt;entry-id>'}).then((response) => {
+  // output the author name
+  console.log(response.items[0].fields.author.fields.name)
+})
+
+// You can pass a query when requesting a single entity
+client.getEntry('&lt;entry-id>', {key: value})</code></pre><p>for more information about the search parameters check the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">documentation</a></p>
+<h2>Troubleshooting</h2><ul>
+<li><strong>Can I use the SDK in react native projects</strong><ul>
+<li>Yes it is possible</li>
+</ul>
+</li>
+<li><p><strong>I get the error: Unable to resolve module <code>http</code></strong></p>
+<ul>
+<li>Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: <code>const { createClient } = require('contentful/dist/contentful.browser.min.js')</code></li>
+</ul>
+</li>
+<li><p><strong>Link resolution does not work when using <code>client.getEntry('&lt;entry-id&gt;')</code></strong></p>
+<ul>
+<li>Link resolution does not work with the single entity endpoint, you can use <code>client.getEntries({'sys.id': '&lt;entry-id&gt;'})</code> to link an entry with resolved links</li>
+</ul>
+</li>
+<li><strong>Can I use it with typescript?</strong><ul>
+<li>Yes, there is also a type definition file</li>
+</ul>
+</li>
+<li><strong>Is the SDK doing any caching?</strong><ul>
+<li>No, check this <a href="https://github.com/contentful/contentful.js/issues/83">issue</a> for more infos</li>
+</ul>
+</li>
+<li>😱 <strong>Something is wrong what should I do?</strong><ul>
+<li>If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it.</li>
+<li>If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the <a href="parameters">support page</a>.</li>
+</ul>
+</li>
+</ul>
+<h2>Documentation/References</h2><p>To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.</p>
+<h3>Configuration</h3><p>The <code>createClient</code> method supports several options you may set to achieve the expected behavior:</p>
+<pre class="prettyprint source lang-js"><code>contentful.createClient({
+  ... your config here ...
+})</code></pre><h4>accessToken (required)</h4><p>Your CDA access token.</p>
+<h4>space (required)</h4><p>Your Space ID.</p>
+<h4>host (default: <code>'cdn.contentful.com'</code>)</h4><p>Set the host used to build the request URI's.</p>
+<h4>basePath (default: ``)</h4><p>This path gets appended to the host to allow request urls like <code>https://gateway.example.com/contentful/</code> for custom gateways/proxies.</p>
+<h4>httpAgent (default: <code>undefined</code>)</h4><p>Custom agent to perform HTTP requests. Find further information in the <a href="https://github.com/mzabriskie/axios#request-config">axios request config documentation</a>.</p>
+<h4>httpsAgent (default: <code>undefined</code>)</h4><p>Custom agent to perform HTTPS requests. Find further information in the <a href="https://github.com/mzabriskie/axios#request-config">axios request config documentation</a>.</p>
+<h4>headers (default: <code>{}</code>)</h4><p>Additional headers to attach to the requests. We add/overwrite the following headers:</p>
+<ul>
+<li>Content-Type: <code>application/vnd.contentful.management.v1+json</code></li>
+<li><p>X-Contentful-User-Agent: <code>sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3</code>
+(Automatically generated)</p>
+<h4>proxy (default: <code>undefined</code>)</h4><p>Axios proxy configuration. See the <a href="https://github.com/mzabriskie/axios#request-config">axios request config documentation</a> for further information about the supported values.</p>
+</li>
+</ul>
+<h4>resolveLinks (default: <code>true</code>)</h4><p>Turn off to disable link resolving.</p>
+<h4>retryOnError (default: <code>true</code>)</h4><p>By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to <code>false</code> to disable this behavior.</p>
+<h4>logHandler (default: <code>function (level, data) {}</code>)</h4><p>Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.</p>
+<h3>Reference documentation</h3><p>The <a href="https://contentful.github.io/contentful.js">Contentful's JS SDK reference</a> documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.</p>
+<p>Most methods also have examples which show you how to use them.</p>
+<p>You can start by looking at the top level <a href="./contentful.html"><code>contentful</code></a> namespace.</p>
+<pre class="prettyprint source"><code>From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/&lt;VERSION>`</code></pre><h3>Contentful JavaScript resources</h3><p>Check the <a href="https://www.contentful.com/developers/docs/javascript/">Contentful for JavaScript</a> page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful</p>
+<h3>REST API reference</h3><p>This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">REST API reference</a>, and you can also get a better understanding of how the requests look under the hood.</p>
+<h3>Legacy contentful.js</h3><p>For versions prior to 3.0.0, you can access documentation at <a href="https://github.com/contentful/contentful.js/tree/legacy">https://github.com/contentful/contentful.js/tree/legacy</a></p>
+<h2>Versioning</h2><p>This project strictly follows <a href="http://semver.org/">Semantic Versioning</a> by use of <a href="https://github.com/semantic-release/semantic-release">semantic-release</a>.</p>
+<p>This means that new versions are released automatically as fixes, features or breaking changes are released.</p>
+<p>You can check the changelog on the <a href="https://github.com/contentful/contentful.js/releases">releases</a> page.</p>
+<h2>Migration from contentful.js 4.x</h2><p>The bundle for browsers is now called <code>contentful.browser.min.js</code> to mark it clearly as browser only bundle. If you need to support IE 11 or other old browsers, you may use the <code>contentful.legacy.min.js</code>. Node will automatically use the <code>contentful.node.min.js</code> while bundlers like Webpack will resolve to the new ES-modules version of the library.</p>
+<p>No changes to the API of the library were made.</p>
+<h2>Migration from contentful.js 3.x</h2><p>From version 4.0.0 and up contentful.js is exported as a single <code>umd</code> bundle the cdn distribution has changed, there is no more <code>browser-dist</code>. the new link format is https://unpkg.com/contentful@version/dist/contentful.min.js instead of https://unpkg.com/contentful@version/browser-dist/contentful.min.js. to access version 3 you can still use https://unpkg.com/contentful@3.0.0/browser-dist/contentful.min.js</p>
+<h2>Migration from contentful.js 2.x and older</h2><p>contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.</p>
+<p>See the <a href="MIGRATION.md">migration guide</a> for more information.</p>
+<h2>Support</h2><p>If you have a problem with this library, please file an <a href="https://github.com/contentful/contentful.js/issues/new">issue</a> here on GitHub.</p>
+<p>If you have other problems with Contentful not related to this library, you can contact <a href="https://support.contentful.com">Customer Support</a>.</p>
+<h2>Contributing</h2><p>See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a></p>
+<h2>License</h2><p>MIT</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the <a href="https://github.com/contentful/contentful-sdk-jsdoc">contentful-sdk-jsdoc</a> theme.
+</footer>
+
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
