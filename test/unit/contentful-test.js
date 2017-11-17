@@ -17,7 +17,7 @@ test('Throws if no space is defined', (t) => {
   t.end()
 })
 test('Generate the correct User Agent Header', (t) => {
-  createClientRewireApi.__Rewire__('axios', sinon.stub)
+  createClientRewireApi.__Rewire__('@contentful/axios', sinon.stub)
   const createHttpClientStub = sinon.stub()
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
@@ -34,11 +34,11 @@ test('Generate the correct User Agent Header', (t) => {
 
   createClientRewireApi.__ResetDependency__('rateLimit')
   createClientRewireApi.__ResetDependency__('createHttpClient')
-  createClientRewireApi.__ResetDependency__('axios')
+  createClientRewireApi.__ResetDependency__('@contentful/axios')
   t.end()
 })
 test('Passes along HTTP client parameters', (t) => {
-  createClientRewireApi.__Rewire__('axios', sinon.stub)
+  createClientRewireApi.__Rewire__('@contentful/axios', sinon.stub)
   createClientRewireApi.__Rewire__('version', 'version')
   const createHttpClientStub = sinon.stub()
   const rateLimitStub = sinon.stub()
@@ -49,7 +49,7 @@ test('Passes along HTTP client parameters', (t) => {
   t.ok(createHttpClientStub.args[0][1].headers['X-Contentful-User-Agent'])
   createClientRewireApi.__ResetDependency__('rateLimit')
   createClientRewireApi.__ResetDependency__('createHttpClient')
-  createClientRewireApi.__ResetDependency__('axios')
+  createClientRewireApi.__ResetDependency__('@contentful/axios')
   t.end()
 })
 
