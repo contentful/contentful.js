@@ -95,7 +95,7 @@ export interface Space {
 export interface SyncCollection {
     entries: Array<Entry<any>>;
     assets: Array<Asset>;
-    deletedEntries: Array<Entry<any>>;
+    deletedEntries: Array<any>;
     deletedAssets: Array<Asset>;
     nextSyncToken: string;
     toPlainObject(): SyncCollection;
