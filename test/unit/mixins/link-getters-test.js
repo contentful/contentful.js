@@ -1,15 +1,28 @@
 import test from 'blue-tape'
 import mixinLinkGetters from '../../../lib/mixins/link-getters'
 
-test('links in response, without matching include should remain', (t) => {
+test('links in response, without matching include should not remain', (t) => {
   const items = [{
     sys: {type: 'Entry', locale: 'en-US'},
     fields: {
       animal: {sys: {type: 'Link', linkType: 'Piglet', id: 'oink'}}
     }
   }]
-  mixinLinkGetters(items, {})
-  t.equal(items[0].fields.animal.sys.type, 'Link')
+  const errors = [
+    {
+      'sys': {
+        'id': 'notResolvable',
+        'type': 'error'
+      },
+      'details': {
+        'type': 'Link',
+        'linkType': 'Entry',
+        'id': 'oink'
+      }
+    }
+  ]
+  mixinLinkGetters(items, {}, errors)
+  t.equal(items[0].fields.animal, undefined)
   t.end()
 })
 
