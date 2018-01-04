@@ -1,6 +1,11 @@
 #!/usr/bin/env node
+require('babel-core/register')({
+  // This will override `node_modules` ignoring - you can alternatively pass
+  // a regex
+  ignore: /node_modules(?!\/contentful-resolve-response)/
+})
 require('require-all')({
   dirname: process.cwd() + '/test/unit',
-  filter: process.argv[2] || /\-test\.js$/,
+  filter: process.argv[2] || /-test\.js$/,
   recursive: true
 })
