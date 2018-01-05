@@ -1,5 +1,6 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
+import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
 import { contentTypeMock, assetMock, entryMock } from './mocks'
@@ -216,6 +217,24 @@ test('API call getEntries', (t) => {
     .then((r) => {
       t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
       t.looseEqual(r, data, 'returns expected data')
+      teardown()
+    })
+})
+
+test('API call getEntries with global resolve links overriden by query', (t) => {
+  t.plan(1)
+
+  const data = {sys: {id: 'id'}}
+
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data }),
+    getGlobalOptions: createGlobalOptions({})
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
+
+  return api.getEntries({resolveLinks: true})
+    .then((r) => {
+      t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
       teardown()
     })
 })
