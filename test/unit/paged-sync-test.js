@@ -71,7 +71,7 @@ test('Initial sync with one page', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true}, true)
+  return pagedSync(http, {initial: true}, {resolveLinks: true})
     .then((response) => {
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
       t.equal(response.entries.length, 3, 'entries length')
@@ -101,7 +101,7 @@ test('Initial sync with one page and filter', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true, content_type: 'cat'}, true)
+  return pagedSync(http, {initial: true, content_type: 'cat'}, {resolveLinks: true})
     .then((response) => {
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
       t.equal(http.get.args[0][1].params.content_type, 'cat', 'http request has content type filter param')
