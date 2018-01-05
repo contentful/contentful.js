@@ -1,12 +1,13 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
+import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
 import { contentTypeMock, assetMock, entryMock } from './mocks'
 
 let entitiesMock
 
-function setupWithData ({promise, shouldLinksResolve = sinon.stub().returns(true)}) {
+function setupWithData ({promise, getGlobalOptions = sinon.stub().returns({resolveLinks: true, removeUnresolved: false})}) {
   entitiesMock = {
     space: {
       wrapSpace: sinon.stub()
@@ -30,7 +31,7 @@ function setupWithData ({promise, shouldLinksResolve = sinon.stub().returns(true
     http: {
       get: getStub.returns(promise)
     },
-    shouldLinksResolve: shouldLinksResolve
+    getGlobalOptions: getGlobalOptions
   })
   return {api, getStub}
 }
@@ -220,6 +221,24 @@ test('API call getEntries', (t) => {
     })
 })
 
+test('API call getEntries with global resolve links overriden by query', (t) => {
+  t.plan(1)
+
+  const data = {sys: {id: 'id'}}
+
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data }),
+    getGlobalOptions: createGlobalOptions({})
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
+
+  return api.getEntries({resolveLinks: true})
+    .then((r) => {
+      t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
+      teardown()
+    })
+})
+
 test('API call getEntries with global resolve links turned off', (t) => {
   t.plan(2)
 
@@ -227,13 +246,13 @@ test('API call getEntries with global resolve links turned off', (t) => {
 
   const {api} = setupWithData({
     promise: Promise.resolve({ data: data }),
-    shouldLinksResolve: sinon.stub().returns(false)
+    getGlobalOptions: sinon.stub().returns({resolveLinks: false})
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
   return api.getEntries()
     .then((r) => {
-      t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned off globally')
+      t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
       t.looseEqual(r, data, 'returns expected data')
       teardown()
     })
@@ -379,7 +398,7 @@ test('CDA call sync fails', (t) => {
 test('Given json should be parsed correctly as a collection of entries', (t) => {
   const api = createContentfulApi({
     http: {},
-    shouldLinksResolve: true
+    getGlobalOptions: sinon.stub().returns({resolveLinks: true})
   })
   const data = {items: [
     {

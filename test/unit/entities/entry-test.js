@@ -87,7 +87,7 @@ test('Entry collection links are resolved', (t) => {
     }
   }
 
-  const wrappedCollection = wrapEntryCollection(entryCollection, true)
+  const wrappedCollection = wrapEntryCollection(entryCollection, {resolveLinks: true})
   const wrappedEntry = wrappedCollection.toPlainObject()
 
   // first linked entry resolved from includes
