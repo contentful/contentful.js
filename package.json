@@ -59,7 +59,7 @@
   ],
   "dependencies": {
     "@contentful/axios": "^0.18.0",
-    "contentful-resolve-response": "^1.0.1",
+    "contentful-resolve-response": "^1.0.2",
     "contentful-sdk-core": "^5.0.1",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.4"
@@ -123,7 +123,7 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "39Kb"
+      "maxSize": "38Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
@@ -131,7 +131,7 @@
     },
     {
       "path": "./dist/contentful.legacy.js",
-      "maxSize": "56Kb"
+      "maxSize": "55Kb"
     },
     {
       "path": "./dist/contentful.legacy.min.js",
@@ -139,7 +139,7 @@
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "48Kb"
+      "maxSize": "47Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
