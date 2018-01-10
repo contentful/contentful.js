@@ -1,34 +1,27 @@
-'use strict'
-var webpack = require('webpack')
-var path = require('path')
-var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
-var plugins = [
-  new LodashModuleReplacementPlugin({
-    'shorthands': true,
-    'cloning': true,
-    'currying': true,
-    'caching': true,
-    'collections': true,
-    'paths': true,
-    'guards': true,
-    'unicode': true,
-    'placeholders': true
-  }),
+const path = require('path')
+
+const webpack = require('webpack')
+const BabiliPlugin = require('babili-webpack-plugin')
+const clone = require('lodash/cloneDeep')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+
+const PROD = process.env.NODE_ENV === 'production'
+
+const plugins = [
   new webpack.optimize.OccurrenceOrderPlugin(),
-  new webpack.IgnorePlugin(/vertx/),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  }),
+  new LodashModuleReplacementPlugin({
+    caching: true,
+    cloning: true,
+    memoizing: true
   })
 ]
 
-if (process.env.NODE_ENV === 'production') {
+if (PROD) {
   plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        screw_ie8: true,
-        warnings: false
-      }
-    })
+    new BabiliPlugin()
   )
   plugins.push(
     new webpack.LoaderOptionsPlugin({
@@ -38,43 +31,88 @@ if (process.env.NODE_ENV === 'production') {
   )
 }
 
-const loaders = [
-  {
-    test: /\.js?$/,
-    exclude: /(node_modules|bower_components|dist)/,
-    loader: 'babel-loader'
-  }
+const baseFileName = `contentful`
+
+const baseBundleConfig = {
+  context: path.join(__dirname, 'lib'),
+  entry: [`./${baseFileName}.js`],
+  output: {
+    path: path.join(__dirname, 'dist'),
+    libraryTarget: 'umd',
+    library: 'contentful'
+  },
+  module: {
+    loaders: []
+  },
+  devtool: PROD ? false : 'source-map',
+  plugins,
+  node: {
+    os: 'empty'
+  },
+  // Show minimal information, but all errors and warnings
+  // Except for log generation which have to contain all information
+  stats: process.env.WEBPACK_MODE === 'log' ? 'verbose' : 'normal'
+}
+
+const defaultBabelLoader = {
+  test: /\.js?$/,
+  include: [
+    path.resolve(__dirname, 'lib'),
+    path.resolve(__dirname, 'test')
+  ],
+  loader: 'babel-loader',
+  options: {}
+}
+
+// Browsers
+const browserBundle = clone(baseBundleConfig)
+browserBundle.module.loaders = [
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      forceEnv: 'browser'
+    })
+  })
 ]
+browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
+
+// Legacy browsers like IE11
+const legacyBundle = clone(baseBundleConfig)
+legacyBundle.module.loaders = [
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      forceEnv: 'legacy'
+    })
+  })
+]
+// To be replaced with babel-polyfill with babel-preset-env 2.0:
+// https://github.com/babel/babel-preset-env#usebuiltins
+// https://github.com/babel/babel-preset-env/pull/241
+legacyBundle.entry = [
+  'core-js/fn/promise',
+  'core-js/fn/object/assign',
+  'core-js/fn/array/from',
+  'core-js/fn/array/find',
+  'core-js/fn/set'
+].concat(legacyBundle.entry)
+
+legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
+
+// Node
+const nodeBundle = clone(baseBundleConfig)
+nodeBundle.module.loaders = [
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      forceEnv: 'node'
+    })
+  })
+]
+nodeBundle.target = 'node'
+nodeBundle.output.libraryTarget = 'commonjs2'
+nodeBundle.output.filename = `${baseFileName}.node${PROD ? '.min' : ''}.js`
+delete nodeBundle.node
 
 module.exports = [
-  {
-    context: path.join(__dirname, 'lib'),
-    entry: './contentful.js',
-    output: {
-      path: path.join(__dirname, 'dist'),
-      filename: `contentful${process.env.NODE_ENV === 'production' ? '.min' : ''}.js`,
-      libraryTarget: 'umd',
-      library: 'contentful'
-    },
-    module: {
-      loaders
-    },
-    devtool: 'cheap-module-source-map',
-    plugins
-  },
-  {
-    context: path.join(__dirname, 'lib'),
-    entry: './contentful.js',
-    target: 'node',
-    output: {
-      path: path.join(__dirname, 'dist'),
-      filename: `contentful.node${process.env.NODE_ENV === 'production' ? '.min' : ''}.js`,
-      libraryTarget: 'commonjs2',
-      library: 'contentful'
-    },
-    module: {
-      loaders
-    },
-    plugins
-  }
+  browserBundle,
+  legacyBundle,
+  nodeBundle
 ]

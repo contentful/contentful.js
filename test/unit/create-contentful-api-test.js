@@ -1,6 +1,6 @@
 import test from 'blue-tape'
 import sinon from 'sinon'
-import Promise from 'es6-promise'
+
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
 import { contentTypeMock, assetMock, entryMock } from './mocks'
 
@@ -68,8 +68,10 @@ test('API call getSpace fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.space.wrapSpace.returns(data)
 
@@ -102,8 +104,10 @@ test('API call getContentType fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.contentType.wrapContentType.returns(data)
 
@@ -142,8 +146,10 @@ test('API call getContentTypes fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
@@ -176,8 +182,10 @@ test('API call getEntry fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.entry.wrapEntry.returns(data)
 
@@ -238,8 +246,10 @@ test('API call getEntries fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
@@ -272,8 +282,10 @@ test('API call getAsset fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.asset.wrapAsset.returns(data)
 
@@ -312,8 +324,10 @@ test('API call getAssets fails', (t) => {
       id: 'id'
     }
   }
+  const rejectError = new Error()
+  rejectError.data = data
   const {api} = setupWithData({
-    promise: Promise.reject({ data: data })
+    promise: Promise.reject(rejectError)
   })
   entitiesMock.asset.wrapAssetCollection.returns(data)
 
@@ -349,14 +363,15 @@ test('CDA call sync', (t) => {
 
 test('CDA call sync fails', (t) => {
   t.plan(1)
-
+  const rejectError = new Error()
+  rejectError.data = 'error'
   const {api} = setupWithData({
-    promise: Promise.reject({ data: 'error' })
+    promise: Promise.reject(rejectError)
   })
   return api.sync({initial: true})
     .then(() => {
     }, (r) => {
-      t.equal(r, 'error')
+      t.equal(r.data, 'error')
       teardown()
     })
 })
@@ -375,17 +390,17 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
       }
     }
   ],
-    includes: {
-      Animal: [
-        {
-          sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
-          fields: {
-            name: 'Pig',
-            friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
-          }
+  includes: {
+    Animal: [
+      {
+        sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+        fields: {
+          name: 'Pig',
+          friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
         }
-      ]
-    }
+      }
+    ]
+  }
   }
   let parsedData = api.parseEntries(data)
   t.ok(parsedData)

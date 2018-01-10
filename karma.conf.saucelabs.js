@@ -1,23 +1,26 @@
 var karmaBaseConf = require('./karma.base.conf')
 
 var browsers = {
-  'SL_Chrome': {
+  sl_chrome: {
     base: 'SauceLabs',
-    platform: 'OS X 10.11',
     browserName: 'chrome',
-    customData: {
-      awesome: true
-    }
+    platform: 'Linux'
   },
-  'SL_Firefox': {
+  sl_firefox: {
     base: 'SauceLabs',
-    platform: 'OS X 10.11',
-    browserName: 'firefox'
+    browserName: 'firefox',
+    platform: 'Linux'
   },
-  'SL_Edge': {
+  sl_ie_11: {
     base: 'SauceLabs',
+    browserName: 'internet explorer',
     platform: 'Windows 10',
-    browserName: 'microsoftedge'
+    version: '11.103'
+  },
+  sl_edge: {
+    base: 'SauceLabs',
+    browserName: 'MicrosoftEdge',
+    platform: 'Windows 10'
   }
 }
 
@@ -26,9 +29,7 @@ module.exports = function (config) {
   karmaBaseConf.reporters.push('saucelabs')
   karmaBaseConf.logLevel = config.LOG_DEBUG
   karmaBaseConf.customLaunchers = browsers
-  karmaBaseConf.captureTimeout = 200000
-  karmaBaseConf.browserDisconnectTolerance = 5
-  karmaBaseConf.concurrency = 5
+  karmaBaseConf.concurrency = 2
   karmaBaseConf.browsers = Object.keys(browsers)
   karmaBaseConf.sauceLabs = {
     // Should be false for running on travis, as travis already starts its own

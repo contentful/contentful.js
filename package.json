@@ -1,12 +1,11 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
-  "version": "4.1.0",
+  "version": "0.0.0-determined-by-semantic-release",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
-  "module": "./dist/es6-modules/contentful.js",
-  "jsnext:main": "./dist/es6-modules/contentful.js",
-  "browser": "./dist/contentful.js",
+  "module": "./dist/es-modules/contentful.js",
+  "jsnext:main": "./dist/es-modules/contentful.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/contentful/contentful.js.git"
@@ -15,39 +14,39 @@
   "license": "MIT",
   "tonicExampleFilename": "tonic-example.js",
   "scripts": {
-    "clean": "rimraf dist && rimraf coverage",
-    "build": "npm run clean && npm run build:ci",
-    "build:ci": "npm run vendor:version && npm run build:standalone && npm run build:modules",
-    "build:standalone": "BABEL_ENV=webpack webpack && BABEL_ENV=webpack NODE_ENV=production webpack",
-    "build:standalone:log": "BABEL_ENV=webpack npm run build && BABEL_ENV=webpack NODE_ENV=production webpack --json --profile > webpack-build-log.json",
-    "build:modules": "BABEL_ENV=webpack babel lib -d dist/es6-modules",
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run build:modules && npm run build:standalone",
+    "build:modules": "BABEL_ENV=modules babel lib -d dist/es-modules/",
+    "build:standalone": "webpack && NODE_ENV=production webpack",
+    "build:standalone:log": "NODE_ENV=production WEBPACK_MODE=log webpack --json --profile --progress > webpack-build-log.json && webpack-bundle-analyzer webpack-build-log.json",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
     "lint": "eslint lib test",
-    "pretest": "npm run lint",
+    "pretest": "rimraf coverage && npm run lint",
+    "test": "npm run test:cover && npm run test:integration && npm run test:browser-local && npm run test:size",
     "test:ci": "npm run build && ./node_modules/contentful-sdk-core/bin/test-ci.sh",
-    "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover test/runner",
-    "test:only": "BABEL_ENV=test babel-node ./test/runner",
+    "test:cover": "BABEL_ENV=test babel-node ./node_modules/istanbul/lib/cli.js cover ./test/runner | tap-spec",
+    "test:unit": "BABEL_ENV=test babel-node ./test/runner | tap-spec",
     "test:debug": "BABEL_ENV=test babel-node debug ./test/runner",
-    "test:integration": "BABEL_ENV=test babel-node ./test/integration/tests.js",
+    "test:integration": "BABEL_ENV=test babel-node ./test/integration/tests.js | tap-spec",
     "test:integration-debug": "BABEL_ENV=test babel-node debug ./test/integration/tests.js",
     "test:browser-local": "BABEL_ENV=test karma start karma.conf.local.js",
     "test:browser-remote": "BABEL_ENV=test karma start karma.conf.saucelabs.js",
+    "test:e2e": "node test/e2e/index.js",
     "test:simulate-ci": "trevor",
-    "vendor:version": "echo \"module.exports = '`cat package.json|json version`'\" > version.js",
+    "test:size": "bundlesize",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
-    "prepublish": "in-publish && npm run build:ci || not-in-publish",
+    "prepublish": "in-publish && npm run build || not-in-publish",
     "postpublish": "npm run docs:publish && npm run clean",
-    "test": "npm run test:cover && npm run test:integration && npm run test:browser-local",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "devdep:build": "pushd ../contentful-sdk-core && npm run build && popd",
     "devdep:clean": "pushd ../contentful-sdk-core && npm run clean && popd",
     "devdep:install": "npm run devdep:build && rm -rf node_modules/contentful-sdk-core && npm install ../contentful-sdk-core && npm run devdep:clean",
     "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core",
     "precommit": "npm run lint",
-    "prepush": "npm run test:only"
+    "prepush": "npm run test:unit"
   },
   "types": "./index.d.ts",
   "files": [
@@ -58,9 +57,8 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "axios": "~0.15.3",
-    "contentful-sdk-core": "^3.10.1",
-    "es6-promise": "^4.0.5",
+    "@contentful/axios": "^0.18.0",
+    "contentful-sdk-core": "^5.0.1",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.4"
   },
@@ -68,44 +66,49 @@
     "babel-cli": "^6.7.5",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-inline-replace-variables": "^1.3.1",
+    "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-rewire": "^1.0.0",
-    "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-plugin-transform-runtime": "^6.7.5",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.1.8",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-register": "^6.7.2",
-    "babel-template": "^6.22.0",
-    "babel-types": "^6.22.0",
+    "babili-webpack-plugin": "^0.1.2",
     "blue-tape": "^1.0.0",
+    "bundlesize": "^0.12.0",
     "contentful-sdk-jsdoc": "^2.2.0",
+    "core-js": "^2.5.1",
     "coveralls": "^2.11.9",
-    "cz-conventional-changelog": "^1.1.6",
-    "eslint": "^3.16.0",
-    "eslint-config-standard": "^6.2.1",
+    "cz-conventional-changelog": "^2.0.0",
+    "eslint": "^4.2.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1",
-    "husky": "^0.13.1",
+    "eslint-plugin-standard": "^3.0.1",
+    "express": "^4.15.4",
+    "husky": "^0.14.3",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
     "jsdoc": "^3.4.0",
-    "json": "^9.0.3",
+    "json": "^9.0.6",
     "karma": "^1.4.1",
-    "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.0.0",
+    "karma-firefox-launcher": "^1.0.1",
     "karma-sauce-launcher": "^1.1.0",
     "karma-tap": "^3.1.1",
     "karma-webpack": "^2.0.2",
-    "lodash-webpack-plugin": "^0.11.2",
+    "lodash-webpack-plugin": "^0.11.4",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
     "require-all": "^2.2.0",
     "rimraf": "^2.6.0",
-    "semantic-release": "^6.3.2",
+    "selenium-webdriver": "^3.5.0",
+    "semantic-release": "^8.2.0",
     "sinon": "^2.0.0-pre",
+    "tap-spec": "^4.1.1",
     "trevor": "^2.2.0",
-    "webpack": "^2.2.1"
+    "webpack": "^3.3.0",
+    "webpack-bundle-analyzer": "^2.8.3"
   },
   "engines": {
     "node": ">=4.7.2"
@@ -114,5 +117,31 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/contentful.browser.js",
+      "maxSize": "39Kb"
+    },
+    {
+      "path": "./dist/contentful.browser.min.js",
+      "maxSize": "14Kb"
+    },
+    {
+      "path": "./dist/contentful.legacy.js",
+      "maxSize": "56Kb"
+    },
+    {
+      "path": "./dist/contentful.legacy.min.js",
+      "maxSize": "23Kb"
+    },
+    {
+      "path": "./dist/contentful.node.js",
+      "maxSize": "48Kb"
+    },
+    {
+      "path": "./dist/contentful.node.min.js",
+      "maxSize": "19Kb"
+    }
+  ]
 }

@@ -3,5 +3,8 @@ module.exports = {
   'plugins': [
     'standard',
     'promise'
-  ]
+  ],
+  'globals': {
+    '__VERSION__': true
+  }
 }

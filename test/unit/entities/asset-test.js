@@ -1,4 +1,4 @@
-import test from 'tape'
+import test from 'blue-tape'
 import {assetMock} from '../mocks'
 import {wrapAsset, wrapAssetCollection} from '../../../lib/entities/asset'
 

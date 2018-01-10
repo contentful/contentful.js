@@ -1,3 +1,7 @@
+# contentful.js
+
+> JavaScript SDK for [Contentful's](https://www.contentful.com) Content Delivery API.
+
 [![npm](https://img.shields.io/npm/v/contentful.svg)](https://www.npmjs.com/package/contentful)
 [![Build Status](https://travis-ci.org/contentful/contentful.js.svg?branch=master)](https://travis-ci.org/contentful/contentful.js)
 [![Coverage Status](https://coveralls.io/repos/github/contentful/contentful.js/badge.svg?branch=master)](https://coveralls.io/github/contentful/contentful.js?branch=master)
@@ -7,12 +11,10 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![npm downloads](https://img.shields.io/npm/dm/contentful.svg)](http://npm-stat.com/charts.html?package=contentful)
+[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip
+)](https://unpkg.com/contentful/dist/contentful.browser.min.js)
 
-Javascript SDK for [Contentful's](https://www.contentful.com) Content Delivery API.
-
-# About
-
-[Contentful](https://www.contentful.com) is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit & manage content in the cloud and publish it anywhere via a powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.
+[Contentful](https://www.contentful.com) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
 
 ## Features
 
@@ -26,7 +28,7 @@ Browsers and Node.js:
 - Chrome
 - Firefox
 - Edge
-- IE11 (with [es6-promise](https://github.com/stefanpenner/es6-promise) polyfill applied)
+- IE11 (with [legacy version](#legacy-browsers) of the library)
 - Safari
 - node.js (4.x, 6.x)
 
@@ -40,33 +42,51 @@ In order to get started with the Contentful JS SDK you'll need not only to insta
 - [Authentication](#authentication)
 - [Using ES6 import](#using-es6-import)
 - [Your first request](#your-first-request)
-- [Using this SDK with the Preview API](#using-this-SDK-with-the-Preview-API)
+- [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
 - [Advanced features](#advanced-features)
 - [Troubleshooting](#troubleshooting)
 - [Documentation/References](#documentationreferences)
-
 ## Installation
 
-In node, using [npm](http://npmjs.org):
+### Node:
+
+Using [npm](http://npmjs.org):
 
 ``` sh
 npm install contentful
 ```
 
-Or, if you'd like to use a standalone built file you can use the following script tag or just download it from [unpkg](https://unpkg.com), under the `dist` directory:
+Using [yarn](https://yarnpkg.com/lang/en/):
+
+``` sh
+yarn add contentful
+```
+
+### Browser:
+
+For browsers, we recommend to download the SDK via npm or yarn to ensure 100% availability.
+
+If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
 
 ``` html
-<script src="https://unpkg.com/contentful@latest/dist/contentful.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js"></script>
 ```
-**It is not recommended to use the above URL for production.**
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number:
 
 ``` html
-<script src="https://unpkg.com/contentful@4.1.1/dist/contentful.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@5.0.1/dist/contentful.browser.min.js"></script>
 ```
 
+The Contentful Delivery SDK will be accessible via the `contentful` global variable.
+
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
+
+### Legacy browsers:
+
+This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
+
+To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
 ## Authentication
 
@@ -77,13 +97,14 @@ You can create API keys using [Contentful's web interface](https://app.contentfu
 Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
+
 ## Using ES6 import
 You can use the es6 import with the SDK as follow
 
 ```js
 // import createClient directly
 import {createClient} from 'contentful'
-var client = createClient({
+const client = createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
@@ -95,7 +116,7 @@ OR
 ```js
 // import everything from contentful
 import * as contentful from 'contentful'
-var client = contentful.createClient({
+const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
@@ -108,8 +129,8 @@ var client = contentful.createClient({
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
 
 ```js
-var contentful = require('contentful')
-var client = contentful.createClient({
+const contentful = require('contentful')
+const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
@@ -155,7 +176,7 @@ const client = contentful.createClient({
 
 Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing an initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
 
-**e.g.** assuming that you have a contentType `post` that has a reference field `author`
+**e.g.** assuming that you have a Content Type `post` that has a reference field `author`
 
 ```js
 const contentful = require('contentful')
@@ -193,7 +214,7 @@ The SDK will go through all the pages for you and gives you back a response obje
 
 ### Querying & Search parameters
 
-You can pass your query params as `key: value` pairs in the query object whenever request a resource.
+You can pass your query parameters as `key: value` pairs in the query object whenever request a resource.
 **e.g.**
 
 ```js
@@ -211,28 +232,78 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 
 // You can pass a query when requesting a single entity
 client.getEntry('<entry-id>', {key: value})
-``` 
+```
 
-for more infos about the search parameters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
+for more information about the search parameters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
 
 ## Troubleshooting
 
 - **Can I use the SDK in react native projects**
 	- Yes it is possible
+- **I get the error: Unable to resolve module `http`**
+	- Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
+	
 - **Link resolution does not work when using `client.getEntry('<entry-id>')`**
 	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?**
 	- Yes, there is also a type definition file
 - **Is the SDK doing any caching?**
-	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos 
-- 😱 **Something is wrong what should I do?** 
+	- No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
+- 😱 **Something is wrong what should I do?**
 	- If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it.
 	- If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the [support page](parameters).
-	
+
 
 ## Documentation/References
 
 To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
+
+### Configuration
+
+The `createClient` method supports several options you may set to achieve the expected behavior:
+
+```js
+contentful.createClient({
+  ... your config here ...
+})
+```
+
+#### accessToken (required)
+Your CDA access token.
+
+#### space (required)
+Your Space ID.
+
+#### host (default: `'cdn.contentful.com'`)
+Set the host used to build the request URI's.
+
+#### basePath (default: ``)
+This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.
+
+#### httpAgent (default: `undefined`)
+Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+
+#### httpsAgent (default: `undefined`)
+Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+
+#### headers (default: `{}`)
+Additional headers to attach to the requests. We add/overwrite the following headers:
+
+* Content-Type: `application/vnd.contentful.management.v1+json`
+* X-Contentful-User-Agent: `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3`
+ (Automatically generated)
+
+ #### proxy (default: `undefined`)
+Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.
+
+#### resolveLinks (default: `true`)
+Turn off to disable link resolving.
+
+#### retryOnError (default: `true`)
+By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.
+
+#### logHandler (default: `function (level, data) {}`)
+Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
 
 ### Reference documentation
 
@@ -264,9 +335,15 @@ This means that new versions are released automatically as fixes, features or br
 
 You can check the changelog on the [releases](https://github.com/contentful/contentful.js/releases) page.
 
+## Migration from contentful.js 4.x
+
+The bundle for browsers is now called `contentful.browser.min.js` to mark it clearly as browser only bundle. If you need to support IE 11 or other old browsers, you may use the `contentful.legacy.min.js`. Node will automatically use the `contentful.node.min.js` while bundlers like Webpack will resolve to the new ES-modules version of the library.
+
+No changes to the API of the library were made.
+
 ## Migration from contentful.js 3.x
 
-From version 4.0.0 and up contenful.js is exported as a single `umd` bundle the cdn distribution has changed, there is no more `browser-dist`. the new link format is https://unpkg.com/contentful@version/dist/contentful.min.js instead of https://unpkg.com/contentful@version/browser-dist/contentful.min.js. to access version 3 you can still use https://unpkg.com/contentful@3.0.0/browser-dist/contentful.min.js
+From version 4.0.0 and up contentful.js is exported as a single `umd` bundle the cdn distribution has changed, there is no more `browser-dist`. the new link format is https://unpkg.com/contentful@version/dist/contentful.min.js instead of https://unpkg.com/contentful@version/browser-dist/contentful.min.js. to access version 3 you can still use https://unpkg.com/contentful@3.0.0/browser-dist/contentful.min.js
 
 ## Migration from contentful.js 2.x and older
 contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.
@@ -275,7 +352,7 @@ See the [migration guide](MIGRATION.md) for more information.
 
 ## Support
 
-If you have a problem with this library, please file an [issue](https://github.com/contentful/contentful.js/issues/new) here on Github.
+If you have a problem with this library, please file an [issue](https://github.com/contentful/contentful.js/issues/new) here on GitHub.
 
 If you have other problems with Contentful not related to this library, you can contact [Customer Support](https://support.contentful.com).
 

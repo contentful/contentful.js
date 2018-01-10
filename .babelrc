@@ -1,35 +1,5 @@
 {
-  "env": {
-    "webpack": {
-      "presets": [
-        ["env", {
-          "debug": true,
-          "targets": {
-            "node": 4.7,
-            "browsers": [
-              "last 3 versions",
-              "ie >= 11"
-            ]
-          },
-          "modules": false
-        }]
-      ]
-    },
-    "test": {
-      "presets": [
-        ["env", {
-          "debug": true,
-          "targets": {
-            "node": 4.7,
-            "browsers": [
-              "last 3 versions",
-              "ie >= 11"
-            ]
-          }
-        }]
-      ],
-      "plugins": ["rewire"],
-      "sourceMaps": "inline",
-    }
-  }
+  "presets": [
+    "./.babelrc.js"
+  ]
 }

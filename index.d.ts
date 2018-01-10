@@ -15,6 +15,7 @@ export interface CreateClientParams {
     accessToken: string;
     insecure?: boolean;
     host?: string;
+    basePath?: string;
     httpAgent?: any;
     httpsAgent?: any;
     proxy?: AxiosProxyConfig;
@@ -22,6 +23,7 @@ export interface CreateClientParams {
     application?: string;
     integration?: string;
     resolveLinks?: boolean;
+    retryOnError?: boolean;
 }
 
 export interface ContentfulClientApi {
