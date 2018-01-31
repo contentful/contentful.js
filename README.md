@@ -192,6 +192,8 @@ client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
 ```
 The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
 
+By default, the SDK will keep links, which could not get resolved, in your response. If you want to completely remove fields which could not be resolved, set `removeUnresolved: true` in the configuration options.
+
 ### Sync
 
 The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, meaning only changes that occurred since last sync call.
@@ -242,7 +244,7 @@ for more information about the search parameters check the [documentation](https
 	- Yes it is possible
 - **I get the error: Unable to resolve module `http`**
 	- Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
-	
+
 - **Link resolution does not work when using `client.getEntry('<entry-id>')`**
 	- Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?**
@@ -298,6 +300,9 @@ Axios proxy configuration. See the [axios request config documentation](https://
 
 #### resolveLinks (default: `true`)
 Turn off to disable link resolving.
+
+#### removeUnresolved (default: `false`)
+Remove fields from response for unresolved links.
 
 #### retryOnError (default: `true`)
 By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.
