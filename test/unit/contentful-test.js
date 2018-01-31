@@ -18,7 +18,11 @@ test('Throws if no space is defined', (t) => {
 })
 test('Generate the correct User Agent Header', (t) => {
   createClientRewireApi.__Rewire__('@contentful/axios', sinon.stub)
-  const createHttpClientStub = sinon.stub()
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
@@ -40,7 +44,11 @@ test('Generate the correct User Agent Header', (t) => {
 test('Passes along HTTP client parameters', (t) => {
   createClientRewireApi.__Rewire__('@contentful/axios', sinon.stub)
   createClientRewireApi.__Rewire__('version', 'version')
-  const createHttpClientStub = sinon.stub()
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
@@ -54,7 +62,11 @@ test('Passes along HTTP client parameters', (t) => {
 })
 
 test('Returns a client instance', (t) => {
-  const createHttpClientStub = sinon.stub()
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
@@ -72,7 +84,11 @@ test('Returns a client instance', (t) => {
 })
 
 test('Initializes API with link resolution turned on by default', (t) => {
-  const createHttpClientStub = sinon.stub()
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
@@ -87,7 +103,11 @@ test('Initializes API with link resolution turned on by default', (t) => {
 })
 
 test('Initializes API with link resolution turned on explicitly', (t) => {
-  const createHttpClientStub = sinon.stub()
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
@@ -102,7 +122,11 @@ test('Initializes API with link resolution turned on explicitly', (t) => {
 })
 
 test('Initializes API with link resolution turned off explicitly', (t) => {
-  const createHttpClientStub = sinon.stub()
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
   const rateLimitStub = sinon.stub()
   createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
   createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
@@ -110,6 +134,42 @@ test('Initializes API with link resolution turned off explicitly', (t) => {
   createClientRewireApi.__Rewire__('createContentfulApi', apiStub)
   createClient({accessToken: 'accesstoken', space: 'spaceid', resolveLinks: false})
   t.notOk(apiStub.args[0][0].resolveLinksGlobalSetting)
+  createClientRewireApi.__ResetDependency__('createHttpClient')
+  createClientRewireApi.__ResetDependency__('rateLimit')
+  t.end()
+})
+
+test('Initializes API and attaches default environment', (t) => {
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
+  const rateLimitStub = sinon.stub()
+  createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
+  createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
+  const apiStub = sinon.stub().returns({})
+  createClientRewireApi.__Rewire__('createContentfulApi', apiStub)
+  createClient({accessToken: 'accesstoken', space: 'spaceid'})
+  t.is(apiStub.args[0][0].http.defaults.baseURL, 'http://some-base-url.com/environments/master')
+  createClientRewireApi.__ResetDependency__('createHttpClient')
+  createClientRewireApi.__ResetDependency__('rateLimit')
+  t.end()
+})
+
+test('Initializes API and attaches custom environment', (t) => {
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com'
+    }
+  })
+  const rateLimitStub = sinon.stub()
+  createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
+  createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
+  const apiStub = sinon.stub().returns({})
+  createClientRewireApi.__Rewire__('createContentfulApi', apiStub)
+  createClient({accessToken: 'accesstoken', space: 'spaceid', environment: 'stage'})
+  t.is(apiStub.args[0][0].http.defaults.baseURL, 'http://some-base-url.com/environments/stage')
   createClientRewireApi.__ResetDependency__('createHttpClient')
   createClientRewireApi.__ResetDependency__('rateLimit')
   t.end()
