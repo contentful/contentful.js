@@ -238,7 +238,7 @@ function customPaginatedSync (query) {
     }
 
     // Otherwise, just continue to next page of the current sync run
-    return customSync({nextPageToken: response.nextPageToken})
+    return customPaginatedSync({nextPageToken: response.nextPageToken})
   })
 }
 
