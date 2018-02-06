@@ -206,13 +206,45 @@ const client = contentful.createClient({
   accessToken:'<you-access-token>',
   space: '<your-space-id>',
 })
-// first time you are syncing make sure to spcify `initial: true`
+// first time you are syncing make sure to specify `initial: true`
 client.sync({initial: true}).then((response) => {
   // You should save the `nextSyncToken` to use in the following sync
   console.log(response.nextSyncToken)
 }).catch((err) => console.log(err))
 ```
 The SDK will go through all the pages for you and gives you back a response object with the full data so you don't need to handle pagination.
+
+#### Sync without pagination
+
+You may use syncing without pagination if you want to handle it on your own. To do this, you have to pass `pagination: false` as option when calling sync. You manually have to take care to pass `nextPageToken` or `nextSyncToken` to your subsequent calls. The logic follows our [sync API docs](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/synchronization/pagination-and-subsequent-syncs) while you pass tokens instead of full urls.
+
+```js
+const contentful = require('contentful')
+const client = contentful.createClient({
+  accessToken:'<you-access-token>',
+  space: '<your-space-id>',
+})
+
+function customPaginatedSync (query) {
+  // Call sync, make sure you set pagination to false for every call
+  return client.sync(query, {pagination: false}).then((response) => {
+    // Do something with the respond. For example save result to disk.
+    console.log('Result of current sync page:', response.items)
+
+    // Sync finished when `nextSyncToken` is available
+    if (response.nextSyncToken) {
+      console.log('Syncing done. Start a new sync via ' + response.nextSyncToken)
+      return
+    }
+
+    // Otherwise, just continue to next page of the current sync run
+    return customPaginatedSync({nextPageToken: response.nextPageToken})
+  })
+}
+
+customPaginatedSync({initial: true})
+  .then(() => console.log('Sync done'))
+```
 
 ### Querying & Search parameters
 
