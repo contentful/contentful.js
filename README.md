@@ -216,7 +216,7 @@ The SDK will go through all the pages for you and gives you back a response obje
 
 #### Sync without pagination
 
-You may use syncing without pagination if you want to handle it on your own. To do this, you have to pass `pagination: false` as option when calling sync. You manually have to take care to pass `nextPageToken` or `nextSyncToken` to your subsequent calls. The logic follows our [sync API docs](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/synchronization/pagination-and-subsequent-syncs) while you pass tokens instead of full urls.
+You may use syncing without pagination if you want to handle it on your own. To do this, you have to pass `paginate: false` as option when calling sync. You manually have to take care to pass `nextPageToken` or `nextSyncToken` to your subsequent calls. The logic follows our [sync API docs](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/synchronization/pagination-and-subsequent-syncs) while you pass tokens instead of full urls.
 
 ```js
 const contentful = require('contentful')
@@ -226,8 +226,8 @@ const client = contentful.createClient({
 })
 
 function customPaginatedSync (query) {
-  // Call sync, make sure you set pagination to false for every call
-  return client.sync(query, {pagination: false}).then((response) => {
+  // Call sync, make sure you set paginate to false for every call
+  return client.sync(query, {paginate: false}).then((response) => {
     // Do something with the respond. For example save result to disk.
     console.log('Result of current sync page:', response.items)
 
