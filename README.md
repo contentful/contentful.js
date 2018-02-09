@@ -138,7 +138,7 @@ const client = contentful.createClient({
 })
 // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
 client.getEntry('5PeGS2SoZGSa4GuiQsigQu')
-.then((entry) => console.log(entry))
+.then((entry) => console.log(entry)).catch((err) => console.log(err))
 ```
 
 You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
@@ -188,7 +188,7 @@ const client = contentful.createClient({
 client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
   // output the author name
   console.log(response.items[0].fields.author.fields.name)
-})
+}).catch((err) => console.log(err))
 ```
 The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
 
@@ -210,7 +210,7 @@ const client = contentful.createClient({
 client.sync({initial: true}).then((response) => {
   // You should save the `nextSyncToken` to use in the following sync
   console.log(response.nextSyncToken)
-})
+}).catch((err) => console.log(err))
 ```
 The SDK will go through all the pages for you and gives you back a response object with the full data so you don't need to handle pagination.
 
@@ -230,7 +230,7 @@ const client = contentful.createClient({
 client.getEntries({'sys.id': '<entry-id>'}).then((response) => {
   // output the author name
   console.log(response.items[0].fields.author.fields.name)
-})
+}).catch((err) => console.log(err))
 
 // You can pass a query when requesting a single entity
 client.getEntry('<entry-id>', {key: value})
