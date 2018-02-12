@@ -55,7 +55,7 @@ const baseBundleConfig = {
 
 const defaultBabelLoader = {
   test: /\.js?$/,
-  exclude: /node_modules(?!\/contentful-resolve-response)/,
+  exclude: /node_modules/,
   loader: 'babel-loader',
   options: {}
 }
