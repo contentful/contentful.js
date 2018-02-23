@@ -31,8 +31,8 @@ export interface ContentfulClientApi {
     getAssets(query?: any): Promise<AssetCollection>;
     getContentType(id: string): Promise<ContentType>;
     getContentTypes(query?: any): Promise<ContentTypeCollection>;
-    getEntries(query?: any): Promise<EntryCollection<any>>;
-    getEntry(id: string, query?: any): Promise<Entry<any>>;
+    getEntries<T>(query?: any): Promise<EntryCollection<T>>;
+    getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
     sync(query: any): Promise<SyncCollection>;
 }
