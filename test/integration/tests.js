@@ -3,8 +3,8 @@ import test from 'blue-tape'
 import * as contentful from '../../lib/contentful'
 
 const params = {
-  accessToken: 'b4c0n73n7fu1',
-  space: 'cfexampleapi'
+  accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
+  space: 'ezs1swce23xe'
 }
 const localeSpaceParams = {
   accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
@@ -13,8 +13,8 @@ const localeSpaceParams = {
 
 const previewParams = {
   host: 'preview.contentful.com',
-  accessToken: 'e5e8d4c5c122cf28fc1af3ff77d28bef78a3952957f15067bbc29f2f0dde0b50',
-  space: 'cfexampleapi'
+  accessToken: 'fc9c8a0968c592bd7a0a5a9167d6fb6002dbbc3b8f900a75708ec269332d250a',
+  space: 'ezs1swce23xe'
 }
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -347,22 +347,24 @@ test('Gets entries by inverse creation order', (t) => {
 
 /**
  * This test checks if entries can be ordered by two properties. The first
- * property (in this case revision) takes priority. The test checks if two
- * entries with the same revision are ordered by the second property, id.
- * It also checks if the entry which comes after these two has a higher revision.
+ * property (in this case content type id) takes priority. The test checks if two
+ * entries with the same content type are ordered by the second property, id.
+ * It also checks if the entry which comes before these has a lower id.
  *
- * It's a slightly fragile test as it can break if any of the entries are
- * updated and republished.
+ * It's a slightly fragile test as it can break if entries are added or deleted
+ * from the space.
  */
 test('Gets entries by creation order and id order', (t) => {
-  t.plan(3)
+  t.plan(2)
   return client.getEntries({
-    order: 'sys.revision,sys.id'
+    order: 'sys.contentType.sys.id,sys.id'
   })
     .then((response) => {
-      t.equal(response.items[0].sys.revision, response.items[1].sys.revision, 'revisions of entries with index 0 and 1 are the same')
-      t.ok(response.items[0].sys.id < response.items[1].sys.id, 'the entries with the same version are ordered by id')
-      t.ok(response.items[1].sys.revision < response.items[2].sys.revision, 'revision of entry with index 2 is higher')
+      const contentTypeOrder = response.items
+        .map((item) => item.sys.contentType.sys.id)
+        .filter((value, index, self) => self.indexOf(value) === index)
+      t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'dog', 'human'], 'orders')
+      t.ok(response.items[0].sys.id < response.items[1].sys.id, 'id of entry with index 1 is higher than the one of index 0 since they share content type')
     })
 })
 
@@ -412,13 +414,13 @@ test('Sync space', (t) => {
       t.ok(response.deletedEntries, 'deleted entries')
       t.ok(response.deletedAssets, 'deleted assets')
       t.ok(response.nextSyncToken, 'next sync token')
-      t.equal(response.entries[4].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
+      t.equal(response.entries[0].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
     })
 })
 
 test('Sync space with token', (t) => {
   t.plan(5)
-  return client.sync({nextSyncToken: 'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybCnV_Cg8OASMKpwo1UY8K8bsKFwqJrw7DDhcKnM2RDOVbDt1E-wo7CnDjChMKKGsK1wrzCrBzCqMOpZAwOOcOvCcOAwqHDv0XCiMKaOcOxZA8BJUzDr8K-wo1lNx7DnHE'})
+  return client.sync({nextSyncToken: 'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA'})
     .then((response) => {
       t.ok(response.entries, 'entries')
       t.ok(response.assets, 'assets')
