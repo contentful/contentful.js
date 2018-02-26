@@ -6,7 +6,7 @@ cache:
 language: node_js
 node_js:
   - "8"
-  - "4.7"
+  - "6"
 script: npm run test:ci
 after_success:
   - curl -Lo travis_after_all.py https://raw.githubusercontent.com/contentful/travis_after_all/master/travis_after_all.py

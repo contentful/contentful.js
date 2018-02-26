@@ -113,7 +113,7 @@
     "webpack-bundle-analyzer": "^2.11.0"
   },
   "engines": {
-    "node": ">=4.7.2"
+    "node": ">=6"
   },
   "config": {
     "commitizen": {

@@ -30,7 +30,7 @@ Browsers and Node.js:
 - Edge
 - IE11 (with [legacy version](#legacy-browsers) of the library)
 - Safari
-- node.js (4.x, 6.x)
+- node.js (6.x, 8.x)
 
 Other browsers should also work, but at the moment we're only running automated tests on the browsers and Node.js versions specified above.
 
