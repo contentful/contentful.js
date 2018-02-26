@@ -1,7 +1,7 @@
 const path = require('path')
 
 const webpack = require('webpack')
-const BabiliPlugin = require('babili-webpack-plugin')
+const MinifyPlugin = require('babel-minify-webpack-plugin')
 const clone = require('lodash/cloneDeep')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
@@ -20,7 +20,7 @@ const plugins = [
 
 if (PROD) {
   plugins.push(
-    new BabiliPlugin()
+    new MinifyPlugin()
   )
   plugins.push(
     new webpack.LoaderOptionsPlugin({
