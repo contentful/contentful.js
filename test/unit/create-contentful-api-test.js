@@ -3,11 +3,19 @@ import sinon from 'sinon'
 import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
-import { contentTypeMock, assetMock, entryMock } from './mocks'
+import { contentTypeMock, assetMock, entryMock, localeMock } from './mocks'
 
 let entitiesMock
 
-function setupWithData ({promise, getGlobalOptions = sinon.stub().returns({resolveLinks: true, removeUnresolved: false})}) {
+function setupWithData ({
+  promise,
+  getGlobalOptions = sinon.stub().returns({
+    resolveLinks: true,
+    removeUnresolved: false,
+    spaceBaseUrl: 'spaceUrl',
+    environmentBaseUrl: 'environementUrl'
+  })
+}) {
   entitiesMock = {
     space: {
       wrapSpace: sinon.stub()
@@ -23,12 +31,17 @@ function setupWithData ({promise, getGlobalOptions = sinon.stub().returns({resol
     asset: {
       wrapAsset: sinon.stub(),
       wrapAssetCollection: sinon.stub()
+    },
+    locale: {
+      wrapLocale: sinon.stub(),
+      wrapLocaleCollection: sinon.stub()
     }
   }
   createContentfulApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
   const api = createContentfulApi({
     http: {
+      defaults: {baseURL: 'baseURL'},
       get: getStub.returns(promise)
     },
     getGlobalOptions: getGlobalOptions
@@ -351,6 +364,48 @@ test('API call getAssets fails', (t) => {
   entitiesMock.asset.wrapAssetCollection.returns(data)
 
   return api.getAssets()
+    .then(() => {
+    }, (r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
+})
+
+test('API call getLocales', (t) => {
+  t.plan(1)
+  const data = {
+    total: 100,
+    skip: 0,
+    limit: 10,
+    items: [localeMock]
+  }
+  const {api} = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.locale.wrapLocaleCollection.returns(data)
+
+  return api.getLocales()
+    .then((r) => {
+      t.looseEqual(r, data)
+      teardown()
+    })
+})
+
+test('API call getLocaless fails', (t) => {
+  t.plan(1)
+  const data = {
+    sys: {
+      id: 'id'
+    }
+  }
+  const rejectError = new Error()
+  rejectError.data = data
+  const {api} = setupWithData({
+    promise: Promise.reject(rejectError)
+  })
+  entitiesMock.locale.wrapLocaleCollection.returns(data)
+
+  return api.getLocales()
     .then(() => {
     }, (r) => {
       t.looseEqual(r, data)
