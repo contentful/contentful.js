@@ -17,7 +17,7 @@
     "clean": "rimraf dist",
     "build": "npm run clean && npm run build:modules && npm run build:standalone",
     "build:modules": "BABEL_ENV=modules babel lib -d dist/es-modules/",
-    "build:standalone": "webpack && NODE_ENV=production webpack",
+    "build:standalone": "NODE_ENV=development webpack && NODE_ENV=production webpack",
     "build:standalone:log": "NODE_ENV=production WEBPACK_MODE=log webpack --json --profile --progress > webpack-build-log.json && webpack-bundle-analyzer webpack-build-log.json",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
