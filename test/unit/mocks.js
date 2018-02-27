@@ -54,10 +54,19 @@ const assetMock = {
   }
 }
 
+const localeMock = {
+  sys: Object.assign(cloneDeep(sysMock), {
+    type: 'Locale'
+  }),
+  name: 'English. United State',
+  code: 'en-US'
+}
+
 export {
   linkMock,
   sysMock,
   contentTypeMock,
   entryMock,
-  assetMock
+  assetMock,
+  localeMock
 }

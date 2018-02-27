@@ -404,7 +404,14 @@ test('Gets assets', (t) => {
       t.ok(response.items, 'items')
     })
 })
-
+test('Gets Locales', (t) => {
+  t.plan(2)
+  return client.getLocales()
+    .then((response) => {
+      t.ok(response.items, 'items')
+      t.equals(response.items[0].code, 'en-US', 'first locale is en-US')
+    })
+})
 test('Sync space', (t) => {
   t.plan(6)
   return client.sync({initial: true})
