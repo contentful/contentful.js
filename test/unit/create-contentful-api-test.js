@@ -13,6 +13,7 @@ function setupWithData ({
     resolveLinks: true,
     removeUnresolved: false,
     spaceBaseUrl: 'spaceUrl',
+    environment: 'master',
     environmentBaseUrl: 'environementUrl'
   })
 }) {
