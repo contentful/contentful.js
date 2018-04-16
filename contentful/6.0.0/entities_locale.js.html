@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>entities/asset.js - Documentation</title>
+    <title>entities/locale.js - Documentation</title>
 
     <script src="scripts/hljs/highlight.min.js"></script>
     <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">entities/asset.js</h1>
+    <h1 class="page-title">entities/locale.js</h1>
     
 
     
@@ -41,45 +41,41 @@ import {toPlainObject, freezeSys} from 'contentful-sdk-core'
 
 /**
  * @memberof Entities
- * @typedef Asset
+ * @typedef Locale
  * @prop {Entities.Sys} sys - Standard system metadata with additional entry specific properties
- * @prop {string=} sys.locale - If present, indicates the locale which this asset uses
- * @prop {Object} fields - Object with content for each field
- * @prop {string} fields.title - Title for this asset
- * @prop {string} fields.description - Description for this asset
- * @prop {Object} fields.file - File object for this asset
- * @prop {string} fields.file.fileName - Name for the file
- * @prop {string} fields.file.contentType - Mime type for the file
- * @prop {string} fields.file.url - Url where the file is available at.
- * @prop {Object} fields.file.details - Details for the file, depending on file type (example: image size in bytes, etc)
- * @prop {function(): Object} toPlainObject() - Returns this Asset as a plain JS object
+ * @prop {string} name - locale name (example: English)
+ * @prop {string} code - locale code (example: en-US)
+ * @prop {string} fallbackCode - the locale code to fallback to when there is not content for the current locale
+ * @prop {boolean} default - If this is the default locale
+ * @prop {boolean} optional - If the locale needs to be filled in on entries or not
+ * @prop {function(): Object} toPlainObject() - Returns this Locale as a plain JS object
  */
 
 /**
  * @private
- * @param {Object} data - Raw asset data
- * @return {Asset} Wrapped asset data
+ * @param {Object} data - Raw locale data
+ * @return {Locale} Wrapped locale data
  */
-export function wrapAsset (data) {
+export function wrapLocale (data) {
   return freezeSys(toPlainObject(cloneDeep(data)))
 }
 
 /**
  * @memberof Entities
- * @typedef AssetCollection
+ * @typedef LocaleCollection
  * @prop {number} total
  * @prop {number} skip
  * @prop {number} limit
- * @prop {Array&lt;Entities.Asset>} items
- * @prop {function(): Object} toPlainObject() - Returns this Asset collection as a plain JS object
+ * @prop {Array&lt;Entities.Locale>} items
+ * @prop {function(): Object} toPlainObject() - Returns this Locale collection as a plain JS object
  */
 
 /**
  * @private
- * @param {Object} data - Raw asset collection data
- * @return {AssetCollection} Wrapped asset collection data
+ * @param {Object} data - Raw locale collection data
+ * @return {LocaleCollection} Wrapped locale collection data
  */
-export function wrapAssetCollection (data) {
+export function wrapLocaleCollection (data) {
   return freezeSys(toPlainObject(cloneDeep(data)))
 }
 </code></pre>
