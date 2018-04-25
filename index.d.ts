@@ -10,9 +10,12 @@ export interface AxiosProxyConfig {
     };
 }
 
+export type ClientLogLevel = 'error' | 'warning' | 'info';
+
 export interface CreateClientParams {
     space: string;
     accessToken: string;
+    environment?: string;
     insecure?: boolean;
     host?: string;
     basePath?: string;
@@ -23,7 +26,10 @@ export interface CreateClientParams {
     application?: string;
     integration?: string;
     resolveLinks?: boolean;
+    removeUnresolved?: boolean;
     retryOnError?: boolean;
+    logHandler?: (level: ClientLogLevel, data?: any) => void;
+    timeout?: number;
 }
 
 export interface ContentfulClientApi {
