@@ -82,6 +82,40 @@ The Contentful Delivery SDK will be accessible via the `contentful` global varia
 
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
 
+### Angular 6:
+For some unknow reason,for now, Angular 6 fail to compile with the SDK because it tries to pick the node disribution instead of the browser one, to fix that Make sure to add the following in your `tsconfig.json` file
+```js
+"paths":{
+      "contentful": ["./node_modules/contentful/dist/contentful.browser.js"]
+    }
+```
+your `tsconfig.json` should look like this
+
+```js
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "paths":{
+      "contentful": ["./node_modules/contentful/dist/contentful.browser.js"] // add this
+    },
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  }
+}
+```
 ### Legacy browsers:
 
 This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
