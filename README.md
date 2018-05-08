@@ -83,7 +83,7 @@ The Contentful Delivery SDK will be accessible via the `contentful` global varia
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
 
 ### Angular 6:
-For some unknow reason,for now, Angular 6 fail to compile with the SDK because it tries to pick the node disribution instead of the browser one, to fix that Make sure to add the following in your `tsconfig.json` file
+Currently Angular 6 fail to compile with the SDK because it tries to pick the node disribution instead of the browser one, to fix that Make sure to add the following in your `tsconfig.json` file
 ```js
 "paths":{
       "contentful": ["./node_modules/contentful/dist/contentful.browser.js"]
