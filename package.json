@@ -5,6 +5,7 @@
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
   "module": "./dist/es-modules/contentful.js",
+  "browser": "./dist/contentful.browser.js",
   "jsnext:main": "./dist/es-modules/contentful.js",
   "repository": {
     "type": "git",
