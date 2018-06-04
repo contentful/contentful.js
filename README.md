@@ -1,18 +1,44 @@
-# contentful.js
 
-> JavaScript SDK for [Contentful's](https://www.contentful.com) Content Delivery API.
+![header](https://user-images.githubusercontent.com/1737026/40924850-8e920376-6818-11e8-8805-563356d4f3b6.png)
+<p align="center">
+    <a href="https://www.contentful.com/slack/"><img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack"></a>
+    <a href="https://www.contentfulcommunity.com/"><img src="https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600" alt="Join Contentful Community Forum"></a>
+    <a href="https://contentful.github.io/contentful.js">
+        <img src="http://img.shields.io/badge/read_the-docs-2196f3.svg" alt="Documentation">
+    </a>
+</p>
 
-[![npm](https://img.shields.io/npm/v/contentful.svg)](https://www.npmjs.com/package/contentful)
-[![Build Status](https://travis-ci.org/contentful/contentful.js.svg?branch=master)](https://travis-ci.org/contentful/contentful.js)
-[![codecov](https://codecov.io/gh/contentful/contentful.js/branch/master/graph/badge.svg)](https://codecov.io/gh/contentful/contentful.js)
-[![Dependency Status](https://img.shields.io/david/contentful/contentful.js.svg)](https://david-dm.org/contentful/contentful.js)
-[![devDependency Status](https://img.shields.io/david/dev/contentful/contentful.js.svg)](https://david-dm.org/contentful/contentful.js#info=devDependencies)
+# contentful.js - Contentful Javascript Delivery SDK
 
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![npm downloads](https://img.shields.io/npm/dm/contentful.svg)](http://npm-stat.com/charts.html?package=contentful)
-[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip
-)](https://unpkg.com/contentful/dist/contentful.browser.min.js)
+> JavaScript SDK for [Contentful's](https://www.contentful.com) Content Delivery API. It helps you to easily access your Content stored in Contentful with your JavaScript applications.
+
+<p align="center">
+    <img src="https://img.shields.io/badge/Status-Maintained-green.svg" alt="This repository is actively maintained" />
+    <a href="LICENSE">
+        <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="License">
+    </a>
+    <a href="https://travis-ci.org/contentful/contentful.js">
+        <img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status">
+    </a>
+    <a href="https://codecov.io/gh/contentful/contentful.js">
+        <img src="https://codecov.io/gh/contentful/contentful.js/branch/master/graph/badge.svg" alt="Code Coverage">
+    </a>
+    <a href="https://david-dm.org/contentful/contentful.js">
+        <img src="https://img.shields.io/david/contentful/contentful.js.svg" alt="Dependency Status">
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://www.npmjs.com/package/contentful">
+        <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
+    </a>
+    <a href="http://npm-stat.com/charts.html?package=contentful">
+        <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
+    </a>
+    <a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
+        <img src="http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
+    </a>
+</p>
 
 [Contentful](https://www.contentful.com) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
 
@@ -23,6 +49,7 @@
 - [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
 - [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
 - Built in rate limiting with recovery procedures
+- Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/) (**since v6 - 06. April 2018**)
 
 Browsers and Node.js:
 - Chrome
@@ -394,6 +421,10 @@ If you have a problem with this library, please file an [issue](https://github.c
 If you have other problems with Contentful not related to this library, you can contact [Customer Support](https://support.contentful.com).
 
 ## Contributing
+
+[![devDependency Status](https://img.shields.io/david/dev/contentful/contentful.js.svg)](https://david-dm.org/contentful/contentful.js#info=devDependencies)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
