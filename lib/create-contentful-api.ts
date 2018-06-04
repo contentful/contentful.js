@@ -45,9 +45,12 @@
  * @prop {function} sync
  */
 
-import {createRequestConfig} from 'contentful-sdk-core'
+import {createRequestConfig, ContentfulQuery} from 'contentful-sdk-core'
 import entities from './entities'
 import pagedSync from './paged-sync'
+import { AxiosInstance } from '@contentful/axios';
+import { GlobalOptionGetter } from './create-global-options';
+import { ContentfulClientApi, EntryCollection } from './interfaces';
 
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -59,7 +62,13 @@ import pagedSync from './paged-sync'
  * @prop {Function} getGlobalOptions - Link resolver preconfigured with global setting
  * @return {ClientAPI}
  */
-export default function createContentfulApi ({http, getGlobalOptions}) {
+export default function createContentfulApi ({
+  http, 
+  getGlobalOptions
+}: {
+  http: AxiosInstance, 
+  getGlobalOptions: GlobalOptionGetter
+}) : ContentfulClientApi {
   const {wrapSpace} = entities.space
   const {wrapContentType, wrapContentTypeCollection} = entities.contentType
   const {wrapEntry, wrapEntryCollection} = entities.entry
@@ -80,7 +89,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
     return error
   }
 
-  function errorHandler (error) {
+  function errorHandler (error: any) {
     if (error.data) {
       throw error.data
     }
@@ -126,7 +135,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * .then((contentType) => console.log(contentType))
    * .catch(console.error)
    */
-  function getContentType (id) {
+  function getContentType (id: string) {
     switchToEnvironment(http)
     return http.get('content_types/' + id)
       .then((response) => wrapContentType(response.data), errorHandler)
@@ -149,7 +158,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getContentTypes (query = {}) {
+  function getContentTypes (query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     return http.get('content_types', createRequestConfig({query: query}))
       .then((response) => wrapContentTypeCollection(response.data), errorHandler)
@@ -173,6 +182,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * .then((entry) => console.log(entry))
    * .catch(console.error)
    */
+<<<<<<< HEAD:lib/create-contentful-api.js
   function getEntry (id, query = {}) {
     return this.getEntries({'sys.id': id, ...query})
       .then((response) => {
@@ -181,6 +191,13 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
         }
         throw notFoundError(id)
       }, errorHandler)
+=======
+  function getEntry (id: string, query = {}) {
+    switchToEnvironment(http)
+    normalizeSelect(query)
+    return http.get('entries/' + id, createRequestConfig({query: query}))
+      .then((response) => wrapEntry(response.data), errorHandler)
+>>>>>>> convert options and api:lib/create-contentful-api.ts
   }
 
   /**
@@ -225,7 +242,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * .then((asset) => console.log(asset))
    * .catch(console.error)
    */
-  function getAsset (id, query = {}) {
+  function getAsset (id:string, query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     normalizeSelect(query)
     return http.get('assets/' + id, createRequestConfig({query: query}))
@@ -249,7 +266,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getAssets (query = {}) {
+  function getAssets (query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     normalizeSelect(query)
     return http.get('assets', createRequestConfig({query: query}))
@@ -273,7 +290,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getLocales (query = {}) {
+  function getLocales (query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     return http.get('locales', createRequestConfig({query: query}))
       .then((response) => wrapLocaleCollection(response.data), errorHandler)
@@ -349,7 +366,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
   * let parsedData = client.parseEntries(data);
   * console.log( parsedData.items[0].fields.foo ); // foo
   */
-  function parseEntries (data) {
+  function parseEntries<T> (data: EntryCollection<T>): EntryCollection<T> {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     return wrapEntryCollection(data, { resolveLinks, removeUnresolved })
   }
@@ -357,7 +374,7 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
    * sdk relies heavily on sys metadata
    * so we cannot omit the sys property on sdk level
    * */
-  function normalizeSelect (query) {
+  function normalizeSelect (query: ContentfulQuery) {
     if (query.select && !/sys/i.test(query.select)) {
       query.select += ',sys'
     }
@@ -366,14 +383,14 @@ export default function createContentfulApi ({http, getGlobalOptions}) {
   /*
    * Switches BaseURL to use /environments path
    * */
-  function switchToEnvironment (http) {
+  function switchToEnvironment (http: AxiosInstance) {
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
   /*
    * Switches BaseURL to use /spaces path
    * */
-  function switchToSpace (http) {
+  function switchToSpace (http: AxiosInstance) {
     http.defaults.baseURL = getGlobalOptions().spaceBaseUrl
   }
 
