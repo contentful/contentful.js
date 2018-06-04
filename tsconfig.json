@@ -6,10 +6,10 @@
     "rootDir": "lib",
     "outDir": "dist",
     "sourceMap": false,
-    "strict": false,
+    "strict": true,
     "moduleResolution": "node"
   },
   "include": [
-    "./lib/"
+    "./lib/**/*"
   ]
 }

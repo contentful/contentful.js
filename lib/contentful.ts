@@ -6,6 +6,7 @@
  */
 
 import axios from '@contentful/axios'
+// TODO: fix the decalration
 import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
 import createContentfulApi from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
@@ -44,7 +45,32 @@ let __VERSION__:string;
  * })
  */
 
-export function createClient (params) {
+// TODO: write a proper definition for the http agent
+interface HttpAgent {
+
+}
+interface ContentfulOptions {
+  space: string;
+  accessToken: string;
+  environment?: string;
+  insecure?: boolean;
+  host?: string;
+  basePath?: string;
+  httpAgent?: HttpAgent;
+  httpsAgent?: HttpAgent;
+  proxy?: any;
+  headers?: {
+    [key:string]: any
+  };
+  resolveLinks?: boolean;
+  removeUnresolved?: boolean;
+  retryOnError?: boolean;
+  logHandler?: (level: string) => void;
+  application?: string;
+  integration?: string;
+  timeout?: number;
+}
+export function createClient (params: ContentfulOptions) {
   if (!params.accessToken) {
     throw new TypeError('Expected parameter accessToken')
   }
