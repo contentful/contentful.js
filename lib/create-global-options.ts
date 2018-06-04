@@ -1,11 +1,11 @@
 import { ContentfulQuery } from "contentful-sdk-core";
 
-interface ContentfulGlobalOptions {
-  resolveLinks?: boolean,
-  environment?: string,
-  removeUnresolved?: boolean,
-  spaceBaseUrl?: string,
-  environmentBaseUrl?: string
+export interface ContentfulGlobalOptions {
+  resolveLinks: boolean,
+  environment: string,
+  removeUnresolved: boolean,
+  spaceBaseUrl: string,
+  environmentBaseUrl: string
 }
 
 export type GlobalOptionGetter = (query?: ContentfulQuery) => ContentfulGlobalOptions;

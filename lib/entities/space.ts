@@ -1,4 +1,5 @@
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
+import { ContentfulCollectionResponse, SpaceJSON, Space } from '../interfaces';
 
 /**
  * @memberof Entities
@@ -16,6 +17,6 @@ import {toPlainObject, freezeSys} from 'contentful-sdk-core'
  * @param  {Object} data - API response for a Space
  * @return {Space}
  */
-export function wrapSpace (data) {
-  return freezeSys(toPlainObject(data))
+export function wrapSpace (data: SpaceJSON): Space {
+  return freezeSys(toPlainObject<SpaceJSON, Space>(data))
 }

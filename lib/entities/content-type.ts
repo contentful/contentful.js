@@ -1,5 +1,6 @@
-import cloneDeep from 'lodash/cloneDeep'
+import { cloneDeep } from 'lodash'
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
+import { ContentTypeJSON, ContentType, ContentfulCollectionResponse, ContentfulCollection } from '../interfaces';
 
 /**
  * @memberof Entities
@@ -17,8 +18,8 @@ import {toPlainObject, freezeSys} from 'contentful-sdk-core'
  * @param {Object} data - Raw content type data
  * @return {ContentType} Wrapped content type data
  */
-export function wrapContentType (data) {
-  return freezeSys(toPlainObject(cloneDeep(data)))
+export function wrapContentType (data: ContentTypeJSON): ContentType {
+  return freezeSys(toPlainObject<ContentTypeJSON, ContentType>(cloneDeep(data)))
 }
 
 /**
@@ -36,6 +37,6 @@ export function wrapContentType (data) {
  * @param {Object} data - Raw content type collection data
  * @return {ContentTypeCollection} Wrapped content type collection data
  */
-export function wrapContentTypeCollection (data) {
-  return freezeSys(toPlainObject(cloneDeep(data)))
+export function wrapContentTypeCollection (data: ContentfulCollectionResponse<ContentTypeJSON>): ContentfulCollection<ContentTypeJSON> {
+  return freezeSys(toPlainObject<ContentfulCollectionResponse<ContentTypeJSON>, ContentfulCollection<ContentTypeJSON>>(cloneDeep(data)))
 }

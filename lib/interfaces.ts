@@ -1,6 +1,4 @@
 import { ContentfulQuery, Plainable } from 'contentful-sdk-core';
-import { Plainable } from 'contentful-sdk-core';
-import { Omit } from 'contentful-sdk-core';
 
 // Type definitions for contentful
 // Definitions by: Miika Hänninen <https://github.com/googol>
@@ -45,11 +43,11 @@ export interface ContentfulClientApi {
   getEntry<T>(id: string, query?: ContentfulQuery): Promise<Entry<T>>;
   getSpace(): Promise<Space>;
   getLocales(query: ContentfulQuery): Promise<LocaleCollection>;
-  parseEntries<T>(data: EntryCollection<T>): EntryCollection<T>;
-  sync(query: ContentfulQuery): Promise<SyncCollection>;
+  parseEntries<T>(data: ContentfulCollectionResponse<EntryJSON<T>>): EntryCollection<T>;
+  sync<T>(query: ContentfulQuery): Promise<SyncCollection<T>>;
 }
 
-export interface Locale {
+export interface LocaleJSON {
   sys: Sys;
   name: string;
   code: string;
@@ -59,6 +57,8 @@ export interface Locale {
   default: boolean;
   optional: boolean;
 }
+
+export interface Locale extends LocaleJSON, Plainable<LocaleJSON> {}
 
 export interface AssetJSON {
   sys: Sys;
@@ -74,9 +74,7 @@ export interface AssetJSON {
   };
 }
 
-export interface Asset extends AssetJSON {
-  toPlainObject(): AssetJSON;
-}
+export interface Asset extends AssetJSON, Plainable<AssetJSON> {}
 
 export interface ContentfulCollectionResponse<T> {
   sys: {
@@ -92,47 +90,63 @@ export interface ContentfulCollection<T> {
 }
 
 export type AssetCollection = ContentfulCollection<AssetJSON>;
-export type LocaleCollection = ContentfulCollection<Locale>;
+export type LocaleCollection = ContentfulCollection<LocaleJSON>;
 
-export interface Entry<T> {
+export interface EntryJSON<T> {
   sys: Sys;
   fields: T;
-  toPlainObject(): Entry<T>;
 }
+
+export interface Entry<T> extends EntryJSON<T>, Plainable<EntryJSON<T>> {}
 
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
   errors?: Array<any>;
-  includes?: any;
+  includes?: Array<EntryJSON<T> | AssetJSON>;
   stringifySafe(replacer: any, space: any): string;
 }
 
-export interface ContentType {
+export interface ContentTypeJSON {
   sys: Sys;
   name: string;
   description: string;
   displayField: string;
   fields: Array<Field>;
-  toPlainObject(): ContentType;
 }
+
+export interface ContentType
+  extends ContentTypeJSON,
+    Plainable<ContentTypeJSON> {}
 
 export type ContentTypeCollection = ContentfulCollection<ContentType>;
 
-export interface Space {
+export interface SpaceJSON {
   sys: Sys;
   name: string;
   locales: Array<string>;
-  toPlainObject(): Space;
 }
 
-export interface SyncCollection {
-  entries: Array<Entry<any>>;
-  assets: Array<Asset>;
-  deletedEntries: Array<Entry<any>>;
-  deletedAssets: Array<Asset>;
+export interface Space extends SpaceJSON,  Plainable<SpaceJSON> {}
+
+export interface SyncCollectionResponse<T> {
+  items: Array<EntryJSON<T> | AssetJSON>;
   nextSyncToken: string;
-  toPlainObject(): SyncCollection;
+}
+
+export interface SyncCollectionJSON<T> {
+  entries: Entry<T>[];
+  assets: Asset[];
+  deletedEntries: Entry<T>[];
+  deletedAssets: Asset[];
+  nextSyncToken: string;
+}
+
+export interface SafeStringifyible {
   stringifySafe(replacer: any, space: any): string;
 }
+export interface SyncCollection<T>
+  extends SyncCollectionJSON<T>,
+    Plainable<SyncCollectionJSON<T>>,
+    SafeStringifyible {}
 
 export interface Sys {
   type: string;
@@ -161,5 +175,3 @@ export interface Field {
   required: boolean;
   type: string;
 }
-
-// export function createClient(params: CreateClientParams): ContentfulClientApi;

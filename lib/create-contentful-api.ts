@@ -50,7 +50,7 @@ import entities from './entities'
 import pagedSync from './paged-sync'
 import { AxiosInstance } from '@contentful/axios';
 import { GlobalOptionGetter } from './create-global-options';
-import { ContentfulClientApi, AssetJSON, Asset, ContentfulCollectionResponse } from './interfaces';
+import { ContentfulClientApi, AssetJSON, Asset, ContentfulCollectionResponse, EntryJSON, ContentTypeJSON, ContentType, ContentfulCollection, LocaleJSON, Entry, EntryCollection, SpaceJSON, Space } from './interfaces';
 
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -112,10 +112,15 @@ export default function createContentfulApi ({
    * .then((space) => console.log(space))
    * .catch(console.error)
    */
-  function getSpace () {
+  async function getSpace (): Promise<Space> {
     switchToSpace(http)
-    return http.get('')
-      .then((response) => wrapSpace(response.data), errorHandler)
+
+    try {
+      const response = await http.get<SpaceJSON>('')
+      return wrapSpace(response.data)
+    } catch (error) {
+      return errorHandler(error)
+    }
   }
 
   /**
@@ -131,18 +136,20 @@ export default function createContentfulApi ({
    * .then((contentType) => console.log(contentType))
    * .catch(console.error)
    */
-  function getContentType (id: string) {
+  async function getContentType (id: string) : Promise<ContentType>{
     switchToEnvironment(http)
-    return http.get('content_types/' + id)
-      .then((response) => wrapContentType(response.data), errorHandler)
+
+    try {
+      const response = await http.get<ContentTypeJSON>('content_types/' + id);
+
+      return wrapContentType(response.data);
+    } catch (error) {
+      return errorHandler(error);
+    }
   }
 
   /**
    * Gets a collection of Content Types
-   * @memberof ContentfulClientAPI
-   * @param  {Object=} query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
-   * @return {Promise<Entities.ContentTypeCollection>} Promise for a collection of Content Types
-   * @example
    * const contentful = require('contentful')
    *
    * const client = contentful.createClient({
@@ -154,10 +161,16 @@ export default function createContentfulApi ({
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getContentTypes (query: ContentfulQuery = {}) {
+  async function getContentTypes(query: ContentfulQuery = {}): Promise<ContentfulCollection<ContentTypeJSON>> {
     switchToEnvironment(http)
-    return http.get('content_types', createRequestConfig({query: query}))
-      .then((response) => wrapContentTypeCollection(response.data), errorHandler)
+
+    try {
+      const response = await http.get<ContentfulCollectionResponse<ContentTypeJSON>>('content_types', createRequestConfig({ query: query }));
+
+      return wrapContentTypeCollection(response.data);
+    } catch (error) {
+      return errorHandler(error);
+    }
   }
 
   /**
@@ -178,23 +191,18 @@ export default function createContentfulApi ({
    * .then((entry) => console.log(entry))
    * .catch(console.error)
    */
-<<<<<<< HEAD
-<<<<<<< HEAD:lib/create-contentful-api.js
-  function getEntry (id, query = {}) {
-    return this.getEntries({'sys.id': id, ...query})
-      .then((response) => {
-        if (response.items.length > 0) {
-          return wrapEntry(response.items[0])
-        }
-        throw notFoundError(id)
-      }, errorHandler)
 
-  function getEntry (id: string, query: ContentfulQuery = {}) {
+  async function getEntry<T> (id: string, query: ContentfulQuery = {}): Promise<Entry<T>> {
+
     switchToEnvironment(http)
     normalizeSelect(query)
 
-    return http.get('entries/' + id, createRequestConfig({query: query}))
-      .then((response) => wrapEntry(response.data), errorHandler)
+    try {
+      const response = await http.get<EntryJSON<T>>('entries/' + id, createRequestConfig({query: query}))
+      return wrapEntry<T>(response.data)
+    } catch (error) {
+      return errorHandler(error)
+    }
   }
   
   /**
@@ -214,12 +222,18 @@ export default function createContentfulApi ({
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getEntries (query = {}) {
+  async function getEntries<T> (query: ContentfulQuery = {}): Promise<EntryCollection<T>> {
+    // TODO: remove duplicate code maybe have a generic makeRequest<T> function?
     switchToEnvironment(http)
-    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
     normalizeSelect(query)
-    return http.get('entries', createRequestConfig({query: query}))
-      .then((response) => wrapEntryCollection(response.data, { resolveLinks, removeUnresolved }), errorHandler)
+    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
+    
+    try {
+      const response = await http.get<ContentfulCollectionResponse<EntryJSON<T>>>('entries', createRequestConfig({query: query}))
+      return wrapEntryCollection<T>(response.data, { resolveLinks, removeUnresolved })
+    } catch (error) {
+      return errorHandler(error)
+    }
   }
   /**
    * Gets an Asset
@@ -291,10 +305,16 @@ export default function createContentfulApi ({
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getLocales (query: ContentfulQuery = {}) {
+  async function getLocales (query: ContentfulQuery = {}): Promise<ContentfulCollection<LocaleJSON>> {
     switchToEnvironment(http)
-    return http.get('locales', createRequestConfig({query: query}))
-      .then((response) => wrapLocaleCollection(response.data), errorHandler)
+
+    try {
+      const response = await http.get<ContentfulCollectionResponse<LocaleJSON>>('locales', createRequestConfig({query: query}));
+
+      return wrapLocaleCollection(response.data);
+    } catch (error) {
+      return errorHandler(error);
+    }
   }
 
   /**
@@ -367,9 +387,9 @@ export default function createContentfulApi ({
   * let parsedData = client.parseEntries(data);
   * console.log( parsedData.items[0].fields.foo ); // foo
   */
-  function parseEntries<T> (data: EntryCollection<T>): EntryCollection<T> {
+  function parseEntries<T> (data: ContentfulCollectionResponse<EntryJSON<T>>) {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
-    return wrapEntryCollection(data, { resolveLinks, removeUnresolved })
+    return wrapEntryCollection<T>(data, { resolveLinks, removeUnresolved })
   }
   /*
    * sdk relies heavily on sys metadata

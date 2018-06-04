@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
+import { cloneDeep } from 'lodash'
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
 import { AssetJSON, Asset, AssetCollection, ContentfulCollectionResponse } from '../interfaces';
 

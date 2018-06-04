@@ -1,7 +1,9 @@
-import cloneDeep from 'lodash/cloneDeep'
+import {cloneDeep} from 'lodash'
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
 import mixinStringifySafe from '../mixins/stringify-safe'
 import resolveResponse from 'contentful-resolve-response'
+import { ContentfulCollectionResponse, EntryJSON, Entry, ContentfulCollection, EntryCollection } from '../interfaces';
+import { ContentfulGlobalOptions } from '../create-global-options';
 
 /**
  * Types of fields found in an Entry
@@ -73,8 +75,8 @@ import resolveResponse from 'contentful-resolve-response'
  * @param {Object} data - Raw entry data
  * @return {Entry} Wrapped entry data
  */
-export function wrapEntry (data) {
-  return freezeSys(toPlainObject(cloneDeep(data)))
+export function wrapEntry<T> (data: EntryJSON<T>): Entry<T> {
+  return freezeSys(toPlainObject<EntryJSON<T>, Entry<T>>(cloneDeep(data)))
 }
 
 /**
@@ -97,8 +99,13 @@ export function wrapEntry (data) {
  * @param {Object} options - wrapper options
  * @return {EntryCollection} Wrapped entry collection data
  */
-export function wrapEntryCollection (data, {resolveLinks, removeUnresolved}) {
-  const wrappedData = mixinStringifySafe(toPlainObject(cloneDeep(data)))
+export interface EntryCollectionOption {
+  resolveLinks: boolean;
+  removeUnresolved: boolean;
+}
+
+export function wrapEntryCollection<T> (data: ContentfulCollectionResponse<EntryJSON<T>>, { resolveLinks, removeUnresolved }: EntryCollectionOption): EntryCollection<T> {
+  const wrappedData = mixinStringifySafe(toPlainObject<ContentfulCollectionResponse<EntryJSON<T>>, ContentfulCollection<EntryJSON<T>>>(cloneDeep(data)))
   if (resolveLinks) {
     wrappedData.items = resolveResponse(wrappedData, {removeUnresolved, itemEntryPoints: ['fields']})
   }
