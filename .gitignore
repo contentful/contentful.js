@@ -159,3 +159,6 @@ $RECYCLE.BIN/
 *.patch
 
 # End of https://www.gitignore.io/api/node,windows,osx,linux,vim
+
+# Awesome TS Loader cache folder
+.awcache

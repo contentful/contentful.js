@@ -10,6 +10,8 @@ import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
 import createContentfulApi from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
+let __VERSION__:string;
+
 /**
  * Create a client instance
  * @func

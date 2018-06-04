@@ -35,15 +35,16 @@ const baseFileName = `contentful`
 const baseBundleConfig = {
   mode: PROD ? 'production' : 'development',
   context: path.join(__dirname, 'lib'),
-  entry: [`./${baseFileName}.js`],
+  entry: [`./${baseFileName}.ts`],
   output: {
     path: path.join(__dirname, 'dist'),
     libraryTarget: 'umd',
     library: 'contentful'
   },
   module: {
-    rules: []
+    rules: [{ enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }]
   },
+  resolve: { extensions: ['.ts', '.js'] },
   devtool: PROD ? false : 'source-map',
   plugins,
   node: {
@@ -55,32 +56,28 @@ const baseBundleConfig = {
 }
 
 const defaultBabelLoader = {
-  test: /\.js?$/,
-  exclude: /node_modules/,
-  loader: 'babel-loader',
-  options: {}
+  test: /\.(t|j)sx?$/,
+  use: { loader: 'awesome-typescript-loader',
+    options: {
+      useCache: true,
+      useBabel: true,
+      babelOptions: {
+        babelrc: true
+      },
+      babelCore: 'babel-core'
+    }
+  },
+  exclude: /node_modules/
 }
 
 // Browsers
 const browserBundle = clone(baseBundleConfig)
-browserBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'browser'
-    })
-  })
-]
+browserBundle.module.rules.push(defaultBabelLoader)
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
 // Legacy browsers like IE11
 const legacyBundle = clone(baseBundleConfig)
-legacyBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'legacy'
-    })
-  })
-]
+legacyBundle.module.rules.push(defaultBabelLoader)
 // To be replaced with babel-polyfill with babel-preset-env 2.0:
 // https://github.com/babel/babel-preset-env#usebuiltins
 // https://github.com/babel/babel-preset-env/pull/241
@@ -96,13 +93,8 @@ legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
 
 // Node
 const nodeBundle = clone(baseBundleConfig)
-nodeBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'node'
-    })
-  })
-]
+nodeBundle.module.rules.push(defaultBabelLoader)
+
 nodeBundle.target = 'node'
 nodeBundle.output.libraryTarget = 'commonjs2'
 nodeBundle.output.filename = `${baseFileName}.node${PROD ? '.min' : ''}.js`
