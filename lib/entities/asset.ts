@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
+import { AssetJSON, Asset, AssetCollection, ContentfulCollectionResponse } from '../interfaces';
 
 /**
  * @memberof Entities
@@ -22,8 +23,8 @@ import {toPlainObject, freezeSys} from 'contentful-sdk-core'
  * @param {Object} data - Raw asset data
  * @return {Asset} Wrapped asset data
  */
-export function wrapAsset (data) {
-  return freezeSys(toPlainObject(cloneDeep(data)))
+export function wrapAsset (data: AssetJSON): Asset {
+  return freezeSys(toPlainObject<AssetJSON, Asset>(cloneDeep(data)))
 }
 
 /**
@@ -41,6 +42,6 @@ export function wrapAsset (data) {
  * @param {Object} data - Raw asset collection data
  * @return {AssetCollection} Wrapped asset collection data
  */
-export function wrapAssetCollection (data) {
+export function wrapAssetCollection (data: ContentfulCollectionResponse<AssetJSON>): AssetCollection {
   return freezeSys(toPlainObject(cloneDeep(data)))
 }

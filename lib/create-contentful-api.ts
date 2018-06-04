@@ -50,7 +50,7 @@ import entities from './entities'
 import pagedSync from './paged-sync'
 import { AxiosInstance } from '@contentful/axios';
 import { GlobalOptionGetter } from './create-global-options';
-import { ContentfulClientApi, EntryCollection } from './interfaces';
+import { ContentfulClientApi, AssetJSON, Asset, ContentfulCollectionResponse } from './interfaces';
 
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -89,7 +89,7 @@ export default function createContentfulApi ({
     return error
   }
 
-  function errorHandler (error: any) {
+  function errorHandler (error: any): never {
     if (error.data) {
       throw error.data
     }
@@ -120,11 +120,7 @@ export default function createContentfulApi ({
 
   /**
    * Gets a Content Type
-   * @memberof ContentfulClientAPI
-   * @param  {string} id
-   * @return {Promise<Entities.ContentType>} Promise for a Content Type
-   * @example
-   * const contentful = require('contentful')
+  * const contentful = require('contentful')
    *
    * const client = contentful.createClient({
    *   space: '<space_id>',
@@ -182,6 +178,7 @@ export default function createContentfulApi ({
    * .then((entry) => console.log(entry))
    * .catch(console.error)
    */
+<<<<<<< HEAD
 <<<<<<< HEAD:lib/create-contentful-api.js
   function getEntry (id, query = {}) {
     return this.getEntries({'sys.id': id, ...query})
@@ -191,15 +188,15 @@ export default function createContentfulApi ({
         }
         throw notFoundError(id)
       }, errorHandler)
-=======
-  function getEntry (id: string, query = {}) {
+
+  function getEntry (id: string, query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     normalizeSelect(query)
+
     return http.get('entries/' + id, createRequestConfig({query: query}))
       .then((response) => wrapEntry(response.data), errorHandler)
->>>>>>> convert options and api:lib/create-contentful-api.ts
   }
-
+  
   /**
    * Gets a collection of Entries
    * @memberof ContentfulClientAPI
@@ -226,11 +223,6 @@ export default function createContentfulApi ({
   }
   /**
    * Gets an Asset
-   * @memberof ContentfulClientAPI
-   * @param  {string} id
-   * @param  {Object=} query - Object with search parameters. In this method it's only useful for `locale`.
-   * @return {Promise<Entities.Asset>} Promise for an Asset
-   * @example
    * const contentful = require('contentful')
    *
    * const client = contentful.createClient({
@@ -242,19 +234,23 @@ export default function createContentfulApi ({
    * .then((asset) => console.log(asset))
    * .catch(console.error)
    */
-  function getAsset (id:string, query: ContentfulQuery = {}) {
+    async function getAsset (id:string, query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     normalizeSelect(query)
-    return http.get('assets/' + id, createRequestConfig({query: query}))
-      .then((response) => wrapAsset(response.data), errorHandler)
+
+    try{
+      const response = await http.get<AssetJSON>('assets/' + id, createRequestConfig({query: query}));
+
+      return wrapAsset(response.data)
+    } catch (error) {
+      return errorHandler(error);
+    }
   }
+
+  
 
   /**
    * Gets a collection of Assets
-   * @memberof ContentfulClientAPI
-   * @param  {Object=} query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
-   * @return {Promise<Entities.AssetCollection>} Promise for a collection of Assets
-   * @example
    * const contentful = require('contentful')
    *
    * const client = contentful.createClient({
@@ -266,11 +262,16 @@ export default function createContentfulApi ({
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  function getAssets (query: ContentfulQuery = {}) {
+  async function getAssets (query: ContentfulQuery = {}) {
     switchToEnvironment(http)
     normalizeSelect(query)
-    return http.get('assets', createRequestConfig({query: query}))
-      .then((response) => wrapAssetCollection(response.data), errorHandler)
+
+    try {
+      const response = await http.get<ContentfulCollectionResponse<AssetJSON>>('assets', createRequestConfig({query: query}));
+      return wrapAssetCollection(response.data);
+    } catch (error) {
+      return errorHandler(error);
+    }
   }
 
   /**

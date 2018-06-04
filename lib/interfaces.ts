@@ -1,4 +1,6 @@
-import { ContentfulQuery } from 'contentful-sdk-core';
+import { ContentfulQuery, Plainable } from 'contentful-sdk-core';
+import { Plainable } from 'contentful-sdk-core';
+import { Omit } from 'contentful-sdk-core';
 
 // Type definitions for contentful
 // Definitions by: Miika Hänninen <https://github.com/googol>
@@ -58,7 +60,7 @@ export interface Locale {
   optional: boolean;
 }
 
-export interface Asset {
+export interface AssetJSON {
   sys: Sys;
   fields: {
     title: string;
@@ -70,18 +72,26 @@ export interface Asset {
       contentType: string;
     };
   };
-  toPlainObject(): Asset;
 }
 
-export interface ContentfulCollection<T> {
+export interface Asset extends AssetJSON {
+  toPlainObject(): AssetJSON;
+}
+
+export interface ContentfulCollectionResponse<T> {
+  sys: {
+    type: string;
+  };
   total: number;
   skip: number;
   limit: number;
-  items: Array<T>;
-  toPlainObject(): this;
+  items: T[];
+}
+export interface ContentfulCollection<T> {
+  toPlainObject(): ContentfulCollectionResponse<T>;
 }
 
-export type AssetCollection = ContentfulCollection<Asset>;
+export type AssetCollection = ContentfulCollection<AssetJSON>;
 export type LocaleCollection = ContentfulCollection<Locale>;
 
 export interface Entry<T> {
