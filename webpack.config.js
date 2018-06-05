@@ -57,16 +57,7 @@ const baseBundleConfig = {
 
 const defaultBabelLoader = {
   test: /\.(t|j)sx?$/,
-  use: { loader: 'awesome-typescript-loader',
-    options: {
-      useCache: true,
-      useBabel: true,
-      babelOptions: {
-        babelrc: true
-      },
-      babelCore: 'babel-core'
-    }
-  },
+  use: { loader: 'ts-loader' },
   exclude: /node_modules/
 }
 

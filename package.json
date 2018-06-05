@@ -115,6 +115,7 @@
     "tap-spec": "^4.1.1",
     "travis-deploy-once": "^4.4.1",
     "trevor": "^2.2.0",
+    "ts-loader": "^4.3.1",
     "typescript": "^2.9.1",
     "webpack": "^4.0.0",
     "webpack-bundle-analyzer": "^2.11.0",
