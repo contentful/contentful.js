@@ -1,63 +1,44 @@
 ![header](https://user-images.githubusercontent.com/1737026/40924850-8e920376-6818-11e8-8805-563356d4f3b6.png)
-
-<table border="0" align="center">
-    <tr>
-      <td>
-        <a href="https://www.contentful.com/slack/">
-          <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
-        </a>
-      </td>
-      <td>
-        <a href="https://www.contentfulcommunity.com/">
-          <img src="https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600"
-            alt="Join Contentful Community Forum">
-        </a>
-      </td>
-    </tr>
-  </table>
+<p align="center">
+  <a href="https://www.contentful.com/slack/">
+    <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
+  </a>
+  &nbsp;
+  <a href="https://www.contentfulcommunity.com/">
+    <img src="https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600"
+      alt="Join Contentful Community Forum">
+  </a>
+</p>
 
 # contentful.js - Contentful JavaScript Delivery SDK
 
 > JavaScript SDK for [Contentful's](https://www.contentful.com) Content Delivery API. It helps you to easily access your Content stored in Contentful with your JavaScript applications.
 
-<table border="0" align="center">
-  <tr>
-    <td>
-      <img src="https://img.shields.io/badge/Status-Maintained-green.svg" alt="This repository is actively maintained" />
-    </td>
-    <td>
-      <a href="LICENSE">
-        <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
-      </a>
-    </td>
-    <td>
-      <a href="https://travis-ci.org/contentful/contentful.js">
-        <img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status">
-      </a>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Maintained-green.svg" alt="This repository is actively maintained" /> &nbsp;
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
+  </a>
+  &nbsp;
+  <a href="https://travis-ci.org/contentful/contentful.js">
+    <img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status">
+  </a>
+</p>
 
 
-<table border="0" align="center">
-  <tr>
-    <td>
-      <a href="https://www.npmjs.com/package/contentful">
-        <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
-      </a>
-    </td>
-    <td>
-      <a href="http://npm-stat.com/charts.html?package=contentful">
-        <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
-      </a>
-    </td>
-    <td>
-      <a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
-        <img src="http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
-      </a>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <a href="https://www.npmjs.com/package/contentful">
+    <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
+  </a>
+  &nbsp;
+  <a href="http://npm-stat.com/charts.html?package=contentful">
+    <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
+  </a>
+  &nbsp;
+  <a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
+    <img src="http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
+  </a>
+</p>
 
 <details>
   <summary>
@@ -95,13 +76,10 @@ Other browsers should also work, but at the moment we're only running automated 
 In order to get started with the Contentful JS SDK you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.
 
 - [Installation](#installation)
-- [Authentication](#authentication)
-- [Using ES6 import](#using-es6-import)
 - [Your first request](#your-first-request)
 - [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
-- [Advanced features](#advanced-features)
-- [Troubleshooting](#troubleshooting)
-- [Documentation/References](#documentationreferences)
+- [Authentication](#authentication)
+- [Documentation & References](#documentationreferences)
 
 ### ☁️ Installation
 
@@ -188,7 +166,7 @@ Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
 
-## 📚 Documentation / References
+## 📚 Documentation & References
 
 <table border="0" align="center">
   <tr>
@@ -247,35 +225,35 @@ contentful.createClient({
     </tr>
     <tr>
       <td>host</td>
-      <td>`'cdn.contentful.com'`</td>
+      <td><code>'cdn.contentful.com'</code></td>
       <td>
         Set the host used to build the request URI's.
       </td>
     </tr>
     <tr>
       <td>basePath</td>
-      <td>``</td>
+      <td><code></code></td>
       <td>
         This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.
       </td>
     </tr>
     <tr>
       <td>httpAgent</td>
-      <td>`undefined`</td>
+      <td><code>undefined</code></td>
       <td>
         Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
       </td>
     </tr>
     <tr>
       <td>httpsAgent</td>
-      <td>`undefined`</td>
+      <td><code>undefined</code></td>
       <td>
         Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
       </td>
     </tr>
     <tr>
       <td>headers</td>
-      <td>`{}`</td>
+      <td><code>{}</code></td>
       <td>
         Additional headers to attach to the requests. We add/overwrite the following headers: - Content-Type: `application/vnd.contentful.management.v1+json`
         - X-Contentful-User-Agent: `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)
@@ -283,7 +261,7 @@ contentful.createClient({
     </tr>
     <tr>
       <td>proxy</td>
-      <td>`undefined`</td>
+      <td><code>undefined</code></td>
       <td>
         Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config)
         for further information about the supported values.
@@ -291,21 +269,21 @@ contentful.createClient({
     </tr>
     <tr>
       <td>resolveLinks</td>
-      <td>`true`</td>
+      <td><code>true</code></td>
       <td>
         Turn off to disable link resolving.
       </td>
     </tr>
     <tr>
       <td>removeUnresolved</td>
-      <td>`false`</td>
+      <td><code>false</code></td>
       <td>
         Remove fields from response for unresolved links.
       </td>
     </tr>
     <tr>
       <td>retryOnError</td>
-      <td>`true`</td>
+      <td><code>true</code></td>
       <td>
         By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false`
         to disable this behavior.
@@ -313,7 +291,7 @@ contentful.createClient({
     </tr>
     <tr>
       <td>logHandler</td>
-      <td>`function (level, data) {}`</td>
+      <td><code>function (level, data) {}</code></td>
       <td>
         Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here
         and handle errors, warnings and info on your own.
