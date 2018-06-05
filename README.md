@@ -377,7 +377,7 @@ We appreciate any help on our repositories. For more details about how to contri
 
 ## 📜 License
 
-This repository is released under the [MIT](LICENSE).
+This repository is published under the [MIT](LICENSE) license.
 
 ## 🗣 Code of Conduct
 
