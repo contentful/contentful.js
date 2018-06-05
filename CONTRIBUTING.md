@@ -1,16 +1,20 @@
 # Contributing for `contentful.js`
 
-<table border="0" align="center">
-  <tr>
-    <td><a href="todo"><img src="" alt="todo"/></a></td>
-    <td><a href="todo"><img src="" alt="todo"/></a></td>
-    <td><a href="todo"><img src="" alt="todo"/></a></td>
-    <td><a href="todo"><img src="" alt="todo"/></a></td>
-  </tr>
-</table>
+<p align="center">
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600" alt="PRs Welcome">
+  </a>
+  &nbsp;
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?maxAge=31557600" alt="Semantic Release">
+  </a>
+  &nbsp;
+  <a href="http://standardjs.com/">
+    <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?maxAge=31557600" alt="JS Standard Style">
+  </a>
+</p>
 
-
-We appreciate any community contributions to this project, whether in the form of issues or Pull Requests.
+We appreciate any community contributions to this project, whether in the form of issues or pull requests.
 
 This document outlines what we'd like you to follow in terms of commit messages and code style.
 
