@@ -20,6 +20,8 @@ This document outlines what we'd like you to follow in terms of commit messages 
 
 It also explains what to do in case you want to setup the project locally and run tests.
 
+**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
 ## Setup
 
 This project is written in ES2015 and transpiled to ES5 using Babel, to the `dist` directory. This should generally only happen at publishing time, or for testing purposes only.
