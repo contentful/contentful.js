@@ -44,6 +44,8 @@
 
 [Contentful](https://www.contentful.com/) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
 
+<details>
+<summary>Table of contents</summary>
 <!-- TOC -->
 
 - [contentful.js - Contentful JavaScript Delivery SDK](#contentfuljs---contentful-javascript-delivery-sdk)
@@ -69,11 +71,12 @@
     - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
     - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
     - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
-  - [✍️ Get involved - [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)](#✍️-get-involved---prs-welcomehttpsimgshieldsiobadgeprs-welcome-brightgreensvgmaxage31557600httpmakeapullrequestcom)
+  - [✍️ Get involved](#✍️-get-involved)
   - [📜 License](#📜-license)
   - [🗣 Code of Conduct](#🗣-code-of-conduct)
 
 <!-- /TOC -->
+</details>
 
 ## 🚀 Core Features
 
@@ -371,7 +374,9 @@ We gathered all information related to migrating from older versions of the libr
 * File a support ticket at our Contentful Customer Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
 
 
-## ✍️ Get involved - [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
+## ✍️ Get involved
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
 
 We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](CONTRIBUTING.md) document.
 
