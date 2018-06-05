@@ -1,4 +1,31 @@
-# Migration to contentful.js 3.x from previous versions
+# Migration information
+
+- [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
+- [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
+- [Migration from contentful.js 3.x](#migration-from-contentfuljs-3x)
+- [Migration to contentful.js 3.x from previous versions](#migration-to-contentfuljs-3x-from-previous-versions)
+  - [Method renaming](#method-renaming)
+  - [Format of collection replies](#format-of-collection-replies)
+  - [Callback API removal](#callback-api-removal)
+  - [Class removal](#class-removal)
+  - [Link resolution](#link-resolution)
+- [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
+
+## Migration from contentful.js 5.x
+
+We dropped support for Node v4 and older. Please ensure you are running Node v5 or newer.
+
+## Migration from contentful.js 4.x
+
+The bundle for browsers is now called `contentful.browser.min.js` to mark it clearly as browser only bundle. If you need to support IE 11 or other old browsers, you may use the `contentful.legacy.min.js`. Node will automatically use the `contentful.node.min.js` while bundlers like Webpack will resolve to the new ES-modules version of the library.
+
+No changes to the API of the library were made.
+
+## Migration from contentful.js 3.x
+
+From version 4.0.0 and up contentful.js is exported as a single `umd` bundle the cdn distribution has changed, there is no more `browser-dist`. the new link format is https://unpkg.com/contentful@version/dist/contentful.min.js instead of https://unpkg.com/contentful@version/browser-dist/contentful.min.js. to access version 3 you can still use https://unpkg.com/contentful@3.0.0/browser-dist/contentful.min.js
+
+## Migration to contentful.js 3.x from previous versions
 
 __(March 8th, 2016)__
 
@@ -12,7 +39,7 @@ For more specific details consult the [reference documentation](https://contentf
 
 Future releases will have any changes listed in the changelog on the [releases page](https://github.com/contentful/contentful.js/releases).
 
-## Method renaming
+### Method renaming
 
 Before contentful.js 3.x, the main methods were named such as `entry()` or `entries()`. Now they have changed to `getEntry()` or `getEntries()`.
 
@@ -31,19 +58,19 @@ Old name | New name
 `assets()` | `getAssets()`
 `sync()` | `sync()`
 
-## Format of collection replies
+### Format of collection replies
 
 Before contentful.js 3.x, collection replies were essentially JavaScript Arrays with some additional properties (`total`, `skip` and `limit`) added to their prototypes.
 
 Now, collection replies are Objects, with those same properties, and an additional `items` property containing an array with all the items returned. This is more similar to what is actually returned from the REST API.
 
-## Callback API removal
+### Callback API removal
 
 While not documented, older version of this SDK supported a callback API such as `entry('id', function(data){})`.
 
 This has now been removed.
 
-## Class removal
+### Class removal
 
 Before contentful.js 3.x, the entities returned from the API such as Entries or Content Types were wrapped in prototype based classes.
 
@@ -55,7 +82,7 @@ You can get a plain version of this object with only the data by using the `toPl
 
 Also note that Date fields such as `sys.createdAt` are not turned into JavaScript `Date` objects anymore, and are now plain ISO-8601 strings.
 
-## Link resolution
+### Link resolution
 
 In previous versions of contentful.js, [Links](https://www.contentful.com/developers/docs/concepts/links/) to other entries and assets were resolved by replacing the link objects with references to the objects containing the Entry or Asset.
 
@@ -64,3 +91,7 @@ This caused problems with serialization when circular links were present, which 
 From contentful.js 3.x onwards, links are now resolved by [getter methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get), and their results memoized. This means that you can use them the same way as before, but you won't get problems with resolution of circular links when serializing them.
 
 However, you can still turn off link resolution if you so wish.
+
+## Migration from contentful.js 2.x and older
+
+contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.
