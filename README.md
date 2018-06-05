@@ -254,9 +254,9 @@ contentful.createClient({
     </tr>
     <tr>
       <td>basePath</td>
-      <td><code></code></td>
+      <td><code>''</code></td>
       <td>
-        This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.
+        This path gets appended to the host to allow request urls like <code>https://gateway.example.com/contentful/</code> for custom gateways/proxies.
       </td>
     </tr>
     <tr>
@@ -277,16 +277,18 @@ contentful.createClient({
       <td>headers</td>
       <td><code>{}</code></td>
       <td>
-        Additional headers to attach to the requests. We add/overwrite the following headers: - Content-Type: `application/vnd.contentful.management.v1+json`
-        - X-Contentful-User-Agent: `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)
+        <p>Additional headers to attach to the requests. We add/overwrite the following headers:</p>
+        <ul>
+          <li>Content-Type: <code>application/vnd.contentful.management.v1+json</code></li>
+          <li>X-Contentful-User-Agent: <code>sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3</code> (Automatically generated)</li>
+        </ul>
       </td>
     </tr>
     <tr>
       <td>proxy</td>
       <td><code>undefined</code></td>
       <td>
-        Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config)
-        for further information about the supported values.
+        Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.
       </td>
     </tr>
     <tr>
@@ -307,16 +309,14 @@ contentful.createClient({
       <td>retryOnError</td>
       <td><code>true</code></td>
       <td>
-        By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false`
-        to disable this behavior.
+        By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to <code>false</code> to disable this behavior.
       </td>
     </tr>
     <tr>
       <td>logHandler</td>
       <td><code>function (level, data) {}</code></td>
       <td>
-        Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here
-        and handle errors, warnings and info on your own.
+        Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
       </td>
     </tr>
   </tbody>
