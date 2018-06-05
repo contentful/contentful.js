@@ -5,11 +5,14 @@
  * @see ContentfulClientAPI
  */
 
-import axios from '@contentful/axios'
+import axios, { AxiosInstance } from '@contentful/axios'
 // TODO: fix the decalration
 import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
 import createContentfulApi from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
+import { AxiosProxyConfig } from './interfaces';
 
 let __VERSION__:string;
 
@@ -45,39 +48,37 @@ let __VERSION__:string;
  * })
  */
 
-// TODO: write a proper definition for the http agent
-interface HttpAgent {
-
-}
 interface ContentfulOptions {
   space: string;
   accessToken: string;
-  environment?: string;
   insecure?: boolean;
   host?: string;
   basePath?: string;
   httpAgent?: HttpAgent;
-  httpsAgent?: HttpAgent;
-  proxy?: any;
-  headers?: {
-    [key:string]: any
-  };
-  resolveLinks?: boolean;
-  removeUnresolved?: boolean;
+  httpsAgent?: HttpsAgent;
+  proxy?: AxiosProxyConfig;
+  headers?: object;
+  resolveLinks: boolean;
+  removeUnresolved: boolean;
   retryOnError?: boolean;
   logHandler?: (level: string) => void;
+  defaultHostname: string;
+  environment: string;
   application?: string;
   integration?: string;
   timeout?: number;
 }
-export function createClient (params: ContentfulOptions) {
-  if (!params.accessToken) {
-    throw new TypeError('Expected parameter accessToken')
-  }
 
-  if (!params.space) {
-    throw new TypeError('Expected parameter space')
+function ensureValueExists(value: string | null | undefined, variableName: string ): string {
+  if(!value) {
+    throw new TypeError(`Expected parameter ${variableName}`)
   }
+  return value
+}
+
+export function createClient (params: Partial<ContentfulOptions>) {
+  const accessToken = ensureValueExists(params.accessToken, 'accessToken')
+  const space = ensureValueExists(params.space, 'space')
 
   const defaultConfig = {
     resolveLinks: true,
@@ -86,9 +87,11 @@ export function createClient (params: ContentfulOptions) {
     environment: 'master'
   }
 
-  const config = {
+  const config: ContentfulOptions = {
     ...defaultConfig,
-    ...params
+    ...params,
+    accessToken: accessToken,
+    space: space
   }
 
   const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
@@ -101,7 +104,7 @@ export function createClient (params: ContentfulOptions) {
     'X-Contentful-User-Agent': userAgentHeader
   }
 
-  const http = createHttpClient(axios, config)
+  const http: AxiosInstance = createHttpClient(axios, config)
 
   const getGlobalOptions = createGlobalOptions({
     resolveLinks: config.resolveLinks,

@@ -1,15 +1,15 @@
-import { ContentfulQuery, Plainable } from 'contentful-sdk-core';
+import { ContentfulQuery } from 'contentful-sdk-core';
 
-// Type definitions for contentful
-// Definitions by: Miika Hänninen <https://github.com/googol>
 
-export interface AxiosProxyConfig {
-  host: string;
-  port?: number;
-  auth?: {
-    username: string;
-    password: string;
-  };
+declare module 'contentful-resolve-response' {
+  // tslint:disable-next-line:no-any
+  const value: any;
+  export default value;
+}
+
+
+interface Plainable<T> {
+  toPlainObject(): T
 }
 
 export type ClientLogLevel = 'error' | 'warning' | 'info';
@@ -38,7 +38,7 @@ export interface ContentfulClientApi {
   getAsset(id: string, query?: ContentfulQuery): Promise<Asset>;
   getAssets(query?: ContentfulQuery): Promise<AssetCollection>;
   getContentType(id: string): Promise<ContentType>;
-  getContentTypes(query?: ContentfulQuery): Promise<ContentTypeCollection>;
+  getContentTypes(query?: ContentfulQuery): Promise<ContentfulCollection<ContentTypeJSON>>;
   getEntries<T>(query?: ContentfulQuery): Promise<EntryCollection<T>>;
   getEntry<T>(id: string, query?: ContentfulQuery): Promise<Entry<T>>;
   getSpace(): Promise<Space>;
@@ -116,8 +116,6 @@ export interface ContentTypeJSON {
 export interface ContentType
   extends ContentTypeJSON,
     Plainable<ContentTypeJSON> {}
-
-export type ContentTypeCollection = ContentfulCollection<ContentType>;
 
 export interface SpaceJSON {
   sys: Sys;

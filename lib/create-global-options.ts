@@ -4,7 +4,7 @@ export interface ContentfulGlobalOptions {
   resolveLinks: boolean,
   environment: string,
   removeUnresolved: boolean,
-  spaceBaseUrl: string,
+  spaceBaseUrl?: string,
   environmentBaseUrl: string
 }
 
