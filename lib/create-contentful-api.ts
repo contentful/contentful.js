@@ -50,7 +50,7 @@ import entities from './entities'
 import pagedSync from './paged-sync'
 import { AxiosInstance } from '@contentful/axios';
 import { GlobalOptionGetter } from './create-global-options';
-import { ContentfulClientApi, AssetJSON, Asset, ContentfulCollectionResponse, EntryJSON, ContentTypeJSON, ContentType, ContentfulCollection, LocaleJSON, Entry, EntryCollection, SpaceJSON, Space } from './interfaces';
+import { ContentfulClientApi, AssetJSON, ContentfulCollectionResponse, EntryJSON, ContentTypeJSON, ContentType, ContentfulCollection, LocaleJSON, Entry, EntryCollection, SpaceJSON, Space, EntryContentfulCollectionResponse, EntryJSONCollection } from './interfaces';
 
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -222,14 +222,14 @@ export default function createContentfulApi ({
    * .then((response) => console.log(response.items))
    * .catch(console.error)
    */
-  async function getEntries<T> (query: ContentfulQuery = {}): Promise<EntryCollection<T>> {
+  async function getEntries<T> (query: ContentfulQuery = {}): Promise<EntryCollection<T> | EntryJSONCollection<T>> {
     // TODO: remove duplicate code maybe have a generic makeRequest<T> function?
     switchToEnvironment(http)
     normalizeSelect(query)
     const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
     
     try {
-      const response = await http.get<ContentfulCollectionResponse<EntryJSON<T>>>('entries', createRequestConfig({query: query}))
+      const response = await http.get<EntryContentfulCollectionResponse<T>>('entries', createRequestConfig({query: query}))
       return wrapEntryCollection<T>(response.data, { resolveLinks, removeUnresolved })
     } catch (error) {
       return errorHandler(error)
@@ -387,7 +387,7 @@ export default function createContentfulApi ({
   * let parsedData = client.parseEntries(data);
   * console.log( parsedData.items[0].fields.foo ); // foo
   */
-  function parseEntries<T> (data: ContentfulCollectionResponse<EntryJSON<T>>) {
+  function parseEntries<T> (data: EntryContentfulCollectionResponse<T>) {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     return wrapEntryCollection<T>(data, { resolveLinks, removeUnresolved })
   }

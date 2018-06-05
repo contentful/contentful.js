@@ -1,36 +1,32 @@
 import { ContentfulQuery } from 'contentful-sdk-core';
-
-
-declare module 'contentful-resolve-response' {
-  // tslint:disable-next-line:no-any
-  const value: any;
-  export default value;
-}
-
+import { AxiosProxyConfig } from '@contentful/axios';
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
 
 interface Plainable<T> {
-  toPlainObject(): T
+  toPlainObject(): T;
 }
 
 export type ClientLogLevel = 'error' | 'warning' | 'info';
 
-export interface CreateClientParams {
+export interface ContentfulOptions {
   space: string;
   accessToken: string;
-  environment?: string;
   insecure?: boolean;
   host?: string;
   basePath?: string;
-  httpAgent?: any;
-  httpsAgent?: any;
+  httpAgent?: HttpAgent;
+  httpsAgent?: HttpsAgent;
   proxy?: AxiosProxyConfig;
-  headers?: any;
-  application?: string;
-  integration?: string;
-  resolveLinks?: boolean;
-  removeUnresolved?: boolean;
+  headers?: object;
+  resolveLinks: boolean;
+  removeUnresolved: boolean;
   retryOnError?: boolean;
   logHandler?: (level: ClientLogLevel, data?: any) => void;
+  defaultHostname: string;
+  environment: string;
+  application?: string;
+  integration?: string;
   timeout?: number;
 }
 
@@ -38,12 +34,18 @@ export interface ContentfulClientApi {
   getAsset(id: string, query?: ContentfulQuery): Promise<Asset>;
   getAssets(query?: ContentfulQuery): Promise<AssetCollection>;
   getContentType(id: string): Promise<ContentType>;
-  getContentTypes(query?: ContentfulQuery): Promise<ContentfulCollection<ContentTypeJSON>>;
-  getEntries<T>(query?: ContentfulQuery): Promise<EntryCollection<T>>;
+  getContentTypes(
+    query?: ContentfulQuery
+  ): Promise<ContentfulCollection<ContentTypeJSON>>;
+  getEntries<T>(
+    query?: ContentfulQuery
+  ): Promise<EntryCollection<T> | EntryJSONCollection<T>>;
   getEntry<T>(id: string, query?: ContentfulQuery): Promise<Entry<T>>;
   getSpace(): Promise<Space>;
   getLocales(query: ContentfulQuery): Promise<LocaleCollection>;
-  parseEntries<T>(data: ContentfulCollectionResponse<EntryJSON<T>>): EntryCollection<T>;
+  parseEntries<T>(
+    data: EntryContentfulCollectionResponse<T>
+  ): EntryCollection<T> | EntryJSONCollection<T>;
   sync<T>(query: ContentfulQuery): Promise<SyncCollection<T>>;
 }
 
@@ -85,9 +87,14 @@ export interface ContentfulCollectionResponse<T> {
   limit: number;
   items: T[];
 }
-export interface ContentfulCollection<T> {
-  toPlainObject(): ContentfulCollectionResponse<T>;
+
+export interface EntryContentfulCollectionResponse<T>
+  extends ContentfulCollectionResponse<EntryJSON<T>> {
+  includes: Array<EntryJSON<T> | AssetJSON>;
 }
+export interface ContentfulCollection<T>
+  extends ContentfulCollectionResponse<T>,
+    Plainable<ContentfulCollectionResponse<T>> {}
 
 export type AssetCollection = ContentfulCollection<AssetJSON>;
 export type LocaleCollection = ContentfulCollection<LocaleJSON>;
@@ -102,6 +109,15 @@ export interface Entry<T> extends EntryJSON<T>, Plainable<EntryJSON<T>> {}
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
   errors?: Array<any>;
   includes?: Array<EntryJSON<T> | AssetJSON>;
+  items: Entry<T>[];
+  // TODO: fix signature of stringifySafe
+  stringifySafe(replacer: any, space: any): void;
+}
+
+export interface EntryJSONCollection<T>
+  extends EntryContentfulCollectionResponse<T> {
+  errors?: Array<any>;
+  // TODO: fix signature of stringifySafe
   stringifySafe(replacer: any, space: any): string;
 }
 
@@ -123,7 +139,7 @@ export interface SpaceJSON {
   locales: Array<string>;
 }
 
-export interface Space extends SpaceJSON,  Plainable<SpaceJSON> {}
+export interface Space extends SpaceJSON, Plainable<SpaceJSON> {}
 
 export interface SyncCollectionResponse<T> {
   items: Array<EntryJSON<T> | AssetJSON>;

@@ -10,9 +10,7 @@ import axios, { AxiosInstance } from '@contentful/axios'
 import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
 import createContentfulApi from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
-import { Agent as HttpAgent } from 'http';
-import { Agent as HttpsAgent } from 'https';
-import { AxiosProxyConfig } from './interfaces';
+import { ContentfulOptions } from './interfaces';
 
 let __VERSION__:string;
 
@@ -47,27 +45,6 @@ let __VERSION__:string;
  *  space: 'mySpaceId'
  * })
  */
-
-interface ContentfulOptions {
-  space: string;
-  accessToken: string;
-  insecure?: boolean;
-  host?: string;
-  basePath?: string;
-  httpAgent?: HttpAgent;
-  httpsAgent?: HttpsAgent;
-  proxy?: AxiosProxyConfig;
-  headers?: object;
-  resolveLinks: boolean;
-  removeUnresolved: boolean;
-  retryOnError?: boolean;
-  logHandler?: (level: string) => void;
-  defaultHostname: string;
-  environment: string;
-  application?: string;
-  integration?: string;
-  timeout?: number;
-}
 
 function ensureValueExists(value: string | null | undefined, variableName: string ): string {
   if(!value) {

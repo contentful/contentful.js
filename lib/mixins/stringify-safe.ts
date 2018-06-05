@@ -1,6 +1,6 @@
-import jsonStringifySafe from 'json-stringify-safe'
+import * as jsonStringifySafe from 'json-stringify-safe'
 
-export default function mixinStringifySafe (data) {
+export default function mixinStringifySafe<T> (data:T): T & {'stringifySafe': (replacer: any, space: any) => string} {
   return Object.defineProperty(data, 'stringifySafe', {
     enumerable: false,
     configurable: false,

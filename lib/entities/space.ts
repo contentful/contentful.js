@@ -1,5 +1,5 @@
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
-import { ContentfulCollectionResponse, SpaceJSON, Space } from '../interfaces';
+import { SpaceJSON, Space } from '../interfaces';
 
 /**
  * @memberof Entities
@@ -18,5 +18,5 @@ import { ContentfulCollectionResponse, SpaceJSON, Space } from '../interfaces';
  * @return {Space}
  */
 export function wrapSpace (data: SpaceJSON): Space {
-  return freezeSys(toPlainObject<SpaceJSON, Space>(data))
+  return freezeSys(toPlainObject<SpaceJSON>(data))
 }

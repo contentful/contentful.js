@@ -1,9 +1,14 @@
-import {cloneDeep} from 'lodash'
-import {toPlainObject, freezeSys} from 'contentful-sdk-core'
-import mixinStringifySafe from '../mixins/stringify-safe'
-import resolveResponse from 'contentful-resolve-response'
-import { ContentfulCollectionResponse, EntryJSON, Entry, ContentfulCollection, EntryCollection } from '../interfaces';
-import { ContentfulGlobalOptions } from '../create-global-options';
+import { cloneDeep } from 'lodash';
+import { toPlainObject, freezeSys } from 'contentful-sdk-core';
+import mixinStringifySafe from '../mixins/stringify-safe';
+import resolveResponse from 'contentful-resolve-response';
+import {
+  EntryJSON,
+  Entry,
+  EntryCollection,
+  EntryJSONCollection,
+  EntryContentfulCollectionResponse
+} from '../interfaces';
 
 /**
  * Types of fields found in an Entry
@@ -75,8 +80,8 @@ import { ContentfulGlobalOptions } from '../create-global-options';
  * @param {Object} data - Raw entry data
  * @return {Entry} Wrapped entry data
  */
-export function wrapEntry<T> (data: EntryJSON<T>): Entry<T> {
-  return freezeSys(toPlainObject<EntryJSON<T>, Entry<T>>(cloneDeep(data)))
+export function wrapEntry<T>(data: EntryJSON<T>): Entry<T> {
+  return freezeSys(toPlainObject<EntryJSON<T>>(cloneDeep(data)));
 }
 
 /**
@@ -104,10 +109,21 @@ export interface EntryCollectionOption {
   removeUnresolved: boolean;
 }
 
-export function wrapEntryCollection<T> (data: ContentfulCollectionResponse<EntryJSON<T>>, { resolveLinks, removeUnresolved }: EntryCollectionOption): EntryCollection<T> {
-  const wrappedData = mixinStringifySafe(toPlainObject<ContentfulCollectionResponse<EntryJSON<T>>, ContentfulCollection<EntryJSON<T>>>(cloneDeep(data)))
+export function wrapEntryCollection<T>(
+  data: EntryContentfulCollectionResponse<T>,
+  { resolveLinks, removeUnresolved }: EntryCollectionOption
+): EntryCollection<T> | EntryJSONCollection<T> {
+  const wrappedData = mixinStringifySafe(
+    toPlainObject<EntryContentfulCollectionResponse<T>>(cloneDeep(data))
+  );
   if (resolveLinks) {
-    wrappedData.items = resolveResponse(wrappedData, {removeUnresolved, itemEntryPoints: ['fields']})
+    const items = resolveResponse<EntryJSON<T>, Entry<T>>(wrappedData, {
+      removeUnresolved,
+      itemEntryPoints: ['fields']
+    });
+
+    wrappedData.items = items;
+    return freezeSys(wrappedData);
   }
-  return freezeSys(wrappedData)
+  return freezeSys(wrappedData);
 }

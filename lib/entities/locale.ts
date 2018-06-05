@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 import {toPlainObject, freezeSys} from 'contentful-sdk-core'
-import { LocaleJSON, Locale, ContentfulCollectionResponse, ContentfulCollection } from '../interfaces';
+import { LocaleJSON, ContentfulCollectionResponse, ContentfulCollection } from '../interfaces';
 
 /**
  * @memberof Entities
@@ -30,5 +30,5 @@ import { LocaleJSON, Locale, ContentfulCollectionResponse, ContentfulCollection 
  * @return {LocaleCollection} Wrapped locale collection data
  */
 export function wrapLocaleCollection (data: ContentfulCollectionResponse<LocaleJSON>): ContentfulCollection<LocaleJSON> {
-  return freezeSys(toPlainObject<ContentfulCollectionResponse<LocaleJSON>, ContentfulCollection<LocaleJSON>>(cloneDeep(data)))
+  return freezeSys(toPlainObject<ContentfulCollectionResponse<LocaleJSON>>(cloneDeep(data)))
 }

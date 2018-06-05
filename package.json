@@ -65,6 +65,7 @@
     "lodash": "^4.17.5"
   },
   "devDependencies": {
+    "@types/json-stringify-safe": "^5.0.0",
     "@types/lodash": "^4.14.109",
     "@types/node": "^10.3.0",
     "awesome-typescript-loader": "^5.0.0",

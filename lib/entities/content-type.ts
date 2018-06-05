@@ -19,7 +19,7 @@ import { ContentTypeJSON, ContentType, ContentfulCollectionResponse, ContentfulC
  * @return {ContentType} Wrapped content type data
  */
 export function wrapContentType (data: ContentTypeJSON): ContentType {
-  return freezeSys(toPlainObject<ContentTypeJSON, ContentType>(cloneDeep(data)))
+  return freezeSys(toPlainObject<ContentTypeJSON>(cloneDeep(data)))
 }
 
 /**
@@ -38,5 +38,5 @@ export function wrapContentType (data: ContentTypeJSON): ContentType {
  * @return {ContentTypeCollection} Wrapped content type collection data
  */
 export function wrapContentTypeCollection (data: ContentfulCollectionResponse<ContentTypeJSON>): ContentfulCollection<ContentTypeJSON> {
-  return freezeSys(toPlainObject<ContentfulCollectionResponse<ContentTypeJSON>, ContentfulCollection<ContentTypeJSON>>(cloneDeep(data)))
+  return freezeSys(toPlainObject<ContentfulCollectionResponse<ContentTypeJSON>>(cloneDeep(data)))
 }

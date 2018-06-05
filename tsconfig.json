@@ -1,13 +1,20 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "module": "es2015",
     "target": "es2017",
     "rootDir": "lib",
     "outDir": "dist",
     "sourceMap": false,
     "strict": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "declaration": true
   },
   "include": [
     "./lib/**/*"

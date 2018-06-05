@@ -24,7 +24,7 @@ import { AssetJSON, Asset, AssetCollection, ContentfulCollectionResponse } from 
  * @return {Asset} Wrapped asset data
  */
 export function wrapAsset (data: AssetJSON): Asset {
-  return freezeSys(toPlainObject<AssetJSON, Asset>(cloneDeep(data)))
+  return freezeSys(toPlainObject<AssetJSON>(cloneDeep(data)))
 }
 
 /**
