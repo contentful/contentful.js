@@ -113,6 +113,16 @@ This library also comes with a legacy version to support Internet Explorer 11 an
 
 To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
+#### 📱 React Native & Server Side Rendering:
+
+This library is able to handle Server Side Rendering and React Native. Depending on your implementation, you may need to explicitly require the `browser` or `node` variant of the library. (Webpack usually is able to handle this on its own)
+
+```js
+const contentful = require("contentful");
+// will become the following to enforce the browser version
+const contentful = require("contentful/dist/contentful.browser.min.js");
+```
+
 ### 🐣 Your first request
 
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
@@ -336,14 +346,28 @@ We gathered all information related to migrating from older versions of the libr
 * File a support ticket at our Contentful Customer Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
 
 
-## Contributing
+## Get involved
 
-[![devDependency Status](https://img.shields.io/david/dev/contentful/contentful.js.svg)](https://david-dm.org/contentful/contentful.js#info=devDependencies)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+<p align="center">
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600" alt="PRs Welcome">
+  </a>
+  &nbsp;
+  @todo number of contributors
+</p>
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+We appreciate and honor any help on our repositories.
+
+For more details about how to contribute see our [CONTRIBUTING.md](CONTRIBUTING.md) document.
+
+### @todo contributors here
 
 ## License
 
-MIT
+This repository is released under the [MIT](LICENSE).
+
+## Code of Conduct
+
+We want to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status, body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
+
+[Read our full Code of Conduct](https://github.com/contentful-developer-relations/community-code-of-conduct).

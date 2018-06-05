@@ -2,6 +2,12 @@
 
 > Find helpful concepts and tips about how to use this library.
 
+- [Using ES6 import](#using-es6-import)
+- [Link resolution](#link-resolution)
+- [Sync](#sync)
+  - [Sync without pagination](#sync-without-pagination)
+- [Querying & Search parameters](#querying--search-parameters)
+
 ## Using ES6 import
 
 You can use the es6 import with the SDK as follow
