@@ -50,7 +50,7 @@ import entities from './entities'
 import pagedSync from './paged-sync'
 import { AxiosInstance } from '@contentful/axios';
 import { GlobalOptionGetter } from './create-global-options';
-import { ContentfulClientApi, AssetJSON, ContentfulCollectionResponse, EntryJSON, ContentTypeJSON, ContentType, ContentfulCollection, LocaleJSON, Entry, EntryCollection, SpaceJSON, Space, EntryContentfulCollectionResponse, EntryJSONCollection } from './interfaces';
+import { ContentfulClientApi, AssetJSON, ContentfulCollectionResponse, EntryJSON, ContentTypeJSON, ContentType, ContentfulCollection, LocaleJSON, Entry, EntryCollection, SpaceJSON, Space, EntryContentfulCollectionResponse, EntryJSONCollection, SyncQuery, SyncOptions } from './interfaces';
 
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -351,10 +351,10 @@ export default function createContentfulApi ({
    * }))
    * .catch(console.error)
    */
-  function sync (query = {}, options = { paginate: true }) {
+  function sync<T> (query: SyncQuery = {}, options: Partial<SyncOptions> = { paginate: true }) {
     const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
     switchToEnvironment(http)
-    return pagedSync(http, query, { resolveLinks, removeUnresolved, ...options })
+    return pagedSync<T>(http, query, { resolveLinks, removeUnresolved, ...options })
   }
 
   /**

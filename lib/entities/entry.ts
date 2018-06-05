@@ -6,7 +6,6 @@ import {
   EntryJSON,
   Entry,
   EntryCollection,
-  EntryJSONCollection,
   EntryContentfulCollectionResponse
 } from '../interfaces';
 
@@ -112,12 +111,12 @@ export interface EntryCollectionOption {
 export function wrapEntryCollection<T>(
   data: EntryContentfulCollectionResponse<T>,
   { resolveLinks, removeUnresolved }: EntryCollectionOption
-): EntryCollection<T> | EntryJSONCollection<T> {
+): EntryCollection<T> {
   const wrappedData = mixinStringifySafe(
     toPlainObject<EntryContentfulCollectionResponse<T>>(cloneDeep(data))
   );
   if (resolveLinks) {
-    const items = resolveResponse<EntryJSON<T>, Entry<T>>(wrappedData, {
+    const items = resolveResponse(wrappedData, {
       removeUnresolved,
       itemEntryPoints: ['fields']
     });

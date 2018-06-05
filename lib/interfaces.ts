@@ -46,7 +46,7 @@ export interface ContentfulClientApi {
   parseEntries<T>(
     data: EntryContentfulCollectionResponse<T>
   ): EntryCollection<T> | EntryJSONCollection<T>;
-  sync<T>(query: ContentfulQuery): Promise<SyncCollection<T>>;
+  sync<T>(query: SyncQuery): Promise<SyncCollection<T>>;
 }
 
 export interface LocaleJSON {
@@ -88,9 +88,13 @@ export interface ContentfulCollectionResponse<T> {
   items: T[];
 }
 
+interface Includes<T> {
+  Asset: AssetJSON[];
+  Entry: EntryJSON<T>[];
+}
 export interface EntryContentfulCollectionResponse<T>
   extends ContentfulCollectionResponse<EntryJSON<T>> {
-  includes: Array<EntryJSON<T> | AssetJSON>;
+  includes: Includes<T>;
 }
 export interface ContentfulCollection<T>
   extends ContentfulCollectionResponse<T>,
@@ -106,10 +110,10 @@ export interface EntryJSON<T> {
 
 export interface Entry<T> extends EntryJSON<T>, Plainable<EntryJSON<T>> {}
 
-export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
+export interface EntryCollection<T> extends ContentfulCollection<EntryJSON<T>> {
   errors?: Array<any>;
-  includes?: Array<EntryJSON<T> | AssetJSON>;
-  items: Entry<T>[];
+  includes?: Includes<T>;
+  items: EntryJSON<T>[];
   // TODO: fix signature of stringifySafe
   stringifySafe(replacer: any, space: any): void;
 }
@@ -143,19 +147,38 @@ export interface Space extends SpaceJSON, Plainable<SpaceJSON> {}
 
 export interface SyncCollectionResponse<T> {
   items: Array<EntryJSON<T> | AssetJSON>;
-  nextSyncToken: string;
+  nextSyncToken?: string;
+  nextPageToken?: string;
+  nextPageUrl?: string;
+  nextSyncUrl?: string;
+}
+
+export interface SyncOptions {
+  resolveLinks: boolean,
+  removeUnresolved: boolean,
+  paginate: boolean
+}
+
+export interface SyncQuery {
+  initial?: boolean;
+  nextSyncToken?: string;
+  nextPageToken?: string;
+  content_type?: string;
+  type?: string;
+  sync_token?: string;
 }
 
 export interface SyncCollectionJSON<T> {
-  entries: Entry<T>[];
-  assets: Asset[];
-  deletedEntries: Entry<T>[];
-  deletedAssets: Asset[];
-  nextSyncToken: string;
+  entries: EntryJSON<T>[];
+  assets: AssetJSON[];
+  deletedEntries: EntryJSON<T>[];
+  deletedAssets: AssetJSON[];
+  nextSyncToken?: string;
+  nextPageToken?: string;
 }
 
 export interface SafeStringifyible {
-  stringifySafe(replacer: any, space: any): string;
+  stringifySafe: (replacer: any, space: any) => string
 }
 export interface SyncCollection<T>
   extends SyncCollectionJSON<T>,
