@@ -40,15 +40,40 @@
   </a>
 </p>
 
-<details>
-  <summary>
-    <strong>What is Contentful?</strong>
-  </summary>
-  <p>
-      <a href="https://www.contentful.com/">Contentful</a>
-      provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
-  </p>
-</details>
+**What is Contentful?**
+
+[Contentful](https://www.contentful.com/) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
+
+<!-- TOC -->
+
+- [contentful.js - Contentful JavaScript Delivery SDK](#contentfuljs---contentful-javascript-delivery-sdk)
+  - [🚀 Core Features](#🚀 core-features)
+    - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
+  - [🛫 Getting started](#🛫 getting-started)
+    - [☁️ Installation](#☁️ installation)
+      - [Using it directly in the browser:](#using-it-directly-in-the-browser)
+      - [🏚 Legacy browsers:](#🏚 legacy-browsers)
+      - [📱 React Native & Server Side Rendering:](#📱 react-native--server-side-rendering)
+    - [🐣 Your first request](#🐣 your-first-request)
+    - [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
+    - [🔑 Authentication](#🔑 authentication)
+  - [🏫 Documentation & References](#🏫 documentation--references)
+    - [⚙️ Configuration](#⚙️ configuration)
+    - [🗂 Reference documentation](#🗂-reference-documentation)
+      - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
+    - [📚 Tutorials & other resources](#📚-tutorials--other-resources)
+    - [⚠️ Troubleshooting](#⚠️-troubleshooting)
+    - [ℹ️ Advanced Concepts](#ℹ️-advanced-concepts)
+    - [🏗 Migration](#🏗-migration)
+  - [📢 Reach out to us](#📢-reach-out-to-us)
+    - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
+    - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
+    - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
+  - [✍️ Get involved - [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)](#✍️-get-involved---prs-welcomehttpsimgshieldsiobadgeprs-welcome-brightgreensvgstyleflat-squarehttpmakeapullrequestcom)
+  - [📜 License](#📜-license)
+  - [🗣 Code of Conduct](#🗣-code-of-conduct)
+
+<!-- /TOC -->
 
 ## 🚀 Core Features
 
@@ -57,7 +82,7 @@
 - [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
 - [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
 - Built in rate limiting with recovery procedures
-- ES6 modules / bundler support (**since v5.0.1 - 17. Oktober 2017**)
+- ES6 modules / bundler support (**since v5.0.1 - 17. October 2017**)
 - Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/) (**since v6.0.0 - 06. April 2018**)
 
 ### Supported browsers and Node.js versions:
