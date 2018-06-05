@@ -11,6 +11,9 @@
   - [Link resolution](#link-resolution)
 - [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
 
+From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+
+
 ## Migration from contentful.js 5.x
 
 We dropped support for Node v4 and older. Please ensure you are running Node v5 or newer.

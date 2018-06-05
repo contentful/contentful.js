@@ -1,4 +1,4 @@
-![header](https://user-images.githubusercontent.com/1737026/40924850-8e920376-6818-11e8-8805-563356d4f3b6.png)
+![header](./.github/header.png)
 <p align="center">
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
@@ -99,11 +99,6 @@ If you'd like to use a standalone built file you can use the following script ta
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number.
 
-<details>
-<summary>
-  Click here to learn how to do it.
-</summary>
-
 ```html
 <script src="https://cdn.jsdelivr.net/npm/contentful@5.0.1/dist/contentful.browser.min.js"></script>
 ```
@@ -112,15 +107,13 @@ The Contentful Delivery SDK will be accessible via the `contentful` global varia
 
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
 
-</details>
-
 #### 🏚 Legacy browsers:
 
 This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
 
 To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
-## 🐣 Your first request
+### 🐣 Your first request
 
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
 
@@ -141,7 +134,7 @@ client
 
 You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
 
-## Using this SDK with the Preview API
+### Using this SDK with the Preview API
 
 This SDK can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
@@ -166,29 +159,23 @@ Don't forget to also get your Space ID.
 
 For more information, check the Contentful's REST API reference on [Authentication](https://www.contentful.com/developers/docs/references/authentication/).
 
-## 📚 Documentation & References
+## 🏫 Documentation & References
 
-<table border="0" align="center">
-  <tr>
-    <td>
-      <a href="https://contentful.github.io/contentful.js">
-        <img src="http://img.shields.io/badge/read_the-docs-2196f3.svg" alt="Documentation">
-      </a>
-    </td>
-    <td>
-      <a href="ADVANCED.md">
-        <img src="http://img.shields.io/badge/advanced-concepts-2196f3.svg" alt="Advanced Concepts">
-      </a>
-    </td>
-    <td>
-       <a href="MIGRATING.md">
-        <img src="http://img.shields.io/badge/migrating-from%20old%20versions-2196f3.svg" alt="Migrating from old versions">
-      </a>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <a href="https://contentful.github.io/contentful.js">
+    <img src="http://img.shields.io/badge/read_the-docs-3AB2E6.svg?maxAge=31557600" alt="Documentation">
+  </a>
+  &nbsp;
+  <a href="ADVANCED.md">
+    <img src="http://img.shields.io/badge/advanced-concepts-FFD860.svg?maxAge=31557600" alt="Advanced Concepts">
+  </a>
+  &nbsp;
+  <a href="MIGRATION.md">
+    <img src="http://img.shields.io/badge/migrating-from%20old%20versions-ED5C68.svg?maxAge=31557600" alt="Migrating from old versions">
+  </a>
+</p>
 
-To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
+To help you get the most out of this SDK, we've prepared all available client configuration options, a reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
 
 ### ⚙️ Configuration
 
@@ -210,14 +197,14 @@ contentful.createClient({
   </thead>
   <tbody>
     <tr>
-      <td>accessToken<br/>(required)</td>
+      <td>accessToken<br/><strong>required</strong></td>
       <td></td>
       <td>
         Your CDA access token.
       </td>
     </tr>
     <tr>
-      <td>space<br/>(required)</td>
+      <td>space<br/><strong>required</strong></td>
       <td></td>
       <td>
         Your Space ID.
@@ -300,12 +287,23 @@ contentful.createClient({
   </tbody>
 </table>
 
-### 📚 Reference documentation
+### 🗂 Reference documentation
 
-### 👨‍🏫 Tutorials
+The [Contentful's JS SDK reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
+
+Most methods also have examples which show you how to use them.
+
+#### Legacy contentful.js documentation
+
+For versions prior to 3.0.0, you can access documentation at [https://github.com/contentful/contentful.js/tree/legacy](https://github.com/contentful/contentful.js/tree/legacy)
 
 
-## Troubleshooting
+### 📚 Tutorials & other resources
+
+* This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can also get a better understanding of how the requests look under the hood.
+* Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful
+
+### ⚠️ Troubleshooting
 
 - **Can I use the SDK in react native projects** - Yes it is possible
 - **I get the error: Unable to resolve module `http`** - Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
@@ -315,33 +313,28 @@ contentful.createClient({
 - **Is the SDK doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
 - 😱 **Something is wrong what should I do?** - If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it. - If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the [support page](parameters).
 
+### ℹ️ Advanced Concepts
 
-The [Contentful's JS SDK reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
+More information about how to use the library in advanced or special ways can be found in the [ADVANCED.md](ADVANCED.md) document.
 
-Most methods also have examples which show you how to use them.
+### 🏗 Migration
 
-You can start by looking at the top level [`contentful`](./contentful.html) namespace.
+We gathered all information related to migrating from older versions of the library in our [MIGRATION.md](MIGRATION.MD) document.
 
-    From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+## 📢 Reach out to us
 
-### Contentful JavaScript resources
+### You have questions about how to use this library?
+* Reach out to our community forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
+* Jump into our community slack channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
 
-Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful
+### You found a bug or want to propose a feature?
 
-### REST API reference
+* File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new)
 
-This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can also get a better understanding of how the requests look under the hood.
+### You need to share confidential information or have other questions?
 
-### Legacy contentful.js
+* File a support ticket at our Contentful Customer Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
 
-For versions prior to 3.0.0, you can access documentation at [https://github.com/contentful/contentful.js/tree/legacy](https://github.com/contentful/contentful.js/tree/legacy)
-
-
-## Support
-
-If you have a problem with this library, please file an [issue](https://github.com/contentful/contentful.js/issues/new) here on GitHub.
-
-If you have other problems with Contentful not related to this library, you can contact [Customer Support](https://support.contentful.com).
 
 ## Contributing
 
