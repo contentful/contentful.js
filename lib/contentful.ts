@@ -10,7 +10,7 @@ import axios, { AxiosInstance } from '@contentful/axios'
 import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
 import createContentfulApi from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
-import { ContentfulOptions } from './interfaces';
+import { ContentfulOptions, ContentfulClientApi } from './interfaces';
 
 let __VERSION__:string;
 
@@ -53,7 +53,7 @@ function ensureValueExists(value: string | null | undefined, variableName: strin
   return value
 }
 
-export function createClient (params: Partial<ContentfulOptions>) {
+export function createClient (params: Partial<ContentfulOptions>): ContentfulClientApi {
   const accessToken = ensureValueExists(params.accessToken, 'accessToken')
   const space = ensureValueExists(params.space, 'space')
 
