@@ -352,15 +352,9 @@ We gathered all information related to migrating from older versions of the libr
   <a href="http://makeapullrequest.com">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600" alt="PRs Welcome">
   </a>
-  &nbsp;
-  @todo number of contributors
 </p>
 
-We appreciate and honor any help on our repositories.
-
-For more details about how to contribute see our [CONTRIBUTING.md](CONTRIBUTING.md) document.
-
-### @todo contributors here
+We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](CONTRIBUTING.md) document.
 
 ## 📜 License
 
