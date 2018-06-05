@@ -49,7 +49,7 @@
     "precommit": "npm run lint",
     "prepush": "npm run test:prepush"
   },
-  "types": "./index.d.ts",
+  "types": "./dist/contentful.d.ts",
   "files": [
     "index.js",
     "version.js",
