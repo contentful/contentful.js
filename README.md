@@ -46,36 +46,33 @@
 
 <details>
 <summary>Table of contents</summary>
-<!-- TOC -->
 
-- [contentful.js - Contentful JavaScript Delivery SDK](#contentfuljs---contentful-javascript-delivery-sdk)
-  - [🚀 Core Features](#🚀 core-features)
-    - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
-  - [🛫 Getting started](#🛫 getting-started)
-    - [☁️ Installation](#☁️ installation)
-      - [Using it directly in the browser:](#using-it-directly-in-the-browser)
-      - [🏚 Legacy browsers:](#🏚 legacy-browsers)
-      - [📱 React Native & Server Side Rendering:](#📱 react-native--server-side-rendering)
-    - [🐣 Your first request](#🐣 your-first-request)
-    - [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
-    - [🔑 Authentication](#🔑 authentication)
-  - [🏫 Documentation & References](#🏫 documentation--references)
-    - [⚙️ Configuration](#⚙️ configuration)
-    - [🗂 Reference documentation](#🗂-reference-documentation)
-      - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
-    - [📚 Tutorials & other resources](#📚-tutorials--other-resources)
-    - [⚠️ Troubleshooting](#⚠️-troubleshooting)
-    - [ℹ️ Advanced Concepts](#ℹ️-advanced-concepts)
-    - [🏗 Migration](#🏗-migration)
-  - [📢 Reach out to us](#📢-reach-out-to-us)
-    - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
-    - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
-    - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
-  - [✍️ Get involved](#✍️-get-involved)
-  - [📜 License](#📜-license)
-  - [🗣 Code of Conduct](#🗣-code-of-conduct)
+- [🚀 Core Features](#core-features)
+  - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
+- [🛫 Getting started](#getting-started)
+  - [☁️ Installation](#☁installation)
+    - [Using it directly in the browser:](#using-it-directly-in-the-browser)
+    - [🏚 Legacy browsers:](#legacy-browsers)
+    - [📱 React Native & Server Side Rendering:](#react-native--server-side-rendering)
+  - [🐣 Your first request](#your-first-request)
+  - [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
+  - [🔑 Authentication](#authentication)
+- [🏫 Documentation & References](#documentation--references)
+  - [⚙️ Configuration](#⚙configuration)
+  - [🗂 Reference documentation](#reference-documentation)
+    - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
+  - [📚 Tutorials & other resources](#tutorials--other-resources)
+  - [⚠️ Troubleshooting](#troubleshooting)
+  - [ℹ️ Advanced Concepts](#advanced-concepts)
+  - [🏗 Migration](#migration)
+- [📢 Reach out to us](#reach-out-to-us)
+  - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
+  - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
+  - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
+- [✍️ Get involved](#get-involved)
+- [📜 License](#license)
+- [🗣 Code of Conduct](#code-of-conduct)
 
-<!-- /TOC -->
 </details>
 
 ## 🚀 Core Features
@@ -343,13 +340,10 @@ For versions prior to 3.0.0, you can access documentation at [https://github.com
 
 ### ⚠️ Troubleshooting
 
-- **Can I use the SDK in react native projects** - Yes it is possible
 - **I get the error: Unable to resolve module `http`** - Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
-
 - **Link resolution does not work when using `client.getEntry('<entry-id>')`** - Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?** - Yes, there is also a type definition file
 - **Is the SDK doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
-- 😱 **Something is wrong what should I do?** - If it is a bug related to the code create a Github issue and make sure to remove any credential for your code before sharing it. - If you need to share your credentials, for example you have an issue with your space, please create a support ticket in the [support page](parameters).
 
 ### ℹ️ Advanced Concepts
 
@@ -367,7 +361,7 @@ We gathered all information related to migrating from older versions of the libr
 
 ### You found a bug or want to propose a feature?
 
-* File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new)
+* File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new). Make sure to remove any credential from your code before sharing it.
 
 ### You need to share confidential information or have other questions?
 
