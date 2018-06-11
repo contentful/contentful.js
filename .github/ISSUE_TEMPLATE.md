@@ -38,7 +38,7 @@ Provide a link to a live example, or an unambiguous set of steps to reproduce
 this bug. If relevant, provide code that demonstrates the problem, keeping it as
 simple and free of external dependencies as possible.
 -->
-1. 
+1.
 2.
 3.
 4.
@@ -54,16 +54,11 @@ Providing context helps us come up with a most relevant solution.
 
 <!--
 Include as many relevant details about the environment you experienced the bug in
-
-Node Version: output of `node -v`
-Npm Version: output of `npm -v`
-Operating System: output of `uname -a` (UNIX), or version and 32 or 64-bit (Windows)
-Package Version: output of `npm list [package-name]`
 -->
 
--   **Language Version**:
--   **Package Manager Version**:
--   **Browser Version**:
--   **Operating System**:
--   **Package Version**:
--   **Which API are you using?**: (Delivery / Management / Preview)
+-   **Language Version**: <!-- output of `node -v` -->
+-   **Package Manager Version**: <!-- output of `npm -v` -->
+-   **Browser Version**: <!-- only if applicable, e.g. Chrome 67.0.3396.62  -->
+-   **Operating System**: <!-- output of `uname -a` (UNIX), or version and 32 or 64-bit (Windows) -->
+-   **Package Version**: <!-- e.g. v6.0.0 -->
+-   **Which API are you using?**: <!-- Delivery / Management / Preview -->
