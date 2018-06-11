@@ -1,10 +1,28 @@
-We appreciate any community contributions to this project, whether in the form of issues or Pull Requests.
+# Contributing for `contentful.js`
+
+<p align="center">
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600" alt="PRs Welcome">
+  </a>
+  &nbsp;
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?maxAge=31557600" alt="Semantic Release">
+  </a>
+  &nbsp;
+  <a href="http://standardjs.com/">
+    <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?maxAge=31557600" alt="JS Standard Style">
+  </a>
+</p>
+
+We appreciate any community contributions to this project, whether in the form of issues or pull requests.
 
 This document outlines what we'd like you to follow in terms of commit messages and code style.
 
 It also explains what to do in case you want to setup the project locally and run tests.
 
-# Setup
+**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
+## Setup
 
 This project is written in ES2015 and transpiled to ES5 using Babel, to the `dist` directory. This should generally only happen at publishing time, or for testing purposes only.
 
@@ -18,17 +36,14 @@ If you have a `dist` directory, run `npm run clean`.
 
 Axios, one of the main dependencies is vendored. This generally shouldn't matter, but if you'd like to understand why, check [SETUP.md](SETUP.md)
 
-# Code style
+## Useful npm scripts
 
-This project uses [standard](https://github.com/feross/standard). Install a relevant editor plugin if you'd like.
+- `npm run clean` removes any built files
+- `npm run build` builds vendored files, node package and browser version
+- `npm run build:dist` builds ES5 sources from ES6 ones
+- `npm run build:standalone` builds unminified and minified sources for browsers
 
-Everywhere where it isn't applicable, follow a style similar to the existing code.
-
-# Commit messages and issues
-
-This project uses the [Angular JS Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit), via semantic-release. See the semantic-release [Default Commit Message Format](https://github.com/semantic-release/semantic-release#default-commit-message-format) section for more details.
-
-# Running tests
+## Running tests
 
 This project has unit and integration tests. Both of these run on both Node.js and Browser environments.
 
@@ -41,7 +56,7 @@ Both of these test environments are setup to deal with Babel and code transpilin
 - `npm run test:ci` runs tests in CI
 - `npm run test:browser-remote` runs both the unit and integration tests using Karma against Sauce Labs. This is only usable in the CI environment, as it expects the credentials and connection tunnel to be present.
 
-# Documentation
+## Documentation
 
 Code is documented using JSDoc 3, and reference documentation is published automatically with each new version.
 
@@ -50,9 +65,20 @@ Code is documented using JSDoc 3, and reference documentation is published autom
 - `npm run docs:build` builds documentation.
 - `npm run docs:publish` builds documentation and publishes it to github pages.
 
-# Other tasks
+## Code style
 
-- `npm run clean` removes any built files
-- `npm run build` builds vendored files, node package and browser version
-- `npm run build:dist` builds ES5 sources from ES6 ones
-- `npm run build:standalone` builds unminified and minified sources for browsers
+This project uses [standard](https://github.com/feross/standard). Install a relevant editor plugin if you'd like.
+
+Everywhere where it isn't applicable, follow a style similar to the existing code.
+
+## Commit messages and issues
+
+This project uses the [Angular JS Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit), via semantic-release. See the semantic-release [Default Commit Message Format](https://github.com/semantic-release/semantic-release#default-commit-message-format) section for more details.
+
+## Versioning
+
+This project strictly follows [Semantic Versioning](http://semver.org/) by use of [semantic-release](https://github.com/semantic-release/semantic-release).
+
+This means that new versions are released automatically as fixes, features or breaking changes are released.
+
+You can check the changelog on the [releases](https://github.com/contentful/contentful.js/releases) page.
