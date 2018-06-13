@@ -109,7 +109,7 @@ In order to get started with the Contentful JS SDK you'll need not only to insta
 - [Your first request](#your-first-request)
 - [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
 - [Authentication](#authentication)
-- [Documentation & References](#documentationreferences)
+- [Documentation & References](#documentation--references)
 
 ### Installation
 
