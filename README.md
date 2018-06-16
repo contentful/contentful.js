@@ -30,6 +30,9 @@
   <a href="https://www.npmjs.com/package/contentful">
     <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
   </a>
+   <a href="https://www.jsdelivr.com/package/npm/contentful">
+    <img src="https://data.jsdelivr.com/v1/package/npm/contentful/badge" alt="jsDelivr Hits">
+  </a>
   &nbsp;
   <a href="http://npm-stat.com/charts.html?package=contentful">
     <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
