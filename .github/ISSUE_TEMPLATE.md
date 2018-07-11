@@ -1,13 +1,12 @@
 <!--
 Thank you for reporting an issue.
 
+Please fill in as much of the template below as you're able. Feel free to delete
+any section you want to skip.
+
 PLEASE **DO NOT** share any credentials related to your Contentful account like
 <space_id> or <access_token>. If this is an urgent issue you are having with Contentful
 It's better to contact support@contentful.com.
-
-Please fill in as much of the template below as you're able.
-
-Assign a label to the issue if you find it relevant.
 -->
 
 ## Expected Behavior
