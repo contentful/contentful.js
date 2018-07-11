@@ -14,11 +14,11 @@ webpackConfig.node = {
   fs: 'empty'
 }
 
-webpackConfig.module.loaders = webpackConfig.module.loaders.map((loader) => {
-  if (loader.loader === 'babel-loader') {
-    loader.options.forceEnv = 'test'
+webpackConfig.module.rules = webpackConfig.module.rules.map((rule) => {
+  if (rule.loader === 'babel-loader') {
+    rule.options.forceEnv = 'test'
   }
-  return loader
+  return rule
 })
 
 console.log('Karma webpack config:')
