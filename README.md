@@ -247,6 +247,13 @@ contentful.createClient({
       </td>
     </tr>
     <tr>
+      <td><code>environment</code></td>
+      <td><code>'master'</code></td>
+      <td>
+        Set the environment that the API key has access to.
+      </td>
+    </tr>
+    <tr>
       <td><code>host</code></td>
       <td><code>'cdn.contentful.com'</code></td>
       <td>
