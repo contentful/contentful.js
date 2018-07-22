@@ -1,6 +1,6 @@
 import { createClient, ContentfulClientApi } from "contentful";
 
-export function testFn() {
+export async function testFn() {
     const client: ContentfulClientApi = createClient({
         space: "mySpace",
         accessToken: "myAccessToken"

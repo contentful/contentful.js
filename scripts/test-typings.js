@@ -12,16 +12,15 @@ const testFiles = fs.readdirSync(testsDir)
   .filter(f => path.basename(f, '.js').endsWith('test'))
   .map(f => path.join(testsDir, f))
 
-testFiles.forEach(testFile => {
+testFiles.map(async (testFile) => {
   const { description, testFn } = require(testFile)
-  test(description, (t) => {
+  test(description, async (t) => {
     try {
-      testFn()
+      await testFn()
     } catch (error) {
-      t.end(error.message)
+      t.fail(error.message)
       return
     }
     t.pass()
-    t.end()
   })
 })
