@@ -18,8 +18,11 @@ testFiles.map(async (testFile) => {
     try {
       await testFn()
     } catch (error) {
-      t.fail(error.message)
-      return
+      if (error.name === 'RuntimeTypeError') {
+        t.fail(error.message)
+        return
+      }
+      throw error
     }
     t.pass()
   })
