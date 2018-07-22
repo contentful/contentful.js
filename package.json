@@ -26,7 +26,6 @@
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
-    "dtslint": "dtslint types",
     "lint": "eslint lib test",
     "pretest": "rimraf coverage && npm run lint",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local && npm run test:size",
