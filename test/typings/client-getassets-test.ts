@@ -1,0 +1,13 @@
+import { Asset, createClient, ContentfulClientApi, ContentfulCollection } from "contentful";
+
+export async function testFn() {
+    const client: ContentfulClientApi = createClient({
+        space: "ezs1swce23xe",
+        accessToken: "59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc"
+    });
+    const asset: ContentfulCollection<Asset> = await client.getAssets({
+        limit: 1
+    });
+}
+
+export const description = "client.getAssets() has correct typing";
