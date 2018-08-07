@@ -177,15 +177,17 @@ test('API call getContentTypes fails', (t) => {
 })
 
 test('API call getEntry', (t) => {
-  t.plan(1)
+  t.plan(2)
   const {api} = setupWithData({
     promise: Promise.resolve({ data: entryMock })
   })
+  api.getEntries = sinon.stub().resolves({items: [entryMock]})
   entitiesMock.entry.wrapEntry.returns(entryMock)
 
   return api.getEntry('eid')
     .then((r) => {
       t.looseEqual(r, entryMock)
+      t.true(api.getEntries.calledOnce)
       teardown()
     })
 })

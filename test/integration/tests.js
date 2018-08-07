@@ -153,6 +153,15 @@ test('Gets entries with linked includes', (t) => {
     })
 })
 
+test('Gets entry with link resolution', (t) => {
+  t.plan(2)
+  return client.getEntry('nyancat', {include: 2})
+    .then((response) => {
+      t.equal(response.fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
+      t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
+    })
+})
+
 test('Gets entries with content type query param', (t) => {
   t.plan(2)
   return client.getEntries({content_type: 'cat'})
