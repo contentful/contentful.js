@@ -73,6 +73,11 @@ test('Gets an entry with a specific locale', (t) => {
     })
 })
 
+test('Get entry fails if entryId does not exist', (t) => {
+  t.plan(1)
+  return t.shouldFail(client.getEntry('nyancatblah'))
+})
+
 test('Get entry with fallback locale', (t) => {
   t.plan(5)
   Promise.all([
@@ -150,6 +155,15 @@ test('Gets entries with linked includes', (t) => {
       t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items')
       t.equal(response.items[0].fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
       t.ok(response.items[0].fields.bestFriend.fields, 'resolved entry has fields')
+    })
+})
+
+test('Gets entry with link resolution', (t) => {
+  t.plan(2)
+  return client.getEntry('nyancat', {include: 2})
+    .then((response) => {
+      t.equal(response.fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
+      t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
     })
 })
 
