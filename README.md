@@ -349,7 +349,6 @@ For versions prior to 3.0.0, you can access documentation at [https://github.com
 ### Troubleshooting
 
 - **I get the error: Unable to resolve module `http`** - Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
-- **Link resolution does not work when using `client.getEntry('<entry-id>')`** - Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?** - Yes, there is also a type definition file
 - **Is the SDK doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
 
