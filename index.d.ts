@@ -40,6 +40,7 @@ export interface ContentfulClientApi {
     getEntries<T>(query?: any): Promise<EntryCollection<T>>;
     getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
+    getLocales(): Promise<Locales>;
     sync(query: any): Promise<SyncCollection>;
 }
 
@@ -95,6 +96,15 @@ export interface Space {
     sys: Sys;
     name: string;
     locales: Array<string>;
+    toPlainObject(): Space;
+}
+
+export interface Locales {
+    sys: Sys;
+    total: number;
+    skip: number;
+    limit: number;
+    items: Array<string>;
     toPlainObject(): Space;
 }
 
