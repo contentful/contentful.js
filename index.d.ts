@@ -104,8 +104,20 @@ export interface Locales {
     total: number;
     skip: number;
     limit: number;
-    items: Array<string>;
+    items: ContentfulCollection<Locale>;
     toPlainObject(): Space;
+}
+
+export interface Locale {
+  code: string
+  name: string
+  default: boolean
+  fallbackCode: string | null
+  sys: {
+    id: string
+    type: 'Locale'
+    version: number
+  }
 }
 
 export interface SyncCollection {
