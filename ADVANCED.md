@@ -41,7 +41,7 @@ const client = contentful.createClient({
 
 Link resolution occurs on the `getEntry` and `getEntries` endpoints as of version 7.0.0. For previous versions, only the collections endpoint resolved links. See [note](#note:-link-resolution-for-versions-older-than-7.0.0) below for more details.
 
-The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
+The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10.
 
 By default, the SDK will keep links, which could not get resolved, in your response. If you want to completely remove fields which could not be resolved, set `removeUnresolved: true` in the configuration options.
 
