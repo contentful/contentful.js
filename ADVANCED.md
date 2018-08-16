@@ -4,6 +4,7 @@
 
 - [Using ES6 import](#using-es6-import)
 - [Link resolution](#link-resolution)
+  - [Note: link resolution for versions older than 7.0.0](#note:-link-resolution-for-versions-older-than-7.0.0)
 - [Sync](#sync)
   - [Sync without pagination](#sync-without-pagination)
 - [Querying & Search parameters](#querying--search-parameters)
@@ -38,7 +39,15 @@ const client = contentful.createClient({
 });
 ```
 
-Please note that the link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing an initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
+Link resolution occurs on the `getEntry` and `getEntries` endpoints as of version 7.0.0. For previous versions, only the collections endpoint resolved links. See [note](#note:-link-resolution-for-versions-older-than-7.0.0) below for more details.
+
+The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
+
+By default, the SDK will keep links, which could not get resolved, in your response. If you want to completely remove fields which could not be resolved, set `removeUnresolved: true` in the configuration options.
+
+### Note: link resolution for versions older than 7.0.0
+
+Please note that for versions older than 7.0.0, link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing an initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
 
 **e.g.** assuming that you have a Content Type `post` that has a reference field `author`
 
@@ -58,9 +67,6 @@ client
   .catch(err => console.log(err));
 ```
 
-The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10..
-
-By default, the SDK will keep links, which could not get resolved, in your response. If you want to completely remove fields which could not be resolved, set `removeUnresolved: true` in the configuration options.
 
 ## Sync
 
