@@ -78,7 +78,7 @@ export interface Entry<T> {
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
     errors?: Array<any>;
     includes?: any;
-    stringifySafe(replacer: any, space: any): string;
+    stringifySafe(replacer?: any, space?: any): string;
 }
 
 export interface ContentType {
@@ -120,7 +120,7 @@ export interface SyncCollection {
     deletedAssets: Array<Asset>;
     nextSyncToken: string;
     toPlainObject(): SyncCollection;
-    stringifySafe(replacer: any, space: any): string;
+    stringifySafe(replacer?: any, space?: any): string;
 }
 
 export interface Sys {
