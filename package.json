@@ -58,7 +58,7 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "@contentful/axios": "^0.18.0",
+    "axios": "^0.19.0-beta.1",
     "contentful-resolve-response": "^1.1.4",
     "contentful-sdk-core": "^6.2.1",
     "json-stringify-safe": "^5.0.1",
@@ -132,7 +132,7 @@
     },
     {
       "path": "./dist/contentful.legacy.js",
-      "maxSize": "62Kb"
+      "maxSize": "80Kb"
     },
     {
       "path": "./dist/contentful.legacy.min.js",
@@ -140,7 +140,7 @@
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "60Kb"
+      "maxSize": "70Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
