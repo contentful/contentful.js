@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-require('babel-core/register')({
-  ignore: /node_modules(?!\/contentful-resolve-response)/
-})
+// require('@babel/register')
+require('@babel/polyfill')
 require('require-all')({
   dirname: process.cwd() + '/test/unit',
   filter: process.argv[2] || /-test\.js$/,

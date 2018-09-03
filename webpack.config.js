@@ -1,9 +1,10 @@
 const path = require('path')
 
 const webpack = require('webpack')
-const MinifyPlugin = require('babel-minify-webpack-plugin')
 const clone = require('lodash/cloneDeep')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+
+const babelConfig = require('./babel.config.js')
 
 const PROD = process.env.NODE_ENV === 'production'
 
@@ -17,18 +18,6 @@ const plugins = [
     cloning: true
   })
 ]
-
-if (PROD) {
-  plugins.push(
-    new MinifyPlugin()
-  )
-  plugins.push(
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false
-    })
-  )
-}
 
 const baseFileName = `contentful`
 
@@ -54,62 +43,63 @@ const baseBundleConfig = {
   stats: process.env.WEBPACK_MODE === 'log' ? 'verbose' : 'normal'
 }
 
-const defaultBabelLoader = {
-  test: /\.js?$/,
-  exclude: /node_modules/,
-  loader: 'babel-loader',
-  options: {}
+function getBabelLoader (scope) {
+  console.log({ scope })
+  let targets = 'last 2 versions, not IE < 13, not dead'
+  if (scope === 'legacy') {
+    targets = 'last 5 versions, not IE < 10, not dead'
+  }
+  if (scope === 'node') {
+    targets = { node: '4.7' }
+  }
+  const options = clone(babelConfig)
+  options.presets.push([
+    '@babel/preset-env',
+    {
+      debug: true,
+      modules: false,
+      useBuiltIns: 'usage',
+      targets: clone(targets)
+    }
+  ])
+  console.log('options.presets[0]', JSON.stringify(options.presets[0], null, 2))
+  return clone({
+    test: /\.js?$/,
+    exclude: /node_modules/,
+    use: {
+      loader: 'babel-loader',
+      options: clone(options)
+    }
+  })
 }
 
 // Browsers
 const browserBundle = clone(baseBundleConfig)
-browserBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'browser'
-    })
-  })
-]
-browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
+browserBundle.module.rules = [getBabelLoader('browser')]
+browserBundle.output.filename = `${baseFileName}.browser${
+  PROD ? '.min' : ''
+}.js`
 
 // Legacy browsers like IE11
 const legacyBundle = clone(baseBundleConfig)
-legacyBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'legacy'
-    })
-  })
-]
-// To be replaced with babel-polyfill with babel-preset-env 2.0:
-// https://github.com/babel/babel-preset-env#usebuiltins
-// https://github.com/babel/babel-preset-env/pull/241
-legacyBundle.entry = [
-  'core-js/fn/promise',
-  'core-js/fn/object/assign',
-  'core-js/fn/array/from',
-  'core-js/fn/array/find',
-  'core-js/fn/set'
-].concat(legacyBundle.entry)
-
+legacyBundle.module.rules = [getBabelLoader('legacy')]
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
+// legacyBundle.entry = [
+//   'core-js/fn/promise',
+//   // 'core-js/fn/object/assign',
+//   // 'core-js/fn/array/from',
+//   // 'core-js/fn/array/find',
+//   // 'core-js/fn/set'
+// ].concat(legacyBundle.entry)
 
 // Node
 const nodeBundle = clone(baseBundleConfig)
-nodeBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'node'
-    })
-  })
-]
+nodeBundle.module.rules = [getBabelLoader('node')]
 nodeBundle.target = 'node'
 nodeBundle.output.libraryTarget = 'commonjs2'
 nodeBundle.output.filename = `${baseFileName}.node${PROD ? '.min' : ''}.js`
 delete nodeBundle.node
 
-module.exports = [
-  browserBundle,
-  legacyBundle,
-  nodeBundle
-]
+module.exports = [browserBundle, legacyBundle, nodeBundle]
+
+// module.exports = nodeBundle
