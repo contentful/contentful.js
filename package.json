@@ -1,7 +1,7 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
-  "version": "0.0.0-determined-by-semantic-release",
+  "version": "7.1.0-beta0",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
   "module": "./dist/es-modules/contentful.js",
