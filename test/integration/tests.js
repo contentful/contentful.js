@@ -452,20 +452,22 @@ test('Sync space with token', (t) => {
 })
 
 test('Sync spaces assets', (t) => {
-  t.plan(3)
+  t.plan(4)
   return client.sync({initial: true, type: 'Asset'})
     .then((response) => {
       t.ok(response.assets, 'assets')
+      t.ok(response.assets[0].toPlainObject, 'toPlainObject exists on asset')
       t.ok(response.deletedAssets, 'deleted assets')
       t.ok(response.nextSyncToken, 'next sync token')
     })
 })
 
 test('Sync space entries by content type', (t) => {
-  t.plan(3)
+  t.plan(4)
   return client.sync({initial: true, type: 'Entry', content_type: 'dog'})
     .then((response) => {
       t.ok(response.entries, 'entries')
+      t.ok(response.entries[0].toPlainObject, 'toPlainObject exists on entry')
       t.ok(response.deletedEntries, 'deleted entries')
       t.ok(response.nextSyncToken, 'next sync token')
     })
