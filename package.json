@@ -112,7 +112,7 @@
     "trevor": "^2.2.0",
     "webpack": "^4.0.0",
     "webpack-bundle-analyzer": "^2.11.0",
-    "webpack-cli": "^2.0.9"
+    "webpack-cli": "^3.1.1"
   },
   "engines": {
     "node": ">=6"
