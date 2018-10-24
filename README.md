@@ -69,8 +69,8 @@
       - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
     - [Tutorials & other resources](#tutorials--other-resources)
     - [Troubleshooting](#troubleshooting)
-    - [Advanced Concepts](#advanced-concepts)
-    - [Migration](#migration)
+    - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
+    - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
   - [Reach out to us](#reach-out-to-us)
     - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
     - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
@@ -379,7 +379,7 @@ We gathered all information related to migrating from older versions of the libr
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
 
-We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](CONTRIBUTING.md) document.
+We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
 
 ## License
 
