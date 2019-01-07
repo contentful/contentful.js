@@ -156,6 +156,10 @@ const contentful = require("contentful");
 const contentful = require("contentful/dist/contentful.browser.min.js");
 ```
 
+#### Angular universal:
+
+This library is able to handle Server Side Rendering with angular universal. To use it you will have to provide a custom [axios adapter](https://github.com/axios/axios/tree/master/lib/adapters), one example for angular would be the [ngx-axios-adapter](https://github.com/patrickhousley/ngx-axios-adapter)
+
 ### Your first request
 
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
@@ -279,6 +283,13 @@ contentful.createClient({
       <td><code>undefined</code></td>
       <td>
         Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+      </td>
+    </tr>
+    <tr>
+      <td><code>adapter</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
       </td>
     </tr>
     <tr>
