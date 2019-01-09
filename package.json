@@ -60,7 +60,7 @@
   "dependencies": {
     "@contentful/axios": "^0.18.0",
     "contentful-resolve-response": "^1.1.4",
-    "contentful-sdk-core": "^6.0.3",
+    "contentful-sdk-core": "^6.1.0",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.5"
   },

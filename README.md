@@ -146,16 +146,6 @@ This library also comes with a legacy version to support Internet Explorer 11 an
 
 To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
-#### React Native & Server Side Rendering:
-
-This library is able to handle Server Side Rendering and React Native. Depending on your implementation, you may need to explicitly require the `browser` or `node` variant of the library. (Webpack usually is able to handle this on its own)
-
-```js
-const contentful = require("contentful");
-// will become the following to enforce the browser version
-const contentful = require("contentful/dist/contentful.browser.min.js");
-```
-
 ### Your first request
 
 The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
@@ -279,6 +269,13 @@ contentful.createClient({
       <td><code>undefined</code></td>
       <td>
         Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+      </td>
+    </tr>
+    <tr>
+      <td><code>adapter</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
       </td>
     </tr>
     <tr>
