@@ -3,6 +3,7 @@
 > Find helpful concepts and tips about how to use this library.
 
 - [Using ES6 import](#using-es6-import)
+- [Framework specifics](#framework-specifics)
 - [Link resolution](#link-resolution)
   - [Note: link resolution for versions older than 7.0.0](#note:-link-resolution-for-versions-older-than-7.0.0)
 - [Sync](#sync)
@@ -24,6 +25,22 @@ OR
 import * as contentful from "contentful";
 const client = contentful.createClient({...});
 ```
+
+## Framework specifics
+
+### React Native & Server Side Rendering:
+
+This library is able to handle Server Side Rendering and React Native. Depending on your implementation, you may need to explicitly require the `browser` or `node` variant of the library. (Webpack usually is able to handle this on its own)
+
+```js
+const contentful = require("contentful");
+// will become the following to enforce the browser version
+const contentful = require("contentful/dist/contentful.browser.min.js");
+```
+
+### Angular universal:
+
+This library is able to handle Server Side Rendering with angular universal. To use it you will have to provide a custom [axios adapter](https://github.com/axios/axios/tree/master/lib/adapters), one example for angular would be the [ngx-axios-adapter](https://github.com/patrickhousley/ngx-axios-adapter)
 
 ## Link resolution
 
