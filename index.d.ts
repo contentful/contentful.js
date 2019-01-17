@@ -44,14 +44,14 @@ export interface ContentfulClientApi {
     sync(query: any): Promise<SyncCollection>;
 }
 
-export interface Asset {
+export interface Asset<T = any> {
     sys: Sys;
     fields: {
         title: string;
         description: string;
         file: {
             url: string;
-            details: any;
+            details: T;
             fileName: string;
             contentType: string;
         };
