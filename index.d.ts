@@ -148,7 +148,38 @@ export interface Field {
     name: string;
     omitted: boolean;
     required: boolean;
-    type: string;
+    type: FieldType;
+    validations: FieldValidation[];
+    items?: FieldItem[];
+}
+
+export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
+
+export interface FieldValidation {
+    unique?: boolean;
+    size?: {
+        min?: number;
+        max?: number;
+    };
+    regexp?: {
+        pattern: string;
+    };
+    linkMimetypeGroup?: string[];
+    in?: string[];
+    linkContentType?: string[];
+    message?: string;
+    nodes?: {
+        'entry-hyperlink'?: FieldValidation[];
+        'embedded-entry-block'?: FieldValidation[];
+        'embedded-entry-inline'?: FieldValidation[];
+    };
+    enabledNodeTypes?: string[];
+}
+
+export interface FieldItem {
+    type: 'Link' | 'Symbol';
+    validations: FieldValidation[];
+    linkType?: 'Entry' | 'Asset';
 }
 
 export function createClient(params: CreateClientParams): ContentfulClientApi;
