@@ -324,6 +324,20 @@ contentful.createClient({
         Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
       </td>
     </tr>
+        <tr>
+      <td><code>requestLogger</code></td>
+      <td><code>function (config) {}</code></td>
+      <td>
+        Interceptor called on every request. Takes Axios request config as an arg.
+      </td>
+    </tr>
+        <tr>
+      <td><code>responseLogger</code></td>
+      <td><code>function (response) {}</code></td>
+      <td>
+        Interceptor called on every response. Takes Axios response object as an arg.
+      </td>
+    </tr>
   </tbody>
 </table>
 
