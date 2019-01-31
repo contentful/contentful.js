@@ -51,7 +51,13 @@ export interface Asset {
         description: string;
         file: {
             url: string;
-            details: any;
+            details: {
+                size: number;
+                image?: {
+                    width: number;
+                    height: number;
+                };
+            };
             fileName: string;
             contentType: string;
         };
