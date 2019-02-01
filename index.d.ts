@@ -23,6 +23,7 @@ export interface CreateClientParams {
     httpsAgent?: any;
     proxy?: AxiosProxyConfig;
     headers?: any;
+    adapter?: any;
     application?: string;
     integration?: string;
     resolveLinks?: boolean;
