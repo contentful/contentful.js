@@ -60,7 +60,7 @@
   "dependencies": {
     "@contentful/axios": "^0.18.0",
     "contentful-resolve-response": "^1.1.4",
-    "contentful-sdk-core": "^6.1.0",
+    "contentful-sdk-core": "^6.2.1",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.5"
   },
@@ -129,7 +129,7 @@
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "14Kb"
+      "maxSize": "15Kb"
     },
     {
       "path": "./dist/contentful.legacy.js",
