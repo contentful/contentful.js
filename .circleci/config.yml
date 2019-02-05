@@ -1,0 +1,27 @@
+version: 2.1
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependency-cache-{{ checksum "package.json" }}g
+      - run: npm run build
+      - run: npm run test:cover
+      - run: npm run test:integration
+      # if successful, run semantic release
+      - run:
+          name: Build Success
+          when: on_success
+          command: ./node_modules/.bin/codecov && npm run semantic-release
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
