@@ -34,9 +34,7 @@ module.exports = function (config) {
   karmaBaseConf.sauceLabs = {
     // Should be false for running on travis, as travis already starts its own
     // sauce connect
-    startConnect: false,
-    // https://github.com/karma-runner/karma-sauce-launcher/issues/73
-    tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+    startConnect: false
   }
 
   config.set(karmaBaseConf)
