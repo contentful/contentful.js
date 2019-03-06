@@ -27,6 +27,14 @@ const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
+const responseLoggerStub = sinon.stub()
+const requestLoggerStub = sinon.stub()
+const clientWithLoggers = contentful.createClient({
+  ...params,
+  responseLogger: responseLoggerStub,
+  requestLogger: requestLoggerStub
+})
+
 test('Gets space', (t) => {
   t.plan(3)
   return client.getSpace()
@@ -500,16 +508,9 @@ test('Gets entries with linked includes with local:* in preview', (t) => {
 
 test('Logs request and response with custom loggers', (t) => {
   t.plan(3)
-  const responseLoggerStub = sinon.stub()
-  const requestLoggerStub = sinon.stub()
 
-  const client = contentful.createClient({
-    ...params,
-    responseLogger: responseLoggerStub,
-    requestLogger: requestLoggerStub
-  })
-  return client.getEntries()
-    .then((response) => {
+  return clientWithLoggers.getEntries()
+    .then(() => {
       t.equal(responseLoggerStub.callCount, 1, 'responseLogger is called')
       t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
       t.equal(requestLoggerStub.args[0][0].url, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master/entries', 'requestLogger is called with correct url')
