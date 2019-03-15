@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>paged-sync.js - Documentation</title>
+
+    <script src="scripts/hljs/highlight.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/hljs.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="contentful.html">contentful</a><ul class='methods'><li data-type='method'><a href="contentful.html#.createClient">createClient</a></li></ul></li><li><a href="ContentfulClientAPI.html">ContentfulClientAPI</a><ul class='methods'><li data-type='method'><a href="ContentfulClientAPI.html#.getAsset">getAsset</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getAssets">getAssets</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getContentType">getContentType</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getContentTypes">getContentTypes</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getEntries">getEntries</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getEntry">getEntry</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getLocales">getLocales</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.getSpace">getSpace</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.parseEntries">parseEntries</a></li><li data-type='method'><a href="ContentfulClientAPI.html#.sync">sync</a></li></ul></li><li><a href="Entities.html">Entities</a></li><li><a href="EntryFields.html">EntryFields</a></li><li><a href="Sync.html">Sync</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">paged-sync.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * See &lt;a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization&lt;/a> for more information.
+ * @namespace Sync
+ */
+import {createRequestConfig, freezeSys, toPlainObject} from 'contentful-sdk-core'
+import resolveResponse from 'contentful-resolve-response'
+import mixinStringifySafe from './mixins/stringify-safe'
+
+/**
+ * @memberof Sync
+ * @typedef SyncCollection
+ * @prop {Array&lt;Entities.Entry>} entries - All existing entries on first sync. New and updated entries on subsequent syncs.
+ * @prop {Array&lt;Entities.Asset>} assets - All existing assets on first sync. New and updated assets on subsequent syncs.
+ * @prop {Array&lt;Sync.DeletedEntry>} deletedEntries - List of deleted Entries since last sync
+ * @prop {Array&lt;Sync.DeletedAsset>} deletedAssets - List of deleted Assets since last sync
+ * @prop {string} nextSyncToken - Token to be sent to the next sync call
+ * @prop {function(): Object} toPlainObject() - Returns this Sync collection as a plain JS object
+ * @prop {function(?function=, space=): Object} stringifySafe(replacer,space) - Stringifies the Sync collection, accounting for circular references. Circular references will be replaced with just a Link object, with a &lt;code>circular&lt;/code> property set to &lt;code>true&lt;/code>. See &lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">MDN&lt;/a> and &lt;a href="https://www.npmjs.com/package/json-stringify-safe">json-stringify-safe&lt;/a> for more details on the arguments this method can take.
+ */
+
+/**
+ * Deleted Entries are the same as Entries, but only appear on the sync API.
+ * @memberof Sync
+ * @typedef DeletedEntry
+ * @type Entities.Entry
+ */
+
+/**
+ * Deleted Assets are the same as Assets, but only appear on the sync API.
+ * @memberof Sync
+ * @typedef DeletedAsset
+ * @type Entities.Asset
+ */
+
+/**
+ * This module retrieves all the available pages for a sync operation
+ * @private
+ * @param {Object} http - HTTP client
+ * @param {Object} query - Query object
+ * @param {Object} options - Sync options object
+ * @param {boolean} [options.resolveLinks = true] - If links should be resolved
+ * @param {boolean} [options.removeUnresolved = false] - If unresolvable links should get removed
+ * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
+ * @return {Promise&lt;SyncCollection>}
+ */
+export default function pagedSync (http, query, options = {}) {
+  if (!query || (!query.initial &amp;&amp; !query.nextSyncToken &amp;&amp; !query.nextPageToken)) {
+    throw new Error('Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing')
+  }
+
+  if (query &amp;&amp; query.content_type &amp;&amp; !query.type) {
+    query.type = 'Entry'
+  } else if (query &amp;&amp; query.content_type &amp;&amp; query.type &amp;&amp; query.type !== 'Entry') {
+    throw new Error('When using the `content_type` filter your `type` parameter cannot be different from `Entry`.')
+  }
+
+  const defaultOptions = { resolveLinks: true, removeUnresolved: false, paginate: true }
+  const { resolveLinks, removeUnresolved, paginate } = {
+    ...defaultOptions,
+    ...options
+  }
+
+  const syncOptions = {
+    paginate
+  }
+
+  return getSyncPage(http, [], query, syncOptions)
+    .then((response) => {
+      // clones response.items used in includes because we don't want these to be mutated
+      if (resolveLinks) {
+        response.items = resolveResponse(response, {removeUnresolved, itemEntryPoints: ['fields']})
+      }
+      // maps response items again after getters are attached
+      const mappedResponseItems = mapResponseItems(response.items)
+
+      if (response.nextSyncToken) {
+        mappedResponseItems.nextSyncToken = response.nextSyncToken
+      }
+
+      if (response.nextPageToken) {
+        mappedResponseItems.nextPageToken = response.nextPageToken
+      }
+
+      return freezeSys(mixinStringifySafe(toPlainObject(mappedResponseItems)))
+    }, (error) => {
+      throw error
+    })
+}
+
+/**
+ * @private
+ * @param {Array&lt;Entities.Entry|Entities.Array|Sync.DeletedEntry|Sync.DeletedAsset>} items
+ * @return {Object} Entities mapped to an object for each entity type
+ */
+function mapResponseItems (items) {
+  const reducer = (type) => {
+    return (accumulated, item) => {
+      if (item.sys.type === type) {
+        accumulated.push(toPlainObject(item))
+      }
+      return accumulated
+    }
+  }
+
+  return {
+    entries: items.reduce(reducer('Entry'), []),
+    assets: items.reduce(reducer('Asset'), []),
+    deletedEntries: items.reduce(reducer('DeletedEntry'), []),
+    deletedAssets: items.reduce(reducer('DeletedAsset'), [])
+  }
+}
+
+/**
+ * If the response contains a nextPageUrl, extracts the sync token to get the
+ * next page and calls itself again with that token.
+ * Otherwise, if the response contains a nextSyncUrl, extracts the sync token
+ * and returns it.
+ * On each call of this function, any retrieved items are collected in the
+ * supplied items array, which gets returned in the end
+ * @private
+ * @param {Object} http
+ * @param {Array&lt;Entities.Entry|Entities.Array|Sync.DeletedEntry|Sync.DeletedAsset>} items
+ * @param {Object} query
+ * @param {Object} options - Sync page options object
+ * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
+ * @return {Promise&lt;{items: Array, nextSyncToken: string}>}
+ */
+function getSyncPage (http, items, query, { paginate }) {
+  if (query.nextSyncToken) {
+    query.sync_token = query.nextSyncToken
+    delete query.nextSyncToken
+  }
+
+  if (query.nextPageToken) {
+    query.sync_token = query.nextPageToken
+    delete query.nextPageToken
+  }
+
+  if (query.sync_token) {
+    delete query.initial
+    delete query.type
+    delete query.content_type
+  }
+
+  return http.get('sync', createRequestConfig({query: query}))
+    .then((response) => {
+      const data = response.data
+      items = items.concat(data.items)
+      if (data.nextPageUrl) {
+        if (paginate) {
+          delete query.initial
+          query.sync_token = getToken(data.nextPageUrl)
+          return getSyncPage(http, items, query, { paginate })
+        }
+        return {
+          items: items,
+          nextPageToken: getToken(data.nextPageUrl)
+        }
+      } else if (data.nextSyncUrl) {
+        return {
+          items: items,
+          nextSyncToken: getToken(data.nextSyncUrl)
+        }
+      }
+    })
+}
+
+/**
+ * Extracts token out of an url
+ * @private
+ */
+function getToken (url) {
+  const urlParts = url.split('?')
+  return urlParts.length > 0 ? urlParts[1].replace('sync_token=', '') : ''
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the <a href="https://github.com/contentful/contentful-sdk-jsdoc">contentful-sdk-jsdoc</a> theme.
+</footer>
+
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
