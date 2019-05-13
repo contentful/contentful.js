@@ -23,6 +23,7 @@ export interface CreateClientParams {
     httpsAgent?: any;
     proxy?: AxiosProxyConfig;
     headers?: any;
+    adapter?: any;
     application?: string;
     integration?: string;
     resolveLinks?: boolean;
@@ -40,6 +41,7 @@ export interface ContentfulClientApi {
     getEntries<T>(query?: any): Promise<EntryCollection<T>>;
     getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
+    getLocales(): Promise<LocaleCollection>;
     sync(query: any): Promise<SyncCollection>;
 }
 
@@ -50,7 +52,13 @@ export interface Asset {
         description: string;
         file: {
             url: string;
-            details: any;
+            details: {
+                size: number;
+                image?: {
+                    width: number;
+                    height: number;
+                };
+            };
             fileName: string;
             contentType: string;
         };
@@ -77,7 +85,7 @@ export interface Entry<T> {
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
     errors?: Array<any>;
     includes?: any;
-    stringifySafe(replacer: any, space: any): string;
+    stringifySafe(replacer?: any, space?: any): string;
 }
 
 export interface ContentType {
@@ -98,6 +106,20 @@ export interface Space {
     toPlainObject(): Space;
 }
 
+export interface Locale {
+  code: string
+  name: string
+  default: boolean
+  fallbackCode: string | null
+  sys: {
+    id: string
+    type: 'Locale'
+    version: number
+  }
+}
+
+export type LocaleCollection = ContentfulCollection<Locale>;
+
 export interface SyncCollection {
     entries: Array<Entry<any>>;
     assets: Array<Asset>;
@@ -105,7 +127,7 @@ export interface SyncCollection {
     deletedAssets: Array<Asset>;
     nextSyncToken: string;
     toPlainObject(): SyncCollection;
-    stringifySafe(replacer: any, space: any): string;
+    stringifySafe(replacer?: any, space?: any): string;
 }
 
 export interface Sys {
@@ -133,7 +155,87 @@ export interface Field {
     name: string;
     omitted: boolean;
     required: boolean;
-    type: string;
+    type: FieldType;
+    validations: FieldValidation[];
+    items?: FieldItem;
+}
+
+export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
+
+export interface FieldValidation {
+    unique?: boolean;
+    size?: {
+        min?: number;
+        max?: number;
+    };
+    regexp?: {
+        pattern: string;
+    };
+    linkMimetypeGroup?: string[];
+    in?: string[];
+    linkContentType?: string[];
+    message?: string;
+    nodes?: {
+        'entry-hyperlink'?: FieldValidation[];
+        'embedded-entry-block'?: FieldValidation[];
+        'embedded-entry-inline'?: FieldValidation[];
+    };
+    enabledNodeTypes?: string[];
+}
+
+export interface FieldItem {
+    type: 'Link' | 'Symbol';
+    validations: FieldValidation[];
+    linkType?: 'Entry' | 'Asset';
 }
 
 export function createClient(params: CreateClientParams): ContentfulClientApi;
+
+/**
+ * Types of fields found in an Entry
+ */
+export namespace EntryFields {
+    export type Symbol = string;
+    export type Text = string;
+    export type Integer = number;
+    export type Number = number;
+    export type Date = string;
+    export type Boolean = boolean;
+    export interface Location {
+        lat: string;
+        lon: string;
+    }
+    export type Link<T> = Asset | Entry<T>;
+    export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
+    export type Object<T = any> = T;
+    export interface RichText {
+        data:{};
+        content: RichTextContent;
+        nodeType: 'document';
+    }
+}
+
+interface RichTextDataTarget {
+    sys: {
+        id: string;
+        type: "Link";
+        "linkType": 'Entry' | 'Asset';
+    };
+}
+
+interface RichTextData {
+    uri?: string;
+    target?: RichTextDataTarget;
+}
+
+type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
+    | 'heading-6' | 'paragraph' | 'hyperlink' | 'entry-hyperlink' | 'asset-hyperlink'
+    | 'unordered-list' | 'ordered-list' | 'list-item' | 'blockquote' | 'hr' | 'embedded-entry-block';
+
+interface RichTextContent {
+    data: RichTextData;
+    content?: RichTextContent[]
+    marks: {type: ('bold' | 'underline' | 'code')}[];
+    value?: string;
+    nodeType: RichTextNodeType;
+}

@@ -5,7 +5,6 @@
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
   "module": "./dist/es-modules/contentful.js",
-  "browser": "./dist/contentful.browser.js",
   "jsnext:main": "./dist/es-modules/contentful.js",
   "repository": {
     "type": "git",
@@ -62,11 +61,11 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "@contentful/axios": "^0.18.0",
+    "axios": "^0.19.0-beta.1",
     "contentful-resolve-response": "^1.1.4",
-    "contentful-sdk-core": "^6.0.0-beta0",
+    "contentful-sdk-core": "^6.3.2",
     "json-stringify-safe": "^5.0.1",
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
@@ -97,7 +96,7 @@
     "istanbul": "^1.0.0-alpha.2",
     "jsdoc": "^3.4.0",
     "json": "^9.0.6",
-    "karma": "^2.0.0",
+    "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.1.0",
     "karma-sauce-launcher": "^1.1.0",
@@ -110,16 +109,15 @@
     "require-rewrite": "^1.0.2",
     "rimraf": "^2.6.0",
     "selenium-webdriver": "^3.5.0",
-    "semantic-release": "^12.4.1",
+    "semantic-release": "^15.13.4",
     "sinon": "^4.4.2",
-    "tap-spec": "^4.1.1",
-    "travis-deploy-once": "^4.4.1",
+    "tap-spec": "^5.0.0",
     "trevor": "^2.2.0",
     "ts-runtime": "^0.1.35",
     "typescript": "^2.9.2",
     "webpack": "^4.0.0",
     "webpack-bundle-analyzer": "^2.11.0",
-    "webpack-cli": "^2.0.9"
+    "webpack-cli": "^3.1.1"
   },
   "engines": {
     "node": ">=6"
@@ -136,7 +134,7 @@
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "14Kb"
+      "maxSize": "15Kb"
     },
     {
       "path": "./dist/contentful.legacy.js",

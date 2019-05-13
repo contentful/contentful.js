@@ -44,7 +44,7 @@ test('Throws with incompatible content_type and type parameter', (t) => {
 })
 
 test('Initial sync with one page', (t) => {
-  t.plan(7)
+  t.plan(11)
   const http = {get: sinon.stub()}
   const entryWithLink = createEntry('1')
   entryWithLink.fields.linked = {
@@ -75,9 +75,13 @@ test('Initial sync with one page', (t) => {
     .then((response) => {
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
       t.equal(response.entries.length, 3, 'entries length')
+      t.ok(response.entries[0].toPlainObject, 'toPlainObject on entry')
       t.equal(response.deletedEntries.length, 2, 'deleted entries length')
+      t.ok(response.deletedEntries[0].toPlainObject, 'toPlainObject on deletedEntry')
       t.equal(response.assets.length, 3, 'entries length')
+      t.ok(response.assets[0].toPlainObject, 'toPlainObject on asset')
       t.equal(response.deletedAssets.length, 1, 'deleted assets length')
+      t.ok(response.deletedAssets[0].toPlainObject, 'toPlainObject on deletedAsset')
       t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
       t.equal(response.entries[0].fields.linked.sys.type, 'Entry', 'linked entry is resolved')
     })

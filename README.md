@@ -1,4 +1,4 @@
-![header](./.github/header.png)
+![header](https://github.com/contentful/contentful.js/raw/master/.github/header.png)
 <p align="center">
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
@@ -69,8 +69,8 @@
       - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
     - [Tutorials & other resources](#tutorials--other-resources)
     - [Troubleshooting](#troubleshooting)
-    - [Advanced Concepts](#advanced-concepts)
-    - [Migration](#migration)
+    - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
+    - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
   - [Reach out to us](#reach-out-to-us)
     - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
     - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
@@ -145,16 +145,6 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
 
 To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
-
-#### React Native & Server Side Rendering:
-
-This library is able to handle Server Side Rendering and React Native. Depending on your implementation, you may need to explicitly require the `browser` or `node` variant of the library. (Webpack usually is able to handle this on its own)
-
-```js
-const contentful = require("contentful");
-// will become the following to enforce the browser version
-const contentful = require("contentful/dist/contentful.browser.min.js");
-```
 
 ### Your first request
 
@@ -247,6 +237,13 @@ contentful.createClient({
       </td>
     </tr>
     <tr>
+      <td><code>environment</code></td>
+      <td><code>'master'</code></td>
+      <td>
+        Set the environment that the API key has access to.
+      </td>
+    </tr>
+    <tr>
       <td><code>host</code></td>
       <td><code>'cdn.contentful.com'</code></td>
       <td>
@@ -272,6 +269,13 @@ contentful.createClient({
       <td><code>undefined</code></td>
       <td>
         Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
+      </td>
+    </tr>
+    <tr>
+      <td><code>adapter</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
       </td>
     </tr>
     <tr>
@@ -320,6 +324,20 @@ contentful.createClient({
         Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
       </td>
     </tr>
+        <tr>
+      <td><code>requestLogger</code></td>
+      <td><code>function (config) {}</code></td>
+      <td>
+        Interceptor called on every request. Takes Axios request config as an arg.
+      </td>
+    </tr>
+        <tr>
+      <td><code>responseLogger</code></td>
+      <td><code>function (response) {}</code></td>
+      <td>
+        Interceptor called on every response. Takes Axios response object as an arg.
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -342,7 +360,6 @@ For versions prior to 3.0.0, you can access documentation at [https://github.com
 ### Troubleshooting
 
 - **I get the error: Unable to resolve module `http`** - Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
-- **Link resolution does not work when using `client.getEntry('<entry-id>')`** - Link resolution does not work with the single entity endpoint, you can use `client.getEntries({'sys.id': '<entry-id>'})` to link an entry with resolved links
 - **Can I use it with typescript?** - Yes, there is also a type definition file
 - **Is the SDK doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
 
@@ -373,7 +390,7 @@ We gathered all information related to migrating from older versions of the libr
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
 
-We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](CONTRIBUTING.md) document.
+We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
 
 ## License
 

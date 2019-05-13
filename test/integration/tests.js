@@ -1,4 +1,5 @@
 import test from 'blue-tape'
+import sinon from 'sinon'
 
 import * as contentful from '../../lib/contentful'
 
@@ -25,6 +26,14 @@ if (process.env.API_INTEGRATION_TESTS) {
 const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
+
+const responseLoggerStub = sinon.stub()
+const requestLoggerStub = sinon.stub()
+const clientWithLoggers = contentful.createClient({
+  ...params,
+  responseLogger: responseLoggerStub,
+  requestLogger: requestLoggerStub
+})
 
 test('Gets space', (t) => {
   t.plan(3)
@@ -71,6 +80,11 @@ test('Gets an entry with a specific locale', (t) => {
     .then((entry) => {
       t.equal(entry.sys.locale, 'tlh')
     })
+})
+
+test('Get entry fails if entryId does not exist', (t) => {
+  t.plan(1)
+  return t.shouldFail(client.getEntry('nyancatblah'))
 })
 
 test('Get entry with fallback locale', (t) => {
@@ -150,6 +164,15 @@ test('Gets entries with linked includes', (t) => {
       t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items')
       t.equal(response.items[0].fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
       t.ok(response.items[0].fields.bestFriend.fields, 'resolved entry has fields')
+    })
+})
+
+test('Gets entry with link resolution', (t) => {
+  t.plan(2)
+  return client.getEntry('nyancat', {include: 2})
+    .then((response) => {
+      t.equal(response.fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
+      t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
     })
 })
 
@@ -438,20 +461,22 @@ test('Sync space with token', (t) => {
 })
 
 test('Sync spaces assets', (t) => {
-  t.plan(3)
+  t.plan(4)
   return client.sync({initial: true, type: 'Asset'})
     .then((response) => {
       t.ok(response.assets, 'assets')
+      t.ok(response.assets[0].toPlainObject, 'toPlainObject exists on asset')
       t.ok(response.deletedAssets, 'deleted assets')
       t.ok(response.nextSyncToken, 'next sync token')
     })
 })
 
 test('Sync space entries by content type', (t) => {
-  t.plan(3)
+  t.plan(4)
   return client.sync({initial: true, type: 'Entry', content_type: 'dog'})
     .then((response) => {
       t.ok(response.entries, 'entries')
+      t.ok(response.entries[0].toPlainObject, 'toPlainObject exists on entry')
       t.ok(response.deletedEntries, 'deleted entries')
       t.ok(response.nextSyncToken, 'next sync token')
     })
@@ -478,5 +503,16 @@ test('Gets entries with linked includes with local:* in preview', (t) => {
       t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
       t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
       t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+    })
+})
+
+test('Logs request and response with custom loggers', (t) => {
+  t.plan(3)
+
+  return clientWithLoggers.getEntries()
+    .then(() => {
+      t.equal(responseLoggerStub.callCount, 1, 'responseLogger is called')
+      t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
+      t.equal(requestLoggerStub.args[0][0].url, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master/entries', 'requestLogger is called with correct url')
     })
 })
