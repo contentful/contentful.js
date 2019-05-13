@@ -1,4 +1,5 @@
 import test from 'blue-tape'
+import sinon from 'sinon'
 
 import * as contentful from '../../lib/contentful'
 
@@ -25,6 +26,14 @@ if (process.env.API_INTEGRATION_TESTS) {
 const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
+
+const responseLoggerStub = sinon.stub()
+const requestLoggerStub = sinon.stub()
+const clientWithLoggers = contentful.createClient({
+  ...params,
+  responseLogger: responseLoggerStub,
+  requestLogger: requestLoggerStub
+})
 
 test('Gets space', (t) => {
   t.plan(3)
@@ -494,5 +503,16 @@ test('Gets entries with linked includes with local:* in preview', (t) => {
       t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
       t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
       t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+    })
+})
+
+test('Logs request and response with custom loggers', (t) => {
+  t.plan(3)
+
+  return clientWithLoggers.getEntries()
+    .then(() => {
+      t.equal(responseLoggerStub.callCount, 1, 'responseLogger is called')
+      t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
+      t.equal(requestLoggerStub.args[0][0].url, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master/entries', 'requestLogger is called with correct url')
     })
 })

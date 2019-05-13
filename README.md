@@ -1,4 +1,4 @@
-![header](./.github/header.png)
+![header](https://github.com/contentful/contentful.js/raw/master/.github/header.png)
 <p align="center">
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
@@ -322,6 +322,20 @@ contentful.createClient({
       <td><code>function (level, data) {}</code></td>
       <td>
         Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
+      </td>
+    </tr>
+        <tr>
+      <td><code>requestLogger</code></td>
+      <td><code>function (config) {}</code></td>
+      <td>
+        Interceptor called on every request. Takes Axios request config as an arg.
+      </td>
+    </tr>
+        <tr>
+      <td><code>responseLogger</code></td>
+      <td><code>function (response) {}</code></td>
+      <td>
+        Interceptor called on every response. Takes Axios response object as an arg.
       </td>
     </tr>
   </tbody>

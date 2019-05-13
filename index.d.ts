@@ -157,7 +157,7 @@ export interface Field {
     required: boolean;
     type: FieldType;
     validations: FieldValidation[];
-    items?: FieldItem[];
+    items?: FieldItem;
 }
 
 export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
