@@ -1,0 +1,45 @@
+version: 2.1
+jobs:
+  unit:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:cover
+      - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Build Success
+          when: on_success
+          command: ./node_modules/.bin/codecov
+  integration:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:integration
+  release:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - run: npm run semantic-release
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - unit
+      - integration
+      - release:
+          requires:
+            - unit
+            - integration

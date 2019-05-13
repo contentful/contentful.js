@@ -23,6 +23,7 @@ export interface CreateClientParams {
     httpsAgent?: any;
     proxy?: AxiosProxyConfig;
     headers?: any;
+    adapter?: any;
     application?: string;
     integration?: string;
     resolveLinks?: boolean;
@@ -51,7 +52,13 @@ export interface Asset {
         description: string;
         file: {
             url: string;
-            details: any;
+            details: {
+                size: number;
+                image?: {
+                    width: number;
+                    height: number;
+                };
+            };
             fileName: string;
             contentType: string;
         };
@@ -150,7 +157,7 @@ export interface Field {
     required: boolean;
     type: FieldType;
     validations: FieldValidation[];
-    items?: FieldItem[];
+    items?: FieldItem;
 }
 
 export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
