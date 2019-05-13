@@ -190,3 +190,52 @@ export interface FieldItem {
 }
 
 export function createClient(params: CreateClientParams): ContentfulClientApi;
+
+/**
+ * Types of fields found in an Entry
+ */
+export namespace EntryFields {
+    export type Symbol = string;
+    export type Text = string;
+    export type Integer = number;
+    export type Number = number;
+    export type Date = string;
+    export type Boolean = boolean;
+    export interface Location {
+        lat: string;
+        lon: string;
+    }
+    export type Link<T> = Asset | Entry<T>;
+    export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
+    export type Object<T = any> = T;
+    export interface RichText {
+        data:{};
+        content: RichTextContent;
+        nodeType: 'document';
+    }
+}
+
+interface RichTextDataTarget {
+    sys: {
+        id: string;
+        type: "Link";
+        "linkType": 'Entry' | 'Asset';
+    };
+}
+
+interface RichTextData {
+    uri?: string;
+    target?: RichTextDataTarget;
+}
+
+type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
+    | 'heading-6' | 'paragraph' | 'hyperlink' | 'entry-hyperlink' | 'asset-hyperlink'
+    | 'unordered-list' | 'ordered-list' | 'list-item' | 'blockquote' | 'hr' | 'embedded-entry-block';
+
+interface RichTextContent {
+    data: RichTextData;
+    content?: RichTextContent[]
+    marks: {type: ('bold' | 'underline' | 'code')}[];
+    value?: string;
+    nodeType: RichTextNodeType;
+}
