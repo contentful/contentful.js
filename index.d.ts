@@ -42,6 +42,7 @@ export interface ContentfulClientApi {
     getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
     getLocales(): Promise<LocaleCollection>;
+    parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
     sync(query: any): Promise<SyncCollection>;
 }
 
