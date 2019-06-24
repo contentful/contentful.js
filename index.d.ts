@@ -81,6 +81,7 @@ export interface Entry<T> {
     sys: Sys;
     fields: T;
     toPlainObject(): Entry<T>;
+    update(): Promise<Entry<T>>;
 }
 
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
