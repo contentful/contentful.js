@@ -237,7 +237,7 @@ type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'head
 interface RichTextContent {
     data: RichTextData;
     content?: RichTextContent[]
-    marks: {type: ('bold' | 'underline' | 'code')}[];
+    marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
     value?: string;
     nodeType: RichTextNodeType;
 }
