@@ -64,7 +64,7 @@ export interface Asset {
             contentType: string;
         };
     };
-    toPlainObject(): Asset;
+    toPlainObject(): object;
 }
 
 export interface ContentfulCollection<T> {
@@ -72,7 +72,7 @@ export interface ContentfulCollection<T> {
     skip: number;
     limit: number;
     items: Array<T>;
-    toPlainObject(): this;
+    toPlainObject(): object;
 }
 
 export type AssetCollection = ContentfulCollection<Asset>
@@ -80,7 +80,7 @@ export type AssetCollection = ContentfulCollection<Asset>
 export interface Entry<T> {
     sys: Sys;
     fields: T;
-    toPlainObject(): Entry<T>;
+    toPlainObject(): object;
     update(): Promise<Entry<T>>;
 }
 
@@ -96,7 +96,7 @@ export interface ContentType {
     description: string;
     displayField: string;
     fields: Array<Field>;
-    toPlainObject(): ContentType;
+    toPlainObject(): object;
 }
 
 export type ContentTypeCollection = ContentfulCollection<ContentType>;
@@ -105,7 +105,7 @@ export interface Space {
     sys: Sys;
     name: string;
     locales: Array<string>;
-    toPlainObject(): Space;
+    toPlainObject(): object;
 }
 
 export interface Locale {
@@ -128,7 +128,7 @@ export interface SyncCollection {
     deletedEntries: Array<Entry<any>>;
     deletedAssets: Array<Asset>;
     nextSyncToken: string;
-    toPlainObject(): SyncCollection;
+    toPlainObject(): object;
     stringifySafe(replacer?: any, space?: any): string;
 }
 
