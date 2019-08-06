@@ -42,6 +42,7 @@ export interface ContentfulClientApi {
     getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
     getLocales(): Promise<LocaleCollection>;
+    parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
     sync(query: any): Promise<SyncCollection>;
 }
 
@@ -63,7 +64,7 @@ export interface Asset {
             contentType: string;
         };
     };
-    toPlainObject(): Asset;
+    toPlainObject(): object;
 }
 
 export interface ContentfulCollection<T> {
@@ -71,7 +72,7 @@ export interface ContentfulCollection<T> {
     skip: number;
     limit: number;
     items: Array<T>;
-    toPlainObject(): this;
+    toPlainObject(): object;
 }
 
 export type AssetCollection = ContentfulCollection<Asset>
@@ -79,7 +80,8 @@ export type AssetCollection = ContentfulCollection<Asset>
 export interface Entry<T> {
     sys: Sys;
     fields: T;
-    toPlainObject(): Entry<T>;
+    toPlainObject(): object;
+    update(): Promise<Entry<T>>;
 }
 
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
@@ -94,7 +96,7 @@ export interface ContentType {
     description: string;
     displayField: string;
     fields: Array<Field>;
-    toPlainObject(): ContentType;
+    toPlainObject(): object;
 }
 
 export type ContentTypeCollection = ContentfulCollection<ContentType>;
@@ -103,7 +105,7 @@ export interface Space {
     sys: Sys;
     name: string;
     locales: Array<string>;
-    toPlainObject(): Space;
+    toPlainObject(): object;
 }
 
 export interface Locale {
@@ -126,7 +128,7 @@ export interface SyncCollection {
     deletedEntries: Array<Entry<any>>;
     deletedAssets: Array<Asset>;
     nextSyncToken: string;
-    toPlainObject(): SyncCollection;
+    toPlainObject(): object;
     stringifySafe(replacer?: any, space?: any): string;
 }
 
@@ -235,7 +237,7 @@ type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'head
 interface RichTextContent {
     data: RichTextData;
     content?: RichTextContent[]
-    marks: {type: ('bold' | 'underline' | 'code')}[];
+    marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
     value?: string;
     nodeType: RichTextNodeType;
 }
