@@ -212,7 +212,7 @@ export namespace EntryFields {
     export type Object<T = any> = T;
     export interface RichText {
         data:{};
-        content: RichTextContent;
+        content: RichTextContent[];
         nodeType: 'document';
     }
 }
