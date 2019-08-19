@@ -25,7 +25,7 @@ Click **New draft advisory** and enter the information.
 ![step three](https://github.com/contentful/contentful.js/blob/master/security/step3.JPG)
 
 ### Option 2: Complete this Report
-If Option 1 did not work, or you find Option 2 easier, or you just don't want everybody to be able to see who submitted the report, contact us at (mailto:security@contentful.com?subject=Contentful.js%20Security%20Report)
+If Option 1 did not work, or you find Option 2 easier, or you just don't want everybody to be able to see who submitted the report, contact us at [security@contentful.com](mailto:security@contentful.com?subject=Contentful.js%20Security%20Report)
 
 **Include the following information in your email:**
 
