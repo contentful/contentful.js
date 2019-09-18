@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>entities/space.js - Documentation</title>
+    <title>entities/content-type.js - Documentation</title>
 
     <script src="scripts/hljs/highlight.min.js"></script>
     <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">entities/space.js</h1>
+    <h1 class="page-title">entities/content-type.js</h1>
     
 
     
@@ -36,26 +36,46 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import {toPlainObject, freezeSys} from 'contentful-sdk-core'
+            <pre class="prettyprint source linenums"><code>import cloneDeep from 'lodash/cloneDeep'
+import {toPlainObject, freezeSys} from 'contentful-sdk-core'
 
 /**
  * @memberof Entities
- * @typedef Space
- * @prop {Object} sys - System metadata
- * @prop {string} sys.id - Space id
- * @prop {string} sys.type - Entity type
- * @prop {string} name - Space name
- * @prop {Array&lt;string>} locales - Array with locale codes
- * @prop {function(): Object} toPlainObject() - Returns this Space as a plain JS object
+ * @typedef ContentType
+ * @prop {Entities.Sys} sys - System metadata
+ * @prop {string} name
+ * @prop {string} description
+ * @prop {string} displayField - Field used as the main display field for Entries
+ * @prop {string} Array&lt;Field> - All the fields contained in this Content Type
+ * @prop {function(): Object} toPlainObject() - Returns this Content Type as a plain JS object
  */
 
 /**
  * @private
- * @param  {Object} data - API response for a Space
- * @return {Space}
+ * @param {Object} data - Raw content type data
+ * @return {ContentType} Wrapped content type data
  */
-export function wrapSpace (data) {
-  return freezeSys(toPlainObject(data))
+export function wrapContentType (data) {
+  return freezeSys(toPlainObject(cloneDeep(data)))
+}
+
+/**
+ * @memberof Entities
+ * @typedef ContentTypeCollection
+ * @prop {number} total
+ * @prop {number} skip
+ * @prop {number} limit
+ * @prop {Array&lt;Entities.ContentType>} items
+ * @prop {function(): Object} toPlainObject() - Returns this Content Type collection as a plain JS object
+ */
+
+/**
+ * @private
+ * @param {Object} data - Raw content type collection data
+ * @return {ContentTypeCollection} Wrapped content type collection data
+ */
+export function wrapContentTypeCollection (data) {
+  return freezeSys(toPlainObject(cloneDeep(data)))
 }
 </code></pre>
         </article>
