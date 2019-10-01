@@ -1,6 +1,6 @@
 import test from 'blue-tape'
-import {localeMock} from '../mocks'
-import {wrapLocale, wrapLocaleCollection} from '../../../lib/entities/locale'
+import { localeMock } from '../mocks'
+import { wrapLocale, wrapLocaleCollection } from '../../../lib/entities/locale'
 
 test('Locale is wrapped', (t) => {
   const wrappedLocale = wrapLocale(localeMock)

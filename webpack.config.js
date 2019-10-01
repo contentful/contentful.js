@@ -1,7 +1,6 @@
 const path = require('path')
 
 const webpack = require('webpack')
-const MinifyPlugin = require('babel-minify-webpack-plugin')
 const clone = require('lodash/cloneDeep')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
@@ -20,9 +19,6 @@ const plugins = [
 
 if (PROD) {
   plugins.push(
-    new MinifyPlugin()
-  )
-  plugins.push(
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
@@ -30,7 +26,7 @@ if (PROD) {
   )
 }
 
-const baseFileName = `contentful`
+const baseFileName = 'contentful'
 
 const baseBundleConfig = {
   mode: PROD ? 'production' : 'development',
@@ -66,7 +62,7 @@ const browserBundle = clone(baseBundleConfig)
 browserBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
     options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'browser'
+      envName: 'browser'
     })
   })
 ]
@@ -77,20 +73,10 @@ const legacyBundle = clone(baseBundleConfig)
 legacyBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
     options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'legacy'
+      envName: 'legacy'
     })
   })
 ]
-// To be replaced with babel-polyfill with babel-preset-env 2.0:
-// https://github.com/babel/babel-preset-env#usebuiltins
-// https://github.com/babel/babel-preset-env/pull/241
-legacyBundle.entry = [
-  'core-js/fn/promise',
-  'core-js/fn/object/assign',
-  'core-js/fn/array/from',
-  'core-js/fn/array/find',
-  'core-js/fn/set'
-].concat(legacyBundle.entry)
 
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
 
@@ -99,7 +85,7 @@ const nodeBundle = clone(baseBundleConfig)
 nodeBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
     options: Object.assign({}, defaultBabelLoader.options, {
-      forceEnv: 'node'
+      envName: 'node'
     })
   })
 ]

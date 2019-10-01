@@ -1,8 +1,8 @@
 import test from 'blue-tape'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {entryMock, assetMock} from '../mocks'
-import {wrapEntry, wrapEntryCollection} from '../../../lib/entities/entry'
+import { entryMock, assetMock } from '../mocks'
+import { wrapEntry, wrapEntryCollection } from '../../../lib/entities/entry'
 
 test('Entry is wrapped', (t) => {
   const wrappedEntry = wrapEntry(entryMock)
@@ -47,8 +47,8 @@ test('Entry collection links are resolved', (t) => {
       cloneDeep(entryMock)
     ],
     includes: {
-      Entry: [ cloneDeep(entryMock) ],
-      Asset: [ cloneDeep(assetMock) ]
+      Entry: [cloneDeep(entryMock)],
+      Asset: [cloneDeep(assetMock)]
     }
   }
   // setup first entry
@@ -87,7 +87,7 @@ test('Entry collection links are resolved', (t) => {
     }
   }
 
-  const wrappedCollection = wrapEntryCollection(entryCollection, {resolveLinks: true})
+  const wrappedCollection = wrapEntryCollection(entryCollection, { resolveLinks: true })
   const wrappedEntry = wrappedCollection.toPlainObject()
 
   // first linked entry resolved from includes

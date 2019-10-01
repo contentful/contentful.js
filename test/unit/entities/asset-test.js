@@ -1,6 +1,6 @@
 import test from 'blue-tape'
-import {assetMock} from '../mocks'
-import {wrapAsset, wrapAssetCollection} from '../../../lib/entities/asset'
+import { assetMock } from '../mocks'
+import { wrapAsset, wrapAssetCollection } from '../../../lib/entities/asset'
 
 test('Asset is wrapped', (t) => {
   const wrappedAsset = wrapAsset(assetMock)

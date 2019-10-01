@@ -16,7 +16,7 @@ webpackConfig.node = {
 
 webpackConfig.module.rules = webpackConfig.module.rules.map((rule) => {
   if (rule.loader === 'babel-loader') {
-    rule.options.forceEnv = 'test'
+    rule.options.envName = 'test'
   }
   return rule
 })

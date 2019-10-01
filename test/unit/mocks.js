@@ -36,7 +36,7 @@ const contentTypeMock = {
 const entryMock = {
   sys: Object.assign(cloneDeep(sysMock), {
     type: 'Entry',
-    contentType: Object.assign(cloneDeep(linkMock), {linkType: 'ContentType'}),
+    contentType: Object.assign(cloneDeep(linkMock), { linkType: 'ContentType' }),
     locale: 'locale'
   }),
   fields: {

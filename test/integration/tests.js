@@ -90,11 +90,11 @@ test('Get entry fails if entryId does not exist', (t) => {
 test('Get entry with fallback locale', (t) => {
   t.plan(5)
   Promise.all([
-    localeClient.getEntry('no-af-and-no-zu-za', {locale: 'af'}),
-    localeClient.getEntry('no-af-and-no-zu-za', {locale: 'zu-ZA'}),
-    localeClient.getEntry('no-zu-ZA', {locale: 'zu-ZA'}),
-    localeClient.getEntry('no-ne-NP', {locale: 'ne-NP'}),
-    localeClient.getEntry('no-af', {locale: 'af'})
+    localeClient.getEntry('no-af-and-no-zu-za', { locale: 'af' }),
+    localeClient.getEntry('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
+    localeClient.getEntry('no-zu-ZA', { locale: 'zu-ZA' }),
+    localeClient.getEntry('no-ne-NP', { locale: 'ne-NP' }),
+    localeClient.getEntry('no-af', { locale: 'af' })
   ]).then((entries) => {
     t.notEqual(entries[0].fields.title, '')
     t.notEqual(entries[1].fields.title, '')
@@ -113,7 +113,7 @@ test('Gets entries', (t) => {
 })
 test('Gets entries with select', (t) => {
   t.plan(4)
-  return client.getEntries({select: 'fields.name,fields.likes', content_type: 'cat'})
+  return client.getEntries({ select: 'fields.name,fields.likes', content_type: 'cat' })
     .then((response) => {
       t.ok(response.items, 'items')
       t.ok(response.items[0].fields.name, 'fields.name')
@@ -157,7 +157,7 @@ test('Gets entries with a skip parameter', (t) => {
 
 test('Gets entries with linked includes', (t) => {
   t.plan(5)
-  return client.getEntries({include: 2, 'sys.id': 'nyancat'})
+  return client.getEntries({ include: 2, 'sys.id': 'nyancat' })
     .then((response) => {
       t.ok(response.includes, 'includes')
       t.ok(response.includes.Asset, 'includes for Assets')
@@ -169,7 +169,7 @@ test('Gets entries with linked includes', (t) => {
 
 test('Gets entry with link resolution', (t) => {
   t.plan(2)
-  return client.getEntry('nyancat', {include: 2})
+  return client.getEntry('nyancat', { include: 2 })
     .then((response) => {
       t.equal(response.fields.bestFriend.sys.type, 'Entry', 'entry gets resolved from other entries in collection')
       t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
@@ -178,7 +178,7 @@ test('Gets entry with link resolution', (t) => {
 
 test('Gets entries with content type query param', (t) => {
   t.plan(2)
-  return client.getEntries({content_type: 'cat'})
+  return client.getEntries({ content_type: 'cat' })
     .then((response) => {
       t.equal(response.total, 3)
       t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat'])
@@ -187,7 +187,7 @@ test('Gets entries with content type query param', (t) => {
 
 test('Gets entries with equality query', (t) => {
   t.plan(2)
-  return client.getEntries({'sys.id': 'nyancat'})
+  return client.getEntries({ 'sys.id': 'nyancat' })
     .then((response) => {
       t.equal(response.total, 1)
       t.equal(response.items[0].sys.id, 'nyancat')
@@ -196,7 +196,7 @@ test('Gets entries with equality query', (t) => {
 
 test('Gets entries with inequality query', (t) => {
   t.plan(2)
-  return client.getEntries({'sys.id[ne]': 'nyancat'})
+  return client.getEntries({ 'sys.id[ne]': 'nyancat' })
     .then((response) => {
       t.ok(response.total > 0)
       t.equal(response.items.filter((item) => item.sys.id === 'nyancat').length, 0)
@@ -229,7 +229,7 @@ test('Gets entries with array inequality query', (t) => {
 
 test('Gets entries with inclusion query', (t) => {
   t.plan(3)
-  return client.getEntries({'sys.id[in]': 'finn,jake'})
+  return client.getEntries({ 'sys.id[in]': 'finn,jake' })
     .then((response) => {
       t.equal(response.total, 2)
       t.equal(response.items.filter((item) => item.sys.id === 'finn').length, 1)
@@ -437,7 +437,7 @@ test('Gets Locales', (t) => {
 })
 test('Sync space', (t) => {
   t.plan(6)
-  return client.sync({initial: true})
+  return client.sync({ initial: true })
     .then((response) => {
       t.ok(response.entries, 'entries')
       t.ok(response.assets, 'assets')
@@ -450,7 +450,7 @@ test('Sync space', (t) => {
 
 test('Sync space with token', (t) => {
   t.plan(5)
-  return client.sync({nextSyncToken: 'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA'})
+  return client.sync({ nextSyncToken: 'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA' })
     .then((response) => {
       t.ok(response.entries, 'entries')
       t.ok(response.assets, 'assets')
@@ -462,7 +462,7 @@ test('Sync space with token', (t) => {
 
 test('Sync spaces assets', (t) => {
   t.plan(4)
-  return client.sync({initial: true, type: 'Asset'})
+  return client.sync({ initial: true, type: 'Asset' })
     .then((response) => {
       t.ok(response.assets, 'assets')
       t.ok(response.assets[0].toPlainObject, 'toPlainObject exists on asset')
@@ -473,7 +473,7 @@ test('Sync spaces assets', (t) => {
 
 test('Sync space entries by content type', (t) => {
   t.plan(4)
-  return client.sync({initial: true, type: 'Entry', content_type: 'dog'})
+  return client.sync({ initial: true, type: 'Entry', content_type: 'dog' })
     .then((response) => {
       t.ok(response.entries, 'entries')
       t.ok(response.entries[0].toPlainObject, 'toPlainObject exists on entry')
@@ -484,7 +484,7 @@ test('Sync space entries by content type', (t) => {
 
 test('Gets entries with linked includes with locale:*', (t) => {
   t.plan(5)
-  return client.getEntries({locale: '*', include: 5, 'sys.id': 'nyancat'})
+  return client.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
     .then((response) => {
       t.ok(response.includes, 'includes')
       t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
@@ -496,7 +496,7 @@ test('Gets entries with linked includes with locale:*', (t) => {
 
 test('Gets entries with linked includes with local:* in preview', (t) => {
   t.plan(5)
-  return previewClient.getEntries({locale: '*', include: 5, 'sys.id': 'nyancat'})
+  return previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
     .then((response) => {
       t.ok(response.includes, 'includes')
       t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')

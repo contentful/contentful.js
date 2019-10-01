@@ -42,12 +42,12 @@ function setupWithData ({
   const getStub = sinon.stub()
   const api = createContentfulApi({
     http: {
-      defaults: {baseURL: 'baseURL'},
+      defaults: { baseURL: 'baseURL' },
       get: getStub.returns(promise)
     },
     getGlobalOptions: getGlobalOptions
   })
-  return {api, getStub}
+  return { api, getStub }
 }
 
 function teardown () {
@@ -62,9 +62,9 @@ test('API call getSpace', (t) => {
       type: 'Space'
     },
     name: 'name',
-    locales: [ 'en-US' ]
+    locales: ['en-US']
   }
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data })
   })
   entitiesMock.space.wrapSpace.returns(data)
@@ -85,7 +85,7 @@ test('API call getSpace fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.space.wrapSpace.returns(data)
@@ -100,7 +100,7 @@ test('API call getSpace fails', (t) => {
 
 test('API call getContentType', (t) => {
   t.plan(1)
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: contentTypeMock })
   })
   entitiesMock.contentType.wrapContentType.returns(contentTypeMock)
@@ -121,7 +121,7 @@ test('API call getContentType fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.contentType.wrapContentType.returns(data)
@@ -142,7 +142,7 @@ test('API call getContentTypes', (t) => {
     limit: 10,
     items: [contentTypeMock]
   }
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data })
   })
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
@@ -163,7 +163,7 @@ test('API call getContentTypes fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
@@ -178,10 +178,10 @@ test('API call getContentTypes fails', (t) => {
 
 test('API call getEntry', (t) => {
   t.plan(2)
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: entryMock })
   })
-  api.getEntries = sinon.stub().resolves({items: [entryMock]})
+  api.getEntries = sinon.stub().resolves({ items: [entryMock] })
   entitiesMock.entry.wrapEntry.returns(entryMock)
 
   return api.getEntry('eid')
@@ -201,7 +201,7 @@ test('API call getEntry fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.entry.wrapEntry.returns(data)
@@ -224,7 +224,7 @@ test('API call getEntries', (t) => {
     items: [entryMock]
   }
 
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data })
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
@@ -240,15 +240,15 @@ test('API call getEntries', (t) => {
 test('API call getEntries with global resolve links overriden by query', (t) => {
   t.plan(1)
 
-  const data = {sys: {id: 'id'}}
+  const data = { sys: { id: 'id' } }
 
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data }),
     getGlobalOptions: createGlobalOptions({})
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
-  return api.getEntries({resolveLinks: true})
+  return api.getEntries({ resolveLinks: true })
     .then((r) => {
       t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
       teardown()
@@ -258,11 +258,11 @@ test('API call getEntries with global resolve links overriden by query', (t) => 
 test('API call getEntries with global resolve links turned off', (t) => {
   t.plan(2)
 
-  const data = {sys: {id: 'id'}}
+  const data = { sys: { id: 'id' } }
 
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data }),
-    getGlobalOptions: sinon.stub().returns({resolveLinks: false})
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: false })
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
@@ -283,7 +283,7 @@ test('API call getEntries fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
@@ -298,7 +298,7 @@ test('API call getEntries fails', (t) => {
 
 test('API call getAsset', (t) => {
   t.plan(1)
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: assetMock })
   })
   entitiesMock.asset.wrapAsset.returns(assetMock)
@@ -319,7 +319,7 @@ test('API call getAsset fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.asset.wrapAsset.returns(data)
@@ -340,7 +340,7 @@ test('API call getAssets', (t) => {
     limit: 10,
     items: [assetMock]
   }
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data })
   })
   entitiesMock.asset.wrapAssetCollection.returns(data)
@@ -361,7 +361,7 @@ test('API call getAssets fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.asset.wrapAssetCollection.returns(data)
@@ -382,7 +382,7 @@ test('API call getLocales', (t) => {
     limit: 10,
     items: [localeMock]
   }
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({ data: data })
   })
   entitiesMock.locale.wrapLocaleCollection.returns(data)
@@ -403,7 +403,7 @@ test('API call getLocaless fails', (t) => {
   }
   const rejectError = new Error()
   rejectError.data = data
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
   entitiesMock.locale.wrapLocaleCollection.returns(data)
@@ -418,7 +418,7 @@ test('API call getLocaless fails', (t) => {
 
 test('CDA call sync', (t) => {
   t.plan(5)
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.resolve({
       data: {
         items: [],
@@ -427,7 +427,7 @@ test('CDA call sync', (t) => {
     })
   })
 
-  return api.sync({initial: true})
+  return api.sync({ initial: true })
     .then((r) => {
       t.ok(r.entries, 'entries')
       t.ok(r.assets, 'assets')
@@ -442,10 +442,10 @@ test('CDA call sync fails', (t) => {
   t.plan(1)
   const rejectError = new Error()
   rejectError.data = 'error'
-  const {api} = setupWithData({
+  const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
-  return api.sync({initial: true})
+  return api.sync({ initial: true })
     .then(() => {
     }, (r) => {
       t.equal(r.data, 'error')
@@ -456,30 +456,31 @@ test('CDA call sync fails', (t) => {
 test('Given json should be parsed correctly as a collection of entries', (t) => {
   const api = createContentfulApi({
     http: {},
-    getGlobalOptions: sinon.stub().returns({resolveLinks: true})
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: true })
   })
-  const data = {items: [
-    {
-      sys: {type: 'Entry', locale: 'en-US'},
-      fields: {
-        animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
-        anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
-      }
-    }
-  ],
-  includes: {
-    Animal: [
+  const data = {
+    items: [
       {
-        sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+        sys: { type: 'Entry', locale: 'en-US' },
         fields: {
-          name: 'Pig',
-          friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
+          animal: { sys: { type: 'Link', linkType: 'Animal', id: 'oink' } },
+          anotheranimal: { sys: { type: 'Link', linkType: 'Animal', id: 'middle-parrot' } }
         }
       }
-    ]
+    ],
+    includes: {
+      Animal: [
+        {
+          sys: { type: 'Animal', id: 'oink', locale: 'en-US' },
+          fields: {
+            name: 'Pig',
+            friend: { sys: { type: 'Link', linkType: 'Animal', id: 'groundhog' } }
+          }
+        }
+      ]
+    }
   }
-  }
-  let parsedData = api.parseEntries(data)
+  const parsedData = api.parseEntries(data)
   t.ok(parsedData)
   t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
   t.end()
