@@ -93,7 +93,7 @@ test('API call getSpace fails', (t) => {
   return api.getSpace('spaceid')
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -129,7 +129,7 @@ test('API call getContentType fails', (t) => {
   return api.getContentType('ctid')
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -171,7 +171,7 @@ test('API call getContentTypes fails', (t) => {
   return api.getContentTypes()
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -209,7 +209,7 @@ test('API call getEntry fails', (t) => {
   return api.getEntry('eid')
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -291,7 +291,7 @@ test('API call getEntries fails', (t) => {
   return api.getEntries()
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -327,7 +327,7 @@ test('API call getAsset fails', (t) => {
   return api.getAsset('aid')
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -369,7 +369,7 @@ test('API call getAssets fails', (t) => {
   return api.getAssets()
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
@@ -394,7 +394,7 @@ test('API call getLocales', (t) => {
     })
 })
 
-test('API call getLocaless fails', (t) => {
+test('API call getLocales fails', (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -411,7 +411,7 @@ test('API call getLocaless fails', (t) => {
   return api.getLocales()
     .then(() => {
     }, (r) => {
-      t.looseEqual(r, data)
+      t.looseEqual(r.data, data)
       teardown()
     })
 })
