@@ -128,7 +128,7 @@
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "15Kb"
+      "maxSize": "16Kb"
     },
     {
       "path": "./dist/contentful.legacy.js",
