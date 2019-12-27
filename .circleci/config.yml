@@ -1,6 +1,39 @@
 version: 2.1
 jobs:
-  unit:
+  unit-node-10:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:cover
+      - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Build Success
+          when: on_success
+          command: ./node_modules/.bin/codecov
+  integration-node-10:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:integration
+  release-node-10:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - run: npm run semantic-release
+  unit-node-12:
     docker:
       - image: circleci/node:12
     steps:
@@ -15,7 +48,7 @@ jobs:
           name: Build Success
           when: on_success
           command: ./node_modules/.bin/codecov
-  integration:
+  integration-node-12:
     docker:
       - image: circleci/node:12
     steps:
@@ -25,7 +58,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run test:integration
-  release:
+  release-node-12:
     docker:
       - image: circleci/node:12
     steps:
@@ -37,9 +70,15 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - unit
-      - integration
-      - release:
+      - unit-node-10
+      - integration-node-10
+      - release-node-10:
           requires:
-            - unit
-            - integration
+            - unit-node-10
+            - integration-node-10
+      - unit-node-12
+      - integration-node-12
+      - release-node-12:
+          requires:
+            - unit-node-12
+            - integration-node-12

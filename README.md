@@ -100,7 +100,7 @@
 - Edge
 - IE11 (with [legacy version](#legacy-browsers) of the library)
 - Safari
-- node.js (12.x)
+- node.js (LTS)
 
 Other browsers should also work, but at the moment we're only running automated tests on the browsers and Node.js versions specified above.
 
