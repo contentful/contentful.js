@@ -2,7 +2,7 @@ import test from 'blue-tape'
 import cloneDeep from 'lodash/cloneDeep'
 import sinon from 'sinon'
 
-import {entryMock, assetMock} from './mocks'
+import { entryMock, assetMock } from './mocks'
 import pagedSync from '../../lib/paged-sync'
 
 function createEntry (id, deleted) {
@@ -25,27 +25,27 @@ function createAsset (id, deleted) {
 
 test('Throws with no parameters', (t) => {
   t.plan(1)
-  const http = {get: sinon.stub()}
+  const http = { get: sinon.stub() }
   t.throws(() => {
-    pagedSync(http, {}, {resolveLinks: true})
+    pagedSync(http, {}, { resolveLinks: true })
   }, /initial.*nextSyncToken/)
 })
 
 test('Throws with incompatible content_type and type parameter', (t) => {
   t.plan(1)
-  const http = {get: sinon.stub()}
+  const http = { get: sinon.stub() }
   t.throws(() => {
     pagedSync(http, {
       initial: true,
       content_type: 'id',
       type: 'ContentType'
-    }, {resolveLinks: true})
+    }, { resolveLinks: true })
   }, /content_type.*type.*Entry/)
 })
 
 test('Initial sync with one page', (t) => {
   t.plan(11)
-  const http = {get: sinon.stub()}
+  const http = { get: sinon.stub() }
   const entryWithLink = createEntry('1')
   entryWithLink.fields.linked = {
     sys: {
@@ -54,7 +54,7 @@ test('Initial sync with one page', (t) => {
       linkType: 'Entry'
     }
   }
-  http.get.withArgs('sync', {params: {initial: true}}).returns(Promise.resolve({
+  http.get.withArgs('sync', { params: { initial: true } }).returns(Promise.resolve({
     data: {
       items: [
         entryWithLink,
@@ -71,7 +71,7 @@ test('Initial sync with one page', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true}, {resolveLinks: true})
+  return pagedSync(http, { initial: true }, { resolveLinks: true })
     .then((response) => {
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
       t.equal(response.entries.length, 3, 'entries length')
@@ -89,12 +89,14 @@ test('Initial sync with one page', (t) => {
 
 test('Initial sync with one page and filter', (t) => {
   t.plan(5)
-  const http = {get: sinon.stub()}
-  http.get.withArgs('sync', {params: {
-    initial: true,
-    content_type: 'cat',
-    type: 'Entry'
-  }}).returns(Promise.resolve({
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', {
+    params: {
+      initial: true,
+      content_type: 'cat',
+      type: 'Entry'
+    }
+  }).returns(Promise.resolve({
     data: {
       items: [
         createEntry('1'),
@@ -105,7 +107,7 @@ test('Initial sync with one page and filter', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true, content_type: 'cat'}, {resolveLinks: true})
+  return pagedSync(http, { initial: true, content_type: 'cat' }, { resolveLinks: true })
     .then((response) => {
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
       t.equal(http.get.args[0][1].params.content_type, 'cat', 'http request has content type filter param')
@@ -117,8 +119,8 @@ test('Initial sync with one page and filter', (t) => {
 
 test('Initial sync with multiple pages', (t) => {
   t.plan(12)
-  const http = {get: sinon.stub()}
-  http.get.withArgs('sync', {params: {initial: true, type: 'Entries'}}).returns(Promise.resolve({
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', { params: { initial: true, type: 'Entries' } }).returns(Promise.resolve({
     data: {
       items: [
         createEntry('1'),
@@ -128,7 +130,7 @@ test('Initial sync with multiple pages', (t) => {
     }
   }))
 
-  http.get.withArgs('sync', {params: {sync_token: 'nextpage1'}}).returns(Promise.resolve({
+  http.get.withArgs('sync', { params: { sync_token: 'nextpage1' } }).returns(Promise.resolve({
     data: {
       items: [
         createEntry('3'),
@@ -140,7 +142,7 @@ test('Initial sync with multiple pages', (t) => {
     }
   }))
 
-  http.get.withArgs('sync', {params: {sync_token: 'nextpage2'}}).returns(Promise.resolve({
+  http.get.withArgs('sync', { params: { sync_token: 'nextpage2' } }).returns(Promise.resolve({
     data: {
       items: [
         createAsset('2'),
@@ -151,7 +153,7 @@ test('Initial sync with multiple pages', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true, type: 'Entries'}, {resolveLinks: true})
+  return pagedSync(http, { initial: true, type: 'Entries' }, { resolveLinks: true })
     .then((response) => {
       const objResponse = response.toPlainObject()
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
@@ -171,8 +173,8 @@ test('Initial sync with multiple pages', (t) => {
 
 test('Sync with existing token', (t) => {
   t.plan(6)
-  const http = {get: sinon.stub()}
-  http.get.withArgs('sync', {params: {sync_token: 'nextsynctoken'}}).returns(Promise.resolve({
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', { params: { sync_token: 'nextsynctoken' } }).returns(Promise.resolve({
     data: {
       items: [
         createEntry('1'),
@@ -184,7 +186,7 @@ test('Sync with existing token', (t) => {
     }
   }))
 
-  return pagedSync(http, {nextSyncToken: 'nextsynctoken'}, {resolveLinks: true})
+  return pagedSync(http, { nextSyncToken: 'nextsynctoken' }, { resolveLinks: true })
     .then((response) => {
       t.equal(http.get.args[0][1].params.sync_token, 'nextsynctoken', 'http request param for sync')
       t.equal(response.entries.length, 1, 'entries length')
@@ -198,8 +200,8 @@ test('Sync with existing token', (t) => {
 test('Initial sync with multiple pages but pagination disabled', (t) => {
   t.plan(18)
 
-  const http = {get: sinon.stub()}
-  http.get.withArgs('sync', {params: {initial: true, type: 'Entries'}}).returns(Promise.resolve({
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', { params: { initial: true, type: 'Entries' } }).returns(Promise.resolve({
     data: {
       items: [
         createEntry('1'),
@@ -209,7 +211,7 @@ test('Initial sync with multiple pages but pagination disabled', (t) => {
     }
   }))
 
-  http.get.withArgs('sync', {params: {sync_token: 'nextpage1'}}).returns(Promise.resolve({
+  http.get.withArgs('sync', { params: { sync_token: 'nextpage1' } }).returns(Promise.resolve({
     data: {
       items: [
         createEntry('3'),
@@ -221,7 +223,7 @@ test('Initial sync with multiple pages but pagination disabled', (t) => {
     }
   }))
 
-  http.get.withArgs('sync', {params: {sync_token: 'nextpage2'}}).returns(Promise.resolve({
+  http.get.withArgs('sync', { params: { sync_token: 'nextpage2' } }).returns(Promise.resolve({
     data: {
       items: [
         createAsset('2'),
@@ -232,7 +234,7 @@ test('Initial sync with multiple pages but pagination disabled', (t) => {
     }
   }))
 
-  return pagedSync(http, {initial: true, type: 'Entries'}, {paginate: false})
+  return pagedSync(http, { initial: true, type: 'Entries' }, { paginate: false })
     .then((response) => {
       const objResponse = response.toPlainObject()
       t.equal(http.get.callCount, 1, 'only one request was sent')
@@ -247,7 +249,7 @@ test('Initial sync with multiple pages but pagination disabled', (t) => {
       t.ok(response.stringifySafe(), 'stringifies response')
 
       // Manually sync next page
-      return pagedSync(http, {nextPageToken: objResponse.nextPageToken}, {paginate: false})
+      return pagedSync(http, { nextPageToken: objResponse.nextPageToken }, { paginate: false })
     })
     .then((response) => {
       const objResponse = response.toPlainObject()
@@ -257,7 +259,7 @@ test('Initial sync with multiple pages but pagination disabled', (t) => {
       t.notOk(objResponse.nextSyncToken, 'next sync token should not exist')
 
       // Manually sync next (last) page
-      return pagedSync(http, {nextPageToken: objResponse.nextPageToken}, {paginate: false})
+      return pagedSync(http, { nextPageToken: objResponse.nextPageToken }, { paginate: false })
     })
     .then((response) => {
       const objResponse = response.toPlainObject()

@@ -1,8 +1,8 @@
 import test from 'blue-tape'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {sysMock} from '../mocks'
-import {wrapContentType, wrapContentTypeCollection} from '../../../lib/entities/content-type'
+import { sysMock } from '../mocks'
+import { wrapContentType, wrapContentTypeCollection } from '../../../lib/entities/content-type'
 
 const contentType = {
   sys: Object.assign(cloneDeep(sysMock), {
@@ -12,7 +12,7 @@ const contentType = {
   description: 'this is a ct',
   displayField: 'fieldname',
   fields: [
-    {id: 'fieldname', name: 'field name', type: 'Text', localized: false, required: false}
+    { id: 'fieldname', name: 'field name', type: 'Text', localized: false, required: false }
   ]
 }
 
