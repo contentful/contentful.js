@@ -507,12 +507,13 @@ test('Gets entries with linked includes with local:* in preview', (t) => {
 })
 
 test('Logs request and response with custom loggers', (t) => {
-  t.plan(3)
+  t.plan(4)
 
   return clientWithLoggers.getEntries()
     .then(() => {
       t.equal(responseLoggerStub.callCount, 1, 'responseLogger is called')
       t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
-      t.equal(requestLoggerStub.args[0][0].url, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master/entries', 'requestLogger is called with correct url')
+      t.equal(requestLoggerStub.args[0][0].baseURL, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master', 'requestLogger is called with correct base url')
+      t.equal(requestLoggerStub.args[0][0].url, 'entries', 'requestLogger is called with correct url')
     })
 })
