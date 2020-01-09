@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   unit:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     steps:
       - checkout
       - restore_cache:
@@ -17,7 +17,7 @@ jobs:
           command: ./node_modules/.bin/codecov
   integration:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     steps:
       - checkout
       - restore_cache:
@@ -27,7 +27,7 @@ jobs:
       - run: npm run test:integration
   release:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     steps:
       - checkout
       - run: npm install

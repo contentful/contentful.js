@@ -31,6 +31,7 @@ export interface CreateClientParams {
     retryOnError?: boolean;
     logHandler?: (level: ClientLogLevel, data?: any) => void;
     timeout?: number;
+    retryLimit?: number;
 }
 
 export interface ContentfulClientApi {
