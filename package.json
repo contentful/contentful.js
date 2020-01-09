@@ -136,7 +136,7 @@
     },
     {
       "path": "./dist/contentful.legacy.min.js",
-      "maxSize": "24Kb"
+      "maxSize": "25Kb"
     },
     {
       "path": "./dist/contentful.node.js",
