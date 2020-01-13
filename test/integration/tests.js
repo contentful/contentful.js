@@ -87,6 +87,11 @@ test('Get entry fails if entryId does not exist', (t) => {
   return t.shouldFail(client.getEntry('nyancatblah'))
 })
 
+test('Get entry fails if an entryId is not passed', (t) => {
+  t.plan(1)
+  return t.shouldFail(client.getEntry())
+})
+
 test('Get entry with fallback locale', (t) => {
   t.plan(5)
   Promise.all([
