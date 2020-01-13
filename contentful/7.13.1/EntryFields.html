@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Sync - Documentation</title>
+    <title>EntryFields - Documentation</title>
 
     <script src="scripts/hljs/highlight.min.js"></script>
     <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Sync</h1>
+    <h1 class="page-title">EntryFields</h1>
     
 
     
@@ -39,7 +39,7 @@
 <header>
     
         <h2>
-        Sync
+        EntryFields
         </h2>
         
     
@@ -55,7 +55,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="paged-sync.js.html">paged-sync.js</a>, <a href="paged-sync.js.html#line1">line 1</a>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line6">line 6</a>
     </li></ul></dd>
     
 
@@ -94,7 +94,7 @@
 
 
         
-            <div class="description">See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.</div>
+            <div class="description">Types of fields found in an Entry</div>
         
 
         
@@ -117,7 +117,7 @@
 
         
                 
-<h4 class="name" id=".DeletedAsset">DeletedAsset</h4>
+<h4 class="name" id=".Boolean">Boolean</h4>
 
 
 
@@ -128,7 +128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="paged-sync.js.html">paged-sync.js</a>, <a href="paged-sync.js.html#line28">line 28</a>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -167,17 +167,13 @@
 
 
 
-<div class="description">
-    Deleted Assets are the same as Assets, but only appear on the sync API.
-</div>
-
 
 
     <h5>Type:</h5>
     <ul>
         <li>
             
-<span class="param-type"><a href="Entities.html#.Asset">Entities.Asset</a></span>
+<span class="param-type">boolean</span>
 
 
         </li>
@@ -190,7 +186,7 @@
 
             
                 
-<h4 class="name" id=".DeletedEntry">DeletedEntry</h4>
+<h4 class="name" id=".Date">Date</h4>
 
 
 
@@ -201,7 +197,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="paged-sync.js.html">paged-sync.js</a>, <a href="paged-sync.js.html#line21">line 21</a>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -240,17 +236,13 @@
 
 
 
-<div class="description">
-    Deleted Entries are the same as Entries, but only appear on the sync API.
-</div>
-
 
 
     <h5>Type:</h5>
     <ul>
         <li>
             
-<span class="param-type"><a href="Entities.html#.Entry">Entities.Entry</a></span>
+<span class="param-type">string</span>
 
 
         </li>
@@ -263,7 +255,7 @@
 
             
                 
-<h4 class="name" id=".SyncCollection">SyncCollection</h4>
+<h4 class="name" id=".Integer">Integer</h4>
 
 
 
@@ -274,7 +266,76 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="paged-sync.js.html">paged-sync.js</a>, <a href="paged-sync.js.html#line9">line 9</a>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".Location">Location</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -337,99 +398,7 @@
 
         <tr>
             
-                <td class="name"><code>entries</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="Entities.html#.Entry">Entities.Entry</a>></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">All existing entries on first sync. New and updated entries on subsequent syncs.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>assets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="Entities.html#.Asset">Entities.Asset</a>></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">All existing assets on first sync. New and updated assets on subsequent syncs.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>deletedEntries</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="Sync.html#.DeletedEntry">Sync.DeletedEntry</a>></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">List of deleted Entries since last sync</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>deletedAssets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="Sync.html#.DeletedAsset">Sync.DeletedAsset</a>></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">List of deleted Assets since last sync</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>nextSyncToken</code></td>
+                <td class="name"><code>lat</code></td>
             
 
             <td class="type">
@@ -445,20 +414,20 @@
 
             
 
-            <td class="description last">Token to be sent to the next sync call</td>
+            <td class="description last">latitude</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>toPlainObject()</code></td>
+                <td class="name"><code>lon</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
             
@@ -468,30 +437,7 @@
 
             
 
-            <td class="description last">Returns this Sync collection as a plain JS object</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>stringifySafe(replacer,space)</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Stringifies the Sync collection, accounting for circular references. Circular references will be replaced with just a Link object, with a <code>circular</code> property set to <code>true</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">MDN</a> and <a href="https://www.npmjs.com/package/json-stringify-safe">json-stringify-safe</a> for more details on the arguments this method can take.</td>
+            <td class="description last">longitude</td>
         </tr>
 
     
@@ -504,6 +450,213 @@
 
 
 
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".Number">Number</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".Symbol">Symbol</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".Text">Text</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_entry.js.html">entities/entry.js</a>, <a href="entities_entry.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
 
 
 
