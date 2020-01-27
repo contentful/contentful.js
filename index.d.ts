@@ -139,9 +139,19 @@ export interface Sys {
     createdAt: string;
     updatedAt: string;
     locale: string;
-    contentType: {
+    revision?: number;
+    space: {
+        sys: SpaceLink;
+    };
+    contentType?: {
         sys: ContentTypeLink;
     };
+}
+
+export interface SpaceLink {
+    type: 'Link';
+    linkType: 'Space';
+    id: string;
 }
 
 export interface ContentTypeLink {
