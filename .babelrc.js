@@ -1,10 +1,9 @@
-var env = process.env.BABEL_ENV || process.env.NODE_ENV
-
 var defaultBabelPresetEnvConfig = {
   // No module transformation, webpack will take care of this if necessary.
   modules: false,
   useBuiltIns: 'entry',
-  corejs: 3
+  corejs: 3,
+  // debug: process.env.NODE_ENV !== 'production'
 }
 
 // Latest browsers
@@ -13,7 +12,11 @@ var browserBabelPresetEnvConfig = Object.assign(
   defaultBabelPresetEnvConfig,
   {
     targets: {
-      browsers: ['last 2 versions', 'not ie < 13', 'not android < 50']
+      browsers: [
+        'last 2 versions',
+        'not ie < 13',
+        'not android < 50'
+      ]
     }
   }
 )
@@ -41,7 +44,7 @@ var modulesBabelPresetEnvConfig = Object.assign(
   {},
   defaultBabelPresetEnvConfig,
   {
-    targets: Object.assign(
+    targets: Object.assign({},
       legacyBabelPresetEnvConfig.targets,
       nodeBabelPresetEnvConfig.targets
     )
@@ -69,35 +72,43 @@ var babelConfig = {
   plugins
 }
 
-if (env === 'browser') {
-  babelConfig = Object.assign(babelConfig, {
-    presets: [['@babel/preset-env', browserBabelPresetEnvConfig]]
-  })
-}
+module.exports = function (api) {
 
-if (env === 'legacy') {
-  babelConfig = Object.assign(babelConfig, {
-    presets: [['@babel/preset-env', legacyBabelPresetEnvConfig]]
-  })
-}
+  var env = api.env()
 
-if (env === 'modules') {
-  babelConfig = Object.assign(babelConfig, {
-    presets: [['@babel/preset-env', modulesBabelPresetEnvConfig]]
-  })
-}
+  if (env === 'browser') {
+    babelConfig = Object.assign({}, babelConfig, {
+      presets: [['@babel/preset-env', browserBabelPresetEnvConfig]]
+    })
+  }
 
-if (env === 'node') {
-  babelConfig = Object.assign(babelConfig, {
-    presets: [['@babel/preset-env', nodeBabelPresetEnvConfig]]
-  })
-}
+  if (env === 'legacy') {
+    babelConfig = Object.assign({}, babelConfig, {
+      presets: [['@babel/preset-env', legacyBabelPresetEnvConfig]]
+    })
+  }
 
-if (env === 'test') {
-  babelConfig = Object.assign(babelConfig, {
-    presets: [['@babel/preset-env', testBabelPresetEnvConfig]],
-    plugins: babelConfig.plugins.concat(['rewire'])
-  })
-}
+  if (env === 'modules') {
+    babelConfig = Object.assign({}, babelConfig, {
+      presets: [['@babel/preset-env', modulesBabelPresetEnvConfig]]
+    })
+  }
 
-module.exports = babelConfig
+  if (env === 'node') {
+    babelConfig = Object.assign({}, babelConfig, {
+      presets: [['@babel/preset-env', nodeBabelPresetEnvConfig]]
+    })
+  }
+
+  if (env === 'test') {
+    babelConfig = Object.assign({}, babelConfig, {
+      presets: [['@babel/preset-env', testBabelPresetEnvConfig]],
+      plugins: babelConfig.plugins.concat(['rewire'])
+    })
+  }
+
+  console.debug('BABEL ENV: ' + env)
+  console.table(babelConfig.presets.map(p => p[1].targets))
+
+  return babelConfig
+}
