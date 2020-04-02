@@ -3,7 +3,6 @@ var defaultBabelPresetEnvConfig = {
   modules: false,
   useBuiltIns: 'entry',
   corejs: 3,
-  // debug: process.env.NODE_ENV !== 'production'
 }
 
 // Latest browsers
