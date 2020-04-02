@@ -102,7 +102,7 @@
     "karma-webpack": "^4.0.2",
     "lodash-webpack-plugin": "^0.11.4",
     "mkdirp": "^0.5.1",
-    "nodemon": "^1.15.1",
+    "nodemon": "^2.0.2",
     "require-all": "^3.0.0",
     "rimraf": "^3.0.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
