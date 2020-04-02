@@ -145,7 +145,25 @@
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "21Kb"
+      "maxSize": "22Kb"
     }
-  ]
+  ],
+  "release": {
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "releaseRules": [
+            {
+              "type": "build",
+              "scope": "deps",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm"
+    ]
+  }
 }
