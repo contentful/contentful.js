@@ -20,10 +20,10 @@
     "build:standalone": "NODE_ENV=development webpack && NODE_ENV=production webpack",
     "build:standalone:log": "NODE_ENV=production WEBPACK_MODE=log webpack --json --profile --progress > webpack-build-log.json && webpack-bundle-analyzer webpack-build-log.json",
     "postbuild": "npm run check:browser && npm run check:legacy && npm run check:modules",
-    "check:legacy" : "es-check es5 ./dist/contentful.legacy.js ./dist/contentful.legacy.min.js",
-    "check:browser" : "es-check es6 ./dist/contentful.browser.js ./dist/contentful.browser.min.js",
-    "check:node" : "es-check es6 ./dist/contentful.node.js ./dist/contentful.node.min.js",
-    "check:modules" : "es-check es6 --module ./dist/es-modules/**/*.js",
+    "check:legacy": "es-check es5 ./dist/contentful.legacy.js ./dist/contentful.legacy.min.js",
+    "check:browser": "es-check es6 ./dist/contentful.browser.js ./dist/contentful.browser.min.js",
+    "check:node": "es-check es6 ./dist/contentful.node.js ./dist/contentful.node.min.js",
+    "check:modules": "es-check es6 --module ./dist/es-modules/**/*.js",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
@@ -76,6 +76,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
+    "@semantic-release/changelog": "^5.0.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-plugin-inline-replace-variables": "^1.3.1",
@@ -169,7 +170,9 @@
         }
       ],
       "@semantic-release/release-notes-generator",
-      "@semantic-release/npm"
+      "@semantic-release/npm",
+      "@semantic-release/changelog",
+      "@semantic-release/github"
     ]
   }
 }
