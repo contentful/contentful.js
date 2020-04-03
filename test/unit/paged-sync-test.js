@@ -117,6 +117,34 @@ test('Initial sync with one page and filter', (t) => {
     })
 })
 
+test('Initial sync with one page and limit', (t) => {
+  t.plan(4)
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', {
+    params: {
+      initial: true,
+      limit: 10
+    }
+  }).returns(Promise.resolve({
+    data: {
+      items: [
+        createEntry('1'),
+        createEntry('2'),
+        createEntry('3')
+      ],
+      nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken'
+    }
+  }))
+
+  return pagedSync(http, { initial: true, limit: 10 }, { resolveLinks: true })
+    .then((response) => {
+      t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
+      t.equal(http.get.args[0][1].params.limit, 10, 'http request has limit param')
+      t.equal(response.entries.length, 3, 'entries length')
+      t.equal(response.nextSyncToken, 'nextsynctoken', 'next sync token')
+    })
+})
+
 test('Initial sync with multiple pages', (t) => {
   t.plan(12)
   const http = { get: sinon.stub() }
@@ -159,6 +187,62 @@ test('Initial sync with multiple pages', (t) => {
       t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
       t.equal(http.get.args[0][1].params.type, 'Entries', 'http request has type param')
       t.notOk(http.get.args[1][1].params.initial, 'second http request does not have initial param')
+      t.notOk(http.get.args[1][1].params.type, 'second http request does not have type param')
+      t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
+      t.equal(http.get.args[2][1].params.sync_token, 'nextpage2', 'http request param for second page')
+      t.equal(objResponse.entries.length, 3, 'entries length')
+      t.equal(objResponse.deletedEntries.length, 2, 'deleted entries length')
+      t.equal(objResponse.assets.length, 3, 'entries length')
+      t.equal(objResponse.deletedAssets.length, 1, 'deleted assets length')
+      t.equal(objResponse.nextSyncToken, 'nextsynctoken', 'next sync token')
+      t.ok(response.stringifySafe(), 'stringifies response')
+    })
+})
+
+test('Initial sync with limit and multiple pages', (t) => {
+  t.plan(14)
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', { params: { initial: true, limit: 10, type: 'Entries' } }).returns(Promise.resolve({
+    data: {
+      items: [
+        createEntry('1'),
+        createEntry('2')
+      ],
+      nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1'
+    }
+  }))
+
+  http.get.withArgs('sync', { params: { sync_token: 'nextpage1' } }).returns(Promise.resolve({
+    data: {
+      items: [
+        createEntry('3'),
+        createEntry('3', true),
+        createEntry('3', true),
+        createAsset('1')
+      ],
+      nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2'
+    }
+  }))
+
+  http.get.withArgs('sync', { params: { sync_token: 'nextpage2' } }).returns(Promise.resolve({
+    data: {
+      items: [
+        createAsset('2'),
+        createAsset('3'),
+        createAsset('3', true)
+      ],
+      nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken'
+    }
+  }))
+
+  return pagedSync(http, { initial: true, limit: 10, type: 'Entries' }, { resolveLinks: true })
+    .then((response) => {
+      const objResponse = response.toPlainObject()
+      t.ok(http.get.args[0][1].params.initial, 'http request has initial param')
+      t.equal(http.get.args[0][1].params.limit, 10, 'http request has limit param')
+      t.equal(http.get.args[0][1].params.type, 'Entries', 'http request has type param')
+      t.notOk(http.get.args[1][1].params.initial, 'second http request does not have initial param')
+      t.notOk(http.get.args[1][1].params.limit, 'second http request does not have limit param')
       t.notOk(http.get.args[1][1].params.type, 'second http request does not have type param')
       t.equal(http.get.args[1][1].params.sync_token, 'nextpage1', 'http request param for first page')
       t.equal(http.get.args[2][1].params.sync_token, 'nextpage2', 'http request param for second page')
