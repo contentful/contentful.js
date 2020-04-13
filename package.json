@@ -65,7 +65,7 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "axios": "CookiesCo/axios#4e525eb228c55b82a326e2f3eb7329dcfe5e3e64",
+    "axios": "CookiesCo/axios#771e62bff9b5c573807a43db512f6dc92bfbbea9",
     "contentful-resolve-response": "^1.1.4",
     "contentful-sdk-core": "^6.4.0",
     "json-stringify-safe": "^5.0.1",
@@ -138,7 +138,7 @@
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "17Kb"
+      "maxSize": "18Kb"
     },
     {
       "path": "./dist/contentful.legacy.js",
@@ -150,11 +150,11 @@
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "60Kb"
+      "maxSize": "61Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "23Kb"
+      "maxSize": "24Kb"
     }
   ],
   "release": {
