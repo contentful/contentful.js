@@ -68,6 +68,20 @@ browserBundle.module.rules = [
 ]
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
+// Workers
+const workerBundle = clone(baseBundleConfig)
+workerBundle.module.rules = [
+  Object.assign({}, defaultBabelLoader, {
+    options: Object.assign({}, defaultBabelLoader.options, {
+      envName: 'webworker'
+    })
+  })
+]
+workerBundle.target = 'webworker'
+workerBundle.output.libraryTarget = 'commonjs2'
+workerBundle.output.filename = `${baseFileName}.worker${PROD ? '.min' : ''}.js`
+delete workerBundle.node
+
 // Legacy browsers like IE11
 const legacyBundle = clone(baseBundleConfig)
 legacyBundle.module.rules = [
@@ -96,6 +110,7 @@ delete nodeBundle.node
 
 module.exports = [
   browserBundle,
+  workerBundle,
   legacyBundle,
   nodeBundle
 ]
