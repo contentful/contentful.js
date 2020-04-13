@@ -65,7 +65,7 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "axios": "CookiesCo/axios#771e62bff9b5c573807a43db512f6dc92bfbbea9",
+    "axios": "CookiesCo/axios#753bd710a986b4c99a0cf299aaa335000f7a3ba8",
     "contentful-resolve-response": "^1.1.4",
     "contentful-sdk-core": "^6.4.0",
     "json-stringify-safe": "^5.0.1",
