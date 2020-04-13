@@ -4,6 +4,7 @@
   "version": "0.0.0-determined-by-semantic-release",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/contentful.node.js",
+  "browser": "./dist/contentful.browser.js",
   "module": "./dist/es-modules/contentful.js",
   "jsnext:main": "./dist/es-modules/contentful.js",
   "repository": {
