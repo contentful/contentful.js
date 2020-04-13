@@ -63,7 +63,7 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "axios": "sgammon/axios#f2b52d5febdc429ff40e737cfde8e3fab36a8d32",
+    "axios": "CookiesCo/axios#4e525eb228c55b82a326e2f3eb7329dcfe5e3e64",
     "contentful-resolve-response": "^1.1.4",
     "contentful-sdk-core": "^6.4.0",
     "json-stringify-safe": "^5.0.1",
@@ -122,7 +122,7 @@
     "webpack-cli": "^3.1.1"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=10.18"
   },
   "config": {
     "commitizen": {
