@@ -66,8 +66,8 @@
   ],
   "dependencies": {
     "axios": "CookiesCo/axios#c94f896c41d9e1555476f1a8fdc4f619dd43805b",
+    "contentful-sdk-core": "CookiesCo/contentful-sdk-core#9c8cdc7957188d53adcb284a9d369b5a92981bf5",
     "contentful-resolve-response": "^1.1.4",
-    "contentful-sdk-core": "^6.4.0",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.11"
   },
