@@ -140,10 +140,10 @@ export interface Sys {
     updatedAt: string;
     locale: string;
     revision?: number;
-    space: {
+    space?: {
         sys: SpaceLink;
     };
-    contentType?: {
+    contentType: {
         sys: ContentTypeLink;
     };
 }
