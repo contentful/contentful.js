@@ -34,12 +34,12 @@
     <img src="https://data.jsdelivr.com/v1/package/npm/contentful/badge" alt="jsDelivr Hits">
   </a>
   &nbsp;
-  <a href="http://npm-stat.com/charts.html?package=contentful">
+  <a href="https://npm-stat.com/charts.html?package=contentful">
     <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
   </a>
   &nbsp;
   <a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
-    <img src="http://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
+    <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
   </a>
 </p>
 
@@ -387,8 +387,6 @@ We gathered all information related to migrating from older versions of the libr
 
 
 ## Get involved
-
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
 
 We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
 
