@@ -48,7 +48,7 @@ export interface ContentfulClientApi {
 }
 
 export interface Asset {
-    sys: Sys;
+    sys: EntitySys<Asset>;
     fields: {
         title: string;
         description: string;
@@ -79,7 +79,7 @@ export interface ContentfulCollection<T> {
 export type AssetCollection = ContentfulCollection<Asset>
 
 export interface Entry<T> {
-    sys: Sys;
+    sys: EntrySys;
     fields: T;
     toPlainObject(): object;
     update(): Promise<Entry<T>>;
@@ -92,7 +92,7 @@ export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
 }
 
 export interface ContentType {
-    sys: Sys;
+    sys: EntitySys<ContentType>;
     name: string;
     description: string;
     displayField: string;
@@ -103,7 +103,7 @@ export interface ContentType {
 export type ContentTypeCollection = ContentfulCollection<ContentType>;
 
 export interface Space {
-    sys: Sys;
+    sys: BaseSys;
     name: string;
     locales: Array<string>;
     toPlainObject(): object;
@@ -133,31 +133,34 @@ export interface SyncCollection {
     stringifySafe(replacer?: any, space?: any): string;
 }
 
-export interface Sys {
-    type: string;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    locale: string;
-    revision?: number;
-    space?: {
-        sys: SpaceLink;
-    };
-    contentType?: {
-        sys: ContentTypeLink;
-    };
+export type EntityType = 'Asset' | 'Entry' | 'ContentType'
+export interface BaseSys<Type extends EntityType> {
+    id: string
+    type: Type
+    revision?: number
+
+    createdAt: string
+    updatedAt: string
+
+    space?: Link<Space> //TODO confused about these ones
+    environment?: Link<Environment>
 }
 
-export interface SpaceLink {
-    type: 'Link';
-    linkType: 'Space';
-    id: string;
+export interface EntrySys extends BaseSys<Entry> {
+    contentType: Link<ContentType>
 }
 
-export interface ContentTypeLink {
-    type: 'Link';
-    linkType: 'ContentType';
-    id: string;
+export interface Entity<Type extends EntityType = EntityType> {
+  sys: EntitySys<Type>
+}
+
+export type LinkType = 'Space' | 'Environment' | 'ContentType'
+export interface Link<Type extends LinkType> {
+    sys: {
+        type: 'Link';
+        linkType: Type,
+        id: string
+    }
 }
 
 export interface Field {
