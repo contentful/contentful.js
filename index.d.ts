@@ -143,7 +143,7 @@ export interface Sys {
     space?: {
         sys: SpaceLink;
     };
-    contentType: {
+    contentType?: {
         sys: ContentTypeLink;
     };
 }
