@@ -63,7 +63,7 @@
     "tonic-example.js"
   ],
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.20.0",
     "contentful-resolve-response": "^1.2.2",
     "contentful-sdk-core": "^6.4.5",
     "json-stringify-safe": "^5.0.1",
