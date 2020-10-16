@@ -66,6 +66,24 @@ test('Returns empty response if response has no items', (t) => {
 
 })
 
+test('Returns empty response if response is empty', (t) => {
+  t.plan(4)
+  const http = { get: sinon.stub() }
+  http.get.withArgs('sync', {
+    params: {
+      initial: true
+    }
+  }).returns(Promise.resolve({}))
+
+  return pagedSync(http, { initial: true }, { resolveLinks: true })
+    .then(response => {
+      t.deepEqual(response.entries, [])
+      t.deepEqual(response.assets, [])
+      t.deepEqual(response.deletedEntries, [])
+      t.deepEqual(response.deletedAssets, [])
+    })
+})
+
 test('Initial sync with one page', (t) => {
   t.plan(11)
   const http = { get: sinon.stub() }
