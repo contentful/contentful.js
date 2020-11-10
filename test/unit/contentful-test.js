@@ -169,7 +169,31 @@ test('Initializes API with link resolution turned off explicitly', (t) => {
   t.end()
 })
 
-test('Initializes API and attaches default environment', (t) => {
+test('Initializes API with custom timeout parameter', t => {
+  const createHttpClientStub = sinon.stub().returns({
+    defaults: {
+      baseURL: 'http://some-base-url.com/'
+    },
+    interceptors: {
+      response: {
+        use: sinon.stub()
+      }
+    }
+  })
+  const rateLimitStub = sinon.stub()
+  createClientRewireApi.__Rewire__('createHttpClient', createHttpClientStub)
+  createClientRewireApi.__Rewire__('rateLimit', rateLimitStub)
+  const apiStub = sinon.stub().returns({})
+  createClientRewireApi.__Rewire__('createContentfulApi', apiStub)
+  createClient({ accessToken: 'accesstoken', space: 'spaceid', timeout: 20000 })
+  t.ok(apiStub.args[0][0].getGlobalOptions({}).timeout, 'not overriden by query')
+  t.notOk(apiStub.args[0][0].getGlobalOptions({ timeout: 30000 }).resolveLinks, 'overriden by query')
+  createClientRewireApi.__ResetDependency__('createHttpClient')
+  createClientRewireApi.__ResetDependency__('rateLimit')
+  t.end()
+})
+
+test('Initializes API and attaches default environment', t => {
   const createHttpClientStub = sinon.stub().returns({
     defaults: {
       baseURL: 'http://some-base-url.com/'
