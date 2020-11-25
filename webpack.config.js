@@ -1,8 +1,7 @@
 const path = require('path')
 
 const webpack = require('webpack')
-const copy = require('fast-copy').default
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const copy = require('fast-copy')
 
 const PROD = process.env.NODE_ENV === 'production'
 
@@ -10,10 +9,6 @@ const plugins = [
   new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-  }),
-  new LodashModuleReplacementPlugin({
-    caching: true,
-    cloning: true
   })
 ]
 
