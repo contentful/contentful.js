@@ -64,10 +64,10 @@
   ],
   "dependencies": {
     "axios": "^0.20.0",
-    "contentful-resolve-response": "^1.2.2",
-    "contentful-sdk-core": "^6.4.5",
-    "json-stringify-safe": "^5.0.1",
-    "lodash": "^4.17.11"
+    "contentful-resolve-response": "^1.3.0",
+    "contentful-sdk-core": "^6.5.0",
+    "fast-copy": "^2.1.0",
+    "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
@@ -80,7 +80,6 @@
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-plugin-inline-replace-variables": "^1.3.1",
-    "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-rewire": "^1.0.0",
     "blue-tape": "^1.0.0",
     "bundlesize": "^0.18.0",
@@ -107,7 +106,6 @@
     "karma-sauce-launcher": "^4.1.2",
     "karma-tap": "^4.1.3",
     "karma-webpack": "^4.0.2",
-    "lodash-webpack-plugin": "^0.11.4",
     "mkdirp": "^1.0.3",
     "nodemon": "^2.0.2",
     "require-all": "^3.0.0",

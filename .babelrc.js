@@ -57,7 +57,6 @@ var testBabelPresetEnvConfig = Object.assign({}, modulesBabelPresetEnvConfig, {
 
 var plugins = [
   '@babel/plugin-proposal-object-rest-spread',
-  'lodash',
   [
     'inline-replace-variables',
     {

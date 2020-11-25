@@ -1,5 +1,5 @@
 import test from 'blue-tape'
-import cloneDeep from 'lodash/cloneDeep'
+import copy from 'fast-copy'
 
 import { entryMock, assetMock } from '../mocks'
 import { wrapEntry, wrapEntryCollection } from '../../../lib/entities/entry'
@@ -11,7 +11,7 @@ test('Entry is wrapped', (t) => {
 })
 
 test('Localized entry is wrapped', (t) => {
-  const entry = cloneDeep(entryMock)
+  const entry = copy(entryMock)
   const field = entry.fields.field1
   entry.fields = {
     en: {
@@ -43,12 +43,12 @@ test('Entry collection links are resolved', (t) => {
     skip: 0,
     limit: 100,
     items: [
-      cloneDeep(entryMock),
-      cloneDeep(entryMock)
+      copy(entryMock),
+      copy(entryMock)
     ],
     includes: {
-      Entry: [cloneDeep(entryMock)],
-      Asset: [cloneDeep(assetMock)]
+      Entry: [copy(entryMock)],
+      Asset: [copy(assetMock)]
     }
   }
   // setup first entry

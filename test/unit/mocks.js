@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
+import copy from 'fast-copy'
 
 const linkMock = {
   id: 'linkid',
@@ -9,14 +9,14 @@ const linkMock = {
 const sysMock = {
   type: 'Type',
   id: 'id',
-  space: cloneDeep(linkMock),
+  space: copy(linkMock),
   createdAt: 'createdatdate',
   updatedAt: 'updatedatdate',
   revision: 1
 }
 
 const contentTypeMock = {
-  sys: Object.assign(cloneDeep(sysMock), {
+  sys: Object.assign(copy(sysMock), {
     type: 'ContentType'
   }),
   name: 'name',
@@ -34,9 +34,9 @@ const contentTypeMock = {
 }
 
 const entryMock = {
-  sys: Object.assign(cloneDeep(sysMock), {
+  sys: Object.assign(copy(sysMock), {
     type: 'Entry',
-    contentType: Object.assign(cloneDeep(linkMock), { linkType: 'ContentType' }),
+    contentType: Object.assign(copy(linkMock), { linkType: 'ContentType' }),
     locale: 'locale'
   }),
   fields: {
@@ -45,7 +45,7 @@ const entryMock = {
 }
 
 const assetMock = {
-  sys: Object.assign(cloneDeep(sysMock), {
+  sys: Object.assign(copy(sysMock), {
     type: 'Asset',
     locale: 'locale'
   }),
@@ -55,7 +55,7 @@ const assetMock = {
 }
 
 const localeMock = {
-  sys: Object.assign(cloneDeep(sysMock), {
+  sys: Object.assign(copy(sysMock), {
     type: 'Locale'
   }),
   name: 'English. United State',

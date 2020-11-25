@@ -1,12 +1,12 @@
 import test from 'blue-tape'
-import cloneDeep from 'lodash/cloneDeep'
+import copy from 'fast-copy'
 import sinon from 'sinon'
 
 import { entryMock, assetMock } from './mocks'
 import pagedSync from '../../lib/paged-sync'
 
 function createEntry (id, deleted) {
-  const entry = cloneDeep(entryMock)
+  const entry = copy(entryMock)
   entry.sys.id = id
   if (deleted) {
     entry.sys.type = 'Deleted' + entry.sys.type
@@ -15,7 +15,7 @@ function createEntry (id, deleted) {
 }
 
 function createAsset (id, deleted) {
-  const asset = cloneDeep(assetMock)
+  const asset = copy(assetMock)
   asset.sys.id = id
   if (deleted) {
     asset.sys.type = 'Deleted' + asset.sys.type
@@ -63,7 +63,6 @@ test('Returns empty response if response has no items', (t) => {
       t.deepEqual(response.deletedEntries, [])
       t.deepEqual(response.deletedAssets, [])
     })
-
 })
 
 test('Returns empty response if response is empty', (t) => {
