@@ -2,8 +2,8 @@
 // Use karma.conf.local.js for local tests
 // Use karma.conf.saucelabs.js for saucelabs tests
 
-const cloneDeep = require('lodash/cloneDeep')
-const webpackConfig = cloneDeep(require('./webpack.config.js')[1])
+const copy = require('fast-copy').default
+const webpackConfig = copy(require('./webpack.config.js')[1])
 delete webpackConfig.entry
 delete webpackConfig.output
 webpackConfig.devtool = 'inline-source-map'
@@ -31,7 +31,7 @@ module.exports = {
   ],
 
   basePath: '',
-  frameworks: [ 'tap' ],
+  frameworks: ['tap'],
   files: [
     'test/runner-browser.js'
   ],
@@ -46,7 +46,7 @@ module.exports = {
   browserNoActivityTimeout: 4 * 60 * 1000,
   browserDisconnectTimeout: 10000,
   captureTimeout: 4 * 60 * 1000,
-  reporters: [ 'dots' ],
+  reporters: ['dots'],
   port: 9876,
   colors: true,
   autoWatch: false,

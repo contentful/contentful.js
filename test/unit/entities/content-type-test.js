@@ -1,11 +1,11 @@
 import test from 'blue-tape'
-import cloneDeep from 'lodash/cloneDeep'
+import copy from 'fast-copy'
 
 import { sysMock } from '../mocks'
 import { wrapContentType, wrapContentTypeCollection } from '../../../lib/entities/content-type'
 
 const contentType = {
-  sys: Object.assign(cloneDeep(sysMock), {
+  sys: Object.assign(copy(sysMock), {
     type: 'ContentType'
   }),
   name: 'ct',

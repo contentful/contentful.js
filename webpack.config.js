@@ -1,7 +1,7 @@
 const path = require('path')
 
 const webpack = require('webpack')
-const clone = require('lodash/cloneDeep')
+const copy = require('fast-copy').default
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const PROD = process.env.NODE_ENV === 'production'
@@ -58,7 +58,7 @@ const defaultBabelLoader = {
 }
 
 // Browsers
-const browserBundle = clone(baseBundleConfig)
+const browserBundle = copy(baseBundleConfig)
 browserBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
     options: Object.assign({}, defaultBabelLoader.options, {
@@ -69,7 +69,7 @@ browserBundle.module.rules = [
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
 // Legacy browsers like IE11
-const legacyBundle = clone(baseBundleConfig)
+const legacyBundle = copy(baseBundleConfig)
 legacyBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
     options: Object.assign({}, defaultBabelLoader.options, {
@@ -81,7 +81,7 @@ legacyBundle.module.rules = [
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
 
 // Node
-const nodeBundle = clone(baseBundleConfig)
+const nodeBundle = copy(baseBundleConfig)
 nodeBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
     options: Object.assign({}, defaultBabelLoader.options, {

@@ -66,6 +66,7 @@
     "axios": "^0.20.0",
     "contentful-resolve-response": "^1.3.0",
     "contentful-sdk-core": "^6.5.0",
+    "fast-copy": "^2.1.0",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.11"
   },
