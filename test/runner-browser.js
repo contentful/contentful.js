@@ -4,6 +4,9 @@ require('core-js/es/object/assign')
 require('core-js/es/array/from')
 require('core-js/es/array/find')
 require('core-js/es/set')
+require('core-js/stable')
+
+require('regenerator-runtime/runtime')
 
 // This file is required due to an issue with karma-tap
 // https://github.com/tmcw-up-for-adoption/karma-tap/issues/10
