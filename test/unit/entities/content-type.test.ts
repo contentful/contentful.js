@@ -1,4 +1,3 @@
-import test from 'blue-tape'
 import copy from 'fast-copy'
 
 import { sysMock } from '../mocks'
@@ -12,17 +11,22 @@ const contentType = {
   description: 'this is a ct',
   displayField: 'fieldname',
   fields: [
-    { id: 'fieldname', name: 'field name', type: 'Text', localized: false, required: false }
+    {
+      id: 'fieldname',
+      name: 'field name',
+      type: 'Text',
+      localized: false,
+      required: false
+    }
   ]
 }
 
-test('ContentType is wrapped', (t) => {
+test('ContentType is wrapped', () => {
   const wrappedContentType = wrapContentType(contentType)
-  t.looseEqual(wrappedContentType.toPlainObject(), contentType)
-  t.end()
+  expect(wrappedContentType.toPlainObject()).toEqual(contentType)
 })
 
-test('ContentType collection is wrapped', (t) => {
+test('ContentType collection is wrapped', () => {
   const contentTypeCollection = {
     total: 1,
     skip: 0,
@@ -32,6 +36,5 @@ test('ContentType collection is wrapped', (t) => {
     ]
   }
   const wrappedContentType = wrapContentTypeCollection(contentTypeCollection)
-  t.looseEqual(wrappedContentType.toPlainObject(), contentTypeCollection)
-  t.end()
+  expect(wrappedContentType.toPlainObject()).toEqual(contentTypeCollection)
 })

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "lib": ["dom" ,"esnext"],
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "declarationDir": "dist/types",
+    "declaration": true,
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noImplicitThis": false,
+    "noImplicitAny": false
+  },
+  "include": [
+    "./lib/**/*", "types"],
+  "exclude": ["./node_modules/**/*"]
+}

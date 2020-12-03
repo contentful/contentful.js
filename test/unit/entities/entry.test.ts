@@ -4,13 +4,12 @@ import copy from 'fast-copy'
 import { entryMock, assetMock } from '../mocks'
 import { wrapEntry, wrapEntryCollection } from '../../../lib/entities/entry'
 
-test('Entry is wrapped', (t) => {
+test('Entry is wrapped', () => {
   const wrappedEntry = wrapEntry(entryMock)
-  t.looseEqual(wrappedEntry.toPlainObject(), entryMock)
-  t.end()
+  expect(wrappedEntry.toPlainObject()).toEqual(entryMock)
 })
 
-test('Localized entry is wrapped', (t) => {
+test('Localized entry is wrapped', () => {
   const entry = copy(entryMock)
   const field = entry.fields.field1
   entry.fields = {
@@ -19,11 +18,10 @@ test('Localized entry is wrapped', (t) => {
     }
   }
   const wrappedEntry = wrapEntry(entry)
-  t.looseEqual(wrappedEntry.toPlainObject(), entry)
-  t.end()
+  expect(wrappedEntry.toPlainObject()).toEqual(entry)
 })
 
-test('Entry collection is wrapped', (t) => {
+test('Entry collection is wrapped', () => {
   const entryCollection = {
     total: 1,
     skip: 0,
@@ -33,8 +31,7 @@ test('Entry collection is wrapped', (t) => {
     ]
   }
   const wrappedEntry = wrapEntryCollection(entryCollection, true)
-  t.looseEqual(wrappedEntry.toPlainObject(), entryCollection)
-  t.end()
+  expect(wrappedEntry.toPlainObject()).toEqual(entryCollection)
 })
 
 test('Entry collection links are resolved', (t) => {
@@ -91,13 +88,12 @@ test('Entry collection links are resolved', (t) => {
   const wrappedEntry = wrappedCollection.toPlainObject()
 
   // first linked entry resolved from includes
-  t.equals(wrappedEntry.items[0].fields.linked1.sys.type, 'Asset', 'first linked entity is resolved')
-  t.ok(wrappedEntry.items[0].fields.linked1.fields, 'first linked entity has fields')
+  expect(wrappedEntry.items[0].fields.linked1.sys.type).toBe('Asset')
+  expect(wrappedEntry.items[0].fields.linked1.fields).toBeDefined()
   // second linked entry resolved from items list
-  t.equals(wrappedEntry.items[0].fields.linked2.sys.type, 'Entry', 'second linked entity is resolved')
-  t.ok(wrappedEntry.items[0].fields.linked2.fields, 'second linked entity has fields')
-  t.equals(wrappedEntry.items[1].fields.linked1.sys.type, 'Entry', 'third linked entity is resolved')
-  t.ok(wrappedEntry.items[1].fields.linked1.fields, 'third linked entity has fields')
-  t.ok(wrappedCollection.stringifySafe(), 'stringifies safely')
-  t.end()
+  expect(wrappedEntry.items[0].fields.linked2.sys.type).toBe('Entry')
+  expect(wrappedEntry.items[0].fields.linked2.fields).toBeDefined()
+  expect(wrappedEntry.items[1].fields.linked1.sys.type).toBe('Entry')
+  expect(wrappedEntry.items[1].fields.linked1.fields).toBeDefined()
+  expect(wrappedCollection.stringifySafe()).toBeDefined()
 })
