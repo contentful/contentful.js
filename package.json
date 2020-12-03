@@ -121,7 +121,7 @@
     "webpack-cli": "^4.1.0"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=12"
   },
   "config": {
     "commitizen": {
