@@ -34,7 +34,7 @@ var legacyBabelPresetEnvConfig = Object.assign(
 // Node
 var nodeBabelPresetEnvConfig = Object.assign({}, defaultBabelPresetEnvConfig, {
   targets: {
-    node: '4.7'
+    node: '12'
   }
 })
 

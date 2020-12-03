@@ -1,18 +1,23 @@
 # Migration information
 
-- [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
-- [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
-- [Migration from contentful.js 3.x](#migration-from-contentfuljs-3x)
-- [Migration to contentful.js 3.x from previous versions](#migration-to-contentfuljs-3x-from-previous-versions)
-  - [Method renaming](#method-renaming)
-  - [Format of collection replies](#format-of-collection-replies)
-  - [Callback API removal](#callback-api-removal)
-  - [Class removal](#class-removal)
-  - [Link resolution](#link-resolution)
-- [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
+- [Migration information](#migration-information)
+  - [Migration from contentful.js 6.x](#migration-from-contentfuljs-6x)
+  - [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
+  - [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
+  - [Migration from contentful.js 3.x](#migration-from-contentfuljs-3x)
+  - [Migration to contentful.js 3.x from previous versions](#migration-to-contentfuljs-3x-from-previous-versions)
+    - [Method renaming](#method-renaming)
+    - [Format of collection replies](#format-of-collection-replies)
+    - [Callback API removal](#callback-api-removal)
+    - [Class removal](#class-removal)
+    - [Link resolution](#link-resolution)
+  - [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
 
 From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
 
+## Migration from contentful.js 6.x
+
+We dropped support for Node v11 and older. Please ensure you are running Node v12 or newer.
 
 ## Migration from contentful.js 5.x
 
