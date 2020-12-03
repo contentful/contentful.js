@@ -1,11 +1,11 @@
 module.exports = {
-  'parser': 'babel-eslint',
-  'extends': 'standard',
-  'plugins': [
+  parser: 'babel-eslint',
+  extends: 'standard',
+  plugins: [
     'standard',
     'promise'
   ],
-  'globals': {
-    '__VERSION__': true
+  globals: {
+    __VERSION__: true
   }
 }

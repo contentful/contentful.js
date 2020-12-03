@@ -1,14 +1,12 @@
-import test from 'blue-tape'
 import { assetMock } from '../mocks'
 import { wrapAsset, wrapAssetCollection } from '../../../lib/entities/asset'
 
-test('Asset is wrapped', (t) => {
+test('Asset is wrapped', () => {
   const wrappedAsset = wrapAsset(assetMock)
-  t.looseEqual(wrappedAsset.toPlainObject(), assetMock)
-  t.end()
+  expect(wrappedAsset.toPlainObject()).toEqual(assetMock)
 })
 
-test('Asset collection is wrapped', (t) => {
+test('Asset collection is wrapped', () => {
   const assetCollection = {
     total: 1,
     skip: 0,
@@ -18,6 +16,5 @@ test('Asset collection is wrapped', (t) => {
     ]
   }
   const wrappedAsset = wrapAssetCollection(assetCollection)
-  t.looseEqual(wrappedAsset.toPlainObject(), assetCollection)
-  t.end()
+  expect(wrappedAsset.toPlainObject()).toEqual(assetCollection)
 })
