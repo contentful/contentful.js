@@ -18,6 +18,19 @@ From version 3.0.0 onwards, you can access documentation for a specific version 
 ## Migration from contentful.js 6.x
 
 We dropped support for Node v11 and older. Please ensure you are running Node v12 or newer.
+We also made browser support track https://github.com/contentful/browserslist-config
+Currently that means:
+
+- Chrome >= 75
+- Edge >= 17
+- Firefox >= 70
+- Safari >= 12
+
+For all other browsers you will have to use the legacy bundle and possibly set up [Regenerator Runtime](https://www.npmjs.com/package/regenerator-runtime) for the browser, for example using:
+
+```
+<script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@latest/runtime.min.js"></script>
+```
 
 ## Migration from contentful.js 5.x
 

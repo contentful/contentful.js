@@ -1,3 +1,5 @@
+const mainSupportedBrowsers = require('@contentful/browserslist-config')
+
 var defaultBabelPresetEnvConfig = {
   // No module transformation, webpack will take care of this if necessary.
   modules: false,
@@ -11,11 +13,7 @@ var browserBabelPresetEnvConfig = Object.assign(
   defaultBabelPresetEnvConfig,
   {
     targets: {
-      browsers: [
-        'last 2 versions',
-        'not ie < 13',
-        'not android < 50'
-      ]
+      browsers: mainSupportedBrowsers
     }
   }
 )
