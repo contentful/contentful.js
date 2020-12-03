@@ -24,14 +24,12 @@ const driver = new Builder()
   .usingServer(`http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`)
   .build()
 
-initServer((server) => {
+initServer(async (server) => {
   driver.get('http://localhost:3000')
 
   const h1 = driver.findElement(By.tagName('h1'))
 
   driver.wait(until.elementTextIs(h1, 'Success'), 30000)
-  driver.quit()
-    .then(() => {
-      server.close()
-    })
+  await driver.quit()
+  server.close()
 })

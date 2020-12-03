@@ -54,7 +54,7 @@ function teardown () {
   createContentfulApiRewireApi.__ResetDependency__('entities')
 }
 
-test('API call getSpace', (t) => {
+test('API call getSpace', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -69,14 +69,15 @@ test('API call getSpace', (t) => {
   })
   entitiesMock.space.wrapSpace.returns(data)
 
-  return api.getSpace('spaceid')
-    .then((r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    const r = await api.getSpace('spaceid')
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getSpace fails', (t) => {
+test('API call getSpace fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -90,29 +91,31 @@ test('API call getSpace fails', (t) => {
   })
   entitiesMock.space.wrapSpace.returns(data)
 
-  return api.getSpace('spaceid')
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getSpace('spaceid')
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getContentType', (t) => {
+test('API call getContentType', async (t) => {
   t.plan(1)
   const { api } = setupWithData({
     promise: Promise.resolve({ data: contentTypeMock })
   })
   entitiesMock.contentType.wrapContentType.returns(contentTypeMock)
 
-  return api.getContentType('ctid')
-    .then((r) => {
-      t.looseEqual(r, contentTypeMock)
-      teardown()
-    })
+  try {
+    const r = await api.getContentType('ctid')
+    t.looseEqual(r, contentTypeMock)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getContentType fails', (t) => {
+test('API call getContentType fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -126,15 +129,16 @@ test('API call getContentType fails', (t) => {
   })
   entitiesMock.contentType.wrapContentType.returns(data)
 
-  return api.getContentType('ctid')
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getContentType('ctid')
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getContentTypes', (t) => {
+test('API call getContentTypes', async (t) => {
   t.plan(1)
   const data = {
     total: 100,
@@ -147,14 +151,15 @@ test('API call getContentTypes', (t) => {
   })
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
-  return api.getContentTypes()
-    .then((r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    const r = await api.getContentTypes()
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getContentTypes fails', (t) => {
+test('API call getContentTypes fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -168,15 +173,16 @@ test('API call getContentTypes fails', (t) => {
   })
   entitiesMock.contentType.wrapContentTypeCollection.returns(data)
 
-  return api.getContentTypes()
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getContentTypes()
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getEntry', (t) => {
+test('API call getEntry', async (t) => {
   t.plan(2)
   const { api } = setupWithData({
     promise: Promise.resolve({ data: entryMock })
@@ -184,15 +190,16 @@ test('API call getEntry', (t) => {
   api.getEntries = sinon.stub().resolves({ items: [entryMock] })
   entitiesMock.entry.wrapEntry.returns(entryMock)
 
-  return api.getEntry('eid')
-    .then((r) => {
-      t.looseEqual(r, entryMock)
-      t.true(api.getEntries.calledOnce)
-      teardown()
-    })
+  try {
+    const r = await api.getEntry('eid')
+    t.looseEqual(r, entryMock)
+    t.true(api.getEntries.calledOnce)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getEntry fails', (t) => {
+test('API call getEntry fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -206,15 +213,16 @@ test('API call getEntry fails', (t) => {
   })
   entitiesMock.entry.wrapEntry.returns(data)
 
-  return api.getEntry('eid')
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getEntry('eid')
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getEntries', (t) => {
+test('API call getEntries', async (t) => {
   t.plan(2)
 
   const data = {
@@ -229,15 +237,16 @@ test('API call getEntries', (t) => {
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
-  return api.getEntries()
-    .then((r) => {
-      t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
-      t.looseEqual(r, data, 'returns expected data')
-      teardown()
-    })
+  try {
+    const r = await api.getEntries()
+    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default')
+    t.looseEqual(r, data, 'returns expected data')
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getEntries with global resolve links overriden by query', (t) => {
+test('API call getEntries with global resolve links overriden by query', async (t) => {
   t.plan(1)
 
   const data = { sys: { id: 'id' } }
@@ -248,14 +257,15 @@ test('API call getEntries with global resolve links overriden by query', (t) => 
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
-  return api.getEntries({ resolveLinks: true })
-    .then((r) => {
-      t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
-      teardown()
-    })
+  try {
+    await api.getEntries({ resolveLinks: true })
+    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getEntries with global resolve links turned off', (t) => {
+test('API call getEntries with global resolve links turned off', async (t) => {
   t.plan(2)
 
   const data = { sys: { id: 'id' } }
@@ -266,15 +276,16 @@ test('API call getEntries with global resolve links turned off', (t) => {
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
-  return api.getEntries()
-    .then((r) => {
-      t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
-      t.looseEqual(r, data, 'returns expected data')
-      teardown()
-    })
+  try {
+    const r = await api.getEntries()
+    t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
+    t.looseEqual(r, data, 'returns expected data')
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getEntries fails', (t) => {
+test('API call getEntries fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -288,29 +299,31 @@ test('API call getEntries fails', (t) => {
   })
   entitiesMock.entry.wrapEntryCollection.returns(data)
 
-  return api.getEntries()
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getEntries()
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getAsset', (t) => {
+test('API call getAsset', async (t) => {
   t.plan(1)
   const { api } = setupWithData({
     promise: Promise.resolve({ data: assetMock })
   })
   entitiesMock.asset.wrapAsset.returns(assetMock)
 
-  return api.getAsset('aid')
-    .then((r) => {
-      t.looseEqual(r, assetMock)
-      teardown()
-    })
+  try {
+    const r = await api.getAsset('aid')
+    t.looseEqual(r, assetMock)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getAsset fails', (t) => {
+test('API call getAsset fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -324,15 +337,16 @@ test('API call getAsset fails', (t) => {
   })
   entitiesMock.asset.wrapAsset.returns(data)
 
-  return api.getAsset('aid')
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getAsset('aid')
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getAssets', (t) => {
+test('API call getAssets', async (t) => {
   t.plan(1)
   const data = {
     total: 100,
@@ -345,14 +359,15 @@ test('API call getAssets', (t) => {
   })
   entitiesMock.asset.wrapAssetCollection.returns(data)
 
-  return api.getAssets()
-    .then((r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    const r = await api.getAssets()
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getAssets fails', (t) => {
+test('API call getAssets fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -366,15 +381,16 @@ test('API call getAssets fails', (t) => {
   })
   entitiesMock.asset.wrapAssetCollection.returns(data)
 
-  return api.getAssets()
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getAssets()
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getLocales', (t) => {
+test('API call getLocales', async (t) => {
   t.plan(1)
   const data = {
     total: 100,
@@ -387,14 +403,15 @@ test('API call getLocales', (t) => {
   })
   entitiesMock.locale.wrapLocaleCollection.returns(data)
 
-  return api.getLocales()
-    .then((r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    const r = await api.getLocales()
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('API call getLocaless fails', (t) => {
+test('API call getLocaless fails', async (t) => {
   t.plan(1)
   const data = {
     sys: {
@@ -408,15 +425,16 @@ test('API call getLocaless fails', (t) => {
   })
   entitiesMock.locale.wrapLocaleCollection.returns(data)
 
-  return api.getLocales()
-    .then(() => {
-    }, (r) => {
-      t.looseEqual(r, data)
-      teardown()
-    })
+  try {
+    await api.getLocales()
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
 })
 
-test('CDA call sync', (t) => {
+test('CDA call sync', async (t) => {
   t.plan(5)
   const { api } = setupWithData({
     promise: Promise.resolve({
@@ -427,30 +445,32 @@ test('CDA call sync', (t) => {
     })
   })
 
-  return api.sync({ initial: true })
-    .then((r) => {
-      t.ok(r.entries, 'entries')
-      t.ok(r.assets, 'assets')
-      t.ok(r.deletedEntries, 'deletedEntries')
-      t.ok(r.deletedAssets, 'deletedAssets')
-      t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
-      teardown()
-    })
+  try {
+    const r = await api.sync({ initial: true })
+    t.ok(r.entries, 'entries')
+    t.ok(r.assets, 'assets')
+    t.ok(r.deletedEntries, 'deletedEntries')
+    t.ok(r.deletedAssets, 'deletedAssets')
+    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
+  } finally {
+    teardown()
+  }
 })
 
-test('CDA call sync fails', (t) => {
+test('CDA call sync fails', async (t) => {
   t.plan(1)
   const rejectError = new Error()
   rejectError.data = 'error'
   const { api } = setupWithData({
     promise: Promise.reject(rejectError)
   })
-  return api.sync({ initial: true })
-    .then(() => {
-    }, (r) => {
-      t.equal(r.data, 'error')
-      teardown()
-    })
+  try {
+    await api.sync({ initial: true })
+  } catch (r) {
+    t.equal(r.data, 'error')
+  } finally {
+    teardown()
+  }
 })
 
 test('Given json should be parsed correctly as a collection of entries', (t) => {

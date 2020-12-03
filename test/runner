@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('regenerator-runtime/runtime')
 require('@babel/register')({
   ignore: [/node_modules(?!\/contentful-resolve-response)/]
 })
