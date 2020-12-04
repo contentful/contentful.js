@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "lib": ["dom" ,"esnext"],
+    "lib": [
+      "dom",
+      "esnext"
+    ],
     "target": "esnext",
     "moduleResolution": "node",
     "allowJs": true,
@@ -14,6 +17,10 @@
     "noImplicitAny": false
   },
   "include": [
-    "./lib/**/*", "types"],
-  "exclude": ["./node_modules/**/*"]
+    "./lib/**/*",
+    "types"
+  ],
+  "exclude": [
+    "./node_modules/**/*"
+  ]
 }

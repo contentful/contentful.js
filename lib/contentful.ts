@@ -65,7 +65,7 @@ export function createClient (params) {
     ...params
   }
 
-//  const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
+  // const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
   const userAgentHeader = getUserAgentHeader(`contentful.js/${'0.0.0-tim-and-marco'}`,
     config.application,
     config.integration
@@ -86,7 +86,7 @@ export function createClient (params) {
     environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`
   })
   // Append environment to baseURL
-  http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
+  http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl
 
   // Intercepts response and obscure the token
   obscureAuthTokenInResponse(http)
@@ -98,7 +98,9 @@ export function createClient (params) {
 }
 
 function obscureAuthTokenInResponse (http) {
-  http.interceptors.response.use(response => { return response }, error => {
+  http.interceptors.response.use(response => {
+    return response
+  }, error => {
     if (error.response && error.response.config.headers.Authorization) {
       const token = error.response.config.headers.Authorization
 

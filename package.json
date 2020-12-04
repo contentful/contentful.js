@@ -62,7 +62,7 @@
     "precommit": "npm run lint",
     "prepush": "npm run test:prepush",
     "new:build": "tsdx build --entry lib/contentful.ts",
-    "new:test": "tsdx test"
+    "new:test": "tsdx test --watch"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -121,7 +121,7 @@
     "trevor": "^2.2.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
-    "typescript": "^4.1.2",
+    "typescript": "^3.9.7",
     "webpack": "^4.0.0",
     "webpack-bundle-analyzer": "^4.1.0",
     "webpack-cli": "^4.1.0"
