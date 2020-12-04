@@ -68,7 +68,8 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
   const { wrapLocaleCollection } = entities.locale
   const notFoundError = (id) => {
     const error = new Error('The resource could not be found.')
-    error.sys = {
+    /*
+      error.sys = {
       type: 'Error',
       id: 'NotFound'
     }
@@ -78,6 +79,7 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
       environment: getGlobalOptions().environment,
       space: getGlobalOptions().space
     }
+    */
     return error
   }
 
