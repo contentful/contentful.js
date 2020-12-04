@@ -88,7 +88,7 @@ export default async function pagedSync (http, query, options = {}) {
  * @param {Array<Entities.Entry|Entities.Array|Sync.DeletedEntry|Sync.DeletedAsset>} items
  * @return {Object} Entities mapped to an object for each entity type
  */
-function mapResponseItems (items) {
+function mapResponseItems (items):any {
   const reducer = (type) => {
     return (accumulated, item) => {
       if (item.sys.type === type) {
