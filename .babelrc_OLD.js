@@ -101,7 +101,7 @@ module.exports = function (api) {
   if (env === 'test') {
     babelConfig = Object.assign({}, babelConfig, {
       presets: [['@babel/preset-env', testBabelPresetEnvConfig]],
-      plugins: babelConfig.plugins.concat(['rewire'])
+      //plugins: babelConfig.plugins.concat(['rewire'])
     })
   }
 
