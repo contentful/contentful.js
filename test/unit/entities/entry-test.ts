@@ -1,4 +1,3 @@
-import test from 'blue-tape'
 import copy from 'fast-copy'
 
 import { entryMock, assetMock } from '../mocks'
