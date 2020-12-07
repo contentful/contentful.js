@@ -6,9 +6,9 @@ test('normalizeSelect does nothing if sys is selected', (t) => {
     select: 'fields.foo,sys'
   }
 
-  normalizeSelect(query)
+  const normalized = normalizeSelect(query)
 
-  t.equal(query.select, 'fields.foo,sys')
+  t.equal(normalized.select, 'fields.foo,sys')
   t.end()
 })
 
@@ -17,9 +17,10 @@ test('normalizeSelect adds required properties if sys is not selected', (t) => {
     select: 'fields.foo'
   }
 
-  normalizeSelect(query)
+  const normalized = normalizeSelect(query)
 
-  t.equal(query.select, 'fields.foo,sys.id,sys.type')
+  t.equal(normalized.select, 'fields.foo,sys.id,sys.type')
+  t.notEqual(query, normalized)
   t.end()
 })
 
@@ -28,9 +29,10 @@ test('normalizeSelect adds required properties if different sys properties are s
     select: 'fields.foo,sys.createdAt'
   }
 
-  normalizeSelect(query)
+  const normalized = normalizeSelect(query)
 
-  t.equal(query.select, 'fields.foo,sys.createdAt,sys.id,sys.type')
+  t.equal(normalized.select, 'fields.foo,sys.createdAt,sys.id,sys.type')
+  t.notEqual(query, normalized)
   t.end()
 })
 
@@ -39,8 +41,25 @@ test('normalizeSelect adds required properties if only some required sys propert
     select: 'fields.foo,sys.type'
   }
 
-  normalizeSelect(query)
+  const normalized = normalizeSelect(query)
 
-  t.equal(query.select, 'fields.foo,sys.type,sys.id')
+  t.equal(normalized.select, 'fields.foo,sys.type,sys.id')
+  t.notEqual(query, normalized)
+
+  t.end()
+})
+
+test('normalizeSelect supports arrays but normalizes to strings', (t) => {
+  const query = {
+    select: [
+      'fields.foo',
+      'sys.type'
+    ]
+  }
+
+  const normalized = normalizeSelect(query)
+
+  t.equal(normalized.select, 'fields.foo,sys.type,sys.id')
+  t.notEqual(query, normalized)
   t.end()
 })
