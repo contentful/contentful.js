@@ -5,12 +5,22 @@
  * @param {boolean} globalSetting - Global library setting for link resolution
  * @returns {function} Link resolver method preconfigured with global setting
  */
-export default function createGlobalOptions (globalSettings) {
+
+interface GlobalOptionsParams {
+    resolveLinks?: boolean,
+    environment?: string,
+    removeUnresolved?: boolean,
+    spaceBaseUrl?: string,
+    environmentBaseUrl?: string
+}
+
+export default function createGlobalOptions (globalSettings: GlobalOptionsParams):
+    (query: GlobalOptionsParams) => GlobalOptionsParams {
   /**
-   * Link resolver method
-   * @param {Object} query - regular query object used for collection endpoints
-   */
-  return function getGlobalOptions (query) {
+     * Link resolver method
+     * @param {Object} query - regular query object used for collection endpoints
+     */
+  return function getGlobalOptions (query: GlobalOptionsParams) {
     return Object.assign({}, globalSettings, query)
   }
 }
