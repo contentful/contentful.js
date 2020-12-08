@@ -7,8 +7,41 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import createContentfulApi from './create-contentful-api'
+import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
+
+export interface AxiosProxyConfig {
+    host: string;
+    port: number;
+    auth?: {
+        username: string;
+        password: string;
+    };
+}
+
+export type ClientLogLevel = 'error' | 'warning' | 'info' | string;
+
+export interface CreateClientParams {
+    space: string;
+    accessToken: string;
+    environment?: string;
+    insecure?: boolean;
+    host?: string;
+    basePath?: string;
+    httpAgent?: any;
+    httpsAgent?: any;
+    proxy?: AxiosProxyConfig;
+    headers?: any;
+    adapter?: any;
+    application?: string;
+    integration?: string;
+    resolveLinks?: boolean;
+    removeUnresolved?: boolean;
+    retryOnError?: boolean;
+    logHandler?: (level: ClientLogLevel, data?: any) => void;
+    timeout?: number;
+    retryLimit?: number;
+}
 
 /**
  * Create a client instance
@@ -44,7 +77,7 @@ import createGlobalOptions from './create-global-options'
  * })
  */
 
-export function createClient (params) {
+export function createClient (params: CreateClientParams): ContentfulClientApi {
   if (!params.accessToken) {
     throw new TypeError('Expected parameter accessToken')
   }

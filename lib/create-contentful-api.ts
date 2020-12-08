@@ -46,26 +46,229 @@
  */
 
 import { createRequestConfig } from 'contentful-sdk-core'
-import {
-  Asset,
-  AssetCollection, ContentfulClientApi,
-  ContentType,
-  ContentTypeCollection,
-  Entry,
-  EntryCollection,
-  LocaleCollection,
-  Space
-} from '../index'
 import pagedSync from './paged-sync'
 import normalizeSelect from './utils/normalize-select'
 import {resolveCircular} from "./utils/resolve-circular";
+
+export interface Asset {
+    sys: Sys;
+    fields: {
+        title: string;
+        description: string;
+        file: {
+            url: string;
+            details: {
+                size: number;
+                image?: {
+                    width: number;
+                    height: number;
+                };
+            };
+            fileName: string;
+            contentType: string;
+        };
+    };
+}
+
+export interface ContentfulCollection<T> {
+    total: number;
+    skip: number;
+    limit: number;
+    items: Array<T>;
+}
+
+export type AssetCollection = ContentfulCollection<Asset>
+
+export interface Entry<T> {
+    sys: Sys;
+    fields: T;
+    update(): Promise<Entry<T>>;
+}
+
+export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
+    errors?: Array<any>;
+    includes?: any;
+    stringifySafe(replacer?: any, space?: any): string;
+}
+
+export interface ContentType {
+    sys: Sys;
+    name: string;
+    description: string;
+    displayField: string;
+    fields: Array<Field>;
+}
+
+export type ContentTypeCollection = ContentfulCollection<ContentType>;
+
+export interface Locale {
+    code: string
+    name: string
+    default: boolean
+    fallbackCode: string | null
+    sys: {
+        id: string
+        type: 'Locale'
+        version: number
+    }
+}
+
+export type LocaleCollection = ContentfulCollection<Locale>;
+
+export interface SyncCollection {
+    entries: Array<Entry<any>>;
+    assets: Array<Asset>;
+    deletedEntries: Array<Entry<any>>;
+    deletedAssets: Array<Asset>;
+    nextSyncToken: string;
+    stringifySafe(replacer?: any, space?: any): string;
+}
+
+export interface Sys {
+    type: string;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    locale: string;
+    revision?: number;
+    space?: {
+        sys: SpaceLink;
+    };
+    contentType: {
+        sys: ContentTypeLink;
+    };
+}
+
+export interface SpaceLink {
+    type: 'Link';
+    linkType: 'Space';
+    id: string;
+}
+
+export interface ContentTypeLink {
+    type: 'Link';
+    linkType: 'ContentType';
+    id: string;
+}
+
+export interface Field {
+    disabled: boolean;
+    id: string;
+    linkType?: string;
+    localized: boolean;
+    name: string;
+    omitted: boolean;
+    required: boolean;
+    type: FieldType;
+    validations: FieldValidation[];
+    items?: FieldItem;
+}
+
+export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
+
+export interface FieldValidation {
+    unique?: boolean;
+    size?: {
+        min?: number;
+        max?: number;
+    };
+    regexp?: {
+        pattern: string;
+    };
+    linkMimetypeGroup?: string[];
+    in?: string[];
+    linkContentType?: string[];
+    message?: string;
+    nodes?: {
+        'entry-hyperlink'?: FieldValidation[];
+        'embedded-entry-block'?: FieldValidation[];
+        'embedded-entry-inline'?: FieldValidation[];
+    };
+    enabledNodeTypes?: string[];
+}
+
+export interface FieldItem {
+    type: 'Link' | 'Symbol';
+    validations: FieldValidation[];
+    linkType?: 'Entry' | 'Asset';
+}
+
+
+/**
+ * Types of fields found in an Entry
+ */
+export namespace EntryFields {
+    export type Symbol = string;
+    export type Text = string;
+    export type Integer = number;
+    export type Number = number;
+    export type Date = string;
+    export type Boolean = boolean;
+    export interface Location {
+        lat: string;
+        lon: string;
+    }
+    export type Link<T> = Asset | Entry<T>;
+    export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
+    export type Object<T = any> = T;
+    export interface RichText {
+        data:{};
+        content: RichTextContent[];
+        nodeType: 'document';
+    }
+}
+
+interface RichTextDataTarget {
+    sys: {
+        id: string;
+        type: "Link";
+        "linkType": 'Entry' | 'Asset';
+    };
+}
+
+interface RichTextData {
+    uri?: string;
+    target?: RichTextDataTarget;
+}
+
+type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
+    | 'heading-6' | 'paragraph' | 'hyperlink' | 'entry-hyperlink' | 'asset-hyperlink'
+    | 'unordered-list' | 'ordered-list' | 'list-item' | 'blockquote' | 'hr' | 'embedded-entry-block'
+    | 'embedded-entry-inline';
+
+interface RichTextContent {
+    data: RichTextData;
+    content?: RichTextContent[]
+    marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
+    value?: string;
+    nodeType: RichTextNodeType;
+}
+
+
+export interface Space {
+    sys: Sys;
+    name: string;
+    locales: Array<string>;
+}
+
+export interface ContentfulClientApi {
+    getAsset(id: string, query?: any): Promise<Asset>;
+    getAssets(query?: any): Promise<AssetCollection>;
+    getContentType(id: string): Promise<ContentType>;
+    getContentTypes(query?: any): Promise<ContentTypeCollection>;
+    getEntries<T>(query?: any): Promise<EntryCollection<T>>;
+    getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
+    getSpace(): Promise<Space>;
+    getLocales(): Promise<LocaleCollection>;
+    parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
+    sync(query: any): Promise<SyncCollection>;
+}
 
 interface GetConfig {
     context: "space" | "environment";
     path: any;
     config?: any;
 }
-
 /**
  * Creates API object with methods to access functionality from Contentful's
  * Delivery API
@@ -401,14 +604,14 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
   /*
    * Switches BaseURL to use /environments path
    * */
-  function switchToEnvironment (http) {
+  function switchToEnvironment (http): void {
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
   /*
    * Switches BaseURL to use /spaces path
    * */
-  function switchToSpace (http) {
+  function switchToSpace (http): void {
     http.defaults.baseURL = getGlobalOptions().spaceBaseUrl
   }
 
