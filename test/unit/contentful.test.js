@@ -6,7 +6,7 @@ const { createClient } = require('../../lib/contentful')
 cfSDKCore.createHttpClient = jest.fn()
 const createHttpClientMock = cfSDKCore.createHttpClient
 
-describe.only('contentful', () => {
+describe('contentful', () => {
   beforeEach(() => {
     createHttpClientMock.mockReturnValue({
       defaults: {
