@@ -46,9 +46,25 @@
  */
 
 import { createRequestConfig } from 'contentful-sdk-core'
-import entities from './entities'
+import {
+  Asset,
+  AssetCollection, ContentfulClientApi,
+  ContentType,
+  ContentTypeCollection,
+  Entry,
+  EntryCollection,
+  LocaleCollection,
+  Space
+} from '../index'
 import pagedSync from './paged-sync'
 import normalizeSelect from './utils/normalize-select'
+import {resolveCircular} from "./utils/resolve-circular";
+
+interface GetConfig {
+    context: "space" | "environment";
+    path: any;
+    config?: any;
+}
 
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -60,12 +76,7 @@ import normalizeSelect from './utils/normalize-select'
  * @prop {Function} getGlobalOptions - Link resolver preconfigured with global setting
  * @return {ClientAPI}
  */
-export default function createContentfulApi ({ http, getGlobalOptions }) {
-  const { wrapSpace } = entities.space
-  const { wrapContentType, wrapContentTypeCollection } = entities.contentType
-  const { wrapEntry, wrapEntryCollection } = entities.entry
-  const { wrapAsset, wrapAssetCollection } = entities.asset
-  const { wrapLocaleCollection } = entities.locale
+export default function createContentfulApi ({ http, getGlobalOptions }): ContentfulClientApi {
   const notFoundError = (id) => {
     const error = new Error('The resource could not be found.')
     /*
@@ -83,7 +94,8 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
     return error
   }
 
-  function errorHandler (error) {
+  // eslint-disable-next-line no-undef
+  function errorHandler (error): never {
     if (error.data) {
       throw error.data
     }
@@ -93,6 +105,22 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
     }
 
     throw error
+  }
+
+  async function get<T> ({ context, path, config }: GetConfig) : Promise<T> {
+    if (context === 'space') {
+      switchToSpace(http)
+    } else if (context === 'environment') {
+      switchToEnvironment(http)
+    } else {
+      throw new Error('unknown context ')
+    }
+    try {
+      const response = await http.get(path, config)
+      return response.data
+    } catch (error) {
+      errorHandler(error)
+    }
   }
 
   /**
@@ -110,14 +138,8 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const space = await client.getSpace()
    * console.log(space)
    */
-  async function getSpace () {
-    switchToSpace(http)
-    try {
-      const response = await http.get('')
-      return wrapSpace(response.data)
-    } catch (error) {
-      errorHandler(error)
-    }
+  async function getSpace ():Promise<Space> {
+    return get<Space>({ context: 'space', path: '' })
   }
 
   /**
@@ -136,15 +158,11 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const contentType = await client.getContentType('<content_type_id>')
    * console.log(contentType)
    */
-  async function getContentType (id) {
-    switchToEnvironment(http)
-
-    try {
-      const response = await http.get(`content_types/${id}`)
-      return wrapContentType(response.data)
-    } catch (error) {
-      errorHandler(error)
-    }
+  async function getContentType (id): Promise<ContentType> {
+    return get<ContentType>({
+      context: 'environment',
+      path: `content_types/${id}`
+    })
   }
 
   /**
@@ -163,14 +181,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const response = await client.getContentTypes()
    * console.log(response.items)
    */
-  async function getContentTypes (query = {}) {
-    switchToEnvironment(http)
-    try {
-      const response = await http.get('content_types', createRequestConfig({ query: query }))
-      return wrapContentTypeCollection(response.data)
-    } catch (error) {
-      errorHandler(error)
-    }
+  async function getContentTypes (query = {}):Promise<ContentTypeCollection> {
+    return get<ContentTypeCollection>({
+      context: 'environment',
+      path: 'content_types',
+      config: createRequestConfig({ query: query })
+    })
   }
 
   /**
@@ -190,15 +206,14 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const entry = await client.getEntry('<entry_id>')
    * console.log(entry)
    */
-  async function getEntry (id, query = {}) {
+  async function getEntry <T> (id, query = {}):Promise<Entry<T>> {
     if (!id) {
       throw notFoundError(id)
     }
-
     try {
       const response = await this.getEntries({ 'sys.id': id, ...query })
       if (response.items.length > 0) {
-        return wrapEntry(response.items[0])
+        return response.items[0]
       } else {
         throw notFoundError(id)
       }
@@ -223,14 +238,15 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const response = await client.getEntries()
    * .console.log(response.items)
    */
-  async function getEntries (query = {}) {
-    switchToEnvironment(http)
+  async function getEntries <T> (query = {}):Promise<EntryCollection<T>> {
     const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
-    query = normalizeSelect(query)
-
     try {
-      const response = await http.get('entries', createRequestConfig({ query: query }))
-      return wrapEntryCollection(response.data, { resolveLinks, removeUnresolved })
+      const entries = await get({
+        context: 'environment',
+        path: 'entries',
+        config: createRequestConfig({ query: normalizeSelect(query) })
+      })
+      return resolveCircular(entries, { resolveLinks, removeUnresolved })
     } catch (error) {
       errorHandler(error)
     }
@@ -252,16 +268,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const asset = await client.getAsset('<asset_id>')
    * console.log(asset)
    */
-  async function getAsset (id, query = {}) {
-    switchToEnvironment(http)
-    query = normalizeSelect(query)
-
-    try {
-      const response = await http.get(`assets/${id}`, createRequestConfig({ query: query }))
-      return wrapAsset(response.data)
-    } catch (error) {
-      errorHandler(error)
-    }
+  async function getAsset (id, query = {}): Promise<Asset> {
+    return get<Asset>({
+      context: 'environment',
+      path: `assets/${id}`,
+      config: createRequestConfig({ query: normalizeSelect(query) })
+    })
   }
 
   /**
@@ -280,16 +292,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const response = await client.getAssets()
    * console.log(response.items)
    */
-  async function getAssets (query = {}) {
-    switchToEnvironment(http)
-    query = normalizeSelect(query)
-
-    try {
-      const response = await http.get('assets', createRequestConfig({ query: query }))
-      return wrapAssetCollection(response.data)
-    } catch (error) {
-      errorHandler(error)
-    }
+  async function getAssets (query = {}): Promise<AssetCollection> {
+    return get<AssetCollection>({
+      context: 'environment',
+      path: 'assets',
+      config: createRequestConfig({ query: normalizeSelect(query) })
+    })
   }
 
   /**
@@ -308,15 +316,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
    * const response = await client.getLocales()
    * console.log(response.items)
    */
-  async function getLocales (query = {}) {
-    switchToEnvironment(http)
-
-    try {
-      const response = await http.get('locales', createRequestConfig({ query: query }))
-      return wrapLocaleCollection(response.data)
-    } catch (error) {
-      errorHandler(error)
-    }
+  async function getLocales (query = {}):Promise<LocaleCollection> {
+    return get<LocaleCollection>({
+      context: 'environment',
+      path: 'locales',
+      config: createRequestConfig({ query: normalizeSelect(query) })
+    })
   }
 
   /**
@@ -390,7 +395,7 @@ export default function createContentfulApi ({ http, getGlobalOptions }) {
   */
   function parseEntries (data) {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
-    return wrapEntryCollection(data, { resolveLinks, removeUnresolved })
+    return resolveCircular(data, { resolveLinks, removeUnresolved })
   }
 
   /*
