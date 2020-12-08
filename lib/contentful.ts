@@ -98,8 +98,7 @@ export function createClient (params: CreateClientParams): ContentfulClientApi {
     ...params
   }
 
-  // const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
-  const userAgentHeader = getUserAgentHeader(`contentful.js/${'0.0.0-tim-and-marco'}`,
+  const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
     config.application,
     config.integration
   )

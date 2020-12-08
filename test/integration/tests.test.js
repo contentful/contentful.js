@@ -413,3 +413,7 @@ test('Logs request and response with custom loggers', async () => {
   expect(responseLoggerStub).toHaveBeenCalledTimes(1)
   expect(requestLoggerStub).toHaveBeenCalledTimes(1)
 })
+
+test('Client object exposes current version', async () => {
+  expect(client.version).toEqual(require('./../../package.json').version)
+})

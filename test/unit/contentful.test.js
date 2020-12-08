@@ -1,5 +1,4 @@
-// const version = require('../../package.json').version
-// for some reason, import is not working.
+const version = require('../../package.json').version
 const cfSDKCore = require('contentful-sdk-core')
 const { createClient } = require('../../lib/contentful')
 const createContentfulApi = require('../../lib/create-contentful-api')
@@ -57,7 +56,7 @@ describe('contentful', () => {
     expect(headerParts).toHaveLength(5)
     expect(headerParts[0]).toEqual('app myApplication/1.1.1')
     expect(headerParts[1]).toEqual('integration myIntegration/1.0.0')
-    // expect(headerParts[2]).toEqual(`sdk contentful.js/${version}`)
+    expect(headerParts[2]).toEqual(`sdk contentful.js/${version}`)
   })
 
   test('Passes along HTTP client parameters', () => {
