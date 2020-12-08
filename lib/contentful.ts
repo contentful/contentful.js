@@ -5,42 +5,44 @@
  * @see ContentfulClientAPI
  */
 
-import axios from 'axios'
-import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
-import createGlobalOptions from './create-global-options'
+import axios from "axios";
+import { createHttpClient, getUserAgentHeader } from "contentful-sdk-core";
+import createContentfulApi, {
+  ContentfulClientApi
+} from "./create-contentful-api";
+import createGlobalOptions from "./create-global-options";
 
 export interface AxiosProxyConfig {
-    host: string;
-    port: number;
-    auth?: {
-        username: string;
-        password: string;
-    };
+  host: string;
+  port: number;
+  auth?: {
+    username: string;
+    password: string;
+  };
 }
 
-export type ClientLogLevel = 'error' | 'warning' | 'info' | string;
+export type ClientLogLevel = "error" | "warning" | "info" | string;
 
 export interface CreateClientParams {
-    space: string;
-    accessToken: string;
-    environment?: string;
-    insecure?: boolean;
-    host?: string;
-    basePath?: string;
-    httpAgent?: any;
-    httpsAgent?: any;
-    proxy?: AxiosProxyConfig;
-    headers?: any;
-    adapter?: any;
-    application?: string;
-    integration?: string;
-    resolveLinks?: boolean;
-    removeUnresolved?: boolean;
-    retryOnError?: boolean;
-    logHandler?: (level: ClientLogLevel, data?: any) => void;
-    timeout?: number;
-    retryLimit?: number;
+  space: string;
+  accessToken: string;
+  environment?: string;
+  insecure?: boolean;
+  host?: string;
+  basePath?: string;
+  httpAgent?: any;
+  httpsAgent?: any;
+  proxy?: AxiosProxyConfig;
+  headers?: any;
+  adapter?: any;
+  application?: string;
+  integration?: string;
+  resolveLinks?: boolean;
+  removeUnresolved?: boolean;
+  retryOnError?: boolean;
+  logHandler?: (level: ClientLogLevel, data?: any) => void;
+  timeout?: number;
+  retryLimit?: number;
 }
 
 /**
@@ -77,39 +79,40 @@ export interface CreateClientParams {
  * })
  */
 
-export function createClient (params: CreateClientParams): ContentfulClientApi {
+export function createClient(params: CreateClientParams): ContentfulClientApi {
   if (!params.accessToken) {
-    throw new TypeError('Expected parameter accessToken')
+    throw new TypeError("Expected parameter accessToken");
   }
 
   if (!params.space) {
-    throw new TypeError('Expected parameter space')
+    throw new TypeError("Expected parameter space");
   }
 
   const defaultConfig = {
     resolveLinks: true,
     removeUnresolved: false,
-    defaultHostname: 'cdn.contentful.com',
-    environment: 'master'
-  }
+    defaultHostname: "cdn.contentful.com",
+    environment: "master"
+  };
 
   const config = {
     ...defaultConfig,
     ...params
-  }
+  };
 
   // const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
-  const userAgentHeader = getUserAgentHeader(`contentful.js/${'0.0.0-tim-and-marco'}`,
+  const userAgentHeader = getUserAgentHeader(
+    `contentful.js/${"0.0.0-tim-and-marco"}`,
     config.application,
     config.integration
-  )
+  );
   config.headers = {
     ...config.headers,
-    'Content-Type': 'application/vnd.contentful.delivery.v1+json',
-    'X-Contentful-User-Agent': userAgentHeader
-  }
+    "Content-Type": "application/vnd.contentful.delivery.v1+json",
+    "X-Contentful-User-Agent": userAgentHeader
+  };
 
-  const http = createHttpClient(axios, config)
+  const http = createHttpClient(axios, config);
 
   const getGlobalOptions = createGlobalOptions({
     resolveLinks: config.resolveLinks,
@@ -117,37 +120,52 @@ export function createClient (params: CreateClientParams): ContentfulClientApi {
     removeUnresolved: config.removeUnresolved,
     spaceBaseUrl: http.defaults.baseURL,
     environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`
-  })
+  });
   // Append environment to baseURL
-  http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl
+  http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl;
 
   // Intercepts response and obscure the token
-  obscureAuthTokenInResponse(http)
+  obscureAuthTokenInResponse(http);
 
   return createContentfulApi({
     http,
     getGlobalOptions
-  })
+  });
 }
 
-function obscureAuthTokenInResponse (http) {
-  http.interceptors.response.use(response => {
-    return response
-  }, error => {
-    if (error.response && error.response.config.headers.Authorization) {
-      const token = error.response.config.headers.Authorization
+function obscureAuthTokenInResponse(http) {
+  http.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (error.response && error.response.config.headers.Authorization) {
+        const token = error.response.config.headers.Authorization;
 
-      error.response.config.headers.Authorization = error.response.config.headers.Authorization.replace(token, `Bearer...${token.substr(-5)}`)
+        error.response.config.headers.Authorization = error.response.config.headers.Authorization.replace(
+          token,
+          `Bearer...${token.substr(-5)}`
+        );
 
-      if (error.response.request._headers && error.response.request._headers.authorization) {
-        error.response.request._headers.authorization = error.response.request._headers.authorization.replace(token, `Bearer...${token.substr(-5)}`)
+        if (
+          error.response.request._headers &&
+          error.response.request._headers.authorization
+        ) {
+          error.response.request._headers.authorization = error.response.request._headers.authorization.replace(
+            token,
+            `Bearer...${token.substr(-5)}`
+          );
+        }
+
+        if (error.response.request._header) {
+          error.response.request._header = error.response.request._header.replace(
+            token,
+            `Bearer...${token.substr(-5)}`
+          );
+        }
       }
 
-      if (error.response.request._header) {
-        error.response.request._header = error.response.request._header.replace(token, `Bearer...${token.substr(-5)}`)
-      }
+      return Promise.reject(error);
     }
-
-    return Promise.reject(error)
-  })
+  );
 }

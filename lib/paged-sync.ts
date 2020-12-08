@@ -2,9 +2,13 @@
  * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
  * @namespace Sync
  */
-import { createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
-import resolveResponse from 'contentful-resolve-response'
-import mixinStringifySafe from './mixins/stringify-safe'
+import {
+  createRequestConfig,
+  freezeSys,
+  toPlainObject
+} from "contentful-sdk-core";
+import resolveResponse from "contentful-resolve-response";
+import mixinStringifySafe from "./mixins/stringify-safe";
 
 /**
  * @memberof Sync
@@ -43,44 +47,63 @@ import mixinStringifySafe from './mixins/stringify-safe'
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
  * @return {Promise<SyncCollection>}
  */
-export default async function pagedSync (http, query, options = {}) {
-  if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
-    throw new Error('Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing')
+export default async function pagedSync(http, query, options = {}) {
+  if (
+    !query ||
+    (!query.initial && !query.nextSyncToken && !query.nextPageToken)
+  ) {
+    throw new Error(
+      "Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing"
+    );
   }
 
   if (query && query.content_type && !query.type) {
-    query.type = 'Entry'
-  } else if (query && query.content_type && query.type && query.type !== 'Entry') {
-    throw new Error('When using the `content_type` filter your `type` parameter cannot be different from `Entry`.')
+    query.type = "Entry";
+  } else if (
+    query &&
+    query.content_type &&
+    query.type &&
+    query.type !== "Entry"
+  ) {
+    throw new Error(
+      "When using the `content_type` filter your `type` parameter cannot be different from `Entry`."
+    );
   }
 
-  const defaultOptions = { resolveLinks: true, removeUnresolved: false, paginate: true }
+  const defaultOptions = {
+    resolveLinks: true,
+    removeUnresolved: false,
+    paginate: true
+  };
   const { resolveLinks, removeUnresolved, paginate } = {
     ...defaultOptions,
     ...options
-  }
+  };
 
   const syncOptions = {
     paginate
-  }
+  };
 
-  const response = await getSyncPage(http, [], query, syncOptions)
+  const response = await getSyncPage(http, [], query, syncOptions);
   // clones response.items used in includes because we don't want these to be mutated
   if (resolveLinks) {
-    response.items = resolveResponse(response, { removeUnresolved, itemEntryPoints: ['fields'] })
+    response.items = resolveResponse(response, {
+      removeUnresolved,
+      itemEntryPoints: ["fields"]
+    });
   }
   // maps response items again after getters are attached
-  const mappedResponseItems = mapResponseItems(response.items)
+  const mappedResponseItems = mapResponseItems(response.items);
 
   if (response.nextSyncToken) {
-    mappedResponseItems.nextSyncToken = response.nextSyncToken
+    mappedResponseItems.nextSyncToken = response.nextSyncToken;
   }
 
   if (response.nextPageToken) {
-    mappedResponseItems.nextPageToken = response.nextPageToken
+    mappedResponseItems.nextPageToken = response.nextPageToken;
   }
 
-  return freezeSys(mixinStringifySafe(toPlainObject(mappedResponseItems)))
+  return freezeSys(mixinStringifySafe(toPlainObject(mappedResponseItems)));
 }
 
 /**
@@ -88,22 +111,22 @@ export default async function pagedSync (http, query, options = {}) {
  * @param {Array<Entities.Entry|Entities.Array|Sync.DeletedEntry|Sync.DeletedAsset>} items
  * @return {Object} Entities mapped to an object for each entity type
  */
-function mapResponseItems (items):any {
-  const reducer = (type) => {
+function mapResponseItems(items): any {
+  const reducer = type => {
     return (accumulated, item) => {
       if (item.sys.type === type) {
-        accumulated.push(toPlainObject(item))
+        accumulated.push(toPlainObject(item));
       }
-      return accumulated
-    }
-  }
+      return accumulated;
+    };
+  };
 
   return {
-    entries: items.reduce(reducer('Entry'), []),
-    assets: items.reduce(reducer('Asset'), []),
-    deletedEntries: items.reduce(reducer('DeletedEntry'), []),
-    deletedAssets: items.reduce(reducer('DeletedAsset'), [])
-  }
+    entries: items.reduce(reducer("Entry"), []),
+    assets: items.reduce(reducer("Asset"), []),
+    deletedEntries: items.reduce(reducer("DeletedEntry"), []),
+    deletedAssets: items.reduce(reducer("DeletedAsset"), [])
+  };
 }
 
 /**
@@ -121,44 +144,47 @@ function mapResponseItems (items):any {
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
  * @return {Promise<{items: Array, nextSyncToken: string}>}
  */
-async function getSyncPage (http, items, query, { paginate }) {
+async function getSyncPage(http, items, query, { paginate }) {
   if (query.nextSyncToken) {
-    query.sync_token = query.nextSyncToken
-    delete query.nextSyncToken
+    query.sync_token = query.nextSyncToken;
+    delete query.nextSyncToken;
   }
 
   if (query.nextPageToken) {
-    query.sync_token = query.nextPageToken
-    delete query.nextPageToken
+    query.sync_token = query.nextPageToken;
+    delete query.nextPageToken;
   }
 
   if (query.sync_token) {
-    delete query.initial
-    delete query.type
-    delete query.content_type
-    delete query.limit
+    delete query.initial;
+    delete query.type;
+    delete query.content_type;
+    delete query.limit;
   }
 
-  const response = await http.get('sync', createRequestConfig({ query: query }))
-  const data = response.data || {}
-  items = items.concat(data.items || [])
+  const response = await http.get(
+    "sync",
+    createRequestConfig({ query: query })
+  );
+  const data = response.data || {};
+  items = items.concat(data.items || []);
   if (data.nextPageUrl) {
     if (paginate) {
-      delete query.initial
-      query.sync_token = getToken(data.nextPageUrl)
-      return getSyncPage(http, items, query, { paginate })
+      delete query.initial;
+      query.sync_token = getToken(data.nextPageUrl);
+      return getSyncPage(http, items, query, { paginate });
     }
     return {
       items: items,
       nextPageToken: getToken(data.nextPageUrl)
-    }
+    };
   } else if (data.nextSyncUrl) {
     return {
       items: items,
       nextSyncToken: getToken(data.nextSyncUrl)
-    }
+    };
   } else {
-    return { items: [] }
+    return { items: [] };
   }
 }
 
@@ -166,7 +192,7 @@ async function getSyncPage (http, items, query, { paginate }) {
  * Extracts token out of an url
  * @private
  */
-function getToken (url) {
-  const urlParts = url.split('?')
-  return urlParts.length > 0 ? urlParts[1].replace('sync_token=', '') : ''
+function getToken(url) {
+  const urlParts = url.split("?");
+  return urlParts.length > 0 ? urlParts[1].replace("sync_token=", "") : "";
 }

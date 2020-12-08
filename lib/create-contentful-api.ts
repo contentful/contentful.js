@@ -45,229 +45,253 @@
  * @prop {function} sync
  */
 
-import { createRequestConfig } from 'contentful-sdk-core'
-import pagedSync from './paged-sync'
-import normalizeSelect from './utils/normalize-select'
-import {resolveCircular} from "./utils/resolve-circular";
+import { createRequestConfig } from "contentful-sdk-core";
+import pagedSync from "./paged-sync";
+import normalizeSelect from "./utils/normalize-select";
+import { resolveCircular } from "./utils/resolve-circular";
 
 export interface Asset {
-    sys: Sys;
-    fields: {
-        title: string;
-        description: string;
-        file: {
-            url: string;
-            details: {
-                size: number;
-                image?: {
-                    width: number;
-                    height: number;
-                };
-            };
-            fileName: string;
-            contentType: string;
+  sys: Sys;
+  fields: {
+    title: string;
+    description: string;
+    file: {
+      url: string;
+      details: {
+        size: number;
+        image?: {
+          width: number;
+          height: number;
         };
+      };
+      fileName: string;
+      contentType: string;
     };
+  };
 }
 
 export interface ContentfulCollection<T> {
-    total: number;
-    skip: number;
-    limit: number;
-    items: Array<T>;
+  total: number;
+  skip: number;
+  limit: number;
+  items: Array<T>;
 }
 
-export type AssetCollection = ContentfulCollection<Asset>
+export type AssetCollection = ContentfulCollection<Asset>;
 
 export interface Entry<T> {
-    sys: Sys;
-    fields: T;
-    update(): Promise<Entry<T>>;
+  sys: Sys;
+  fields: T;
+  update(): Promise<Entry<T>>;
 }
 
 export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
-    errors?: Array<any>;
-    includes?: any;
-    stringifySafe(replacer?: any, space?: any): string;
+  errors?: Array<any>;
+  includes?: any;
+  stringifySafe(replacer?: any, space?: any): string;
 }
 
 export interface ContentType {
-    sys: Sys;
-    name: string;
-    description: string;
-    displayField: string;
-    fields: Array<Field>;
+  sys: Sys;
+  name: string;
+  description: string;
+  displayField: string;
+  fields: Array<Field>;
 }
 
 export type ContentTypeCollection = ContentfulCollection<ContentType>;
 
 export interface Locale {
-    code: string
-    name: string
-    default: boolean
-    fallbackCode: string | null
-    sys: {
-        id: string
-        type: 'Locale'
-        version: number
-    }
+  code: string;
+  name: string;
+  default: boolean;
+  fallbackCode: string | null;
+  sys: {
+    id: string;
+    type: "Locale";
+    version: number;
+  };
 }
 
 export type LocaleCollection = ContentfulCollection<Locale>;
 
 export interface SyncCollection {
-    entries: Array<Entry<any>>;
-    assets: Array<Asset>;
-    deletedEntries: Array<Entry<any>>;
-    deletedAssets: Array<Asset>;
-    nextSyncToken: string;
-    stringifySafe(replacer?: any, space?: any): string;
+  entries: Array<Entry<any>>;
+  assets: Array<Asset>;
+  deletedEntries: Array<Entry<any>>;
+  deletedAssets: Array<Asset>;
+  nextSyncToken: string;
+  stringifySafe(replacer?: any, space?: any): string;
 }
 
 export interface Sys {
-    type: string;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    locale: string;
-    revision?: number;
-    space?: {
-        sys: SpaceLink;
-    };
-    contentType: {
-        sys: ContentTypeLink;
-    };
+  type: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  locale: string;
+  revision?: number;
+  space?: {
+    sys: SpaceLink;
+  };
+  contentType: {
+    sys: ContentTypeLink;
+  };
 }
 
 export interface SpaceLink {
-    type: 'Link';
-    linkType: 'Space';
-    id: string;
+  type: "Link";
+  linkType: "Space";
+  id: string;
 }
 
 export interface ContentTypeLink {
-    type: 'Link';
-    linkType: 'ContentType';
-    id: string;
+  type: "Link";
+  linkType: "ContentType";
+  id: string;
 }
 
 export interface Field {
-    disabled: boolean;
-    id: string;
-    linkType?: string;
-    localized: boolean;
-    name: string;
-    omitted: boolean;
-    required: boolean;
-    type: FieldType;
-    validations: FieldValidation[];
-    items?: FieldItem;
+  disabled: boolean;
+  id: string;
+  linkType?: string;
+  localized: boolean;
+  name: string;
+  omitted: boolean;
+  required: boolean;
+  type: FieldType;
+  validations: FieldValidation[];
+  items?: FieldItem;
 }
 
-export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
+export type FieldType =
+  | "Symbol"
+  | "Text"
+  | "Integer"
+  | "Number"
+  | "Date"
+  | "Boolean"
+  | "Location"
+  | "Link"
+  | "Array"
+  | "Object"
+  | "RichText";
 
 export interface FieldValidation {
-    unique?: boolean;
-    size?: {
-        min?: number;
-        max?: number;
-    };
-    regexp?: {
-        pattern: string;
-    };
-    linkMimetypeGroup?: string[];
-    in?: string[];
-    linkContentType?: string[];
-    message?: string;
-    nodes?: {
-        'entry-hyperlink'?: FieldValidation[];
-        'embedded-entry-block'?: FieldValidation[];
-        'embedded-entry-inline'?: FieldValidation[];
-    };
-    enabledNodeTypes?: string[];
+  unique?: boolean;
+  size?: {
+    min?: number;
+    max?: number;
+  };
+  regexp?: {
+    pattern: string;
+  };
+  linkMimetypeGroup?: string[];
+  in?: string[];
+  linkContentType?: string[];
+  message?: string;
+  nodes?: {
+    "entry-hyperlink"?: FieldValidation[];
+    "embedded-entry-block"?: FieldValidation[];
+    "embedded-entry-inline"?: FieldValidation[];
+  };
+  enabledNodeTypes?: string[];
 }
 
 export interface FieldItem {
-    type: 'Link' | 'Symbol';
-    validations: FieldValidation[];
-    linkType?: 'Entry' | 'Asset';
+  type: "Link" | "Symbol";
+  validations: FieldValidation[];
+  linkType?: "Entry" | "Asset";
 }
-
 
 /**
  * Types of fields found in an Entry
  */
 export namespace EntryFields {
-    export type Symbol = string;
-    export type Text = string;
-    export type Integer = number;
-    export type Number = number;
-    export type Date = string;
-    export type Boolean = boolean;
-    export interface Location {
-        lat: string;
-        lon: string;
-    }
-    export type Link<T> = Asset | Entry<T>;
-    export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
-    export type Object<T = any> = T;
-    export interface RichText {
-        data:{};
-        content: RichTextContent[];
-        nodeType: 'document';
-    }
+  export type Symbol = string;
+  export type Text = string;
+  export type Integer = number;
+  export type Number = number;
+  export type Date = string;
+  export type Boolean = boolean;
+  export interface Location {
+    lat: string;
+    lon: string;
+  }
+  export type Link<T> = Asset | Entry<T>;
+  export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
+  export type Object<T = any> = T;
+  export interface RichText {
+    data: {};
+    content: RichTextContent[];
+    nodeType: "document";
+  }
 }
 
 interface RichTextDataTarget {
-    sys: {
-        id: string;
-        type: "Link";
-        "linkType": 'Entry' | 'Asset';
-    };
+  sys: {
+    id: string;
+    type: "Link";
+    linkType: "Entry" | "Asset";
+  };
 }
 
 interface RichTextData {
-    uri?: string;
-    target?: RichTextDataTarget;
+  uri?: string;
+  target?: RichTextDataTarget;
 }
 
-type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
-    | 'heading-6' | 'paragraph' | 'hyperlink' | 'entry-hyperlink' | 'asset-hyperlink'
-    | 'unordered-list' | 'ordered-list' | 'list-item' | 'blockquote' | 'hr' | 'embedded-entry-block'
-    | 'embedded-entry-inline';
+type RichTextNodeType =
+  | "text"
+  | "heading-1"
+  | "heading-2"
+  | "heading-3"
+  | "heading-4"
+  | "heading-5"
+  | "heading-6"
+  | "paragraph"
+  | "hyperlink"
+  | "entry-hyperlink"
+  | "asset-hyperlink"
+  | "unordered-list"
+  | "ordered-list"
+  | "list-item"
+  | "blockquote"
+  | "hr"
+  | "embedded-entry-block"
+  | "embedded-entry-inline";
 
 interface RichTextContent {
-    data: RichTextData;
-    content?: RichTextContent[]
-    marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
-    value?: string;
-    nodeType: RichTextNodeType;
+  data: RichTextData;
+  content?: RichTextContent[];
+  marks: { type: "bold" | "underline" | "code" | "italic" }[];
+  value?: string;
+  nodeType: RichTextNodeType;
 }
 
-
 export interface Space {
-    sys: Sys;
-    name: string;
-    locales: Array<string>;
+  sys: Sys;
+  name: string;
+  locales: Array<string>;
 }
 
 export interface ContentfulClientApi {
-    getAsset(id: string, query?: any): Promise<Asset>;
-    getAssets(query?: any): Promise<AssetCollection>;
-    getContentType(id: string): Promise<ContentType>;
-    getContentTypes(query?: any): Promise<ContentTypeCollection>;
-    getEntries<T>(query?: any): Promise<EntryCollection<T>>;
-    getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
-    getSpace(): Promise<Space>;
-    getLocales(): Promise<LocaleCollection>;
-    parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
-    sync(query: any): Promise<SyncCollection>;
+  getAsset(id: string, query?: any): Promise<Asset>;
+  getAssets(query?: any): Promise<AssetCollection>;
+  getContentType(id: string): Promise<ContentType>;
+  getContentTypes(query?: any): Promise<ContentTypeCollection>;
+  getEntries<T>(query?: any): Promise<EntryCollection<T>>;
+  getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
+  getSpace(): Promise<Space>;
+  getLocales(): Promise<LocaleCollection>;
+  parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
+  sync(query: any): Promise<SyncCollection>;
 }
 
 interface GetConfig {
-    context: "space" | "environment";
-    path: any;
-    config?: any;
+  context: "space" | "environment";
+  path: any;
+  config?: any;
 }
 /**
  * Creates API object with methods to access functionality from Contentful's
@@ -279,9 +303,12 @@ interface GetConfig {
  * @prop {Function} getGlobalOptions - Link resolver preconfigured with global setting
  * @return {ClientAPI}
  */
-export default function createContentfulApi ({ http, getGlobalOptions }): ContentfulClientApi {
-  const notFoundError = (id) => {
-    const error = new Error('The resource could not be found.')
+export default function createContentfulApi({
+  http,
+  getGlobalOptions
+}): ContentfulClientApi {
+  const notFoundError = id => {
+    const error = new Error("The resource could not be found.");
     /*
       error.sys = {
       type: 'Error',
@@ -294,35 +321,35 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
       space: getGlobalOptions().space
     }
     */
-    return error
-  }
+    return error;
+  };
 
   // eslint-disable-next-line no-undef
-  function errorHandler (error): never {
+  function errorHandler(error): never {
     if (error.data) {
-      throw error.data
+      throw error.data;
     }
 
     if (error.response && error.response.data) {
-      throw error.response.data
+      throw error.response.data;
     }
 
-    throw error
+    throw error;
   }
 
-  async function get<T> ({ context, path, config }: GetConfig) : Promise<T> {
-    if (context === 'space') {
-      switchToSpace(http)
-    } else if (context === 'environment') {
-      switchToEnvironment(http)
+  async function get<T>({ context, path, config }: GetConfig): Promise<T> {
+    if (context === "space") {
+      switchToSpace(http);
+    } else if (context === "environment") {
+      switchToEnvironment(http);
     } else {
-      throw new Error('unknown context ')
+      throw new Error("unknown context ");
     }
     try {
-      const response = await http.get(path, config)
-      return response.data
+      const response = await http.get(path, config);
+      return response.data;
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error);
     }
   }
 
@@ -341,8 +368,8 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const space = await client.getSpace()
    * console.log(space)
    */
-  async function getSpace ():Promise<Space> {
-    return get<Space>({ context: 'space', path: '' })
+  async function getSpace(): Promise<Space> {
+    return get<Space>({ context: "space", path: "" });
   }
 
   /**
@@ -361,11 +388,11 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const contentType = await client.getContentType('<content_type_id>')
    * console.log(contentType)
    */
-  async function getContentType (id): Promise<ContentType> {
+  async function getContentType(id): Promise<ContentType> {
     return get<ContentType>({
-      context: 'environment',
+      context: "environment",
       path: `content_types/${id}`
-    })
+    });
   }
 
   /**
@@ -384,12 +411,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const response = await client.getContentTypes()
    * console.log(response.items)
    */
-  async function getContentTypes (query = {}):Promise<ContentTypeCollection> {
+  async function getContentTypes(query = {}): Promise<ContentTypeCollection> {
     return get<ContentTypeCollection>({
-      context: 'environment',
-      path: 'content_types',
+      context: "environment",
+      path: "content_types",
       config: createRequestConfig({ query: query })
-    })
+    });
   }
 
   /**
@@ -409,19 +436,19 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const entry = await client.getEntry('<entry_id>')
    * console.log(entry)
    */
-  async function getEntry <T> (id, query = {}):Promise<Entry<T>> {
+  async function getEntry<T>(id, query = {}): Promise<Entry<T>> {
     if (!id) {
-      throw notFoundError(id)
+      throw notFoundError(id);
     }
     try {
-      const response = await this.getEntries({ 'sys.id': id, ...query })
+      const response = await this.getEntries({ "sys.id": id, ...query });
       if (response.items.length > 0) {
-        return response.items[0]
+        return response.items[0];
       } else {
-        throw notFoundError(id)
+        throw notFoundError(id);
       }
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error);
     }
   }
 
@@ -441,17 +468,17 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const response = await client.getEntries()
    * .console.log(response.items)
    */
-  async function getEntries <T> (query = {}):Promise<EntryCollection<T>> {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
+  async function getEntries<T>(query = {}): Promise<EntryCollection<T>> {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions(query);
     try {
       const entries = await get({
-        context: 'environment',
-        path: 'entries',
+        context: "environment",
+        path: "entries",
         config: createRequestConfig({ query: normalizeSelect(query) })
-      })
-      return resolveCircular(entries, { resolveLinks, removeUnresolved })
+      });
+      return resolveCircular(entries, { resolveLinks, removeUnresolved });
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error);
     }
   }
   /**
@@ -471,12 +498,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const asset = await client.getAsset('<asset_id>')
    * console.log(asset)
    */
-  async function getAsset (id, query = {}): Promise<Asset> {
+  async function getAsset(id, query = {}): Promise<Asset> {
     return get<Asset>({
-      context: 'environment',
+      context: "environment",
       path: `assets/${id}`,
       config: createRequestConfig({ query: normalizeSelect(query) })
-    })
+    });
   }
 
   /**
@@ -495,12 +522,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const response = await client.getAssets()
    * console.log(response.items)
    */
-  async function getAssets (query = {}): Promise<AssetCollection> {
+  async function getAssets(query = {}): Promise<AssetCollection> {
     return get<AssetCollection>({
-      context: 'environment',
-      path: 'assets',
+      context: "environment",
+      path: "assets",
       config: createRequestConfig({ query: normalizeSelect(query) })
-    })
+    });
   }
 
   /**
@@ -519,12 +546,12 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    * const response = await client.getLocales()
    * console.log(response.items)
    */
-  async function getLocales (query = {}):Promise<LocaleCollection> {
+  async function getLocales(query = {}): Promise<LocaleCollection> {
     return get<LocaleCollection>({
-      context: 'environment',
-      path: 'locales',
+      context: "environment",
+      path: "locales",
       config: createRequestConfig({ query: normalizeSelect(query) })
-    })
+    });
   }
 
   /**
@@ -560,59 +587,63 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
    *   nextSyncToken: response.nextSyncToken
    * })
    */
-  async function sync (query = {}, options = { paginate: true }) {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
-    switchToEnvironment(http)
-    return pagedSync(http, query, { resolveLinks, removeUnresolved, ...options })
+  async function sync(query = {}, options = { paginate: true }) {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions(query);
+    switchToEnvironment(http);
+    return pagedSync(http, query, {
+      resolveLinks,
+      removeUnresolved,
+      ...options
+    });
   }
 
   /**
-  * Parse raw json data into collection of entry objects.Links will be resolved also
-  * @memberof ContentfulClientAPI
-  * @param {Object} raw json data
-  * @example
-  * let data = {items: [
-  *    {
-  *    sys: {type: 'Entry', locale: 'en-US'},
-  *    fields: {
-  *      animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
-  *      anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
-  *    }
-  *  }
-  * ],
-  * includes: {
-  *  Animal: [
-  *    {
-  *      sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
-  *      fields: {
-  *        name: 'Pig',
-  *        friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
-  *      }
-  *    }
-  *   ]
-  *  }
-  * }
-  * console.log( data.items[0].fields.foo ); // undefined
-  * let parsedData = client.parseEntries(data);
-  * console.log( parsedData.items[0].fields.foo ); // foo
-  */
-  function parseEntries (data) {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions({})
-    return resolveCircular(data, { resolveLinks, removeUnresolved })
+   * Parse raw json data into collection of entry objects.Links will be resolved also
+   * @memberof ContentfulClientAPI
+   * @param {Object} raw json data
+   * @example
+   * let data = {items: [
+   *    {
+   *    sys: {type: 'Entry', locale: 'en-US'},
+   *    fields: {
+   *      animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
+   *      anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
+   *    }
+   *  }
+   * ],
+   * includes: {
+   *  Animal: [
+   *    {
+   *      sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+   *      fields: {
+   *        name: 'Pig',
+   *        friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
+   *      }
+   *    }
+   *   ]
+   *  }
+   * }
+   * console.log( data.items[0].fields.foo ); // undefined
+   * let parsedData = client.parseEntries(data);
+   * console.log( parsedData.items[0].fields.foo ); // foo
+   */
+  function parseEntries(data) {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions({});
+    return resolveCircular(data, { resolveLinks, removeUnresolved });
   }
 
   /*
    * Switches BaseURL to use /environments path
    * */
-  function switchToEnvironment (http): void {
-    http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
+  function switchToEnvironment(http): void {
+    http.defaults.baseURL = getGlobalOptions().environmentBaseUrl;
   }
 
   /*
    * Switches BaseURL to use /spaces path
    * */
-  function switchToSpace (http): void {
-    http.defaults.baseURL = getGlobalOptions().spaceBaseUrl
+  function switchToSpace(http): void {
+    http.defaults.baseURL = getGlobalOptions().spaceBaseUrl;
   }
 
   return {
@@ -626,5 +657,5 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
     getLocales: getLocales,
     parseEntries: parseEntries,
     sync: sync
-  }
+  };
 }
