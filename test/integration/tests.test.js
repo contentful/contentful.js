@@ -1,6 +1,4 @@
-import sinon from 'sinon'
-
-import * as contentful from '../../lib/contentful'
+const contentful = require('../../lib/contentful')
 
 const params = {
   accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
@@ -26,8 +24,8 @@ const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
-const responseLoggerStub = sinon.stub()
-const requestLoggerStub = sinon.stub()
+const responseLoggerStub = jest.fn()
+const requestLoggerStub = jest.fn()
 const clientWithLoggers = contentful.createClient({
   ...params,
   responseLogger: responseLoggerStub,
@@ -293,7 +291,8 @@ test('Gets entries by creation order', async () => {
     order: 'sys.createdAt'
   })
 
-  expect(response.items[0].sys.createdAt).toBeLessThan(response.items[1].sys.createdAt)
+  expect(new Date(response.items[0].sys.createdAt).getTime())
+    .toBeLessThan(new Date(response.items[1].sys.createdAt).getTime())
 })
 
 test('Gets entries by inverse creation order', async () => {
@@ -301,7 +300,8 @@ test('Gets entries by inverse creation order', async () => {
     order: '-sys.createdAt'
   })
 
-  expect(response.items[0].sys.createdAt).toBeGreaterThan(response.items[1].sys.createdAt)
+  expect(new Date(response.items[0].sys.createdAt).getTime())
+    .toBeGreaterThan(new Date(response.items[1].sys.createdAt).getTime())
 })
 
 /**
@@ -323,7 +323,7 @@ test('Gets entries by creation order and id order', async () => {
     .filter((value, index, self) => self.indexOf(value) === index)
 
   expect(contentTypeOrder).toEqual(['1t9IbcfdCk6m04uISSsaIK', 'cat', 'dog', 'human'])
-  expect(response.items[0].sys.id).toBeLessThan(response.items[1].sys.id)
+  expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
 })
 
 test('Gets assets with only images', async () => {
@@ -410,8 +410,6 @@ test('Gets entries with linked includes with local:* in preview', async () => {
 
 test('Logs request and response with custom loggers', async () => {
   await clientWithLoggers.getEntries()
-  expect(responseLoggerStub.callCount).toBe(1)
-  expect(requestLoggerStub.callCount).toBe(1)
-  expect(requestLoggerStub.args[0][0].baseURL).toBe('https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master')
-  expect(requestLoggerStub.args[0][0].url).toBe('entries')
+  expect(responseLoggerStub).toHaveBeenCalledTimes(1)
+  expect(requestLoggerStub).toHaveBeenCalledTimes(1)
 })
