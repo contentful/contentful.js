@@ -45,10 +45,10 @@
  * @prop {function} sync
  */
 
-import { createRequestConfig } from "contentful-sdk-core";
-import pagedSync from "./paged-sync";
-import normalizeSelect from "./utils/normalize-select";
-import { resolveCircular } from "./utils/resolve-circular";
+import { createRequestConfig } from 'contentful-sdk-core';
+import pagedSync from './paged-sync';
+import normalizeSelect from './utils/normalize-select';
+import { resolveCircular } from './utils/resolve-circular';
 
 export interface Asset {
   sys: Sys;
@@ -108,7 +108,7 @@ export interface Locale {
   fallbackCode: string | null;
   sys: {
     id: string;
-    type: "Locale";
+    type: 'Locale';
     version: number;
   };
 }
@@ -140,14 +140,14 @@ export interface Sys {
 }
 
 export interface SpaceLink {
-  type: "Link";
-  linkType: "Space";
+  type: 'Link';
+  linkType: 'Space';
   id: string;
 }
 
 export interface ContentTypeLink {
-  type: "Link";
-  linkType: "ContentType";
+  type: 'Link';
+  linkType: 'ContentType';
   id: string;
 }
 
@@ -165,17 +165,17 @@ export interface Field {
 }
 
 export type FieldType =
-  | "Symbol"
-  | "Text"
-  | "Integer"
-  | "Number"
-  | "Date"
-  | "Boolean"
-  | "Location"
-  | "Link"
-  | "Array"
-  | "Object"
-  | "RichText";
+  | 'Symbol'
+  | 'Text'
+  | 'Integer'
+  | 'Number'
+  | 'Date'
+  | 'Boolean'
+  | 'Location'
+  | 'Link'
+  | 'Array'
+  | 'Object'
+  | 'RichText';
 
 export interface FieldValidation {
   unique?: boolean;
@@ -191,17 +191,17 @@ export interface FieldValidation {
   linkContentType?: string[];
   message?: string;
   nodes?: {
-    "entry-hyperlink"?: FieldValidation[];
-    "embedded-entry-block"?: FieldValidation[];
-    "embedded-entry-inline"?: FieldValidation[];
+    'entry-hyperlink'?: FieldValidation[];
+    'embedded-entry-block'?: FieldValidation[];
+    'embedded-entry-inline'?: FieldValidation[];
   };
   enabledNodeTypes?: string[];
 }
 
 export interface FieldItem {
-  type: "Link" | "Symbol";
+  type: 'Link' | 'Symbol';
   validations: FieldValidation[];
-  linkType?: "Entry" | "Asset";
+  linkType?: 'Entry' | 'Asset';
 }
 
 /**
@@ -224,15 +224,15 @@ export namespace EntryFields {
   export interface RichText {
     data: {};
     content: RichTextContent[];
-    nodeType: "document";
+    nodeType: 'document';
   }
 }
 
 interface RichTextDataTarget {
   sys: {
     id: string;
-    type: "Link";
-    linkType: "Entry" | "Asset";
+    type: 'Link';
+    linkType: 'Entry' | 'Asset';
   };
 }
 
@@ -242,29 +242,29 @@ interface RichTextData {
 }
 
 type RichTextNodeType =
-  | "text"
-  | "heading-1"
-  | "heading-2"
-  | "heading-3"
-  | "heading-4"
-  | "heading-5"
-  | "heading-6"
-  | "paragraph"
-  | "hyperlink"
-  | "entry-hyperlink"
-  | "asset-hyperlink"
-  | "unordered-list"
-  | "ordered-list"
-  | "list-item"
-  | "blockquote"
-  | "hr"
-  | "embedded-entry-block"
-  | "embedded-entry-inline";
+  | 'text'
+  | 'heading-1'
+  | 'heading-2'
+  | 'heading-3'
+  | 'heading-4'
+  | 'heading-5'
+  | 'heading-6'
+  | 'paragraph'
+  | 'hyperlink'
+  | 'entry-hyperlink'
+  | 'asset-hyperlink'
+  | 'unordered-list'
+  | 'ordered-list'
+  | 'list-item'
+  | 'blockquote'
+  | 'hr'
+  | 'embedded-entry-block'
+  | 'embedded-entry-inline';
 
 interface RichTextContent {
   data: RichTextData;
   content?: RichTextContent[];
-  marks: { type: "bold" | "underline" | "code" | "italic" }[];
+  marks: { type: 'bold' | 'underline' | 'code' | 'italic' }[];
   value?: string;
   nodeType: RichTextNodeType;
 }
@@ -289,7 +289,7 @@ export interface ContentfulClientApi {
 }
 
 interface GetConfig {
-  context: "space" | "environment";
+  context: 'space' | 'environment';
   path: any;
   config?: any;
 }
@@ -303,12 +303,9 @@ interface GetConfig {
  * @prop {Function} getGlobalOptions - Link resolver preconfigured with global setting
  * @return {ClientAPI}
  */
-export default function createContentfulApi({
-  http,
-  getGlobalOptions
-}): ContentfulClientApi {
+export default function createContentfulApi({ http, getGlobalOptions }): ContentfulClientApi {
   const notFoundError = id => {
-    const error = new Error("The resource could not be found.");
+    const error = new Error('The resource could not be found.');
     /*
       error.sys = {
       type: 'Error',
@@ -338,12 +335,12 @@ export default function createContentfulApi({
   }
 
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
-    if (context === "space") {
+    if (context === 'space') {
       switchToSpace(http);
-    } else if (context === "environment") {
+    } else if (context === 'environment') {
       switchToEnvironment(http);
     } else {
-      throw new Error("unknown context ");
+      throw new Error('unknown context ');
     }
     try {
       const response = await http.get(path, config);
@@ -369,7 +366,7 @@ export default function createContentfulApi({
    * console.log(space)
    */
   async function getSpace(): Promise<Space> {
-    return get<Space>({ context: "space", path: "" });
+    return get<Space>({ context: 'space', path: '' });
   }
 
   /**
@@ -390,8 +387,8 @@ export default function createContentfulApi({
    */
   async function getContentType(id): Promise<ContentType> {
     return get<ContentType>({
-      context: "environment",
-      path: `content_types/${id}`
+      context: 'environment',
+      path: `content_types/${id}`,
     });
   }
 
@@ -413,9 +410,9 @@ export default function createContentfulApi({
    */
   async function getContentTypes(query = {}): Promise<ContentTypeCollection> {
     return get<ContentTypeCollection>({
-      context: "environment",
-      path: "content_types",
-      config: createRequestConfig({ query: query })
+      context: 'environment',
+      path: 'content_types',
+      config: createRequestConfig({ query: query }),
     });
   }
 
@@ -441,7 +438,7 @@ export default function createContentfulApi({
       throw notFoundError(id);
     }
     try {
-      const response = await this.getEntries({ "sys.id": id, ...query });
+      const response = await this.getEntries({ 'sys.id': id, ...query });
       if (response.items.length > 0) {
         return response.items[0];
       } else {
@@ -472,9 +469,9 @@ export default function createContentfulApi({
     const { resolveLinks, removeUnresolved } = getGlobalOptions(query);
     try {
       const entries = await get({
-        context: "environment",
-        path: "entries",
-        config: createRequestConfig({ query: normalizeSelect(query) })
+        context: 'environment',
+        path: 'entries',
+        config: createRequestConfig({ query: normalizeSelect(query) }),
       });
       return resolveCircular(entries, { resolveLinks, removeUnresolved });
     } catch (error) {
@@ -500,9 +497,9 @@ export default function createContentfulApi({
    */
   async function getAsset(id, query = {}): Promise<Asset> {
     return get<Asset>({
-      context: "environment",
+      context: 'environment',
       path: `assets/${id}`,
-      config: createRequestConfig({ query: normalizeSelect(query) })
+      config: createRequestConfig({ query: normalizeSelect(query) }),
     });
   }
 
@@ -524,9 +521,9 @@ export default function createContentfulApi({
    */
   async function getAssets(query = {}): Promise<AssetCollection> {
     return get<AssetCollection>({
-      context: "environment",
-      path: "assets",
-      config: createRequestConfig({ query: normalizeSelect(query) })
+      context: 'environment',
+      path: 'assets',
+      config: createRequestConfig({ query: normalizeSelect(query) }),
     });
   }
 
@@ -548,9 +545,9 @@ export default function createContentfulApi({
    */
   async function getLocales(query = {}): Promise<LocaleCollection> {
     return get<LocaleCollection>({
-      context: "environment",
-      path: "locales",
-      config: createRequestConfig({ query: normalizeSelect(query) })
+      context: 'environment',
+      path: 'locales',
+      config: createRequestConfig({ query: normalizeSelect(query) }),
     });
   }
 
@@ -593,7 +590,7 @@ export default function createContentfulApi({
     return pagedSync(http, query, {
       resolveLinks,
       removeUnresolved,
-      ...options
+      ...options,
     });
   }
 
@@ -656,6 +653,6 @@ export default function createContentfulApi({
     getAssets: getAssets,
     getLocales: getLocales,
     parseEntries: parseEntries,
-    sync: sync
+    sync: sync,
   };
 }

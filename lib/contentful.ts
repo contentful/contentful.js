@@ -5,12 +5,10 @@
  * @see ContentfulClientAPI
  */
 
-import axios from "axios";
-import { createHttpClient, getUserAgentHeader } from "contentful-sdk-core";
-import createContentfulApi, {
-  ContentfulClientApi
-} from "./create-contentful-api";
-import createGlobalOptions from "./create-global-options";
+import axios from 'axios';
+import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core';
+import createContentfulApi, { ContentfulClientApi } from './create-contentful-api';
+import createGlobalOptions from './create-global-options';
 
 export interface AxiosProxyConfig {
   host: string;
@@ -21,7 +19,7 @@ export interface AxiosProxyConfig {
   };
 }
 
-export type ClientLogLevel = "error" | "warning" | "info" | string;
+export type ClientLogLevel = 'error' | 'warning' | 'info' | string;
 
 export interface CreateClientParams {
   space: string;
@@ -81,35 +79,35 @@ export interface CreateClientParams {
 
 export function createClient(params: CreateClientParams): ContentfulClientApi {
   if (!params.accessToken) {
-    throw new TypeError("Expected parameter accessToken");
+    throw new TypeError('Expected parameter accessToken');
   }
 
   if (!params.space) {
-    throw new TypeError("Expected parameter space");
+    throw new TypeError('Expected parameter space');
   }
 
   const defaultConfig = {
     resolveLinks: true,
     removeUnresolved: false,
-    defaultHostname: "cdn.contentful.com",
-    environment: "master"
+    defaultHostname: 'cdn.contentful.com',
+    environment: 'master',
   };
 
   const config = {
     ...defaultConfig,
-    ...params
+    ...params,
   };
 
   // const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
   const userAgentHeader = getUserAgentHeader(
-    `contentful.js/${"0.0.0-tim-and-marco"}`,
+    `contentful.js/${'0.0.0-tim-and-marco'}`,
     config.application,
     config.integration
   );
   config.headers = {
     ...config.headers,
-    "Content-Type": "application/vnd.contentful.delivery.v1+json",
-    "X-Contentful-User-Agent": userAgentHeader
+    'Content-Type': 'application/vnd.contentful.delivery.v1+json',
+    'X-Contentful-User-Agent': userAgentHeader,
   };
 
   const http = createHttpClient(axios, config);
@@ -119,7 +117,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
     environment: config.environment,
     removeUnresolved: config.removeUnresolved,
     spaceBaseUrl: http.defaults.baseURL,
-    environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`
+    environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`,
   });
   // Append environment to baseURL
   http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl;
@@ -129,7 +127,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
 
   return createContentfulApi({
     http,
-    getGlobalOptions
+    getGlobalOptions,
   });
 }
 
@@ -147,10 +145,7 @@ function obscureAuthTokenInResponse(http) {
           `Bearer...${token.substr(-5)}`
         );
 
-        if (
-          error.response.request._headers &&
-          error.response.request._headers.authorization
-        ) {
+        if (error.response.request._headers && error.response.request._headers.authorization) {
           error.response.request._headers.authorization = error.response.request._headers.authorization.replace(
             token,
             `Bearer...${token.substr(-5)}`

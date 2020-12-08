@@ -1,11 +1,11 @@
-import test from "blue-tape";
-import sinon from "sinon";
-import createGlobalOptions from "../../lib/create-global-options";
+import test from 'blue-tape';
+import sinon from 'sinon';
+import createGlobalOptions from '../../lib/create-global-options';
 
 import createContentfulApi, {
-  __RewireAPI__ as createContentfulApiRewireApi
-} from "../../lib/create-contentful-api";
-import { contentTypeMock, assetMock, entryMock, localeMock } from "./mocks";
+  __RewireAPI__ as createContentfulApiRewireApi,
+} from '../../lib/create-contentful-api';
+import { contentTypeMock, assetMock, entryMock, localeMock } from './mocks';
 
 let entitiesMock;
 
@@ -14,87 +14,87 @@ function setupWithData({
   getGlobalOptions = sinon.stub().returns({
     resolveLinks: true,
     removeUnresolved: false,
-    spaceBaseUrl: "spaceUrl",
-    environment: "master",
-    environmentBaseUrl: "environementUrl"
-  })
+    spaceBaseUrl: 'spaceUrl',
+    environment: 'master',
+    environmentBaseUrl: 'environementUrl',
+  }),
 }) {
   entitiesMock = {
     space: {
-      wrapSpace: sinon.stub()
+      wrapSpace: sinon.stub(),
     },
     contentType: {
       wrapContentType: sinon.stub(),
-      wrapContentTypeCollection: sinon.stub()
+      wrapContentTypeCollection: sinon.stub(),
     },
     entry: {
       wrapEntry: sinon.stub(),
-      wrapEntryCollection: sinon.stub()
+      wrapEntryCollection: sinon.stub(),
     },
     asset: {
       wrapAsset: sinon.stub(),
-      wrapAssetCollection: sinon.stub()
+      wrapAssetCollection: sinon.stub(),
     },
     locale: {
       wrapLocale: sinon.stub(),
-      wrapLocaleCollection: sinon.stub()
-    }
+      wrapLocaleCollection: sinon.stub(),
+    },
   };
-  createContentfulApiRewireApi.__Rewire__("entities", entitiesMock);
+  createContentfulApiRewireApi.__Rewire__('entities', entitiesMock);
   const getStub = sinon.stub();
   const api = createContentfulApi({
     http: {
-      defaults: { baseURL: "baseURL" },
-      get: getStub.returns(promise)
+      defaults: { baseURL: 'baseURL' },
+      get: getStub.returns(promise),
     },
-    getGlobalOptions: getGlobalOptions
+    getGlobalOptions: getGlobalOptions,
   });
   return { api, getStub };
 }
 
 function teardown() {
-  createContentfulApiRewireApi.__ResetDependency__("entities");
+  createContentfulApiRewireApi.__ResetDependency__('entities');
 }
 
-test("API call getSpace", async t => {
+test('API call getSpace', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id",
-      type: "Space"
+      id: 'id',
+      type: 'Space',
     },
-    name: "name",
-    locales: ["en-US"]
+    name: 'name',
+    locales: ['en-US'],
   };
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: data })
+    promise: Promise.resolve({ data: data }),
   });
   entitiesMock.space.wrapSpace.returns(data);
 
   try {
-    const r = await api.getSpace("spaceid");
+    const r = await api.getSpace('spaceid');
     t.looseEqual(r, data);
   } finally {
     teardown();
   }
 });
 
-test("API call getSpace fails", async t => {
+test('API call getSpace fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.space.wrapSpace.returns(data);
 
   try {
-    await api.getSpace("spaceid");
+    await api.getSpace('spaceid');
   } catch (r) {
     t.looseEqual(r, data);
   } finally {
@@ -102,37 +102,37 @@ test("API call getSpace fails", async t => {
   }
 });
 
-test("API call getContentType", async t => {
+test('API call getContentType', async t => {
   t.plan(1);
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: contentTypeMock })
+    promise: Promise.resolve({ data: contentTypeMock }),
   });
   entitiesMock.contentType.wrapContentType.returns(contentTypeMock);
 
   try {
-    const r = await api.getContentType("ctid");
+    const r = await api.getContentType('ctid');
     t.looseEqual(r, contentTypeMock);
   } finally {
     teardown();
   }
 });
 
-test("API call getContentType fails", async t => {
+test('API call getContentType fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.contentType.wrapContentType.returns(data);
 
   try {
-    await api.getContentType("ctid");
+    await api.getContentType('ctid');
   } catch (r) {
     t.looseEqual(r, data);
   } finally {
@@ -140,16 +140,16 @@ test("API call getContentType fails", async t => {
   }
 });
 
-test("API call getContentTypes", async t => {
+test('API call getContentTypes', async t => {
   t.plan(1);
   const data = {
     total: 100,
     skip: 0,
     limit: 10,
-    items: [contentTypeMock]
+    items: [contentTypeMock],
   };
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: data })
+    promise: Promise.resolve({ data: data }),
   });
   entitiesMock.contentType.wrapContentTypeCollection.returns(data);
 
@@ -161,17 +161,17 @@ test("API call getContentTypes", async t => {
   }
 });
 
-test("API call getContentTypes fails", async t => {
+test('API call getContentTypes fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.contentType.wrapContentTypeCollection.returns(data);
 
@@ -184,16 +184,16 @@ test("API call getContentTypes fails", async t => {
   }
 });
 
-test("API call getEntry", async t => {
+test('API call getEntry', async t => {
   t.plan(2);
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: entryMock })
+    promise: Promise.resolve({ data: entryMock }),
   });
   api.getEntries = sinon.stub().resolves({ items: [entryMock] });
   entitiesMock.entry.wrapEntry.returns(entryMock);
 
   try {
-    const r = await api.getEntry("eid");
+    const r = await api.getEntry('eid');
     t.looseEqual(r, entryMock);
     t.true(api.getEntries.calledOnce);
   } finally {
@@ -201,22 +201,22 @@ test("API call getEntry", async t => {
   }
 });
 
-test("API call getEntry fails", async t => {
+test('API call getEntry fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.entry.wrapEntry.returns(data);
 
   try {
-    await api.getEntry("eid");
+    await api.getEntry('eid');
   } catch (r) {
     t.looseEqual(r, data);
   } finally {
@@ -224,41 +224,38 @@ test("API call getEntry fails", async t => {
   }
 });
 
-test("API call getEntries", async t => {
+test('API call getEntries', async t => {
   t.plan(2);
 
   const data = {
     total: 100,
     skip: 0,
     limit: 10,
-    items: [entryMock]
+    items: [entryMock],
   };
 
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: data })
+    promise: Promise.resolve({ data: data }),
   });
   entitiesMock.entry.wrapEntryCollection.returns(data);
 
   try {
     const r = await api.getEntries();
-    t.ok(
-      entitiesMock.entry.wrapEntryCollection.args[0][1],
-      "resolveLinks turned on by default"
-    );
-    t.looseEqual(r, data, "returns expected data");
+    t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1], 'resolveLinks turned on by default');
+    t.looseEqual(r, data, 'returns expected data');
   } finally {
     teardown();
   }
 });
 
-test("API call getEntries with global resolve links overriden by query", async t => {
+test('API call getEntries with global resolve links overriden by query', async t => {
   t.plan(1);
 
-  const data = { sys: { id: "id" } };
+  const data = { sys: { id: 'id' } };
 
   const { api } = setupWithData({
     promise: Promise.resolve({ data: data }),
-    getGlobalOptions: createGlobalOptions({})
+    getGlobalOptions: createGlobalOptions({}),
   });
   entitiesMock.entry.wrapEntryCollection.returns(data);
 
@@ -266,21 +263,21 @@ test("API call getEntries with global resolve links overriden by query", async t
     await api.getEntries({ resolveLinks: true });
     t.ok(
       entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks,
-      "resolveLinks turned off globally"
+      'resolveLinks turned off globally'
     );
   } finally {
     teardown();
   }
 });
 
-test("API call getEntries with global resolve links turned off", async t => {
+test('API call getEntries with global resolve links turned off', async t => {
   t.plan(2);
 
-  const data = { sys: { id: "id" } };
+  const data = { sys: { id: 'id' } };
 
   const { api } = setupWithData({
     promise: Promise.resolve({ data: data }),
-    getGlobalOptions: sinon.stub().returns({ resolveLinks: false })
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: false }),
   });
   entitiesMock.entry.wrapEntryCollection.returns(data);
 
@@ -288,25 +285,25 @@ test("API call getEntries with global resolve links turned off", async t => {
     const r = await api.getEntries();
     t.notOk(
       entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks,
-      "resolveLinks turned off globally"
+      'resolveLinks turned off globally'
     );
-    t.looseEqual(r, data, "returns expected data");
+    t.looseEqual(r, data, 'returns expected data');
   } finally {
     teardown();
   }
 });
 
-test("API call getEntries fails", async t => {
+test('API call getEntries fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.entry.wrapEntryCollection.returns(data);
 
@@ -319,37 +316,37 @@ test("API call getEntries fails", async t => {
   }
 });
 
-test("API call getAsset", async t => {
+test('API call getAsset', async t => {
   t.plan(1);
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: assetMock })
+    promise: Promise.resolve({ data: assetMock }),
   });
   entitiesMock.asset.wrapAsset.returns(assetMock);
 
   try {
-    const r = await api.getAsset("aid");
+    const r = await api.getAsset('aid');
     t.looseEqual(r, assetMock);
   } finally {
     teardown();
   }
 });
 
-test("API call getAsset fails", async t => {
+test('API call getAsset fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.asset.wrapAsset.returns(data);
 
   try {
-    await api.getAsset("aid");
+    await api.getAsset('aid');
   } catch (r) {
     t.looseEqual(r, data);
   } finally {
@@ -357,16 +354,16 @@ test("API call getAsset fails", async t => {
   }
 });
 
-test("API call getAssets", async t => {
+test('API call getAssets', async t => {
   t.plan(1);
   const data = {
     total: 100,
     skip: 0,
     limit: 10,
-    items: [assetMock]
+    items: [assetMock],
   };
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: data })
+    promise: Promise.resolve({ data: data }),
   });
   entitiesMock.asset.wrapAssetCollection.returns(data);
 
@@ -378,17 +375,17 @@ test("API call getAssets", async t => {
   }
 });
 
-test("API call getAssets fails", async t => {
+test('API call getAssets fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.asset.wrapAssetCollection.returns(data);
 
@@ -401,16 +398,16 @@ test("API call getAssets fails", async t => {
   }
 });
 
-test("API call getLocales", async t => {
+test('API call getLocales', async t => {
   t.plan(1);
   const data = {
     total: 100,
     skip: 0,
     limit: 10,
-    items: [localeMock]
+    items: [localeMock],
   };
   const { api } = setupWithData({
-    promise: Promise.resolve({ data: data })
+    promise: Promise.resolve({ data: data }),
   });
   entitiesMock.locale.wrapLocaleCollection.returns(data);
 
@@ -422,17 +419,17 @@ test("API call getLocales", async t => {
   }
 });
 
-test("API call getLocaless fails", async t => {
+test('API call getLocaless fails', async t => {
   t.plan(1);
   const data = {
     sys: {
-      id: "id"
-    }
+      id: 'id',
+    },
   };
   const rejectError = new Error();
   rejectError.data = data;
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   entitiesMock.locale.wrapLocaleCollection.returns(data);
 
@@ -445,82 +442,78 @@ test("API call getLocaless fails", async t => {
   }
 });
 
-test("CDA call sync", async t => {
+test('CDA call sync', async t => {
   t.plan(5);
   const { api } = setupWithData({
     promise: Promise.resolve({
       data: {
         items: [],
-        nextSyncUrl: "http://nextsyncurl?sync_token=thisisthesynctoken"
-      }
-    })
+        nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken',
+      },
+    }),
   });
 
   try {
     const r = await api.sync({ initial: true });
-    t.ok(r.entries, "entries");
-    t.ok(r.assets, "assets");
-    t.ok(r.deletedEntries, "deletedEntries");
-    t.ok(r.deletedAssets, "deletedAssets");
-    t.equal(r.nextSyncToken, "thisisthesynctoken", "sync token");
+    t.ok(r.entries, 'entries');
+    t.ok(r.assets, 'assets');
+    t.ok(r.deletedEntries, 'deletedEntries');
+    t.ok(r.deletedAssets, 'deletedAssets');
+    t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token');
   } finally {
     teardown();
   }
 });
 
-test("CDA call sync fails", async t => {
+test('CDA call sync fails', async t => {
   t.plan(1);
   const rejectError = new Error();
-  rejectError.data = "error";
+  rejectError.data = 'error';
   const { api } = setupWithData({
-    promise: Promise.reject(rejectError)
+    promise: Promise.reject(rejectError),
   });
   try {
     await api.sync({ initial: true });
   } catch (r) {
-    t.equal(r.data, "error");
+    t.equal(r.data, 'error');
   } finally {
     teardown();
   }
 });
 
-test("Given json should be parsed correctly as a collection of entries", t => {
+test('Given json should be parsed correctly as a collection of entries', t => {
   const api = createContentfulApi({
     http: {},
-    getGlobalOptions: sinon.stub().returns({ resolveLinks: true })
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: true }),
   });
   const data = {
     items: [
       {
-        sys: { type: "Entry", locale: "en-US" },
+        sys: { type: 'Entry', locale: 'en-US' },
         fields: {
-          animal: { sys: { type: "Link", linkType: "Animal", id: "oink" } },
+          animal: { sys: { type: 'Link', linkType: 'Animal', id: 'oink' } },
           anotheranimal: {
-            sys: { type: "Link", linkType: "Animal", id: "middle-parrot" }
-          }
-        }
-      }
+            sys: { type: 'Link', linkType: 'Animal', id: 'middle-parrot' },
+          },
+        },
+      },
     ],
     includes: {
       Animal: [
         {
-          sys: { type: "Animal", id: "oink", locale: "en-US" },
+          sys: { type: 'Animal', id: 'oink', locale: 'en-US' },
           fields: {
-            name: "Pig",
+            name: 'Pig',
             friend: {
-              sys: { type: "Link", linkType: "Animal", id: "groundhog" }
-            }
-          }
-        }
-      ]
-    }
+              sys: { type: 'Link', linkType: 'Animal', id: 'groundhog' },
+            },
+          },
+        },
+      ],
+    },
   };
   const parsedData = api.parseEntries(data);
   t.ok(parsedData);
-  t.looseEquals(
-    parsedData.items[0].fields.animal.sys,
-    data.includes.Animal[0].sys,
-    "oink"
-  );
+  t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink');
   t.end();
 });

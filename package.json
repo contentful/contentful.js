@@ -84,6 +84,14 @@
     "tslib": "^2.0.3",
     "typescript": "^3.9.7"
   },
+  "prettier": {
+    "printWidth": 100,
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "useTabs": false,
+    "trailingComma": "es5"
+  },
   "engines": {
     "node": ">=12"
   },

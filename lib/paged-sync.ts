@@ -2,13 +2,9 @@
  * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
  * @namespace Sync
  */
-import {
-  createRequestConfig,
-  freezeSys,
-  toPlainObject
-} from "contentful-sdk-core";
-import resolveResponse from "contentful-resolve-response";
-import mixinStringifySafe from "./mixins/stringify-safe";
+import { createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core';
+import resolveResponse from 'contentful-resolve-response';
+import mixinStringifySafe from './mixins/stringify-safe';
 
 /**
  * @memberof Sync
@@ -48,40 +44,32 @@ import mixinStringifySafe from "./mixins/stringify-safe";
  * @return {Promise<SyncCollection>}
  */
 export default async function pagedSync(http, query, options = {}) {
-  if (
-    !query ||
-    (!query.initial && !query.nextSyncToken && !query.nextPageToken)
-  ) {
+  if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error(
-      "Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing"
+      'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
     );
   }
 
   if (query && query.content_type && !query.type) {
-    query.type = "Entry";
-  } else if (
-    query &&
-    query.content_type &&
-    query.type &&
-    query.type !== "Entry"
-  ) {
+    query.type = 'Entry';
+  } else if (query && query.content_type && query.type && query.type !== 'Entry') {
     throw new Error(
-      "When using the `content_type` filter your `type` parameter cannot be different from `Entry`."
+      'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.'
     );
   }
 
   const defaultOptions = {
     resolveLinks: true,
     removeUnresolved: false,
-    paginate: true
+    paginate: true,
   };
   const { resolveLinks, removeUnresolved, paginate } = {
     ...defaultOptions,
-    ...options
+    ...options,
   };
 
   const syncOptions = {
-    paginate
+    paginate,
   };
 
   const response = await getSyncPage(http, [], query, syncOptions);
@@ -89,7 +77,7 @@ export default async function pagedSync(http, query, options = {}) {
   if (resolveLinks) {
     response.items = resolveResponse(response, {
       removeUnresolved,
-      itemEntryPoints: ["fields"]
+      itemEntryPoints: ['fields'],
     });
   }
   // maps response items again after getters are attached
@@ -122,10 +110,10 @@ function mapResponseItems(items): any {
   };
 
   return {
-    entries: items.reduce(reducer("Entry"), []),
-    assets: items.reduce(reducer("Asset"), []),
-    deletedEntries: items.reduce(reducer("DeletedEntry"), []),
-    deletedAssets: items.reduce(reducer("DeletedAsset"), [])
+    entries: items.reduce(reducer('Entry'), []),
+    assets: items.reduce(reducer('Asset'), []),
+    deletedEntries: items.reduce(reducer('DeletedEntry'), []),
+    deletedAssets: items.reduce(reducer('DeletedAsset'), []),
   };
 }
 
@@ -162,10 +150,7 @@ async function getSyncPage(http, items, query, { paginate }) {
     delete query.limit;
   }
 
-  const response = await http.get(
-    "sync",
-    createRequestConfig({ query: query })
-  );
+  const response = await http.get('sync', createRequestConfig({ query: query }));
   const data = response.data || {};
   items = items.concat(data.items || []);
   if (data.nextPageUrl) {
@@ -176,12 +161,12 @@ async function getSyncPage(http, items, query, { paginate }) {
     }
     return {
       items: items,
-      nextPageToken: getToken(data.nextPageUrl)
+      nextPageToken: getToken(data.nextPageUrl),
     };
   } else if (data.nextSyncUrl) {
     return {
       items: items,
-      nextSyncToken: getToken(data.nextSyncUrl)
+      nextSyncToken: getToken(data.nextSyncUrl),
     };
   } else {
     return { items: [] };
@@ -193,6 +178,6 @@ async function getSyncPage(http, items, query, { paginate }) {
  * @private
  */
 function getToken(url) {
-  const urlParts = url.split("?");
-  return urlParts.length > 0 ? urlParts[1].replace("sync_token=", "") : "";
+  const urlParts = url.split('?');
+  return urlParts.length > 0 ? urlParts[1].replace('sync_token=', '') : '';
 }

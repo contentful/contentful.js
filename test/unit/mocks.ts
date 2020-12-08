@@ -1,65 +1,65 @@
-import copy from "fast-copy";
+import copy from 'fast-copy';
 
 const linkMock = {
-  id: "linkid",
-  type: "Link",
-  linkType: "linkType"
+  id: 'linkid',
+  type: 'Link',
+  linkType: 'linkType',
 };
 
 const sysMock = {
-  type: "Type",
-  id: "id",
+  type: 'Type',
+  id: 'id',
   space: copy(linkMock),
-  createdAt: "createdatdate",
-  updatedAt: "updatedatdate",
-  revision: 1
+  createdAt: 'createdatdate',
+  updatedAt: 'updatedatdate',
+  revision: 1,
 };
 
 const contentTypeMock = {
   sys: Object.assign(copy(sysMock), {
-    type: "ContentType"
+    type: 'ContentType',
   }),
-  name: "name",
-  description: "desc",
-  displayField: "displayfield",
+  name: 'name',
+  description: 'desc',
+  displayField: 'displayfield',
   fields: [
     {
-      id: "fieldid",
-      name: "fieldname",
-      type: "Text",
+      id: 'fieldid',
+      name: 'fieldname',
+      type: 'Text',
       localized: true,
-      required: false
-    }
-  ]
+      required: false,
+    },
+  ],
 };
 
 const entryMock = {
   sys: Object.assign(copy(sysMock), {
-    type: "Entry",
-    contentType: Object.assign(copy(linkMock), { linkType: "ContentType" }),
-    locale: "locale"
+    type: 'Entry',
+    contentType: Object.assign(copy(linkMock), { linkType: 'ContentType' }),
+    locale: 'locale',
   }),
   fields: {
-    field1: "str"
-  }
+    field1: 'str',
+  },
 };
 
 const assetMock = {
   sys: Object.assign(copy(sysMock), {
-    type: "Asset",
-    locale: "locale"
+    type: 'Asset',
+    locale: 'locale',
   }),
   fields: {
-    field1: "str"
-  }
+    field1: 'str',
+  },
 };
 
 const localeMock = {
   sys: Object.assign(copy(sysMock), {
-    type: "Locale"
+    type: 'Locale',
   }),
-  name: "English. United State",
-  code: "en-US"
+  name: 'English. United State',
+  code: 'en-US',
 };
 
 export { linkMock, sysMock, contentTypeMock, entryMock, assetMock, localeMock };

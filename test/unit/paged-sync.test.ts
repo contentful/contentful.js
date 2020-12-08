@@ -1,13 +1,13 @@
-import copy from "fast-copy";
+import copy from 'fast-copy';
 
-import { entryMock, assetMock } from "./mocks";
-import pagedSync from "../../lib/paged-sync";
+import { entryMock, assetMock } from './mocks';
+import pagedSync from '../../lib/paged-sync';
 
 function createEntry(id, deleted) {
   const entry = copy(entryMock);
   entry.sys.id = id;
   if (deleted) {
-    entry.sys.type = "Deleted" + entry.sys.type;
+    entry.sys.type = 'Deleted' + entry.sys.type;
   }
   return entry;
 }
@@ -16,40 +16,40 @@ function createAsset(id, deleted) {
   const asset = copy(assetMock);
   asset.sys.id = id;
   if (deleted) {
-    asset.sys.type = "Deleted" + asset.sys.type;
+    asset.sys.type = 'Deleted' + asset.sys.type;
   }
   return asset;
 }
 
-describe("paged-sync", () => {
+describe('paged-sync', () => {
   let http;
 
   beforeEach(() => {
     http = { get: jest.fn() };
   });
 
-  test("Rejects with no parameters", async () => {
+  test('Rejects with no parameters', async () => {
     await expect(pagedSync(http, {}, { resolveLinks: true })).rejects.toEqual(
       new Error(
-        "Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing"
+        'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
       )
     );
   });
 
-  test("Rejects with incompatible content_type and type parameter", async () => {
+  test('Rejects with incompatible content_type and type parameter', async () => {
     await expect(
       pagedSync(
         http,
         {
           initial: true,
-          content_type: "id",
-          type: "ContentType"
+          content_type: 'id',
+          type: 'ContentType',
         },
         { resolveLinks: true }
       )
     ).rejects.toEqual(
       new Error(
-        "When using the `content_type` filter your `type` parameter cannot be different from `Entry`."
+        'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.'
       )
     );
   });
