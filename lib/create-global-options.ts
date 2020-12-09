@@ -6,7 +6,7 @@
  * @returns {function} Link resolver method preconfigured with global setting
  */
 
-interface GlobalOptionsParams {
+export interface GlobalOptionsParams {
     resolveLinks?: boolean,
     environment?: string,
     removeUnresolved?: boolean,
@@ -14,13 +14,15 @@ interface GlobalOptionsParams {
     environmentBaseUrl?: string
 }
 
+export type GetGlobalOptions = (globalOptions? : GlobalOptionsParams) => GlobalOptionsParams
+
 export default function createGlobalOptions (globalSettings: GlobalOptionsParams):
-    (query: GlobalOptionsParams) => GlobalOptionsParams {
+    GetGlobalOptions {
   /**
      * Link resolver method
      * @param {Object} query - regular query object used for collection endpoints
      */
-  return function getGlobalOptions (query: GlobalOptionsParams) {
+  return function getGlobalOptions (query?: GlobalOptionsParams) {
     return Object.assign({}, globalSettings, query)
   }
 }

@@ -7,6 +7,7 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
+import { HttpClientInstance } from './common-types'
 import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
@@ -129,7 +130,7 @@ export function createClient (params: CreateClientParams): ContentfulClientApi {
   })
 }
 
-function obscureAuthTokenInResponse (http) {
+function obscureAuthTokenInResponse (http: HttpClientInstance) {
   http.interceptors.response.use(response => {
     return response
   }, error => {
