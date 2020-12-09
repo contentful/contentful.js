@@ -1,8 +1,6 @@
-import copy from 'fast-copy'
-
-import { entryMock, assetMock } from './mocks'
 import pagedSync from '../../lib/paged-sync'
 
+/*
 function createEntry (id, deleted) {
   const entry = copy(entryMock)
   entry.sys.id = id
@@ -20,6 +18,7 @@ function createAsset (id, deleted) {
   }
   return asset
 }
+ */
 
 describe('paged-sync', () => {
   let http

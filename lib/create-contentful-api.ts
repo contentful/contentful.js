@@ -252,6 +252,7 @@ export interface Space {
 }
 
 export interface ContentfulClientApi {
+    readonly version: string;
     getAsset(id: string, query?: any): Promise<Asset>;
     getAssets(query?: any): Promise<AssetCollection>;
     getContentType(id: string): Promise<ContentType>;
@@ -616,6 +617,7 @@ export default function createContentfulApi ({ http, getGlobalOptions }): Conten
   }
 
   return {
+    version: __VERSION__,
     getSpace: getSpace,
     getContentType: getContentType,
     getContentTypes: getContentTypes,
