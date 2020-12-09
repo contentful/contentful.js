@@ -4,6 +4,7 @@
  */
 import { createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import resolveResponse from 'contentful-resolve-response'
+import {AxiosInstance} from "contentful-sdk-core/dist/types/types";
 import mixinStringifySafe from './mixins/stringify-safe'
 
 /**
@@ -43,7 +44,7 @@ import mixinStringifySafe from './mixins/stringify-safe'
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
  * @return {Promise<SyncCollection>}
  */
-export default async function pagedSync (http, query, options = {}) {
+export default async function pagedSync (http:AxiosInstance, query, options = {}) {
   if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error('Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing')
   }
@@ -121,7 +122,7 @@ function mapResponseItems (items):any {
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
  * @return {Promise<{items: Array, nextSyncToken: string}>}
  */
-async function getSyncPage (http, items, query, { paginate }) {
+async function getSyncPage (http:AxiosInstance, items, query, { paginate }) {
   if (query.nextSyncToken) {
     query.sync_token = query.nextSyncToken
     delete query.nextSyncToken
