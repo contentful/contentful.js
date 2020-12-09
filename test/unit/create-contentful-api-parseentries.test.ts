@@ -5,6 +5,7 @@ test('Given json should be parsed correctly as a collection of entries', () => {
   const api = createContentfulApi({
   // @ts-ignore
     http: {},
+  // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true })
   })
   const data = {
