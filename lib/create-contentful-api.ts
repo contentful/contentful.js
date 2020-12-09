@@ -61,22 +61,28 @@ interface CreateContentfulApiParams {
   getGlobalOptions: GetGlobalOptions
 }
 
-export default function createContentfulApi ({ http, getGlobalOptions }:CreateContentfulApiParams): ContentfulClientApi {
-  const notFoundError = (id?: string) => {
-    const error = new Error('The resource could not be found.')
-    /*
-      error.sys = {
+class NotFoundError extends Error {
+  public readonly sys: { id: string; type: string };
+  public readonly details: { environment: string; id: string; type: string; space: any };
+
+  constructor(id: string, environment: string, space: string) {
+    super('The resource could not be found.');
+    this.sys = {
       type: 'Error',
       id: 'NotFound'
     }
-    error.details = {
+    this.details = {
       type: 'Entry',
-      id: id,
-      environment: getGlobalOptions().environment,
-      space: getGlobalOptions().space
+      id,
+      environment,
+      space
     }
-    */
-    return error
+  }
+}
+
+export default function createContentfulApi ({ http, getGlobalOptions }:CreateContentfulApiParams): ContentfulClientApi {
+  const notFoundError = (id: string = 'unknown') => {
+    return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
 
   // eslint-disable-next-line no-undef

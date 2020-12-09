@@ -6,42 +6,42 @@
  */
 
 import axios from 'axios'
-import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import { HttpClientInstance } from './common-types'
-import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
+import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
+import {HttpClientInstance} from './common-types'
+import createContentfulApi, {ContentfulClientApi} from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
 export interface AxiosProxyConfig {
-    host: string;
-    port: number;
-    auth?: {
-        username: string;
-        password: string;
-    };
+  host: string;
+  port: number;
+  auth?: {
+    username: string;
+    password: string;
+  };
 }
 
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string;
 
 export interface CreateClientParams {
-    space: string;
-    accessToken: string;
-    environment?: string;
-    insecure?: boolean;
-    host?: string;
-    basePath?: string;
-    httpAgent?: any;
-    httpsAgent?: any;
-    proxy?: AxiosProxyConfig;
-    headers?: any;
-    adapter?: any;
-    application?: string;
-    integration?: string;
-    resolveLinks?: boolean;
-    removeUnresolved?: boolean;
-    retryOnError?: boolean;
-    logHandler?: (level: ClientLogLevel, data?: any) => void;
-    timeout?: number;
-    retryLimit?: number;
+  space: string;
+  accessToken: string;
+  environment?: string;
+  insecure?: boolean;
+  host?: string;
+  basePath?: string;
+  httpAgent?: any;
+  httpsAgent?: any;
+  proxy?: AxiosProxyConfig;
+  headers?: any;
+  adapter?: any;
+  application?: string;
+  integration?: string;
+  resolveLinks?: boolean;
+  removeUnresolved?: boolean;
+  retryOnError?: boolean;
+  logHandler?: (level: ClientLogLevel, data?: any) => void;
+  timeout?: number;
+  retryLimit?: number;
 }
 
 /**
@@ -78,7 +78,7 @@ export interface CreateClientParams {
  * })
  */
 
-export function createClient (params: CreateClientParams): ContentfulClientApi {
+export function createClient(params: CreateClientParams): ContentfulClientApi {
   if (!params.accessToken) {
     throw new TypeError('Expected parameter accessToken')
   }
@@ -111,7 +111,12 @@ export function createClient (params: CreateClientParams): ContentfulClientApi {
 
   const http = createHttpClient(axios, config)
 
+  if (!http.defaults.baseURL) {
+    throw new Error('Please define a bseURL')
+  }
+
   const getGlobalOptions = createGlobalOptions({
+    space: config.space,
     resolveLinks: config.resolveLinks,
     environment: config.environment,
     removeUnresolved: config.removeUnresolved,
@@ -130,7 +135,7 @@ export function createClient (params: CreateClientParams): ContentfulClientApi {
   })
 }
 
-function obscureAuthTokenInResponse (http: HttpClientInstance) {
+function obscureAuthTokenInResponse(http: HttpClientInstance) {
   http.interceptors.response.use(response => {
     return response
   }, error => {
