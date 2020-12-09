@@ -1,8 +1,7 @@
 const mocks = require('./mocks')
-const createGlobalOptions = require('../../lib/create-global-options')
-const createContentfulApi = require('../../lib/create-contentful-api')
-
-let entitiesMock
+const createGlobalOptions = require('../../lib/create-global-options').default
+const createContentfulApi = require('../../lib/create-contentful-api').default
+const resolveCircular = require('../../lib/utils/resolve-circular')
 
 function setupWithData ({
   promise,
@@ -14,30 +13,8 @@ function setupWithData ({
     environmentBaseUrl: 'environmentUrl'
   })
 }) {
-  entitiesMock = {
-    space: {
-      wrapSpace: jest.fn()
-    },
-    contentType: {
-      wrapContentType: jest.fn(),
-      wrapContentTypeCollection: jest.fn()
-    },
-    entry: {
-      wrapEntry: jest.fn(),
-      wrapEntryCollection: jest.fn()
-    },
-    asset: {
-      wrapAsset: jest.fn(),
-      wrapAssetCollection: jest.fn()
-    },
-    locale: {
-      wrapLocale: jest.fn(),
-      wrapLocaleCollection: jest.fn()
-    }
-  }
-
   const getStub = jest.fn()
-  const api = createContentfulApi.default({
+  const api = createContentfulApi({
     http: {
       defaults: { baseURL: 'baseURL' },
       get: getStub.mockReturnValue(promise)
@@ -51,6 +28,19 @@ function setupWithData ({
 }
 
 describe('create-contentful-api', () => {
+  resolveCircular.default = jest.fn()
+  const resolveCircularMock = resolveCircular.default
+
+  beforeEach(() => {
+    resolveCircularMock.mockImplementation(args => {
+      return args
+    })
+  })
+
+  afterEach(() => {
+    resolveCircularMock.mockReset()
+  })
+
   test('API call getSpace', async () => {
     const data = {
       sys: {
@@ -63,7 +53,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data })
     })
-    entitiesMock.space.wrapSpace.mockReturnValue(data)
     await expect(api.getSpace()).resolves.toEqual(data)
   })
 
@@ -78,7 +67,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.space.wrapSpace.mockReturnValue(data)
     await expect(api.getSpace()).rejects.toEqual(rejectError.data)
   })
 
@@ -86,7 +74,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: mocks.contentTypeMock })
     })
-    entitiesMock.contentType.wrapContentType.mockReturnValue(mocks.contentTypeMock)
     await expect(api.getContentType('ctid')).resolves.toEqual(mocks.contentTypeMock)
   })
 
@@ -101,7 +88,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.contentType.wrapContentType.mockReturnValue(data)
     await expect(api.getContentType('ctid')).rejects.toEqual(data)
   })
 
@@ -115,7 +101,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data })
     })
-    entitiesMock.contentType.wrapContentTypeCollection.mockReturnValue(data)
     await expect(api.getContentTypes()).resolves.toEqual(data)
   })
 
@@ -130,7 +115,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.contentType.wrapContentTypeCollection.mockReturnValue(data)
     await expect(api.getContentTypes()).rejects.toEqual(data)
   })
 
@@ -139,8 +123,6 @@ describe('create-contentful-api', () => {
       promise: Promise.resolve({ data: mocks.entryMock })
     })
     api.getEntries = jest.fn().mockResolvedValue({ items: [mocks.entryMock] })
-    entitiesMock.entry.wrapEntry.mockReturnValue(mocks.entryMock)
-
     await expect(api.getEntry('eid')).resolves.toEqual(mocks.entryMock)
     expect(api.getEntries).toHaveBeenCalledTimes(1)
   })
@@ -156,7 +138,6 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.entry.wrapEntry.mockReturnValue(data)
     await expect(api.getEntry('eid')).rejects.toEqual(data)
   })
 
@@ -167,57 +148,44 @@ describe('create-contentful-api', () => {
       limit: 10,
       items: [mocks.entryMock]
     }
-
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data })
     })
-    entitiesMock.entry.wrapEntryCollection.mockReturnValue(data)
     await expect(api.getEntries()).resolves.toEqual(data)
-    // expect(entitiesMock.entry.wrapEntryCollection.mock).toHaveBeenCalledTimes(1)
-    // console.log(entitiesMock.entry.wrapEntryCollection.mock.calls)
   })
 
-  test.skip('API call getEntries with global resolve links overriden by query', async (t) => {
-    t.plan(1)
+  test('API call getEntries with global resolve links overridden by query', async () => {
+    const data = { sys: { id: 'id' } }
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
+      getGlobalOptions: createGlobalOptions({
+        environment: 'master',
+        environmentBaseUrl: 'environmentUrl'
+      })
+    })
 
+    await expect(api.getEntries()).resolves.toEqual(data)
+    expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeFalsy()
+  })
+
+  test('API call getEntries with global resolve links turned off', async () => {
     const data = { sys: { id: 'id' } }
 
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data }),
-      getGlobalOptions: createGlobalOptions({})
+      getGlobalOptions: jest.fn().mockReturnValue({
+        environment: 'master',
+        environmentBaseUrl: 'environmentUrl',
+        resolveLinks: true,
+        removeUnresolved: false
+      })
     })
-    entitiesMock.entry.wrapEntryCollection.returns(data)
 
-    try {
-      await api.getEntries({ resolveLinks: true })
-      t.ok(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
-    } finally {
-      teardown()
-    }
+    await expect(api.getEntries()).resolves.toEqual(data)
+    expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeTruthy()
   })
 
-  test.skip('API call getEntries with global resolve links turned off', async (t) => {
-    t.plan(2)
-
-    const data = { sys: { id: 'id' } }
-
-    const { api } = setupWithData({
-      promise: Promise.resolve({ data: data }),
-      getGlobalOptions: sinon.stub().returns({ resolveLinks: false })
-    })
-    entitiesMock.entry.wrapEntryCollection.returns(data)
-
-    try {
-      const r = await api.getEntries()
-      t.notOk(entitiesMock.entry.wrapEntryCollection.args[0][1].resolveLinks, 'resolveLinks turned off globally')
-      t.looseEqual(r, data, 'returns expected data')
-    } finally {
-      teardown()
-    }
-  })
-
-  test.skip('API call getEntries fails', async (t) => {
-    t.plan(1)
+  test('API call getEntries fails', async () => {
     const data = {
       sys: {
         id: 'id'
@@ -228,34 +196,19 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.entry.wrapEntryCollection.returns(data)
 
-    try {
-      await api.getEntries()
-    } catch (r) {
-      t.looseEqual(r, data)
-    } finally {
-      teardown()
-    }
+    await expect(api.getEntries()).rejects.toEqual(data)
   })
 
-  test.skip('API call getAsset', async (t) => {
-    t.plan(1)
+  test('API call getAsset', async () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: mocks.assetMock })
     })
-    entitiesMock.asset.wrapAsset.returns(mocks.assetMock)
 
-    try {
-      const r = await api.getAsset('aid')
-      t.looseEqual(r, mocks.assetMock)
-    } finally {
-      teardown()
-    }
+    await expect(api.getAsset('aid')).resolves.toEqual(mocks.assetMock)
   })
 
-  test.skip('API call getAsset fails', async (t) => {
-    t.plan(1)
+  test('API call getAsset fails', async () => {
     const data = {
       sys: {
         id: 'id'
@@ -266,19 +219,11 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.asset.wrapAsset.returns(data)
 
-    try {
-      await api.getAsset('aid')
-    } catch (r) {
-      t.looseEqual(r, data)
-    } finally {
-      teardown()
-    }
+    await expect(api.getAsset('aid')).rejects.toEqual(data)
   })
 
-  test.skip('API call getAssets', async (t) => {
-    t.plan(1)
+  test('API call getAssets', async () => {
     const data = {
       total: 100,
       skip: 0,
@@ -288,18 +233,10 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data })
     })
-    entitiesMock.asset.wrapAssetCollection.returns(data)
-
-    try {
-      const r = await api.getAssets()
-      t.looseEqual(r, data)
-    } finally {
-      teardown()
-    }
+    await expect(api.getAssets()).resolves.toEqual(data)
   })
 
-  test.skip('API call getAssets fails', async (t) => {
-    t.plan(1)
+  test('API call getAssets fails', async () => {
     const data = {
       sys: {
         id: 'id'
@@ -310,19 +247,11 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.asset.wrapAssetCollection.returns(data)
 
-    try {
-      await api.getAssets()
-    } catch (r) {
-      t.looseEqual(r, data)
-    } finally {
-      teardown()
-    }
+    await expect(api.getAssets()).rejects.toEqual(data)
   })
 
-  test.skip('API call getLocales', async (t) => {
-    t.plan(1)
+  test('API call getLocales', async () => {
     const data = {
       total: 100,
       skip: 0,
@@ -332,18 +261,10 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data })
     })
-    entitiesMock.locale.wrapLocaleCollection.returns(data)
-
-    try {
-      const r = await api.getLocales()
-      t.looseEqual(r, data)
-    } finally {
-      teardown()
-    }
+    await expect(api.getLocales()).resolves.toEqual(data)
   })
 
-  test.skip('API call getLocaless fails', async (t) => {
-    t.plan(1)
+  test('API call getLocales fails', async () => {
     const data = {
       sys: {
         id: 'id'
@@ -354,19 +275,10 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    entitiesMock.locale.wrapLocaleCollection.returns(data)
-
-    try {
-      await api.getLocales()
-    } catch (r) {
-      t.looseEqual(r, data)
-    } finally {
-      teardown()
-    }
+    await expect(api.getLocales()).rejects.toEqual(data)
   })
 
-  test.skip('CDA call sync', async (t) => {
-    t.plan(5)
+  test('CDA call sync', async () => {
     const { api } = setupWithData({
       promise: Promise.resolve({
         data: {
@@ -376,89 +288,21 @@ describe('create-contentful-api', () => {
       })
     })
 
-    try {
-      const r = await api.sync({ initial: true })
-      t.ok(r.entries, 'entries')
-      t.ok(r.assets, 'assets')
-      t.ok(r.deletedEntries, 'deletedEntries')
-      t.ok(r.deletedAssets, 'deletedAssets')
-      t.equal(r.nextSyncToken, 'thisisthesynctoken', 'sync token')
-    } finally {
-      teardown()
-    }
+    const r = await api.sync({ initial: true })
+    expect(r.entries).toBeDefined()
+    expect(r.assets).toBeDefined()
+    expect(r.deletedEntries).toBeDefined()
+    expect(r.deletedAssets).toBeDefined()
+    expect(r.nextSyncToken).toEqual('thisisthesynctoken')
   })
 
-  test.skip('CDA call sync fails', async (t) => {
-    t.plan(1)
+  test('CDA call sync fails', async () => {
     const rejectError = new Error()
     rejectError.data = 'error'
     const { api } = setupWithData({
       promise: Promise.reject(rejectError)
     })
-    try {
-      await api.sync({ initial: true })
-    } catch (r) {
-      t.equal(r.data, 'error')
-    } finally {
-      teardown()
-    }
-  })
 
-  test.skip('Given json should be parsed correctly as a collection of entries', (t) => {
-    const api = createContentfulApi({
-      http: {},
-      getGlobalOptions: sinon.stub().returns({ resolveLinks: true })
-    })
-    const data = {
-      items: [
-        {
-          sys: {
-            type: 'Entry',
-            locale: 'en-US'
-          },
-          fields: {
-            animal: {
-              sys: {
-                type: 'Link',
-                linkType: 'Animal',
-                id: 'oink'
-              }
-            },
-            anotheranimal: {
-              sys: {
-                type: 'Link',
-                linkType: 'Animal',
-                id: 'middle-parrot'
-              }
-            }
-          }
-        }
-      ],
-      includes: {
-        Animal: [
-          {
-            sys: {
-              type: 'Animal',
-              id: 'oink',
-              locale: 'en-US'
-            },
-            fields: {
-              name: 'Pig',
-              friend: {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Animal',
-                  id: 'groundhog'
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-    const parsedData = api.parseEntries(data)
-    t.ok(parsedData)
-    t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
-    t.end()
+    await expect(api.sync({ initial: true })).rejects.toEqual(new Error())
   })
 })
