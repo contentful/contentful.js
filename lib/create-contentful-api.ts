@@ -19,7 +19,7 @@ import {
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
 import normalizeSelect from './utils/normalize-select'
-import { resolveCircular } from './utils/resolve-circular'
+import resolveCircular from './utils/resolve-circular'
 
 export interface ContentfulClientApi {
   version: string;
@@ -104,7 +104,7 @@ export default function createContentfulApi ({ http, getGlobalOptions }:CreateCo
       : getGlobalOptions().environmentBaseUrl
 
     if (!baseUrl) {
-      throw new Error('You better define some defaults here')
+      throw new Error('Please define baseUrl for ' + context)
     }
 
     if (!baseUrl.endsWith('/')) {
