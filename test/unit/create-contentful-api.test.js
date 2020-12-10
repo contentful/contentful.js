@@ -17,7 +17,11 @@ function setupWithData ({
   const api = createContentfulApi({
     http: {
       defaults: { baseURL: 'baseURL' },
-      get: getStub.mockReturnValue(promise)
+      get: getStub.mockReturnValue(promise),
+      cloneWithNewParams: jest.fn().mockReturnValue({
+        defaults: { baseURL: 'baseURL' },
+        get: getStub.mockReturnValue(promise),
+      })
     },
     getGlobalOptions: getGlobalOptions
   })
