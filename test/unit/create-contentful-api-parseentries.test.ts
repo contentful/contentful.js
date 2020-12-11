@@ -3,35 +3,35 @@ import createGlobalOptions from '../../lib/create-global-options'
 
 test('Given json should be parsed correctly as a collection of entries', () => {
   const api = createContentfulApi({
-  // @ts-ignore
+    // @ts-ignore
     http: {},
-  // @ts-ignore
-    getGlobalOptions: createGlobalOptions({ resolveLinks: true })
+    // @ts-ignore
+    getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
   const data = {
     items: [
       {
         sys: {
           type: 'Entry',
-          locale: 'en-US'
+          locale: 'en-US',
         },
         fields: {
           animal: {
             sys: {
               type: 'Link',
               linkType: 'Animal',
-              id: 'oink'
-            }
+              id: 'oink',
+            },
           },
           anotheranimal: {
             sys: {
               type: 'Link',
               linkType: 'Animal',
-              id: 'middle-parrot'
-            }
-          }
-        }
-      }
+              id: 'middle-parrot',
+            },
+          },
+        },
+      },
     ],
     includes: {
       Animal: [
@@ -39,7 +39,7 @@ test('Given json should be parsed correctly as a collection of entries', () => {
           sys: {
             type: 'Animal',
             id: 'oink',
-            locale: 'en-US'
+            locale: 'en-US',
           },
           fields: {
             name: 'Pig',
@@ -47,13 +47,13 @@ test('Given json should be parsed correctly as a collection of entries', () => {
               sys: {
                 type: 'Link',
                 linkType: 'Animal',
-                id: 'groundhog'
-              }
-            }
-          }
-        }
-      ]
-    }
+                id: 'groundhog',
+              },
+            },
+          },
+        },
+      ],
+    },
   }
   const parsedData = api.parseEntries<any>(data)
   expect(parsedData).toBeDefined()

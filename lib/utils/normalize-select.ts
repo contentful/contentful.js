@@ -1,10 +1,10 @@
 /*
-* sdk relies heavily on sys metadata
-* so we cannot omit the sys property on sdk level entirely
-* and we have to ensure that at least `id` and `type` are present
-* */
+ * sdk relies heavily on sys metadata
+ * so we cannot omit the sys property on sdk level entirely
+ * and we have to ensure that at least `id` and `type` are present
+ * */
 
-export default function normalizeSelect (query) {
+export default function normalizeSelect(query) {
   if (!query.select) {
     return query
   }
@@ -28,6 +28,6 @@ export default function normalizeSelect (query) {
   // Reassign the normalized sys properties
   return {
     ...query,
-    select: [...selectedSet].join(',')
+    select: [...selectedSet].join(','),
   }
 }

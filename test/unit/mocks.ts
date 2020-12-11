@@ -1,22 +1,23 @@
 import copy from 'fast-copy'
-import {Asset, ContentType, ContentTypeLink, Entry, Locale, SpaceLink, Sys} from "../../lib/common-types";
+import { Asset, ContentType, ContentTypeLink, Entry, Locale, Sys } from '../../lib/common-types'
 
+/*
 const linkMock = {
   id: 'linkid',
   type: 'Link',
-  linkType: 'linkType'
+  linkType: 'linkType',
 }
-
 const spaceLinkMock: SpaceLink = {
   type: 'Link',
   linkType: 'Space',
-  id: 'mySpace'
+  id: 'mySpace',
 }
+ */
 
 const contentTypeLinkMock: ContentTypeLink = {
   type: 'Link',
   linkType: 'ContentType',
-  id: 'myContentType'
+  id: 'myContentType',
 }
 
 const sysMock: Sys = {
@@ -27,13 +28,13 @@ const sysMock: Sys = {
   revision: 1,
   locale: 'en',
   contentType: {
-    sys: copy(contentTypeLinkMock)
-  }
+    sys: copy(contentTypeLinkMock),
+  },
 }
 
 const contentTypeMock: ContentType = {
   sys: Object.assign(copy(sysMock), {
-    type: 'ContentType'
+    type: 'ContentType',
   }),
   name: 'name',
   description: 'desc',
@@ -47,9 +48,9 @@ const contentTypeMock: ContentType = {
       required: false,
       disabled: false,
       omitted: false,
-      validations: []
-    }
-  ]
+      validations: [],
+    },
+  ],
 }
 
 export type EntryFields = {
@@ -60,18 +61,18 @@ const entryMock: Entry<EntryFields> = {
   sys: {
     ...copy(sysMock),
     type: 'Entry',
-    locale: 'locale'
+    locale: 'locale',
   },
   fields: {
-    field1: 'str'
-  }
+    field1: 'str',
+  },
 }
 
 const assetMock: Asset = {
   sys: {
     ...copy(sysMock),
     type: 'Asset',
-    locale: 'locale'
+    locale: 'locale',
   },
   fields: {
     title: 'assetTitle',
@@ -82,9 +83,9 @@ const assetMock: Asset = {
         size: 1000,
       },
       fileName: 'assetFileName',
-      contentType: 'assetContentType'
-    }
-  }
+      contentType: 'assetContentType',
+    },
+  },
 }
 
 const localeMock: Locale = {
@@ -96,14 +97,7 @@ const localeMock: Locale = {
   default: true,
   fallbackCode: null,
   name: 'English. United State',
-  code: 'en-US'
+  code: 'en-US',
 }
 
-export {
-  linkMock,
-  sysMock,
-  contentTypeMock,
-  entryMock,
-  assetMock,
-  localeMock
-}
+export { sysMock, contentTypeMock, entryMock, assetMock, localeMock }

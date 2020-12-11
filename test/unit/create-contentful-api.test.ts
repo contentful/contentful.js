@@ -1,51 +1,50 @@
-import createContentfulApi from "../../lib/create-contentful-api";
-import createGlobalOptions from "../../lib/create-global-options";
-import * as resolveCircular from "../../lib/utils/resolve-circular";
-import {EntryFields} from "./mocks";
+import createContentfulApi from '../../lib/create-contentful-api'
+import createGlobalOptions from '../../lib/create-global-options'
+import * as resolveCircular from '../../lib/utils/resolve-circular'
+import { EntryFields } from './mocks'
 import * as mocks from './mocks'
 
 class RejectError extends Error {
-  private data: unknown;
+  private data: unknown
 
   constructor(data) {
-    super('RejectError');
-    this.data = data;
+    super('RejectError')
+    this.data = data
   }
 }
 
-function setupWithData(
-  {
-    promise,
-    getGlobalOptions = jest.fn().mockReturnValue({
-      resolveLinks: true,
-      removeUnresolved: false,
-      spaceBaseUrl: 'spaceUrl',
-      environment: 'master',
-      environmentBaseUrl: 'environmentUrl'
-    })
-  }) {
+function setupWithData({
+  promise,
+  getGlobalOptions = jest.fn().mockReturnValue({
+    resolveLinks: true,
+    removeUnresolved: false,
+    spaceBaseUrl: 'spaceUrl',
+    environment: 'master',
+    environmentBaseUrl: 'environmentUrl',
+  }),
+}) {
   const getStub = jest.fn()
   const api = createContentfulApi({
     // @ts-ignore
     http: {
-      defaults: {baseURL: 'baseURL', logHandler: jest.fn()},
-      get: getStub.mockReturnValue(promise)
+      defaults: { baseURL: 'baseURL', logHandler: jest.fn() },
+      get: getStub.mockReturnValue(promise),
     },
-    getGlobalOptions: getGlobalOptions
+    getGlobalOptions: getGlobalOptions,
   })
   return {
     api,
-    getStub
+    getStub,
   }
 }
 
 describe('create-contentful-api', () => {
-  const resolveCircularMock = jest.fn();
+  const resolveCircularMock = jest.fn()
   // @ts-ignore
-  resolveCircular.default = resolveCircularMock;
+  resolveCircular.default = resolveCircularMock
 
   beforeEach(() => {
-    resolveCircularMock.mockImplementation(args => {
+    resolveCircularMock.mockImplementation((args) => {
       return args
     })
   })
@@ -58,13 +57,13 @@ describe('create-contentful-api', () => {
     const data = {
       sys: {
         id: 'id',
-        type: 'Space'
+        type: 'Space',
       },
       name: 'name',
-      locales: ['en-US']
+      locales: ['en-US'],
     }
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
     })
     await expect(api.getSpace()).resolves.toEqual(data)
   })
@@ -72,19 +71,19 @@ describe('create-contentful-api', () => {
   test('API call getSpace fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
     await expect(api.getSpace()).rejects.toEqual(data)
   })
 
   test('API call getContentType', async () => {
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: mocks.contentTypeMock})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: mocks.contentTypeMock }),
     })
     await expect(api.getContentType('ctid')).resolves.toEqual(mocks.contentTypeMock)
   })
@@ -92,12 +91,12 @@ describe('create-contentful-api', () => {
   test('API call getContentType fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
     await expect(api.getContentType('ctid')).rejects.toEqual(data)
   })
@@ -107,10 +106,10 @@ describe('create-contentful-api', () => {
       total: 100,
       skip: 0,
       limit: 10,
-      items: [mocks.contentTypeMock]
+      items: [mocks.contentTypeMock],
     }
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
     })
     await expect(api.getContentTypes()).resolves.toEqual(data)
   })
@@ -118,21 +117,21 @@ describe('create-contentful-api', () => {
   test('API call getContentTypes fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
     await expect(api.getContentTypes()).rejects.toEqual(data)
   })
 
   test('API call getEntry', async () => {
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: mocks.entryMock})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: mocks.entryMock }),
     })
-    api.getEntries = jest.fn().mockResolvedValue({items: [mocks.entryMock]})
+    api.getEntries = jest.fn().mockResolvedValue({ items: [mocks.entryMock] })
     await expect(api.getEntry<EntryFields>('eid')).resolves.toEqual(mocks.entryMock)
     expect(api.getEntries).toHaveBeenCalledTimes(1)
   })
@@ -140,12 +139,12 @@ describe('create-contentful-api', () => {
   test('API call getEntry fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
     await expect(api.getEntry<EntryFields>('eid')).rejects.toEqual(data)
   })
@@ -155,23 +154,23 @@ describe('create-contentful-api', () => {
       total: 100,
       skip: 0,
       limit: 10,
-      items: [mocks.entryMock]
+      items: [mocks.entryMock],
     }
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
     })
     await expect(api.getEntries()).resolves.toEqual(data)
   })
 
   test('API call getEntries with global resolve links overridden by query', async () => {
-    const data = {sys: {id: 'id'}}
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data}),
+    const data = { sys: { id: 'id' } }
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
       // @ts-ignore
       getGlobalOptions: createGlobalOptions({
         environment: 'master',
-        environmentBaseUrl: 'environmentUrl'
-      })
+        environmentBaseUrl: 'environmentUrl',
+      }),
     })
 
     await expect(api.getEntries()).resolves.toEqual(data)
@@ -179,16 +178,16 @@ describe('create-contentful-api', () => {
   })
 
   test('API call getEntries with global resolve links turned off', async () => {
-    const data = {sys: {id: 'id'}}
+    const data = { sys: { id: 'id' } }
 
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data}),
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
       getGlobalOptions: jest.fn().mockReturnValue({
         environment: 'master',
         environmentBaseUrl: 'environmentUrl',
         resolveLinks: true,
-        removeUnresolved: false
-      })
+        removeUnresolved: false,
+      }),
     })
 
     await expect(api.getEntries()).resolves.toEqual(data)
@@ -198,20 +197,20 @@ describe('create-contentful-api', () => {
   test('API call getEntries fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
 
     await expect(api.getEntries()).rejects.toEqual(data)
   })
 
   test('API call getAsset', async () => {
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: mocks.assetMock})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: mocks.assetMock }),
     })
 
     await expect(api.getAsset('aid')).resolves.toEqual(mocks.assetMock)
@@ -220,12 +219,12 @@ describe('create-contentful-api', () => {
   test('API call getAsset fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
 
     await expect(api.getAsset('aid')).rejects.toEqual(data)
@@ -236,10 +235,10 @@ describe('create-contentful-api', () => {
       total: 100,
       skip: 0,
       limit: 10,
-      items: [mocks.assetMock]
+      items: [mocks.assetMock],
     }
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
     })
     await expect(api.getAssets()).resolves.toEqual(data)
   })
@@ -247,12 +246,12 @@ describe('create-contentful-api', () => {
   test('API call getAssets fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
 
     await expect(api.getAssets()).rejects.toEqual(data)
@@ -263,10 +262,10 @@ describe('create-contentful-api', () => {
       total: 100,
       skip: 0,
       limit: 10,
-      items: [mocks.localeMock]
+      items: [mocks.localeMock],
     }
-    const {api} = setupWithData({
-      promise: Promise.resolve({data: data})
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
     })
     await expect(api.getLocales()).resolves.toEqual(data)
   })
@@ -274,27 +273,27 @@ describe('create-contentful-api', () => {
   test('API call getLocales fails', async () => {
     const data = {
       sys: {
-        id: 'id'
-      }
+        id: 'id',
+      },
     }
     const rejectError = new RejectError(data)
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
     await expect(api.getLocales()).rejects.toEqual(data)
   })
 
   test('CDA call sync', async () => {
-    const {api} = setupWithData({
+    const { api } = setupWithData({
       promise: Promise.resolve({
         data: {
           items: [],
-          nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken'
-        }
-      })
+          nextSyncUrl: 'http://nextsyncurl?sync_token=thisisthesynctoken',
+        },
+      }),
     })
 
-    const r = await api.sync({initial: true})
+    const r = await api.sync({ initial: true })
     expect(r.entries).toBeDefined()
     expect(r.assets).toBeDefined()
     expect(r.deletedEntries).toBeDefined()
@@ -304,10 +303,10 @@ describe('create-contentful-api', () => {
 
   test('CDA call sync fails', async () => {
     const rejectError = new RejectError('error')
-    const {api} = setupWithData({
-      promise: Promise.reject(rejectError)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
     })
 
-    await expect(api.sync({initial: true})).rejects.toEqual(new RejectError('error'))
+    await expect(api.sync({ initial: true })).rejects.toEqual(new RejectError('error'))
   })
 })

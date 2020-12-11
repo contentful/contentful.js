@@ -1,29 +1,33 @@
-import {createClient} from "../../lib/contentful";
-import * as SdkCore from 'contentful-sdk-core';
-import * as CreateContentfulApi from '../../lib/create-contentful-api';
+import { createClient } from '../../lib/contentful'
+import * as SdkCore from 'contentful-sdk-core'
+import * as CreateContentfulApi from '../../lib/create-contentful-api'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
 
-jest.mock('../../lib/create-contentful-api');
+jest.mock('../../lib/create-contentful-api')
 
 // @ts-ignore
-SdkCore.createHttpClient = jest.fn();
-const createHttpClientMock = <jest.Mock<typeof SdkCore.createHttpClient>><unknown>SdkCore.createHttpClient;
-const createContentfulApiMock = <jest.Mock<typeof CreateContentfulApi.default>><unknown>CreateContentfulApi.default;
+SdkCore.createHttpClient = jest.fn()
+const createHttpClientMock = <jest.Mock<typeof SdkCore.createHttpClient>>(
+  (<unknown>SdkCore.createHttpClient)
+)
+const createContentfulApiMock = <jest.Mock<typeof CreateContentfulApi.default>>(
+  (<unknown>CreateContentfulApi.default)
+)
 
 describe('contentful', () => {
-
   beforeEach(() => {
     createHttpClientMock.mockReturnValue({
-     // @ts-ignore
+      // @ts-ignore
       defaults: {
-        baseURL: 'http://some-base-url.com/'
+        baseURL: 'http://some-base-url.com/',
       },
       interceptors: {
         response: {
-          use: jest.fn()
-        }
-      }
+          use: jest.fn(),
+        },
+      },
     })
   })
 
@@ -33,14 +37,12 @@ describe('contentful', () => {
 
   test('Throws if no accessToken is defined', () => {
     // @ts-ignore
-    expect(() => createClient({space: 'spaceId'}))
-      .toThrow(/Expected parameter accessToken/)
+    expect(() => createClient({ space: 'spaceId' })).toThrow(/Expected parameter accessToken/)
   })
 
   test('Throws if no space is defined', () => {
     // @ts-ignore
-    expect(() => createClient({accessToken: 'accessToken'}))
-      .toThrow(/Expected parameter space/)
+    expect(() => createClient({ accessToken: 'accessToken' })).toThrow(/Expected parameter space/)
   })
 
   test('Generate the correct User Agent Header', () => {
@@ -48,7 +50,7 @@ describe('contentful', () => {
       accessToken: 'accessToken',
       space: 'spaceId',
       application: 'myApplication/1.1.1',
-      integration: 'myIntegration/1.0.0'
+      integration: 'myIntegration/1.0.0',
     })
 
     expect(createHttpClientMock).toHaveBeenCalledTimes(1)
@@ -68,7 +70,7 @@ describe('contentful', () => {
   test('Passes along HTTP client parameters', () => {
     createClient({
       accessToken: 'accessToken',
-      space: 'spaceId'
+      space: 'spaceId',
     })
     const callConfig = createHttpClientMock.mock.calls[0][1]
     expect(callConfig.headers['Content-Type']).toBeDefined()
@@ -79,7 +81,7 @@ describe('contentful', () => {
   test.skip('Returns a client instance', () => {
     const client = createClient({
       accessToken: 'accessToken',
-      space: 'spaceId'
+      space: 'spaceId',
     })
 
     expect(client.getSpace).toBeDefined()
@@ -94,31 +96,33 @@ describe('contentful', () => {
   test('Initializes API with link resolution turned on by default', () => {
     createClient({
       accessToken: 'accessToken',
-      space: 'spaceId'
+      space: 'spaceId',
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
     expect(callConfig[0].getGlobalOptions().resolveLinks).toBeTruthy()
-    expect(callConfig[0].getGlobalOptions({resolveLinks: false}).resolveLinks).toBeFalsy()
+    expect(callConfig[0].getGlobalOptions({ resolveLinks: false }).resolveLinks).toBeFalsy()
   })
 
   test('Initializes API with link resolution turned on explicitly', () => {
     createClient({
       accessToken: 'accessToken',
       space: 'spaceId',
-      resolveLinks: true
+      resolveLinks: true,
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
     expect(callConfig[0].getGlobalOptions().resolveLinks).toBeTruthy()
-    expect(callConfig[0].getGlobalOptions({resolveLinks: false}).resolveLinks).toBeFalsy()
+    expect(callConfig[0].getGlobalOptions({ resolveLinks: false }).resolveLinks).toBeFalsy()
   })
 
   test('Initializes API and attaches default environment', () => {
     createClient({
       accessToken: 'accessToken',
-      space: 'spaceId'
+      space: 'spaceId',
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
-    expect(callConfig[0].http.defaults.baseURL).toEqual('http://some-base-url.com/environments/master')
+    expect(callConfig[0].http.defaults.baseURL).toEqual(
+      'http://some-base-url.com/environments/master'
+    )
   })
 
   // fails, not sure if it because of wrong mocking
@@ -126,9 +130,11 @@ describe('contentful', () => {
     createClient({
       accessToken: 'accessToken',
       space: 'spaceId',
-      environment: 'stage'
+      environment: 'stage',
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
-    expect(callConfig[0].http.defaults.baseURL).toEqual('http://some-base-url.com/environments/stage')
+    expect(callConfig[0].http.defaults.baseURL).toEqual(
+      'http://some-base-url.com/environments/stage'
+    )
   })
 })
