@@ -44,7 +44,7 @@
     "test:size": "bundlesize",
     "test:prepush": "npm run build && npm run test:unit && npm run test:size",
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
-    "prePublishOnly": "npm run build",
+    "prepublishOnly": "npm run build",
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
     "devdep:build": "pushd ../contentful-sdk-core && npm run build && popd",
