@@ -84,6 +84,7 @@
     "husky": "^4.2.3",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
+    "jest-when": "^3.0.1",
     "jsdoc": "^3.4.0",
     "json": "^10.0.0",
     "mkdirp": "^1.0.3",
