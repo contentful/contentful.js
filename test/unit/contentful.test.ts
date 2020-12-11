@@ -1,17 +1,21 @@
+import {createClient} from "../../lib/contentful";
+import * as SdkCore from 'contentful-sdk-core';
+import * as CreateContentfulApi from '../../lib/create-contentful-api';
+
 const version = require('../../package.json').version
-const cfSDKCore = require('contentful-sdk-core')
-const { createClient } = require('../../lib/contentful')
-const createContentfulApi = require('../../lib/create-contentful-api')
 
-cfSDKCore.createHttpClient = jest.fn()
-const createHttpClientMock = cfSDKCore.createHttpClient
+jest.mock('../../lib/create-contentful-api');
 
-jest.mock('../../lib/create-contentful-api')
-const createContentfulApiMock = createContentfulApi.default
+// @ts-ignore
+SdkCore.createHttpClient = jest.fn();
+const createHttpClientMock = <jest.Mock<typeof SdkCore.createHttpClient>><unknown>SdkCore.createHttpClient;
+const createContentfulApiMock = <jest.Mock<typeof CreateContentfulApi.default>><unknown>CreateContentfulApi.default;
 
 describe('contentful', () => {
+
   beforeEach(() => {
     createHttpClientMock.mockReturnValue({
+     // @ts-ignore
       defaults: {
         baseURL: 'http://some-base-url.com/'
       },
@@ -27,15 +31,15 @@ describe('contentful', () => {
     createHttpClientMock.mockReset()
   })
 
-  // Todo: how can we test a signature that's not allowed?
-  test.skip('Throws if no accessToken is defined', () => {
-    expect(() => createClient({ space: 'spaceId' }))
+  test('Throws if no accessToken is defined', () => {
+    // @ts-ignore
+    expect(() => createClient({space: 'spaceId'}))
       .toThrow(/Expected parameter accessToken/)
   })
 
-  // Todo: how can we test a signature that's not allowed?
-  test.skip('Throws if no space is defined', () => {
-    expect(() => createClient({ accessToken: 'accessToken' }))
+  test('Throws if no space is defined', () => {
+    // @ts-ignore
+    expect(() => createClient({accessToken: 'accessToken'}))
       .toThrow(/Expected parameter space/)
   })
 
@@ -93,8 +97,8 @@ describe('contentful', () => {
       space: 'spaceId'
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
-    expect(callConfig[0].getGlobalOptions({}).resolveLinks).toBeTruthy()
-    expect(callConfig[0].getGlobalOptions({ resolveLinks: false }).resolveLinks).toBeFalsy()
+    expect(callConfig[0].getGlobalOptions().resolveLinks).toBeTruthy()
+    expect(callConfig[0].getGlobalOptions({resolveLinks: false}).resolveLinks).toBeFalsy()
   })
 
   test('Initializes API with link resolution turned on explicitly', () => {
@@ -104,8 +108,8 @@ describe('contentful', () => {
       resolveLinks: true
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
-    expect(callConfig[0].getGlobalOptions({}).resolveLinks).toBeTruthy()
-    expect(callConfig[0].getGlobalOptions({ resolveLinks: false }).resolveLinks).toBeFalsy()
+    expect(callConfig[0].getGlobalOptions().resolveLinks).toBeTruthy()
+    expect(callConfig[0].getGlobalOptions({resolveLinks: false}).resolveLinks).toBeFalsy()
   })
 
   test('Initializes API and attaches default environment', () => {

@@ -1,24 +1,26 @@
 import { AxiosInstance } from 'contentful-sdk-core'
-
 export type HttpClientInstance = AxiosInstance
+export interface AssetDetails {
+  size: number;
+  image?: {
+    width: number;
+    height: number;
+  }
+}
+export interface AssetFile {
+  url: string;
+  details: AssetDetails;
+  fileName: string;
+  contentType: string;
+}
+export interface AssetFields {
+  title: string;
+  description: string;
+  file: AssetFile
+}
 export interface Asset {
   sys: Sys;
-  fields: {
-    title: string;
-    description: string;
-    file: {
-      url: string;
-      details: {
-        size: number;
-        image?: {
-          width: number;
-          height: number;
-        };
-      };
-      fileName: string;
-      contentType: string;
-    };
-  };
+  fields: AssetFields;
 }
 export interface ContentfulCollection<T> {
   total: number;
@@ -76,16 +78,13 @@ export interface Sys {
     sys: ContentTypeLink;
   };
 }
-export interface SpaceLink {
-  type: 'Link';
-  linkType: 'Space';
-  id: string;
+export interface Link<T extends string> {
+    type: 'Link'
+    linkType: T
+    id: string
 }
-export interface ContentTypeLink {
-  type: 'Link';
-  linkType: 'ContentType';
-  id: string;
-}
+export interface SpaceLink extends Link<'Space'>{}
+export interface ContentTypeLink extends Link<'ContentType'>{}
 export interface Field {
   disabled: boolean;
   id: string;

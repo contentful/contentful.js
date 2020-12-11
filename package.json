@@ -33,6 +33,7 @@
     "pretest": "rimraf coverage",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "tsdx test ./test/unit --coverage",
+    "test:unit:watch": "tsdx test ./test/unit --watch",
     "test:integration": "tsdx test ./test/integration --coverage",
     "test:size": "bundlesize",
     "test:prepush": "npm run build && npm run test:unit && npm run test:size",
@@ -94,7 +95,7 @@
     "semantic-release": "^17.0.4",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
-    "typescript": "^3.9.7"
+    "typescript": "^4.1.2"
   },
   "engines": {
     "node": ">=12"

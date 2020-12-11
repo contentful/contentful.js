@@ -1,4 +1,5 @@
 import copy from 'fast-copy'
+import {Asset, ContentType, ContentTypeLink, Entry, Locale, SpaceLink, Sys} from "../../lib/common-types";
 
 const linkMock = {
   id: 'linkid',
@@ -6,16 +7,31 @@ const linkMock = {
   linkType: 'linkType'
 }
 
-const sysMock = {
-  type: 'Type',
-  id: 'id',
-  space: copy(linkMock),
-  createdAt: 'createdatdate',
-  updatedAt: 'updatedatdate',
-  revision: 1
+const spaceLinkMock: SpaceLink = {
+  type: 'Link',
+  linkType: 'Space',
+  id: 'mySpace'
 }
 
-const contentTypeMock = {
+const contentTypeLinkMock: ContentTypeLink = {
+  type: 'Link',
+  linkType: 'ContentType',
+  id: 'myContentType'
+}
+
+const sysMock: Sys = {
+  type: 'Type',
+  id: 'id',
+  createdAt: 'createdatdate',
+  updatedAt: 'updatedatdate',
+  revision: 1,
+  locale: 'en',
+  contentType: {
+    sys: copy(contentTypeLinkMock)
+  }
+}
+
+const contentTypeMock: ContentType = {
   sys: Object.assign(copy(sysMock), {
     type: 'ContentType'
   }),
@@ -28,36 +44,57 @@ const contentTypeMock = {
       name: 'fieldname',
       type: 'Text',
       localized: true,
-      required: false
+      required: false,
+      disabled: false,
+      omitted: false,
+      validations: []
     }
   ]
 }
 
-const entryMock = {
-  sys: Object.assign(copy(sysMock), {
+export type EntryFields = {
+  field1: string
+}
+
+const entryMock: Entry<EntryFields> = {
+  sys: {
+    ...copy(sysMock),
     type: 'Entry',
-    contentType: Object.assign(copy(linkMock), { linkType: 'ContentType' }),
     locale: 'locale'
-  }),
+  },
   fields: {
     field1: 'str'
   }
 }
 
-const assetMock = {
-  sys: Object.assign(copy(sysMock), {
+const assetMock: Asset = {
+  sys: {
+    ...copy(sysMock),
     type: 'Asset',
     locale: 'locale'
-  }),
+  },
   fields: {
-    field1: 'str'
+    title: 'assetTitle',
+    description: 'assetDescription',
+    file: {
+      url: 'assetUrl',
+      details: {
+        size: 1000,
+      },
+      fileName: 'assetFileName',
+      contentType: 'assetContentType'
+    }
   }
 }
 
-const localeMock = {
-  sys: Object.assign(copy(sysMock), {
-    type: 'Locale'
-  }),
+const localeMock: Locale = {
+  sys: {
+    id: 'id',
+    type: 'Locale',
+    version: 1,
+  },
+  default: true,
+  fallbackCode: null,
   name: 'English. United State',
   code: 'en-US'
 }

@@ -5,36 +5,37 @@
  * @see Entities
  */
 
-import {createRequestConfig} from 'contentful-sdk-core'
-import {AxiosInstance} from 'contentful-sdk-core/dist/types/types'
+import { createRequestConfig } from 'contentful-sdk-core'
+import { AxiosInstance } from 'contentful-sdk-core/dist/types/types'
 import {
   Asset,
-  AssetCollection,
+  AssetCollection, AssetFields,
   ContentType,
   ContentTypeCollection,
   Entry,
   EntryCollection, LocaleCollection,
   Space, SyncCollection
 } from './common-types'
-import {GetGlobalOptions} from './create-global-options'
+import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
+import {FieldsQueries} from "./query";
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 
 export interface ContentfulClientApi {
   version: string;
 
-  getAsset(id: string, query?: any): Promise<Asset>;
+  getAsset(id: string): Promise<Asset>;
 
-  getAssets(query?: any): Promise<AssetCollection>;
+  getAssets(query?: FieldsQueries<AssetFields>): Promise<AssetCollection>;
 
   getContentType(id: string): Promise<ContentType>;
 
-  getContentTypes(query?: any): Promise<ContentTypeCollection>;
+  getContentTypes(): Promise<ContentTypeCollection>;
 
-  getEntries<T>(query?: any): Promise<EntryCollection<T>>;
+  getEntries<Fields = any>(query?: FieldsQueries<Fields>): Promise<EntryCollection<Fields | any>>;
 
-  getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
+  getEntry<Fields = any>(id: string, query?: FieldsQueries<Fields>): Promise<Entry<Fields>>;
 
   getSpace(): Promise<Space>;
 
@@ -80,13 +81,13 @@ class NotFoundError extends Error {
   }
 }
 
-export default function createContentfulApi({http, getGlobalOptions}: CreateContentfulApiParams): ContentfulClientApi {
+export default function createContentfulApi ({ http, getGlobalOptions }:CreateContentfulApiParams): ContentfulClientApi {
   const notFoundError = (id: string = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
 
   // eslint-disable-next-line no-undef
-  function errorHandler(error): never {
+  function errorHandler (error): never {
     if (error.data) {
       throw error.data
     }
@@ -104,7 +105,7 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
     config?: any;
   }
 
-  async function get<T>({context, path, config}: GetConfig): Promise<T> {
+  async function get<T> ({ context, path, config }: GetConfig): Promise<T> {
     let baseUrl = context === 'space'
       ? getGlobalOptions().spaceBaseUrl
       : getGlobalOptions().environmentBaseUrl
@@ -140,8 +141,8 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const space = await client.getSpace()
    * console.log(space)
    */
-  async function getSpace(): Promise<Space> {
-    return get<Space>({context: 'space', path: ''})
+  async function getSpace (): Promise<Space> {
+    return get<Space>({ context: 'space', path: '' })
   }
 
   /**
@@ -160,7 +161,7 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const contentType = await client.getContentType('<content_type_id>')
    * console.log(contentType)
    */
-  async function getContentType(id: string): Promise<ContentType> {
+  async function getContentType (id: string): Promise<ContentType> {
     return get<ContentType>({
       context: 'environment',
       path: `content_types/${id}`
@@ -183,11 +184,11 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const response = await client.getContentTypes()
    * console.log(response.items)
    */
-  async function getContentTypes(query = {}): Promise<ContentTypeCollection> {
+  async function getContentTypes (): Promise<ContentTypeCollection> {
     return get<ContentTypeCollection>({
       context: 'environment',
       path: 'content_types',
-      config: createRequestConfig({query: query})
+      config: createRequestConfig({ query: {} })
     })
   }
 
@@ -208,12 +209,12 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const entry = await client.getEntry('<entry_id>')
    * console.log(entry)
    */
-  async function getEntry<T>(id: string, query = {}): Promise<Entry<T>> {
+  async function getEntry<Fields> (id: string, query:FieldsQueries<Fields> = {}): Promise<Entry<Fields>> {
     if (!id) {
       throw notFoundError(id)
     }
     try {
-      const response = await this.getEntries({'sys.id': id, ...query})
+      const response = await this.getEntries({ 'sys.id': id, ...query })
       if (response.items.length > 0) {
         return response.items[0]
       } else {
@@ -240,15 +241,15 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const response = await client.getEntries()
    * .console.log(response.items)
    */
-  async function getEntries<T>(query = {}): Promise<EntryCollection<T>> {
-    const {resolveLinks, removeUnresolved} = getGlobalOptions(query)
+  async function getEntries<T> (query = {}): Promise<EntryCollection<T>> {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
     try {
       const entries = await get({
         context: 'environment',
         path: 'entries',
-        config: createRequestConfig({query: normalizeSelect(query)})
+        config: createRequestConfig({ query: normalizeSelect(query) })
       })
-      return resolveCircular(entries, {resolveLinks, removeUnresolved})
+      return resolveCircular(entries, { resolveLinks, removeUnresolved })
     } catch (error) {
       errorHandler(error)
     }
@@ -271,11 +272,11 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const asset = await client.getAsset('<asset_id>')
    * console.log(asset)
    */
-  async function getAsset(id: string, query = {}): Promise<Asset> {
+  async function getAsset (id: string, query = {}): Promise<Asset> {
     return get<Asset>({
       context: 'environment',
       path: `assets/${id}`,
-      config: createRequestConfig({query: normalizeSelect(query)})
+      config: createRequestConfig({ query: normalizeSelect(query) })
     })
   }
 
@@ -295,11 +296,11 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const response = await client.getAssets()
    * console.log(response.items)
    */
-  async function getAssets(query = {}): Promise<AssetCollection> {
+  async function getAssets (query = {}): Promise<AssetCollection> {
     return get<AssetCollection>({
       context: 'environment',
       path: 'assets',
-      config: createRequestConfig({query: normalizeSelect(query)})
+      config: createRequestConfig({ query: normalizeSelect(query) })
     })
   }
 
@@ -319,11 +320,11 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * const response = await client.getLocales()
    * console.log(response.items)
    */
-  async function getLocales(query = {}): Promise<LocaleCollection> {
+  async function getLocales (query = {}): Promise<LocaleCollection> {
     return get<LocaleCollection>({
       context: 'environment',
       path: 'locales',
-      config: createRequestConfig({query: normalizeSelect(query)})
+      config: createRequestConfig({ query: normalizeSelect(query) })
     })
   }
 
@@ -360,10 +361,10 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    *   nextSyncToken: response.nextSyncToken
    * })
    */
-  async function sync(query = {}, options = {paginate: true}) {
-    const {resolveLinks, removeUnresolved} = getGlobalOptions(query)
-    const httpClone = http.cloneWithNewParams({baseURL: getGlobalOptions().environmentBaseUrl});
-    return pagedSync(httpClone, query, {resolveLinks, removeUnresolved, ...options})
+  async function sync (query = {}, options = { paginate: true }) {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
+    switchToEnvironment(http)
+    return pagedSync(http, query, { resolveLinks, removeUnresolved, ...options })
   }
 
   /**
@@ -396,9 +397,16 @@ export default function createContentfulApi({http, getGlobalOptions}: CreateCont
    * let parsedData = client.parseEntries(data);
    * console.log( parsedData.items[0].fields.foo ); // foo
    */
-  function parseEntries(data) {
-    const {resolveLinks, removeUnresolved} = getGlobalOptions({})
-    return resolveCircular(data, {resolveLinks, removeUnresolved})
+  function parseEntries (data) {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions({})
+    return resolveCircular(data, { resolveLinks, removeUnresolved })
+  }
+
+  /*
+   * Switches BaseURL to use /environments path
+   * */
+  function switchToEnvironment (http: AxiosInstance): void {
+    http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
   return {
