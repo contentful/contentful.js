@@ -1,20 +1,23 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
+    "rootDir": "./lib",
     "lib": [
       "dom",
       "esnext"
     ],
     "target": "esnext",
     "moduleResolution": "node",
-    "allowJs": true,
+    "allowJs": false,
     "declarationDir": "dist/types",
     "declaration": true,
     "strict": true,
-    "isolatedModules": true,
+    "importHelpers": true,
+    "isolatedModules": false,
     "esModuleInterop": true,
     "noImplicitThis": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "skipLibCheck": true
   },
   "include": [
     "./lib/**/*",

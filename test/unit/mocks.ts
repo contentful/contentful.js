@@ -1,5 +1,5 @@
 import copy from 'fast-copy'
-import { Asset, ContentType, ContentTypeLink, Entry, Locale, Sys } from '../../lib/common-types'
+import { Asset, ContentType, ContentTypeLink, Entry, Locale, Sys } from '../../lib'
 
 /*
 const linkMock = {

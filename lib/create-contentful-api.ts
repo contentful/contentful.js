@@ -249,8 +249,8 @@ export default function createContentfulApi({
    * const response = await client.getEntries()
    * .console.log(response.items)
    */
-  async function getEntries<T>(query = {}): Promise<EntryCollection<T>> {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
+  async function getEntries<T>(query: FieldsQueries<T> = {}): Promise<EntryCollection<T>> {
+    const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     try {
       const entries = await get({
         context: 'environment',

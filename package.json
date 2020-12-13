@@ -4,14 +4,18 @@
   "version": "0.0.0-determined-by-semantic-release",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "main": "./dist/index.js",
-  "module": "./dist/es-modules/contentful.js",
-  "jsnext:main": "./dist/es-modules/contentful.js",
-  "types": "./dist/types",
+  "module": "./dist/contentful.esm.js",
+  "jsnext:main": "./dist/contentful.esm.js",
+  "types": "./dist/types/index.d.ts",
   "files": [
-    "index.js",
-    "version.js",
-    "index.d.ts",
-    "dist"
+    "dist",
+    "lib",
+    "ADVANCED.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "SETUP.md",
+    "SECURITY.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
@@ -48,8 +52,9 @@
     "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core",
     "precommit": "npm run lint && npm run prettier:check",
     "prepush": "npm run test:prepush",
-    "new:build": "tsdx build --entry lib/contentful.ts",
-    "new:lint": "tsdx lint"
+    "new:build": "tsdx build --entry lib/index.ts",
+    "new:lint": "tsdx lint",
+    "postinstall": "rimraf node_modules/tsdx/node_modules"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -102,6 +107,9 @@
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
     "typescript": "^4.1.2"
+  },
+  "resolutions": {
+    "typescript": "4.1.2"
   },
   "engines": {
     "node": ">=12"
