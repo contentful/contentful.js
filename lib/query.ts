@@ -26,17 +26,22 @@ type CollectionSpecificQueries<Fields> = {
     ? Fields[FieldName]
     : Array<Fields[FieldName]>
 }
-type FixedQueryOptions = {
+
+type FixedPagedOptions = {
   skip?: number
   limit?: number
+}
+
+type FixedQueryOptions = {
   include?: number
   select?: string | string[]
   locale?: string
   query?: string
 }
-export type FieldsQueries<Fields> = FieldsEqualityQueries<Fields> &
+export declare type FieldsQueries<Fields> = FieldsEqualityQueries<Fields> &
   (FieldsSpecificQueries<Fields> | CollectionSpecificQueries<Fields>) &
   FixedQueryOptions &
+  FixedPagedOptions &
   Record<string, any>
 
 // export function query<Fields>(query: FieldsQueries<Fields>): void {}
