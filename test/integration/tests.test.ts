@@ -1,18 +1,21 @@
-const contentful = require('../../lib/contentful')
+import { CreateClientParams } from '../../lib/contentful'
+import * as contentful from '../../lib/contentful'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const version = require('../../package.json').version
 
-const params = {
+const params: CreateClientParams = {
   accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
-  space: 'ezs1swce23xe'
+  space: 'ezs1swce23xe',
 }
 const localeSpaceParams = {
   accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
-  space: '7dh3w86is8ls'
+  space: '7dh3w86is8ls',
 }
 
 const previewParams = {
   host: 'preview.contentful.com',
   accessToken: 'fc9c8a0968c592bd7a0a5a9167d6fb6002dbbc3b8f900a75708ec269332d250a',
-  space: 'ezs1swce23xe'
+  space: 'ezs1swce23xe',
 }
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -28,8 +31,9 @@ const responseLoggerStub = jest.fn()
 const requestLoggerStub = jest.fn()
 const clientWithLoggers = contentful.createClient({
   ...params,
+  // @ts-ignore
   responseLogger: responseLoggerStub,
-  requestLogger: requestLoggerStub
+  requestLogger: requestLoggerStub,
 })
 
 test('Gets space', async () => {
@@ -59,7 +63,7 @@ test('Gets entry', async () => {
 
 test('Gets an entry with a specific locale', async () => {
   const entry = await client.getEntry('nyancat', {
-    locale: 'tlh'
+    locale: 'tlh',
   })
   expect(entry.sys.locale).toBe('tlh')
 })
@@ -69,16 +73,19 @@ test('Get entry fails if entryId does not exist', async () => {
 })
 
 test('Get entry fails if an entryId is not passed', async () => {
+  // @ts-ignore
   await expect(client.getEntry()).rejects.toThrow()
 })
 
 test('Get entry with fallback locale', async () => {
+  type Fields = { title: string }
+
   const entries = await Promise.all([
-    localeClient.getEntry('no-af-and-no-zu-za', { locale: 'af' }),
-    localeClient.getEntry('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
-    localeClient.getEntry('no-zu-ZA', { locale: 'zu-ZA' }),
-    localeClient.getEntry('no-ne-NP', { locale: 'ne-NP' }),
-    localeClient.getEntry('no-af', { locale: 'af' })
+    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'af' }),
+    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
+    localeClient.getEntry<Fields>('no-zu-ZA', { locale: 'zu-ZA' }),
+    localeClient.getEntry<Fields>('no-ne-NP', { locale: 'ne-NP' }),
+    localeClient.getEntry<Fields>('no-af', { locale: 'af' }),
   ])
 
   expect(entries[0].fields.title).not.toBe('')
@@ -94,7 +101,16 @@ test('Gets entries', async () => {
   expect(response.items).toBeDefined()
 })
 test('Gets entries with select', async () => {
-  const response = await client.getEntries({ select: 'fields.name,fields.likes', content_type: 'cat' })
+  type Fields = {
+    name: string
+    likes: string
+    color: string
+  }
+
+  const response = await client.getEntries<Fields>({
+    select: 'fields.name,fields.likes',
+    content_type: 'cat',
+  })
 
   expect(response.items).toBeDefined()
   expect(response.items[0].fields.name).toBeDefined()
@@ -104,7 +120,7 @@ test('Gets entries with select', async () => {
 
 test('Gets entries with a specific locale', async () => {
   const response = await client.getEntries({
-    locale: 'tlh'
+    locale: 'tlh',
   })
 
   expect(response.items[0].sys.locale).toBe('tlh')
@@ -113,7 +129,7 @@ test('Gets entries with a specific locale', async () => {
 
 test('Gets entries with a limit parameter', async () => {
   const response = await client.getEntries({
-    limit: 2
+    limit: 2,
   })
 
   expect(response.items).toBeDefined()
@@ -122,7 +138,7 @@ test('Gets entries with a limit parameter', async () => {
 
 test('Gets entries with a skip parameter', async () => {
   const response = await client.getEntries({
-    skip: 2
+    skip: 2,
   })
 
   expect(response.items).toBeDefined()
@@ -170,7 +186,7 @@ test('Gets entries with inequality query', async () => {
 test('Gets entries with array equality query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes': 'lasagna'
+    'fields.likes': 'lasagna',
   })
 
   expect(response.total).toBe(1)
@@ -180,7 +196,7 @@ test('Gets entries with array equality query', async () => {
 test('Gets entries with array inequality query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[ne]': 'lasagna'
+    'fields.likes[ne]': 'lasagna',
   })
 
   expect(response.total).toBeGreaterThan(0)
@@ -198,7 +214,7 @@ test('Gets entries with inclusion query', async () => {
 test('Gets entries with exclusion query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[nin]': 'rainbows,lasagna'
+    'fields.likes[nin]': 'rainbows,lasagna',
   })
 
   expect(response.total).toBeGreaterThan(0)
@@ -209,7 +225,7 @@ test('Gets entries with exclusion query', async () => {
 test('Gets entries with exists query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[exists]': 'true'
+    'fields.likes[exists]': 'true',
   })
 
   expect(response.items.map((item) => item.fields.likes)).toHaveLength(response.total)
@@ -218,7 +234,7 @@ test('Gets entries with exists query', async () => {
 test('Gets entries with inverse exists query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[exists]': 'false'
+    'fields.likes[exists]': 'false',
   })
 
   expect(response.items.map((item) => item.fields.likes)).toHaveLength(0)
@@ -227,7 +243,7 @@ test('Gets entries with inverse exists query', async () => {
 test('Gets entries with field link query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.bestFriend.sys.id': 'happycat'
+    'fields.bestFriend.sys.id': 'happycat',
   })
 
   expect(response.items[0].sys.id).toEqual('nyancat')
@@ -235,7 +251,7 @@ test('Gets entries with field link query', async () => {
 
 test('Gets entries with gte range query', async () => {
   const response = await client.getEntries({
-    'sys.updatedAt[gte]': '2013-01-01T00:00:00Z'
+    'sys.updatedAt[gte]': '2013-01-01T00:00:00Z',
   })
 
   expect(response.total).toBeGreaterThan(0)
@@ -243,7 +259,7 @@ test('Gets entries with gte range query', async () => {
 
 test('Gets entries with lte range query', async () => {
   const response = await client.getEntries({
-    'sys.updatedAt[lte]': '2013-01-01T00:00:00Z'
+    'sys.updatedAt[lte]': '2013-01-01T00:00:00Z',
   })
 
   expect(response.total).toBe(0)
@@ -251,7 +267,7 @@ test('Gets entries with lte range query', async () => {
 
 test('Gets entries with full text search query', async () => {
   const response = await client.getEntries({
-    query: 'bacon'
+    query: 'bacon',
   })
 
   expect(response.items[0].fields.description).toMatch(/bacon/)
@@ -260,7 +276,7 @@ test('Gets entries with full text search query', async () => {
 test('Gets entries with full text search query on field', async () => {
   const response = await client.getEntries({
     content_type: 'dog',
-    'fields.description[match]': 'bacon pancakes'
+    'fields.description[match]': 'bacon pancakes',
   })
 
   expect(response.items[0].fields.description).toMatch(/bacon/)
@@ -269,7 +285,7 @@ test('Gets entries with full text search query on field', async () => {
 test('Gets entries with location proximity search', async () => {
   const response = await client.getEntries({
     content_type: '1t9IbcfdCk6m04uISSsaIK',
-    'fields.center[near]': '38,-122'
+    'fields.center[near]': '38,-122',
   })
 
   expect(response.items[0].fields.center.lat).toBeDefined()
@@ -279,7 +295,7 @@ test('Gets entries with location proximity search', async () => {
 test('Gets entries with location in bounding object', async () => {
   const response = await client.getEntries({
     content_type: '1t9IbcfdCk6m04uISSsaIK',
-    'fields.center[within]': '40,-124,36,-120'
+    'fields.center[within]': '40,-124,36,-120',
   })
 
   expect(response.items[0].fields.center.lat).toBeDefined()
@@ -288,20 +304,22 @@ test('Gets entries with location in bounding object', async () => {
 
 test('Gets entries by creation order', async () => {
   const response = await client.getEntries({
-    order: 'sys.createdAt'
+    order: 'sys.createdAt',
   })
 
-  expect(new Date(response.items[0].sys.createdAt).getTime())
-    .toBeLessThan(new Date(response.items[1].sys.createdAt).getTime())
+  expect(new Date(response.items[0].sys.createdAt).getTime()).toBeLessThan(
+    new Date(response.items[1].sys.createdAt).getTime()
+  )
 })
 
 test('Gets entries by inverse creation order', async () => {
   const response = await client.getEntries({
-    order: '-sys.createdAt'
+    order: '-sys.createdAt',
   })
 
-  expect(new Date(response.items[0].sys.createdAt).getTime())
-    .toBeGreaterThan(new Date(response.items[1].sys.createdAt).getTime())
+  expect(new Date(response.items[0].sys.createdAt).getTime()).toBeGreaterThan(
+    new Date(response.items[1].sys.createdAt).getTime()
+  )
 })
 
 /**
@@ -315,7 +333,7 @@ test('Gets entries by inverse creation order', async () => {
  */
 test('Gets entries by creation order and id order', async () => {
   const response = await client.getEntries({
-    order: 'sys.contentType.sys.id,sys.id'
+    order: 'sys.contentType.sys.id,sys.id',
   })
 
   const contentTypeOrder = response.items
@@ -328,7 +346,7 @@ test('Gets entries by creation order and id order', async () => {
 
 test('Gets assets with only images', async () => {
   const response = await client.getAssets({
-    mimetype_group: 'image'
+    mimetype_group: 'image',
   })
   expect(response.items[0].fields.file.contentType).toMatch(/image/)
 })
@@ -341,7 +359,7 @@ test('Gets asset', async () => {
 
 test('Gets an entry with a specific locale', async () => {
   const entry = await client.getEntry('jake', {
-    locale: 'tlh'
+    locale: 'tlh',
   })
   expect(entry.sys.locale).toBe('tlh')
 })
@@ -366,7 +384,10 @@ test('Sync space', async () => {
 })
 
 test('Sync space with token', async () => {
-  const response = await client.sync({ nextSyncToken: 'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA' })
+  const response = await client.sync({
+    nextSyncToken:
+      'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA',
+  })
   expect(response.entries).toBeDefined()
   expect(response.assets).toBeDefined()
   expect(response.deletedEntries).toBeDefined()
@@ -377,7 +398,6 @@ test('Sync space with token', async () => {
 test('Sync spaces assets', async () => {
   const response = await client.sync({ initial: true, type: 'Asset' })
   expect(response.assets).toBeDefined()
-  expect(response.assets[0].toPlainObject).toBeDefined()
   expect(response.deletedAssets).toBeDefined()
   expect(response.nextSyncToken).toBeDefined()
 })
@@ -385,7 +405,6 @@ test('Sync spaces assets', async () => {
 test('Sync space entries by content type', async () => {
   const response = await client.sync({ initial: true, type: 'Entry', content_type: 'dog' })
   expect(response.entries).toBeDefined()
-  expect(response.entries[0].toPlainObject).toBeDefined()
   expect(response.deletedEntries).toBeDefined()
   expect(response.nextSyncToken).toBeDefined()
 })
@@ -415,5 +434,5 @@ test('Logs request and response with custom loggers', async () => {
 })
 
 test('Client object exposes current version', async () => {
-  expect(client.version).toEqual(require('./../../package.json').version)
+  expect(client.version).toEqual(version)
 })

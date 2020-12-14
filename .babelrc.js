@@ -4,8 +4,8 @@ module.exports = {
     [
       'inline-replace-variables',
       {
-        __VERSION__: require('./package.json').version
-      }
-    ]
-  ]
+        __VERSION__: require('./package.json').version,
+      },
+    ],
+  ],
 }

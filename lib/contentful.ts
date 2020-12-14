@@ -6,42 +6,42 @@
  */
 
 import axios from 'axios'
-import {createHttpClient, getUserAgentHeader} from 'contentful-sdk-core'
-import {HttpClientInstance} from './common-types'
-import createContentfulApi, {ContentfulClientApi} from './create-contentful-api'
+import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
+import { HttpClientInstance } from './common-types'
+import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
 export interface AxiosProxyConfig {
-  host: string;
-  port: number;
+  host: string
+  port: number
   auth?: {
-    username: string;
-    password: string;
-  };
+    username: string
+    password: string
+  }
 }
 
-export type ClientLogLevel = 'error' | 'warning' | 'info' | string;
+export type ClientLogLevel = 'error' | 'warning' | 'info' | string
 
 export interface CreateClientParams {
-  space: string;
-  accessToken: string;
-  environment?: string;
-  insecure?: boolean;
-  host?: string;
-  basePath?: string;
-  httpAgent?: any;
-  httpsAgent?: any;
-  proxy?: AxiosProxyConfig;
-  headers?: any;
-  adapter?: any;
-  application?: string;
-  integration?: string;
-  resolveLinks?: boolean;
-  removeUnresolved?: boolean;
-  retryOnError?: boolean;
-  logHandler?: (level: ClientLogLevel, data?: any) => void;
-  timeout?: number;
-  retryLimit?: number;
+  space: string
+  accessToken: string
+  environment?: string
+  insecure?: boolean
+  host?: string
+  basePath?: string
+  httpAgent?: any
+  httpsAgent?: any
+  proxy?: AxiosProxyConfig
+  headers?: any
+  adapter?: any
+  application?: string
+  integration?: string
+  resolveLinks?: boolean
+  removeUnresolved?: boolean
+  retryOnError?: boolean
+  logHandler?: (level: ClientLogLevel, data?: any) => void
+  timeout?: number
+  retryLimit?: number
 }
 
 /**
@@ -91,22 +91,23 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
     resolveLinks: true,
     removeUnresolved: false,
     defaultHostname: 'cdn.contentful.com',
-    environment: 'master'
+    environment: 'master',
   }
 
   const config = {
     ...defaultConfig,
-    ...params
+    ...params,
   }
 
-  const userAgentHeader = getUserAgentHeader(`contentful.js/${__VERSION__}`,
+  const userAgentHeader = getUserAgentHeader(
+    `contentful.js/${__VERSION__}`,
     config.application,
     config.integration
   )
   config.headers = {
     ...config.headers,
     'Content-Type': 'application/vnd.contentful.delivery.v1+json',
-    'X-Contentful-User-Agent': userAgentHeader
+    'X-Contentful-User-Agent': userAgentHeader,
   }
 
   const http = createHttpClient(axios, config)
@@ -121,7 +122,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
     environment: config.environment,
     removeUnresolved: config.removeUnresolved,
     spaceBaseUrl: http.defaults.baseURL,
-    environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`
+    environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`,
   })
   // Append environment to baseURL
   http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl
@@ -131,28 +132,40 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
 
   return createContentfulApi({
     http,
-    getGlobalOptions
+    getGlobalOptions,
   })
 }
 
 function obscureAuthTokenInResponse(http: HttpClientInstance) {
-  http.interceptors.response.use(response => {
-    return response
-  }, error => {
-    if (error.response && error.response.config.headers.Authorization) {
-      const token = error.response.config.headers.Authorization
+  http.interceptors.response.use(
+    (response) => {
+      return response
+    },
+    (error) => {
+      if (error.response && error.response.config.headers.Authorization) {
+        const token = error.response.config.headers.Authorization
 
-      error.response.config.headers.Authorization = error.response.config.headers.Authorization.replace(token, `Bearer...${token.substr(-5)}`)
+        error.response.config.headers.Authorization = error.response.config.headers.Authorization.replace(
+          token,
+          `Bearer...${token.substr(-5)}`
+        )
 
-      if (error.response.request._headers && error.response.request._headers.authorization) {
-        error.response.request._headers.authorization = error.response.request._headers.authorization.replace(token, `Bearer...${token.substr(-5)}`)
+        if (error.response.request._headers && error.response.request._headers.authorization) {
+          error.response.request._headers.authorization = error.response.request._headers.authorization.replace(
+            token,
+            `Bearer...${token.substr(-5)}`
+          )
+        }
+
+        if (error.response.request._header) {
+          error.response.request._header = error.response.request._header.replace(
+            token,
+            `Bearer...${token.substr(-5)}`
+          )
+        }
       }
 
-      if (error.response.request._header) {
-        error.response.request._header = error.response.request._header.replace(token, `Bearer...${token.substr(-5)}`)
-      }
+      return Promise.reject(error)
     }
-
-    return Promise.reject(error)
-  })
+  )
 }
