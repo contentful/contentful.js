@@ -1,23 +1,40 @@
 import copy from 'fast-copy'
+import { Asset, ContentType, ContentTypeLink, Entry, Locale, Sys } from '../../lib'
 
+/*
 const linkMock = {
   id: 'linkid',
   type: 'Link',
-  linkType: 'linkType'
+  linkType: 'linkType',
+}
+const spaceLinkMock: SpaceLink = {
+  type: 'Link',
+  linkType: 'Space',
+  id: 'mySpace',
+}
+ */
+
+const contentTypeLinkMock: ContentTypeLink = {
+  type: 'Link',
+  linkType: 'ContentType',
+  id: 'myContentType',
 }
 
-const sysMock = {
+const sysMock: Sys = {
   type: 'Type',
   id: 'id',
-  space: copy(linkMock),
   createdAt: 'createdatdate',
   updatedAt: 'updatedatdate',
-  revision: 1
+  revision: 1,
+  locale: 'en',
+  contentType: {
+    sys: copy(contentTypeLinkMock),
+  },
 }
 
-const contentTypeMock = {
+const contentTypeMock: ContentType = {
   sys: Object.assign(copy(sysMock), {
-    type: 'ContentType'
+    type: 'ContentType',
   }),
   name: 'name',
   description: 'desc',
@@ -28,45 +45,59 @@ const contentTypeMock = {
       name: 'fieldname',
       type: 'Text',
       localized: true,
-      required: false
-    }
-  ]
+      required: false,
+      disabled: false,
+      omitted: false,
+      validations: [],
+    },
+  ],
 }
 
-const entryMock = {
-  sys: Object.assign(copy(sysMock), {
+export type EntryFields = {
+  field1: string
+}
+
+const entryMock: Entry<EntryFields> = {
+  sys: {
+    ...copy(sysMock),
     type: 'Entry',
-    contentType: Object.assign(copy(linkMock), { linkType: 'ContentType' }),
-    locale: 'locale'
-  }),
+    locale: 'locale',
+  },
   fields: {
-    field1: 'str'
-  }
+    field1: 'str',
+  },
 }
 
-const assetMock = {
-  sys: Object.assign(copy(sysMock), {
+const assetMock: Asset = {
+  sys: {
+    ...copy(sysMock),
     type: 'Asset',
-    locale: 'locale'
-  }),
+    locale: 'locale',
+  },
   fields: {
-    field1: 'str'
-  }
+    title: 'assetTitle',
+    description: 'assetDescription',
+    file: {
+      url: 'assetUrl',
+      details: {
+        size: 1000,
+      },
+      fileName: 'assetFileName',
+      contentType: 'assetContentType',
+    },
+  },
 }
 
-const localeMock = {
-  sys: Object.assign(copy(sysMock), {
-    type: 'Locale'
-  }),
+const localeMock: Locale = {
+  sys: {
+    id: 'id',
+    type: 'Locale',
+    version: 1,
+  },
+  default: true,
+  fallbackCode: null,
   name: 'English. United State',
-  code: 'en-US'
+  code: 'en-US',
 }
 
-export {
-  linkMock,
-  sysMock,
-  contentTypeMock,
-  entryMock,
-  assetMock,
-  localeMock
-}
+export { sysMock, contentTypeMock, entryMock, assetMock, localeMock }

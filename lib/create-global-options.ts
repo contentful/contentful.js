@@ -7,18 +7,21 @@
  */
 
 export interface GlobalOptionsParams {
-  resolveLinks?: boolean,
-  environment?: string,
-  removeUnresolved?: boolean,
-  space?: string,
-  spaceBaseUrl?: string,
+  resolveLinks?: boolean
+  environment?: string
+  removeUnresolved?: boolean
+  space?: string
+  spaceBaseUrl?: string
   environmentBaseUrl?: string
 }
 
-export type GetGlobalOptions = (globalOptions?: GlobalOptionsParams) => Required<GlobalOptionsParams>
+export type GetGlobalOptions = (
+  globalOptions?: GlobalOptionsParams
+) => Required<GlobalOptionsParams>
 
-export default function createGlobalOptions(globalSettings: Required<GlobalOptionsParams>):
-  GetGlobalOptions {
+export default function createGlobalOptions(
+  globalSettings: Required<GlobalOptionsParams>
+): GetGlobalOptions {
   /**
    * Link resolver method
    * @param {Object} query - regular query object used for collection endpoints
