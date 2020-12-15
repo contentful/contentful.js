@@ -2,7 +2,11 @@
     "tags": {
         "allowUnknownTags": true
     },
+    "plugins": [
+        "node_modules/better-docs/typescript"
+    ],
     "source": {
+        "includePattern": "\\.(js|ts)$",
         "include": [
             "lib/",
             "./README.md"
@@ -10,7 +14,7 @@
     },
     "opts": {
         "encoding": "utf8",
-        "template": "node_modules/contentful-sdk-jsdoc/jsdoc-template",
+        "template": "node_modules/better-docs",
         "destination": "out/",
         "recurse": true,
         "verbose": true
