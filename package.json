@@ -25,7 +25,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && npm run new:build",
+    "build": "npm run clean && tsdx build --entry lib/index.ts --format cjs,umd,esm --name contentful",
     "postbuild": "npm run check:browser && npm run check:node && npm run check:modules",
     "check:modules": "es-check es6 --module ./dist/contentful.esm.js",
     "check:browser": "es-check es5 ./dist/contentful.browser.js ./dist/contentful.browser.min.js",
@@ -34,7 +34,7 @@
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
-    "lint": "eslint \"lib/**\" \"test/**\"",
+    "lint": "tsdx lint && eslint \"lib/**\" \"test/**\"",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx}'",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx}'",
     "pretest": "rimraf coverage",
@@ -53,12 +53,10 @@
     "devdep:uninstall": "npm run devdep:clean && rimraf node_modules/contentful-sdk-core",
     "precommit": "npm run lint && npm run prettier:check",
     "prepush": "npm run test:prepush",
-    "new:build": "tsdx build --entry lib/index.ts --format cjs,umd,esm --name contentful",
-    "new:lint": "tsdx lint",
     "postinstall": "rimraf node_modules/tsdx/node_modules"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "contentful-resolve-response": "^1.3.0",
     "contentful-sdk-core": "^6.6.0",
     "json-stringify-safe": "^5.0.1"
@@ -80,7 +78,7 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-inline-replace-variables": "^1.3.1",
     "better-docs": "^2.3.2",
-    "bundlesize": "^0.18.0",
+    "bundlesize": "^0.18.1",
     "codecov": "^3.0.0",
     "contentful-sdk-jsdoc": "^2.2.0",
     "core-js": "^3.2.1",
