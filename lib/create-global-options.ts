@@ -13,6 +13,8 @@ export interface GlobalOptionsParams {
   space?: string
   spaceBaseUrl?: string
   environmentBaseUrl?: string
+  // TODO? Do we have to add locale as another global option here?
+  withAllLocales?: boolean
 }
 
 export type GetGlobalOptions = (

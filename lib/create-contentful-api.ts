@@ -52,6 +52,9 @@ export interface ContentfulClientApi {
   parseEntries<T>(raw: any): EntryCollection<T>
 
   sync(query: any): Promise<SyncCollection>
+
+  // TODO
+  // Add correct type representation of withAllLocales
 }
 
 /**
@@ -127,6 +130,8 @@ export default function createContentfulApi({
     if (!baseUrl.endsWith('/')) {
       baseUrl += '/'
     }
+
+    // TODO Add withAllLocales check here?
 
     try {
       const response = await http.get(baseUrl + path, config)
@@ -423,6 +428,9 @@ export default function createContentfulApi({
   function switchToEnvironment(http: AxiosInstance): void {
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
+
+  // TODO
+  // withAllLocales Object that returns new instance of api with globalOption withAllLocales default set to true
 
   return {
     version: __VERSION__,

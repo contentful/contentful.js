@@ -42,6 +42,8 @@ export interface CreateClientParams {
   logHandler?: (level: ClientLogLevel, data?: any) => void
   timeout?: number
   retryLimit?: number
+  // TODO add query param locale here and then as a global option?
+  withAllLocales?: boolean
 }
 
 /**
@@ -92,6 +94,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
     removeUnresolved: false,
     defaultHostname: 'cdn.contentful.com',
     environment: 'master',
+    withAllLocales: false,
   }
 
   const config = {
@@ -123,6 +126,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
     removeUnresolved: config.removeUnresolved,
     spaceBaseUrl: http.defaults.baseURL,
     environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`,
+    withAllLocales: config.withAllLocales,
   })
   // Append environment to baseURL
   http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl
