@@ -7,7 +7,7 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import { HttpClientInstance } from './common-types'
+import { HttpClientInstance } from './types'
 import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 

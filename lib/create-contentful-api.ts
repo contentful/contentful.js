@@ -18,7 +18,7 @@ import {
   LocaleCollection,
   Space,
   SyncCollection,
-} from './common-types'
+} from './types'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
 import { FieldsQueries } from './query'
