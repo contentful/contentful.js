@@ -16,7 +16,7 @@ export declare namespace EntryFields {
   type Text = string
   type Integer = number
   type Number = number
-  type Date = string
+  type Date = `${number}-${number}-${number}T${number}:${number}:${number}Z`
   type Boolean = boolean
 
   interface Location {

@@ -7,11 +7,9 @@ import {
   AssetSys,
   SpaceSys,
 } from '../../lib'
-
 const stringValue = ''
 const numberValue = 123
 const expectMessage = 'no parser error'
-
 describe('Entry', () => {
   test('define with simple generic', () => {
     const entry: Entry<{ name: string }> = {
@@ -51,21 +49,22 @@ describe('Entry', () => {
     expect(expectMessage)
   })
 })
-
 describe('FieldsQueries', () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   function query<Fields>(query: FieldsQueries<Fields>): void {}
-
   type Fields = {
     stringField: string
     numberField: number
+    collectionField: string[]
   }
-
+  test('requires nothing (without generic)', () => {
+    query({})
+    expect(expectMessage)
+  })
   test('requires nothing', () => {
     query<Fields>({})
     expect(expectMessage)
   })
-
   test('has default optional fields', () => {
     query<Fields>({
       limit: numberValue,
@@ -77,7 +76,6 @@ describe('FieldsQueries', () => {
     })
     expect(expectMessage)
   })
-
   test('has number field selector', () => {
     query<Fields>({
       'fields.numberField': numberValue,
@@ -102,7 +100,6 @@ describe('FieldsQueries', () => {
     })
     expect(expectMessage)
   })
-
   test('has string field selector', () => {
     query<Fields>({
       'fields.stringField': stringValue,
@@ -121,8 +118,25 @@ describe('FieldsQueries', () => {
     })
     expect(expectMessage)
   })
+  test('has collection field selector', () => {
+    query<Fields>({
+      'fields.collectionField': stringValue,
+    })
+    query<Fields>({
+      'fields.collectionField[in]': [stringValue],
+    })
+    query<Fields>({
+      'fields.collectionField[nin]': stringValue,
+    })
+    query<Fields>({
+      'fields.stringField[ne]': stringValue,
+    })
+    query<Fields>({
+      'fields.stringField[exists]': stringValue,
+    })
+    expect(expectMessage)
+  })
 })
-
 describe('Sys', () => {
   test('Entry', () => {
     const sys: EntrySys = {
@@ -154,7 +168,6 @@ describe('Sys', () => {
       },
       locale: 'en-US',
     }
-
     const sysWithoutLocale: EntrySys = {
       space: {
         sys: {
@@ -185,7 +198,6 @@ describe('Sys', () => {
     }
     expect(expectMessage)
   })
-
   test('Locale', () => {
     const sys: LocaleSys = {
       id: '2RDFkX6NV4CB3E32fby13g',
@@ -194,7 +206,6 @@ describe('Sys', () => {
     }
     expect(expectMessage)
   })
-
   test('ContentType', () => {
     const sys: ContentTypeSys = {
       space: {
@@ -219,7 +230,6 @@ describe('Sys', () => {
     }
     expect(expectMessage)
   })
-
   test('Asset', () => {
     const sys: AssetSys = {
       space: {
@@ -266,7 +276,6 @@ describe('Sys', () => {
     }
     expect(expectMessage)
   })
-
   test('Space', () => {
     const sys: SpaceSys = {
       type: 'Space',

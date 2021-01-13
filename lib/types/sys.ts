@@ -1,3 +1,4 @@
+import { EntryFields } from './entry';
 import { SpaceLink, EnvironmentLink } from './link'
 
 export interface BaseSys {
@@ -6,8 +7,8 @@ export interface BaseSys {
 }
 
 export interface EntitySys extends BaseSys {
-  createdAt: string
-  updatedAt: string
+  createdAt: EntryFields.Date
+  updatedAt: EntryFields.Date
   revision: number
   space: { sys: SpaceLink }
   environment: { sys: EnvironmentLink }
