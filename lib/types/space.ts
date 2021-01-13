@@ -1,3 +1,4 @@
+import { Locale } from './locale'
 import { BaseSys } from './sys'
 
 export interface SpaceSys extends BaseSys {
@@ -7,5 +8,5 @@ export interface SpaceSys extends BaseSys {
 export interface Space {
   sys: SpaceSys
   name: string
-  locales: Array<string>
+  locales: Array<Omit<Locale, 'sys'>>
 }
