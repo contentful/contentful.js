@@ -56,6 +56,7 @@
     "postinstall": "rimraf node_modules/tsdx/node_modules"
   },
   "dependencies": {
+    "@contentful/rich-text-types": "^14.1.2",
     "axios": "^0.21.1",
     "contentful-resolve-response": "^1.3.0",
     "contentful-sdk-core": "^6.6.0",
