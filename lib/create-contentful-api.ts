@@ -36,9 +36,14 @@ export interface ContentfulClientApi {
 
   getContentTypes(): Promise<ContentTypeCollection>
 
-  getEntries<Fields = Record<string, any>>(query?: FieldsQueries<Fields>): Promise<EntryCollection<Fields>>
+  getEntries<Fields = Record<string, any>>(
+    query?: FieldsQueries<Fields>
+  ): Promise<EntryCollection<Fields>>
 
-  getEntry<Fields = Record<string, any>>(id: string, query?: FieldsQueries<Fields>): Promise<Entry<Fields>>
+  getEntry<Fields = Record<string, any>>(
+    id: string,
+    query?: FieldsQueries<Fields>
+  ): Promise<Entry<Fields>>
 
   getSpace(): Promise<Space>
 
@@ -249,7 +254,9 @@ export default function createContentfulApi({
    * const response = await client.getEntries()
    * .console.log(response.items)
    */
-  async function getEntries<Fields>(query: FieldsQueries<Fields> = {}): Promise<EntryCollection<Fields>> {
+  async function getEntries<Fields>(
+    query: FieldsQueries<Fields> = {}
+  ): Promise<EntryCollection<Fields>> {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     try {
       const entries = await get({

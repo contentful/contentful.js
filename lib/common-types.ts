@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'contentful-sdk-core'
+import { Document as RichTextDocument } from '@contentful/rich-text-types'
 export type HttpClientInstance = AxiosInstance
 export interface AssetDetails {
   size: number
@@ -151,51 +152,9 @@ export declare namespace EntryFields {
   type Link<T> = Asset | Entry<T>
   type Array<T = any> = symbol[] | Entry<T>[] | Asset[]
   type Object<T = any> = T
-  interface RichText {
-    data: any
-    content: RichTextContent[]
-    nodeType: 'document'
-  }
+  type RichText = RichTextDocument
 }
-interface RichTextDataTarget {
-  sys: {
-    id: string
-    type: 'Link'
-    linkType: 'Entry' | 'Asset'
-  }
-}
-interface RichTextData {
-  uri?: string
-  target?: RichTextDataTarget
-}
-declare type RichTextNodeType =
-  | 'text'
-  | 'heading-1'
-  | 'heading-2'
-  | 'heading-3'
-  | 'heading-4'
-  | 'heading-5'
-  | 'heading-6'
-  | 'paragraph'
-  | 'hyperlink'
-  | 'entry-hyperlink'
-  | 'asset-hyperlink'
-  | 'unordered-list'
-  | 'ordered-list'
-  | 'list-item'
-  | 'blockquote'
-  | 'hr'
-  | 'embedded-entry-block'
-  | 'embedded-entry-inline'
-interface RichTextContent {
-  data: RichTextData
-  content?: RichTextContent[]
-  marks: {
-    type: 'bold' | 'underline' | 'code' | 'italic'
-  }[]
-  value?: string
-  nodeType: RichTextNodeType
-}
+
 export interface Space {
   sys: Sys
   name: string
