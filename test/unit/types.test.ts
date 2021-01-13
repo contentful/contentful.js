@@ -20,6 +20,13 @@ describe('Entry', () => {
             type: 'Link',
           },
         },
+        environment: {
+          sys: {
+            type: 'Link',
+            linkType: 'Environment',
+            id: 'master',
+          },
+        },
       },
       fields: {
         name: stringValue,
