@@ -436,3 +436,15 @@ test('Logs request and response with custom loggers', async () => {
 test('Client object exposes current version', async () => {
   expect(client.version).toEqual(version)
 })
+
+// Tests for new chaining approach wip
+
+describe('Property chaining', () => {
+  test('withAllLocales', async () => {
+    const response = await client.withAllLocales.getEntry('nyancat')
+    expect(response.sys).toBeDefined()
+    expect(response.fields).toBeDefined()
+    expect(response.fields.name).toHaveProperty('en-US')
+    expect(response.fields.name).toHaveProperty('tlh')
+  })
+})
