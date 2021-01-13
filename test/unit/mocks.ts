@@ -1,18 +1,19 @@
 import copy from 'fast-copy'
-import { Asset, ContentType, ContentTypeLink, Entry, EnvironmentLink, Locale, Sys } from '../../lib'
-
-/*
-const linkMock = {
-  id: 'linkid',
-  type: 'Link',
-  linkType: 'linkType',
-}
+import {
+  Asset,
+  ContentType,
+  ContentTypeLink,
+  Entry,
+  EnvironmentLink,
+  Locale,
+  EntrySys,
+  SpaceLink,
+} from '../../lib'
 const spaceLinkMock: SpaceLink = {
   type: 'Link',
   linkType: 'Space',
   id: 'mySpace',
 }
- */
 
 const contentTypeLinkMock: ContentTypeLink = {
   type: 'Link',
@@ -26,13 +27,14 @@ const environmentLinkMock: EnvironmentLink = {
   type: 'Link',
 }
 
-const sysMock: Sys = {
-  type: 'Type',
+const sysMock: EntrySys = {
+  type: 'Entry',
   id: 'id',
   createdAt: 'createdatdate',
   updatedAt: 'updatedatdate',
   revision: 1,
   locale: 'en',
+  space: { sys: copy(spaceLinkMock) },
   contentType: { sys: copy(contentTypeLinkMock) },
   environment: { sys: copy(environmentLinkMock) },
 }
