@@ -1,7 +1,7 @@
 import createContentfulApi from '../../lib/create-contentful-api'
 import createGlobalOptions from '../../lib/create-global-options'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
-import { EntryFields } from './mocks'
+// @ts-ignore
 import * as mocks from './mocks'
 
 class RejectError extends Error {
@@ -132,7 +132,7 @@ describe('create-contentful-api', () => {
       promise: Promise.resolve({ data: mocks.entryMock }),
     })
     api.getEntries = jest.fn().mockResolvedValue({ items: [mocks.entryMock] })
-    await expect(api.getEntry<EntryFields>('eid')).resolves.toEqual(mocks.entryMock)
+    await expect(api.getEntry<mocks.EntryFields>('eid')).resolves.toEqual(mocks.entryMock)
     expect(api.getEntries).toHaveBeenCalledTimes(1)
   })
 
@@ -146,7 +146,7 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getEntry<EntryFields>('eid')).rejects.toEqual(data)
+    await expect(api.getEntry<mocks.EntryFields>('eid')).rejects.toEqual(data)
   })
 
   test('API call getEntries', async () => {

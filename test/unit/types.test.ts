@@ -1,15 +1,19 @@
 import {
   Entry,
-  FieldsQueries,
+  EntryQueries,
   EntrySys,
   LocaleSys,
   ContentTypeSys,
   AssetSys,
-  SpaceSys,
+  SpaceSys, EntryFields
 } from '../../lib'
 const stringValue = ''
 const numberValue = 123
+const emptyArrayValue = []
+const booleanValue = true
+const dateValue: EntryFields.Date = '2018-05-03T09:18:16.329Z'
 const expectMessage = 'no parser error'
+
 describe('Entry', () => {
   test('define with simple generic', () => {
     const entry: Entry<{ name: string }> = {
@@ -17,8 +21,8 @@ describe('Entry', () => {
         id: stringValue,
         locale: stringValue,
         type: stringValue,
-        createdAt: stringValue,
-        updatedAt: stringValue,
+        createdAt: dateValue,
+        updatedAt: dateValue,
         revision: 1,
         space: {
           sys: {
@@ -49,9 +53,9 @@ describe('Entry', () => {
     expect(expectMessage)
   })
 })
-describe('FieldsQueries', () => {
+describe('EntryQueries', () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  function query<Fields>(query: FieldsQueries<Fields>): void {}
+  function query<Fields>(query: EntryQueries<Fields>): void {}
   type Fields = {
     stringField: string
     numberField: number
@@ -72,7 +76,7 @@ describe('FieldsQueries', () => {
       include: numberValue,
       locale: stringValue,
       query: stringValue,
-      select: stringValue,
+      select: emptyArrayValue,
     })
     expect(expectMessage)
   })
@@ -93,7 +97,7 @@ describe('FieldsQueries', () => {
       'fields.numberField[in]': [numberValue, numberValue],
     })
     query<Fields>({
-      'fields.numberField[exists]': numberValue,
+      'fields.numberField[exists]': booleanValue,
     })
     query<Fields>({
       'fields.numberField[nin]': numberValue,
@@ -105,7 +109,7 @@ describe('FieldsQueries', () => {
       'fields.stringField': stringValue,
     })
     query<Fields>({
-      'fields.stringField[exists]': stringValue,
+      'fields.stringField[exists]': booleanValue,
     })
     query<Fields>({
       'fields.stringField[nin]': stringValue,
@@ -132,7 +136,22 @@ describe('FieldsQueries', () => {
       'fields.stringField[ne]': stringValue,
     })
     query<Fields>({
-      'fields.stringField[exists]': stringValue,
+      'fields.stringField[exists]': booleanValue,
+    })
+    expect(expectMessage)
+  })
+  test('has select filter', () => {
+    query<Fields>({
+      select:[]
+    })
+    query<Fields>({
+      select:['sys.id', 'sys.revision']
+    })
+    query<Fields>({
+      select:['fields.numberField', 'fields.collectionField']
+    })
+    query<Fields>({
+      select:['fields.numberField', 'sys.id']
     })
     expect(expectMessage)
   })

@@ -1,5 +1,7 @@
 import { ConditionalPick } from 'type-fest'
 
+export type FieldsType = Record<string, any>
+
 export type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
 
 export type ConditionalFixedQueries<Fields,

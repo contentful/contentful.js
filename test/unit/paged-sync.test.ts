@@ -1,5 +1,6 @@
 import copy from 'fast-copy'
 import pagedSync from '../../lib/paged-sync'
+// @ts-ignore
 import { assetMock, entryMock } from './mocks'
 import { when } from 'jest-when'
 

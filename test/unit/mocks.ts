@@ -7,8 +7,11 @@ import {
   EnvironmentLink,
   Locale,
   EntrySys,
-  SpaceLink,
+  SpaceLink, EntryFields
 } from '../../lib'
+
+const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'
+
 const spaceLinkMock: SpaceLink = {
   type: 'Link',
   linkType: 'Space',
@@ -30,8 +33,8 @@ const environmentLinkMock: EnvironmentLink = {
 const sysMock: EntrySys = {
   type: 'Entry',
   id: 'id',
-  createdAt: 'createdatdate',
-  updatedAt: 'updatedatdate',
+  createdAt: date,
+  updatedAt: date,
   revision: 1,
   locale: 'en',
   space: { sys: copy(spaceLinkMock) },
