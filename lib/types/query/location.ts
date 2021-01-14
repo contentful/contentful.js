@@ -1,34 +1,33 @@
 import { ConditionalPick } from 'type-fest'
 import { EntryFields } from "../entry"
+import { BaseOrArrayType } from './util'
 
 // In the future figure out how to really exclude the `Date` type
-type SupportedTypes = EntryFields.Location
-type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
+type Types = EntryFields.Location
 
 type ProximitySearchFilterInput = [number, number]
 type BoundingBoxSearchFilterInput = [number, number, number, number]
 type BoundingCircleSearchFilterInput = [number, number, number]
 
-type ProximitySearchFilters<Fields, Prefix extends string> = {
- [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string & FieldName}[near]`]?:
-      BaseOrArrayType<Fields[FieldName]> extends EntryFields.Location
-        ? ProximitySearchFilterInput
-      : never
+type BaseLocationQueries<Fields,
+  SupportedTypes,
+  ValueType,
+  Prefix extends string,
+  QueryFilter extends string = ''> = {
+  [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string & FieldName}${QueryFilter}`]?:
+  BaseOrArrayType<Fields[FieldName]> extends SupportedTypes
+    ? ValueType
+    : never
 }
 
-type BoundingBoxSearchFilters<Fields, Prefix extends string> = {
-[FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string & FieldName}[within]`]?:
-      BaseOrArrayType<Fields[FieldName]> extends EntryFields.Location
-        ? BoundingBoxSearchFilterInput
-      : never
-}
+type ProximitySearchFilters<Fields, Prefix extends string> =
+  BaseLocationQueries<Fields, Types, ProximitySearchFilterInput, Prefix, '[near]'>
 
-type BoundingCircleSearchFilters<Fields, Prefix extends string> = {
-[FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string & FieldName}[within]`]?:
-      BaseOrArrayType<Fields[FieldName]> extends EntryFields.Location
-        ? BoundingCircleSearchFilterInput
-      : never
-}
+type BoundingBoxSearchFilters<Fields, Prefix extends string> =
+  BaseLocationQueries<Fields, Types, BoundingBoxSearchFilterInput, Prefix, '[within]'>
 
-export type LocationSearchFilters<Fields, Prefix extends string> = 
+type BoundingCircleSearchFilters<Fields, Prefix extends string> =
+  BaseLocationQueries<Fields, Types, BoundingCircleSearchFilterInput, Prefix, '[within]'>
+
+export type LocationSearchFilters<Fields, Prefix extends string> =
   ProximitySearchFilters<Fields, Prefix> | BoundingBoxSearchFilters<Fields, Prefix> | BoundingCircleSearchFilters<Fields, Prefix>

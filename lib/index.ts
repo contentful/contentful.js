@@ -6,4 +6,3 @@ export * from './utils/resolve-circular'
 
 export * from './types'
 export { ContentfulClientApi } from './create-contentful-api'
-export * from './query'

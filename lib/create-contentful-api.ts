@@ -14,14 +14,13 @@ import {
   ContentType,
   ContentTypeCollection,
   Entry,
-  EntryCollection,
+  EntryCollection, EntryQueries,
   LocaleCollection,
   Space,
-  SyncCollection,
+  SyncCollection
 } from './types'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
-import { FieldsQueries } from './query'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 
@@ -30,19 +29,19 @@ export interface ContentfulClientApi {
 
   getAsset(id: string): Promise<Asset>
 
-  getAssets(query?: FieldsQueries<AssetFields>): Promise<AssetCollection>
+  getAssets(query?: EntryQueries<AssetFields>): Promise<AssetCollection>
 
   getContentType(id: string): Promise<ContentType>
 
   getContentTypes(): Promise<ContentTypeCollection>
 
   getEntries<Fields = Record<string, any>>(
-    query?: FieldsQueries<Fields>
+    query?: EntryQueries<Fields>
   ): Promise<EntryCollection<Fields>>
 
   getEntry<Fields = Record<string, any>>(
     id: string,
-    query?: FieldsQueries<Fields>
+    query?: EntryQueries<Fields>
   ): Promise<Entry<Fields>>
 
   getSpace(): Promise<Space>
@@ -221,7 +220,7 @@ export default function createContentfulApi({
    */
   async function getEntry<Fields>(
     id: string,
-    query: FieldsQueries<Fields> = {}
+    query: EntryQueries<Fields> = {}
   ): Promise<Entry<Fields>> {
     if (!id) {
       throw notFoundError(id)
@@ -255,7 +254,7 @@ export default function createContentfulApi({
    * .console.log(response.items)
    */
   async function getEntries<Fields>(
-    query: FieldsQueries<Fields> = {}
+    query: EntryQueries<Fields> = {}
   ): Promise<EntryCollection<Fields>> {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     try {
