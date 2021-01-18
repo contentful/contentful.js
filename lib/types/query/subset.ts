@@ -1,5 +1,5 @@
-import { ConditionalPick } from "type-fest"
-import { BasicEntryField, EntryFields } from ".."
+import { ConditionalPick } from 'type-fest'
+import { BasicEntryField, EntryFields } from '..'
 
 // All is probably only legit for array fields
 type SubsetFilterTypes = 'in' | 'nin' | 'all'

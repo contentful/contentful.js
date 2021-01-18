@@ -5,7 +5,8 @@ import {
   LocaleSys,
   ContentTypeSys,
   AssetSys,
-  SpaceSys, EntryFields
+  SpaceSys,
+  EntryFields,
 } from '../../lib'
 const stringValue = ''
 const numberValue = 123
@@ -142,16 +143,16 @@ describe('EntryQueries', () => {
   })
   test('has select filter', () => {
     query<Fields>({
-      select:[]
+      select: [],
     })
     query<Fields>({
-      select:['sys.id', 'sys.revision']
+      select: ['sys.id', 'sys.revision'],
     })
     query<Fields>({
-      select:['fields.numberField', 'fields.collectionField']
+      select: ['fields.numberField', 'fields.collectionField'],
     })
     query<Fields>({
-      select:['fields.numberField', 'sys.id']
+      select: ['fields.numberField', 'sys.id'],
     })
     expect(expectMessage)
   })

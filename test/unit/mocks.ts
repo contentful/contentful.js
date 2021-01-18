@@ -7,7 +7,8 @@ import {
   EnvironmentLink,
   Locale,
   EntrySys,
-  SpaceLink, EntryFields
+  SpaceLink,
+  EntryFields,
 } from '../../lib'
 
 const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'

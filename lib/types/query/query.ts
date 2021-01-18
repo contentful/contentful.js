@@ -1,4 +1,4 @@
-import { Entry, EntryFields, EntrySys } from '../entry'
+import { EntrySys } from '../entry'
 import { EqualityQueries, InequalityQueries } from './equality'
 import { ExistenceQueries } from './existence'
 import { FullTextSearchFilters } from './fts'
@@ -19,16 +19,17 @@ type FixedQueryOptions = {
   query?: string
 }
 
-export type SysQueries<Sys> =
-  ExistenceQueries<Sys, 'sys'> &
+export type SysQueries<Sys> = ExistenceQueries<Sys, 'sys'> &
   EqualityQueries<Sys, 'sys'> &
   InequalityQueries<Sys, 'sys'> &
   SubsetFilters<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'> &
   SelectQueries<Sys, 'sys'>
 
-export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
-  ExistenceQueries<Fields, 'fields'> &
+export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<
+  Fields,
+  'fields'
+> &
   EqualityQueries<Fields, 'fields'> &
   InequalityQueries<Fields, 'fields'> &
   SubsetFilters<Fields, 'fields'> &
@@ -37,26 +38,8 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
   LocationSearchFilters<Fields, 'fields'> &
   SelectQueries<Fields, 'fields'>
 
-export type EntryQueries<Fields extends FieldsType = FieldsType> =
-  EntryFieldsQueries<Fields> &
+export type EntryQueries<Fields extends FieldsType = FieldsType> = EntryFieldsQueries<Fields> &
   SysQueries<EntrySys> &
   FixedQueryOptions &
   FixedPagedOptions &
   Record<string, any>
-
-function query<Fields>(query: EntryQueries<Fields>): void {
-  console.log(query)
-}
-
-type Fields = {
-  name: string,
-  collection: number[]
-  dateField: EntryFields.Date
-  center: EntryFields.Location
-  nested: Entry<{ subField: EntryFields.Text }>
-}
-
-query<Fields>({
-  select: ['sys.contentType', 'sys.id', 'fields.center']
-})
-

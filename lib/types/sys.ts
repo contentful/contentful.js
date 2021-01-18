@@ -1,4 +1,4 @@
-import { EntryFields } from './entry';
+import { EntryFields } from './entry'
 import { SpaceLink, EnvironmentLink } from './link'
 
 export interface BaseSys {

@@ -14,10 +14,11 @@ import {
   ContentType,
   ContentTypeCollection,
   Entry,
-  EntryCollection, EntryQueries,
+  EntryCollection,
+  EntryQueries,
   LocaleCollection,
   Space,
-  SyncCollection
+  SyncCollection,
 } from './types'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
