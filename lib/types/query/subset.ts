@@ -1,13 +1,18 @@
 import { ConditionalPick } from 'type-fest'
 import { BasicEntryField, EntryFields } from '..'
 
-// All is probably only legit for array fields
-type SubsetFilterTypes = 'in' | 'nin' | 'all'
+type SubsetFilterTypes = 'in' | 'nin'
 type SupportedTypes = Exclude<BasicEntryField, EntryFields.Location>
 
+/**
+ * @desc inclusion & exclusion
+ * @see [inclusion documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inclusion}
+ * @see [exclusion documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/exclusion}
+ * @example
+ * // {'fields.myField', 'singleValue'}
+ * // {'fields.myField', 'firstValue,secondValue'}
+ */
 export type SubsetFilters<Fields, Prefix extends string> = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
-    FieldName}[${SubsetFilterTypes}]`]?: Fields[FieldName] extends Array<any>
-    ? Fields[FieldName]
-    : Array<Fields[FieldName]>
+    FieldName}[${SubsetFilterTypes}]`]?: Fields[FieldName]
 }

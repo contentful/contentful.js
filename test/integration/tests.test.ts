@@ -1,4 +1,4 @@
-import { CreateClientParams } from '../../lib/contentful'
+import { CreateClientParams } from '../../lib'
 import * as contentful from '../../lib/contentful'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
@@ -108,7 +108,7 @@ test('Gets entries with select', async () => {
   }
 
   const response = await client.getEntries<Fields>({
-    select: 'fields.name,fields.likes',
+    select: ['fields.name', 'fields.likes'],
     content_type: 'cat',
   })
 

@@ -5,12 +5,14 @@
  * @see Entities
  */
 
-import { createRequestConfig } from 'contentful-sdk-core'
-import { AxiosInstance } from 'contentful-sdk-core/dist/types/types'
+import { AxiosInstance, createRequestConfig } from 'contentful-sdk-core'
+import { GetGlobalOptions } from './create-global-options'
+import pagedSync from './paged-sync'
 import {
   Asset,
   AssetCollection,
   AssetFields,
+  AssetQueries,
   ContentType,
   ContentTypeCollection,
   Entry,
@@ -20,8 +22,6 @@ import {
   Space,
   SyncCollection,
 } from './types'
-import { GetGlobalOptions } from './create-global-options'
-import pagedSync from './paged-sync'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 
@@ -30,7 +30,7 @@ export interface ContentfulClientApi {
 
   getAsset(id: string): Promise<Asset>
 
-  getAssets(query?: EntryQueries<AssetFields>): Promise<AssetCollection>
+  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection>
 
   getContentType(id: string): Promise<ContentType>
 

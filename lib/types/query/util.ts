@@ -22,5 +22,5 @@ export type ConditionalQueries<
   QueryFilter extends string = ''
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
-    FieldName}${QueryFilter}`]?: Fields[FieldName] extends Array<infer T> ? T : Fields[FieldName]
+    FieldName}${QueryFilter}`]?: Fields[FieldName] extends Array<infer T> ? T[] : Fields[FieldName]
 }

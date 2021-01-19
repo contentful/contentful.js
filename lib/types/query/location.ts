@@ -22,6 +22,10 @@ type BaseLocationQueries<
     : never
 }
 
+/**
+ * @desc near - location proximity search
+ * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/location-proximity-search}
+ */
 type ProximitySearchFilters<Fields, Prefix extends string> = BaseLocationQueries<
   Fields,
   Types,
@@ -30,6 +34,10 @@ type ProximitySearchFilters<Fields, Prefix extends string> = BaseLocationQueries
   '[near]'
 >
 
+/**
+ * @desc within - location in a bounding rectangle
+ * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/locations-in-a-bounding-object}
+ */
 type BoundingBoxSearchFilters<Fields, Prefix extends string> = BaseLocationQueries<
   Fields,
   Types,
@@ -37,7 +45,10 @@ type BoundingBoxSearchFilters<Fields, Prefix extends string> = BaseLocationQueri
   Prefix,
   '[within]'
 >
-
+/**
+ * @desc within - location in a bounding circle
+ * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/locations-in-a-bounding-object}
+ */
 type BoundingCircleSearchFilters<Fields, Prefix extends string> = BaseLocationQueries<
   Fields,
   Types,
@@ -46,6 +57,12 @@ type BoundingCircleSearchFilters<Fields, Prefix extends string> = BaseLocationQu
   '[within]'
 >
 
+/**
+ * @desc location search
+ * @see [proximity]{@link ProximitySearchFilters}
+ * @see [bounding rectangle]{@link BoundingBoxSearchFilters}
+ * @see [bounding circle]{@link BoundingCircleSearchFilters}
+ */
 export type LocationSearchFilters<Fields, Prefix extends string> =
   | ProximitySearchFilters<Fields, Prefix>
   | BoundingBoxSearchFilters<Fields, Prefix>

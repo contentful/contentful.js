@@ -1,1 +1,1 @@
-export { EntryQueries, SysQueries } from './query'
+export { AssetQueries, EntryQueries } from './query'

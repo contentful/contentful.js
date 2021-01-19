@@ -1,9 +1,10 @@
+import { AssetSys } from '../asset'
 import { EntrySys } from '../entry'
 import { EqualityQueries, InequalityQueries } from './equality'
 import { ExistenceQueries } from './existence'
-import { FullTextSearchFilters } from './fts'
 import { LocationSearchFilters } from './location'
 import { RangeFilters } from './range'
+import { FullTextSearchFilters } from './search'
 import { SelectQueries } from './select'
 import { SubsetFilters } from './subset'
 import { FieldsType } from './util'
@@ -40,6 +41,23 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> = Existen
 
 export type EntryQueries<Fields extends FieldsType = FieldsType> = EntryFieldsQueries<Fields> &
   SysQueries<EntrySys> &
+  FixedQueryOptions &
+  FixedPagedOptions &
+  Record<string, any>
+
+export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<
+  Fields,
+  'fields'
+> &
+  EqualityQueries<Fields, 'fields'> &
+  InequalityQueries<Fields, 'fields'> &
+  SubsetFilters<Fields, 'fields'> &
+  RangeFilters<Fields, 'fields'> &
+  FullTextSearchFilters<Fields, 'fields'> &
+  SelectQueries<Fields, 'fields'>
+
+export type AssetQueries<Fields extends FieldsType = FieldsType> = AssetFieldsQueries<Fields> &
+  SysQueries<AssetSys> &
   FixedQueryOptions &
   FixedPagedOptions &
   Record<string, any>
