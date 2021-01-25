@@ -2,7 +2,7 @@ import { ConditionalPick } from 'type-fest'
 import { BasicEntryField, EntryFields } from '..'
 
 type SubsetFilterTypes = 'in' | 'nin'
-type SupportedTypes = Exclude<BasicEntryField, EntryFields.Location>
+type SupportedTypes = Exclude<BasicEntryField, EntryFields.Location | EntryFields.RichText>
 
 /**
  * @desc inclusion & exclusion
@@ -16,3 +16,4 @@ export type SubsetFilters<Fields, Prefix extends string> = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}[${SubsetFilterTypes}]`]?: Fields[FieldName]
 }
+
