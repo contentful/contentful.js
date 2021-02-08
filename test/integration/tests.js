@@ -448,14 +448,17 @@ test('Gets entries with linked includes with locale:*', async (t) => {
   t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
 })
 
-test('Gets entries with linked includes with local:* in preview', async (t) => {
-  t.plan(5)
-  const response = await previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
-  t.ok(response.includes, 'includes')
-  t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
-  t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
-  t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
-  t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+test('Gets entries with linked includes with local:* in preview', (t) => {
+  t.plan(6)
+  return previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
+    .then((response) => {
+      t.ok(response.includes, 'includes')
+      t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
+      t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
+      t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
+      t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+      t.ok(response.items[0].metadata, 'metadata')
+    })
 })
 
 test('Logs request and response with custom loggers', async (t) => {
