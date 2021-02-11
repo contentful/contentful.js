@@ -23,7 +23,7 @@ if (process.env.API_INTEGRATION_TESTS) {
   params.insecure = true
 }
 
-const client = contentful.createClient(params)
+const client = contentful.createClient(previewParams)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
@@ -469,4 +469,10 @@ test('Logs request and response with custom loggers', async (t) => {
   t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
   t.equal(requestLoggerStub.args[0][0].baseURL, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master', 'requestLogger is called with correct base url')
   t.equal(requestLoggerStub.args[0][0].url, 'entries', 'requestLogger is called with correct url')
+})
+
+test('Gets entries with attached metadata on cpa', async t => {
+  t.plan(1)
+  const response = await previewClient.getEntries()
+  t.ok(response.items, 'items')
 })
