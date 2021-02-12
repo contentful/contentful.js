@@ -23,7 +23,7 @@ if (process.env.API_INTEGRATION_TESTS) {
   params.insecure = true
 }
 
-const client = contentful.createClient(previewParams)
+const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
