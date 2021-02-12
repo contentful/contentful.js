@@ -471,8 +471,18 @@ test('Logs request and response with custom loggers', async (t) => {
   t.equal(requestLoggerStub.args[0][0].url, 'entries', 'requestLogger is called with correct url')
 })
 
-test('Gets entries with attached metadata on cpa', async t => {
+test('Gets entries with attached metadata and metadata field on cpa', async t => {
   t.plan(1)
   const response = await previewClient.getEntries()
   t.ok(response.items, 'items')
+})
+
+test('Gets entry with attached metadata and metadata field on cpa', async t => {
+  t.plan(4)
+  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW';
+  const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
+  t.ok(response.sys, 'sys')
+  t.ok(response.fields, 'fields')
+  t.ok(response.fields.metadata, 'metadata field')
+  t.ok(response.metadata, 'metadata')
 })
