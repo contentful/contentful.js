@@ -54,6 +54,7 @@ var testBabelPresetEnvConfig = Object.assign({}, modulesBabelPresetEnvConfig, {
 })
 
 var plugins = [
+  '@babel/plugin-transform-runtime',
   '@babel/plugin-proposal-object-rest-spread',
   [
     'inline-replace-variables',
