@@ -357,8 +357,11 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'dog', 'human'], 'orders')
-  t.ok(response.items[0].sys.id < response.items[1].sys.id, 'id of entry with index 1 is higher than the one of index 0 since they share content type')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human'], 'orders')
+  t.ok(
+    response.items[0].sys.id < response.items[1].sys.id,
+    'id of entry with index 1 is higher than the one of index 0 since they share content type'
+  )
 })
 
 test('Gets assets with only images', async (t) => {
@@ -403,7 +406,8 @@ test('Sync space', async (t) => {
   t.ok(response.deletedEntries, 'deleted entries')
   t.ok(response.deletedAssets, 'deleted assets')
   t.ok(response.nextSyncToken, 'next sync token')
-  t.equal(response.entries[0].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
+  const entryWithImageLink = response.entries.find(entry => entry.fields && entry.fields.image)
+  t.equal(entryWithImageLink.fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
 })
 
 test('Sync space with token', async (t) => {
