@@ -448,14 +448,17 @@ test('Gets entries with linked includes with locale:*', async (t) => {
   t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
 })
 
-test('Gets entries with linked includes with local:* in preview', async (t) => {
-  t.plan(5)
-  const response = await previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
-  t.ok(response.includes, 'includes')
-  t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
-  t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
-  t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
-  t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+test('Gets entries with linked includes with local:* in preview', (t) => {
+  t.plan(6)
+  return previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
+    .then((response) => {
+      t.ok(response.includes, 'includes')
+      t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
+      t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
+      t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
+      t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+      t.ok(response.items[0].metadata, 'metadata')
+    })
 })
 
 test('Logs request and response with custom loggers', async (t) => {
@@ -466,4 +469,20 @@ test('Logs request and response with custom loggers', async (t) => {
   t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
   t.equal(requestLoggerStub.args[0][0].baseURL, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master', 'requestLogger is called with correct base url')
   t.equal(requestLoggerStub.args[0][0].url, 'entries', 'requestLogger is called with correct url')
+})
+
+test('Gets entries with attached metadata and metadata field on cpa', async t => {
+  t.plan(1)
+  const response = await previewClient.getEntries()
+  t.ok(response.items, 'items')
+})
+
+test('Gets entry with attached metadata and metadata field on cpa', async t => {
+  t.plan(4)
+  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW';
+  const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
+  t.ok(response.sys, 'sys')
+  t.ok(response.fields, 'fields')
+  t.ok(response.fields.metadata, 'metadata field')
+  t.ok(response.metadata, 'metadata')
 })

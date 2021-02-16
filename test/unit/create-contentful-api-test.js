@@ -47,7 +47,10 @@ function setupWithData ({
     },
     getGlobalOptions: getGlobalOptions
   })
-  return { api, getStub }
+  return {
+    api,
+    getStub
+  }
 }
 
 function teardown () {
@@ -481,20 +484,45 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
   const data = {
     items: [
       {
-        sys: { type: 'Entry', locale: 'en-US' },
+        sys: {
+          type: 'Entry',
+          locale: 'en-US'
+        },
         fields: {
-          animal: { sys: { type: 'Link', linkType: 'Animal', id: 'oink' } },
-          anotheranimal: { sys: { type: 'Link', linkType: 'Animal', id: 'middle-parrot' } }
+          animal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'oink'
+            }
+          },
+          anotheranimal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'middle-parrot'
+            }
+          }
         }
       }
     ],
     includes: {
       Animal: [
         {
-          sys: { type: 'Animal', id: 'oink', locale: 'en-US' },
+          sys: {
+            type: 'Animal',
+            id: 'oink',
+            locale: 'en-US'
+          },
           fields: {
             name: 'Pig',
-            friend: { sys: { type: 'Link', linkType: 'Animal', id: 'groundhog' } }
+            friend: {
+              sys: {
+                type: 'Link',
+                linkType: 'Animal',
+                id: 'groundhog'
+              }
+            }
           }
         }
       ]
@@ -503,5 +531,72 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
   const parsedData = api.parseEntries(data)
   t.ok(parsedData)
   t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
+  t.end()
+})
+
+test('Given json should be parsed correctly as a collection of entries with metadata field', (t) => {
+  const api = createContentfulApi({
+    http: {},
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: true })
+  })
+  const data = {
+    items: [
+      {
+        sys: {
+          type: 'Entry',
+          locale: 'en-US'
+        },
+        fields: {
+          metadata: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'oink'
+            }
+          },
+          anotheranimal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'middle-parrot'
+            }
+          }
+        },
+        metadata: {
+          tags: [{
+            sys: {
+              type: 'Link',
+              linkType: 'Tag',
+              id: 'tagId'
+            }
+          }]
+        }
+      }
+    ],
+    includes: {
+      Metadata: [
+        {
+          sys: {
+            type: 'Animal',
+            id: 'oink',
+            locale: 'en-US'
+          },
+          fields: {
+            name: 'Pig',
+            friend: {
+              sys: {
+                type: 'Link',
+                linkType: 'Animal',
+                id: 'groundhog'
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+  const parsedData = api.parseEntries(data)
+  t.ok(parsedData)
+  t.looseEquals(parsedData.items[0].fields.metadata.sys, data.includes.Metadata[0].sys, 'metadata field is included')
   t.end()
 })
