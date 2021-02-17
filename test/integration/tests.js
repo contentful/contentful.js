@@ -357,8 +357,11 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'dog', 'human'], 'orders')
-  t.ok(response.items[0].sys.id < response.items[1].sys.id, 'id of entry with index 1 is higher than the one of index 0 since they share content type')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human'], 'orders')
+  t.ok(
+    response.items[0].sys.id < response.items[1].sys.id,
+    'id of entry with index 1 is higher than the one of index 0 since they share content type'
+  )
 })
 
 test('Gets assets with only images', async (t) => {
@@ -403,7 +406,8 @@ test('Sync space', async (t) => {
   t.ok(response.deletedEntries, 'deleted entries')
   t.ok(response.deletedAssets, 'deleted assets')
   t.ok(response.nextSyncToken, 'next sync token')
-  t.equal(response.entries[0].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
+  const entryWithImageLink = response.entries.find(entry => entry.fields && entry.fields.image)
+  t.equal(entryWithImageLink.fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
 })
 
 test('Sync space with token', async (t) => {
@@ -444,14 +448,17 @@ test('Gets entries with linked includes with locale:*', async (t) => {
   t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
 })
 
-test('Gets entries with linked includes with local:* in preview', async (t) => {
-  t.plan(5)
-  const response = await previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
-  t.ok(response.includes, 'includes')
-  t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
-  t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
-  t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
-  t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+test('Gets entries with linked includes with local:* in preview', (t) => {
+  t.plan(6)
+  return previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
+    .then((response) => {
+      t.ok(response.includes, 'includes')
+      t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
+      t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
+      t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
+      t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+      t.ok(response.items[0].metadata, 'metadata')
+    })
 })
 
 test('Logs request and response with custom loggers', async (t) => {
@@ -462,4 +469,20 @@ test('Logs request and response with custom loggers', async (t) => {
   t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
   t.equal(requestLoggerStub.args[0][0].baseURL, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master', 'requestLogger is called with correct base url')
   t.equal(requestLoggerStub.args[0][0].url, 'entries', 'requestLogger is called with correct url')
+})
+
+test('Gets entries with attached metadata and metadata field on cpa', async t => {
+  t.plan(1)
+  const response = await previewClient.getEntries()
+  t.ok(response.items, 'items')
+})
+
+test('Gets entry with attached metadata and metadata field on cpa', async t => {
+  t.plan(4)
+  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW';
+  const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
+  t.ok(response.sys, 'sys')
+  t.ok(response.fields, 'fields')
+  t.ok(response.fields.metadata, 'metadata field')
+  t.ok(response.metadata, 'metadata')
 })

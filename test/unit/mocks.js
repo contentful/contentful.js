@@ -41,6 +41,9 @@ const entryMock = {
   }),
   fields: {
     field1: 'str'
+  },
+  metadata: {
+    tags: [{ type: 'Link', linkType: 'Tag', id: 'sample-tag-id' }]
   }
 }
 
@@ -51,6 +54,9 @@ const assetMock = {
   }),
   fields: {
     field1: 'str'
+  },
+  metadata: {
+    tags: []
   }
 }
 
