@@ -10,6 +10,18 @@ test('Entry is wrapped', (t) => {
   t.end()
 })
 
+test('Entry with field named metadata is wrapped', (t) => {
+  const mock = Object.assign(entryMock, {
+    fields: {
+      field1: 'str',
+      metadata: 'metadataFieldContent'
+    }
+  })
+  const wrappedEntry = wrapEntry(mock)
+  t.looseEqual(wrappedEntry.toPlainObject(), mock)
+  t.end()
+})
+
 test('Localized entry is wrapped', (t) => {
   const entry = copy(entryMock)
   const field = entry.fields.field1
