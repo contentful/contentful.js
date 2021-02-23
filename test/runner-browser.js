@@ -1,4 +1,4 @@
-// Readd promise polyfills for legacy browsers since karma-webpack removes them
+// Re-add promise polyfills for legacy browsers since karma-webpack removes them
 require('core-js/es/promise')
 require('core-js/es/object/assign')
 require('core-js/es/array/from')

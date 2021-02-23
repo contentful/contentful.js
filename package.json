@@ -19,7 +19,7 @@
     "build:modules": "BABEL_ENV=modules babel lib -d dist/es-modules/",
     "build:standalone": "NODE_ENV=development webpack && NODE_ENV=production webpack",
     "build:standalone:log": "NODE_ENV=production WEBPACK_MODE=log webpack --json --profile --progress > webpack-build-log.json && webpack-bundle-analyzer webpack-build-log.json",
-    "postbuild": "npm run check:browser && npm run check:legacy && npm run check:modules",
+    "postbuild": "npm run check:browser && npm run check:legacy && npm run check:modules && npm run check:node",
     "check:legacy": "es-check es5 ./dist/contentful.legacy.js ./dist/contentful.legacy.min.js",
     "check:browser": "es-check es2017 ./dist/contentful.browser.js ./dist/contentful.browser.min.js",
     "check:node": "es-check es2017 ./dist/contentful.node.js ./dist/contentful.node.min.js",
@@ -74,8 +74,10 @@
     "@babel/core": "^7.6.2",
     "@babel/node": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-transform-runtime": "^7.13.5",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
+    "@babel/runtime-corejs3": "^7.13.4",
     "@contentful/browserslist-config": "^1.0.1",
     "@semantic-release/changelog": "^5.0.1",
     "babel-eslint": "^10.0.3",
@@ -140,19 +142,19 @@
     },
     {
       "path": "./dist/contentful.legacy.js",
-      "maxSize": "64Kb"
+      "maxSize": "90Kb"
     },
     {
       "path": "./dist/contentful.legacy.min.js",
-      "maxSize": "25Kb"
+      "maxSize": "40Kb"
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "60Kb"
+      "maxSize": "80Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "23Kb"
+      "maxSize": "35Kb"
     }
   ],
   "release": {

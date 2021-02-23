@@ -1,57 +1,38 @@
 const mainSupportedBrowsers = require('@contentful/browserslist-config')
 
-var defaultBabelPresetEnvConfig = {
-  // No module transformation, webpack will take care of this if necessary.
-  modules: false,
-  useBuiltIns: 'entry',
-  corejs: 3,
+// Latest browsers
+var browserBabelPresetEnvConfig = {
+  targets: {
+    browsers: mainSupportedBrowsers
+  }
 }
 
-// Latest browsers
-var browserBabelPresetEnvConfig = Object.assign(
-  {},
-  defaultBabelPresetEnvConfig,
-  {
-    targets: {
-      browsers: mainSupportedBrowsers
-    }
-  }
-)
-
 // Legacy browsers
-var legacyBabelPresetEnvConfig = Object.assign(
-  {},
-  defaultBabelPresetEnvConfig,
-  {
-    targets: {
-      browsers: ['last 5 versions', 'not ie < 10']
-    }
+var legacyBabelPresetEnvConfig = {
+  targets: {
+    browsers: ['last 5 versions', 'not ie < 10']
   }
-)
+}
 
 // Node
-var nodeBabelPresetEnvConfig = Object.assign({}, defaultBabelPresetEnvConfig, {
+var nodeBabelPresetEnvConfig = {
   targets: {
     node: '12'
   }
-})
+}
 
 // Combined node and browser environment for es6 modules version and tests
-var modulesBabelPresetEnvConfig = Object.assign(
-  {},
-  defaultBabelPresetEnvConfig,
-  {
-    targets: Object.assign({},
-      legacyBabelPresetEnvConfig.targets,
-      nodeBabelPresetEnvConfig.targets
-    )
+var modulesBabelPresetEnvConfig = {
+  targets: {
+    browsers: mainSupportedBrowsers,
+    node: '12'
   }
-)
+}
 
-var testBabelPresetEnvConfig = Object.assign({}, modulesBabelPresetEnvConfig, {
+var testBabelPresetEnvConfig = {
   // Tests need to transform modules
   modules: 'commonjs'
-})
+}
 
 var plugins = [
   '@babel/plugin-proposal-object-rest-spread',
@@ -68,7 +49,8 @@ var babelConfig = {
   plugins
 }
 
-module.exports = function (api) {
+module
+  .exports = function(api) {
 
   var env = api.env()
 
@@ -80,6 +62,15 @@ module.exports = function (api) {
 
   if (env === 'legacy') {
     babelConfig = Object.assign({}, babelConfig, {
+      plugins: [
+        [
+          '@babel/plugin-transform-runtime',
+          {
+            'regenerator': true,
+            'corejs': 3
+          }
+        ]
+      ].concat(plugins),
       presets: [['@babel/preset-env', legacyBabelPresetEnvConfig]]
     })
   }
@@ -103,8 +94,8 @@ module.exports = function (api) {
     })
   }
 
-  console.debug('BABEL ENV: ' + env)
-  console.table(babelConfig.presets.map(p => p[1].targets))
+  console.debug({ babelENV: env, nodeENV: process.env.NODE_ENV })
+  // console.table(babelConfig.presets.map(p => p[1].targets))
 
   return babelConfig
 }
