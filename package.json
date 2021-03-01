@@ -12,7 +12,6 @@
   },
   "author": "Contentful <opensource@contentful.com>",
   "license": "MIT",
-  "tonicExampleFilename": "tonic-example.js",
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && npm run build:modules && npm run build:standalone",
@@ -59,8 +58,7 @@
     "index.js",
     "version.js",
     "index.d.ts",
-    "dist",
-    "tonic-example.js"
+    "dist"
   ],
   "dependencies": {
     "axios": "^0.21.1",
