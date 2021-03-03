@@ -479,7 +479,7 @@ test('Gets entries with attached metadata and metadata field on cpa', async t =>
 
 test('Gets entry with attached metadata and metadata field on cpa', async t => {
   t.plan(4)
-  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW';
+  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW'
   const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
   t.ok(response.sys, 'sys')
   t.ok(response.fields, 'fields')

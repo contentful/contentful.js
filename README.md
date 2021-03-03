@@ -165,7 +165,7 @@ client
   .catch(err => console.log(err));
 ```
 
-You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
+Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
 
 ### Using this SDK with the Preview API
 
