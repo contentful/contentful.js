@@ -2,6 +2,7 @@ import test from 'blue-tape'
 import sinon from 'sinon'
 
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
 
 const params = {
   accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
@@ -34,6 +35,10 @@ const clientWithLoggers = contentful.createClient({
   responseLogger: responseLoggerStub,
   requestLogger: requestLoggerStub
 })
+
+const now = () => Math.floor(Date.now() / 1000)
+const withExpiryIn1Hour = () => now() + 1 * 60 * 60
+const withExpiryIn48Hours = () => now() + 48 * 60 * 60
 
 test('Gets space', async (t) => {
   t.plan(3)
@@ -485,4 +490,54 @@ test('Gets entry with attached metadata and metadata field on cpa', async t => {
   t.ok(response.fields, 'fields')
   t.ok(response.fields.metadata, 'metadata field')
   t.ok(response.metadata, 'metadata')
+})
+
+// Embargoed Assets
+
+test('Creates asset key on CDA', async (t) => {
+  t.plan(2)
+  const response = await client.createAssetKey(withExpiryIn48Hours())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Creates asset key on CDA with a different lifetime', async (t) => {
+  t.plan(2)
+  const response = await client.createAssetKey(withExpiryIn1Hour())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Creates asset key on CPA', async (t) => {
+  t.plan(2)
+  const response = await previewClient.createAssetKey(withExpiryIn48Hours())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Does not create asset key if feature is not enabled', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey(withExpiryIn48Hours()))
+})
+
+test('Does not create asset key if no/undefined expiresAt is given', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey(), ValidationError)
+})
+
+test('Does not create asset key if invalid expiresAt is given', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey('invalidExpiresAt'), ValidationError)
+})
+
+test('Does not create asset key if expiresAt is in the past', async (t) => {
+  t.plan(1)
+  const shortExpiresAt = now() - 60
+  await t.shouldReject(localeClient.createAssetKey(shortExpiresAt), ValidationError)
+})
+
+test('Does not create asset key if expiresAt is too far in the future (> 48 hours)', async (t) => {
+  t.plan(1)
+  const longExpiresAt = now() + 72 * 60 * 60
+  await t.shouldReject(localeClient.createAssetKey(longExpiresAt), ValidationError)
 })

@@ -3,7 +3,10 @@ import sinon from 'sinon'
 import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
-import { contentTypeMock, assetMock, entryMock, localeMock } from './mocks'
+import { contentTypeMock, assetMock, assetKeyMock, entryMock, localeMock } from './mocks'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
+
+const now = () => Math.floor(Date.now() / 1000)
 
 let entitiesMock
 
@@ -33,6 +36,9 @@ function setupWithData ({
       wrapAsset: sinon.stub(),
       wrapAssetCollection: sinon.stub()
     },
+    assetKey: {
+      wrapAssetKey: sinon.stub()
+    },
     locale: {
       wrapLocale: sinon.stub(),
       wrapLocaleCollection: sinon.stub()
@@ -40,16 +46,19 @@ function setupWithData ({
   }
   createContentfulApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
+  const postStub = sinon.stub()
   const api = createContentfulApi({
     http: {
       defaults: { baseURL: 'baseURL' },
-      get: getStub.returns(promise)
+      get: getStub.returns(promise),
+      post: postStub.returns(promise)
     },
     getGlobalOptions: getGlobalOptions
   })
   return {
     api,
-    getStub
+    getStub,
+    postStub
   }
 }
 
@@ -386,6 +395,44 @@ test('API call getAssets fails', async (t) => {
 
   try {
     await api.getAssets()
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
+})
+
+test('API call createAssetKey', async (t) => {
+  t.plan(1)
+  const { api } = setupWithData({
+    promise: Promise.resolve({ data: assetKeyMock })
+  })
+  entitiesMock.assetKey.wrapAssetKey.returns(assetKeyMock)
+
+  try {
+    const r = await api.createAssetKey(now() + 60)
+    t.looseEqual(r, assetKeyMock)
+  } finally {
+    teardown()
+  }
+})
+
+test('API call createAssetKey fails', async (t) => {
+  t.plan(1)
+  const data = {
+    sys: { type: 'Error', id: 'AccessDenied' },
+    message: 'Forbidden',
+    details: { reasons: 'Embargoed assets not enabled for space' }
+  }
+  const rejectError = new Error()
+  rejectError.data = data
+  const { api } = setupWithData({
+    promise: Promise.reject(rejectError)
+  })
+  entitiesMock.assetKey.wrapAssetKey.returns(data)
+
+  try {
+    await api.createAssetKey(now() + 60)
   } catch (r) {
     t.looseEqual(r, data)
   } finally {

@@ -60,6 +60,12 @@ const assetMock = {
   }
 }
 
+const assetKeyMock = {
+  policy:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE6MSJ9.eyJleHAiOjE2MTIyODE0MTEsInN1YiI6Inl6MjJwOGZzeGhpNiIsImF1ZCI6ImFkbiIsImp0aSI6ImQ1NWI2YmM1LTkyMGEtNDRjNi1hNmQ0LTM0YzRhYmIyYjdkNiIsImN0Zjp1bnB1YiI6dHJ1ZX0',
+  secret: '-jE6hqytutc_dygbjShVq0PijvDn80SdT0EWD1mNHgc'
+}
+
 const localeMock = {
   sys: Object.assign(copy(sysMock), {
     type: 'Locale'
@@ -74,5 +80,6 @@ export {
   contentTypeMock,
   entryMock,
   assetMock,
+  assetKeyMock,
   localeMock
 }
