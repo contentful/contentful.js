@@ -76,7 +76,7 @@
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
     "@babel/runtime-corejs3": "^7.13.4",
-    "@contentful/browserslist-config": "^1.0.1",
+    "@contentful/browserslist-config": "^2.0.0",
     "@semantic-release/changelog": "^5.0.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
