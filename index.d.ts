@@ -114,7 +114,7 @@ export interface Locale {
   name: string
   default: boolean
   fallbackCode: string | null
-  sys: {
+  sys: Sys & {
     id: string
     type: 'Locale'
     version: number
@@ -141,10 +141,10 @@ export interface Sys {
     locale: string;
     revision?: number;
     space?: {
-        sys: SpaceLink;
+        sys: Sys & SpaceLink;
     };
     contentType: {
-        sys: ContentTypeLink;
+        sys: Sys & ContentTypeLink;
     };
 }
 
@@ -228,12 +228,13 @@ export namespace EntryFields {
     }
 }
 
-interface RichTextDataTarget {
-    sys: {
+interface RichTextDataTarget<T = unknown> {
+    sys: Sys & {
         id: string;
         type: "Link";
         "linkType": 'Entry' | 'Asset';
     };
+    fields: T
 }
 
 interface RichTextData {
