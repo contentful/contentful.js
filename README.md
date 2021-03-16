@@ -318,6 +318,34 @@ contentful.createClient({
       </td>
     </tr>
     <tr>
+      <td><code>application</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Application name and version e.g myApp/version.
+      </td>
+    </tr>
+    <tr>
+      <td><code>integration</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Integration name and version e.g react/version.
+      </td>
+    </tr>
+    <tr>
+      <td><code>timeout</code></td>
+      <td><code>30000</code></td>
+      <td>
+        in milliseconds - connection timeout.
+      </td>
+    </tr>
+    <tr>
+      <td><code>retryLimit</code></td>
+      <td><code>5</code></td>
+      <td>
+        Optional number of retries before failure.
+      </td>
+    </tr>
+    <tr>
       <td><code>logHandler</code></td>
       <td><code>function (level, data) {}</code></td>
       <td>
