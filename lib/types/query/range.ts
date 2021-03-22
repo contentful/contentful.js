@@ -24,27 +24,3 @@ export type RangeFilters<Fields, Prefix extends string> = NonNullable<{
     ? BaseOrArrayType<Fields[FieldName]>
     : never
 }>
-
-// TODO: it still includes 'Link' fields
-
-/*
-  It still includes Link, Location and RichText
- */
-
-function query<Fields>(query: RangeFilters<Fields, 'fields'>): void {
-  console.log(query)
-}
-
-type Fields = {
-  collection: EntryFields.Array<EntryFields.Text>
-  date: EntryFields.Date
-  link: EntryFields.Link<Asset>
-  location: EntryFields.Location
-  nested: Entry<{ subField: EntryFields.Text }>
-  number: EntryFields.Number
-  richText: EntryFields.RichText
-  text: EntryFields.Text
-}
-
-
-query<Fields>({  })

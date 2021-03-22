@@ -1,6 +1,5 @@
 import { ConditionalPick } from 'type-fest'
 import { EntryFields } from '../entry'
-import { BaseOrArrayType } from './util'
 
 type Types = EntryFields.Location
 
@@ -54,5 +53,5 @@ type BoundingCircleSearchFilters<Fields, Prefix extends string> = BaseLocationQu
  */
 export type LocationSearchFilters<Fields, Prefix extends string> =
   ProximitySearchFilters<Fields, Prefix>
-  & BoundingBoxSearchFilters<Fields, Prefix>
-  & BoundingCircleSearchFilters<Fields, Prefix>
+  | BoundingBoxSearchFilters<Fields, Prefix>
+  | BoundingCircleSearchFilters<Fields, Prefix>
