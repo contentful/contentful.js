@@ -16,4 +16,3 @@ export type SubsetFilters<Fields, Prefix extends string> = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}[${SubsetFilterTypes}]`]?: Fields[FieldName]
 }
-

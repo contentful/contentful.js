@@ -89,13 +89,15 @@ describe('EntryQueries', () => {
       'fields.numberField[ne]': numberValue,
     })
     query<Fields>({
-      'fields.numberField[ne]': numberValue, numberValue,
+      'fields.numberField[ne]': numberValue,
+      numberValue,
     })
     query<Fields>({
       'fields.numberField[in]': numberValue,
     })
     query<Fields>({
-      'fields.numberField[in]': numberValue, numberValue,
+      'fields.numberField[in]': numberValue,
+      numberValue,
     })
     query<Fields>({
       'fields.numberField[exists]': booleanValue,
