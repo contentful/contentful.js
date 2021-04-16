@@ -1,7 +1,7 @@
 # Migration information
 
 - [Migration information](#migration-information)
-  - [Migration from contentful.js 6.x](#migration-from-contentfuljs-6x)
+  - [Migration from contentful.js 7.x](#migration-from-contentfuljs-7x)
   - [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
   - [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
   - [Migration from contentful.js 3.x](#migration-from-contentfuljs-3x)
@@ -15,7 +15,7 @@
 
 From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
 
-## Migration from contentful.js 6.x
+## Migration from contentful.js 7.x
 
 We dropped support for Node v11 and older. Please ensure you are running Node v12 or newer.
 We also made browser support track https://github.com/contentful/browserslist-config
@@ -48,7 +48,7 @@ From version 4.0.0 and up contentful.js is exported as a single `umd` bundle the
 
 ## Migration to contentful.js 3.x from previous versions
 
-__(March 8th, 2016)__
+**(March 8th, 2016)**
 
 contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.
 
@@ -68,16 +68,16 @@ This helps bring the API of this SDK more in line with that of [contentful-manag
 
 For contentful.js, all of these methods were renamed, apart from `sync()`. The complete list is on the following table:
 
-Old name | New name
----------|---------
-`space()` | `getSpace()`
-`entry()` | `getEntry()`
-`entries()` | `getEntries()`
-`contentType()` | `getContentType()`
-`contentTypes()` | `getContentTypes()`
-`asset()` | `getAsset()`
-`assets()` | `getAssets()`
-`sync()` | `sync()`
+| Old name         | New name            |
+| ---------------- | ------------------- |
+| `space()`        | `getSpace()`        |
+| `entry()`        | `getEntry()`        |
+| `entries()`      | `getEntries()`      |
+| `contentType()`  | `getContentType()`  |
+| `contentTypes()` | `getContentTypes()` |
+| `asset()`        | `getAsset()`        |
+| `assets()`       | `getAssets()`       |
+| `sync()`         | `sync()`            |
 
 ### Format of collection replies
 

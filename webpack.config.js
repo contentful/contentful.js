@@ -52,7 +52,7 @@ const defaultBabelLoader = {
   options: {}
 }
 
-// Browsers
+// Browsers with native async await calls
 const browserBundle = copy(baseBundleConfig)
 browserBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
@@ -63,7 +63,7 @@ browserBundle.module.rules = [
 ]
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
-// Legacy browsers like IE11
+// Legacy browsers like IE11, with bundled regenerator-runtime
 const legacyBundle = copy(baseBundleConfig)
 legacyBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {
@@ -75,7 +75,7 @@ legacyBundle.module.rules = [
 
 legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
 
-// Node
+// Node - bundled umd file
 const nodeBundle = copy(baseBundleConfig)
 nodeBundle.module.rules = [
   Object.assign({}, defaultBabelLoader, {

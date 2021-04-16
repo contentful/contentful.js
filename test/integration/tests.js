@@ -2,6 +2,7 @@ import test from 'blue-tape'
 import sinon from 'sinon'
 
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
 
 const params = {
   accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
@@ -34,6 +35,10 @@ const clientWithLoggers = contentful.createClient({
   responseLogger: responseLoggerStub,
   requestLogger: requestLoggerStub
 })
+
+const now = () => Math.floor(Date.now() / 1000)
+const withExpiryIn1Hour = () => now() + 1 * 60 * 60
+const withExpiryIn48Hours = () => now() + 48 * 60 * 60
 
 test('Gets space', async (t) => {
   t.plan(3)
@@ -357,8 +362,11 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'dog', 'human'], 'orders')
-  t.ok(response.items[0].sys.id < response.items[1].sys.id, 'id of entry with index 1 is higher than the one of index 0 since they share content type')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human'], 'orders')
+  t.ok(
+    response.items[0].sys.id < response.items[1].sys.id,
+    'id of entry with index 1 is higher than the one of index 0 since they share content type'
+  )
 })
 
 test('Gets assets with only images', async (t) => {
@@ -403,7 +411,8 @@ test('Sync space', async (t) => {
   t.ok(response.deletedEntries, 'deleted entries')
   t.ok(response.deletedAssets, 'deleted assets')
   t.ok(response.nextSyncToken, 'next sync token')
-  t.equal(response.entries[0].fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
+  const entryWithImageLink = response.entries.find(entry => entry.fields && entry.fields.image)
+  t.equal(entryWithImageLink.fields.image['en-US'].sys.type, 'Asset', 'links are resolved')
 })
 
 test('Sync space with token', async (t) => {
@@ -444,14 +453,17 @@ test('Gets entries with linked includes with locale:*', async (t) => {
   t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
 })
 
-test('Gets entries with linked includes with local:* in preview', async (t) => {
-  t.plan(5)
-  const response = await previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
-  t.ok(response.includes, 'includes')
-  t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
-  t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
-  t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
-  t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+test('Gets entries with linked includes with local:* in preview', (t) => {
+  t.plan(6)
+  return previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
+    .then((response) => {
+      t.ok(response.includes, 'includes')
+      t.ok(response.includes.Asset, 'includes for Assets from preview endpoint')
+      t.ok(Object.keys(response.includes.Asset).length > 0, 'list of includes has asset items from preview endpoint')
+      t.ok(response.items[0].fields.bestFriend['en-US'].fields, 'resolved entry has fields from preview endpoint')
+      t.equal(response.items[0].fields.bestFriend['en-US'].sys.type, 'Entry', 'entry gets resolved from other entries in collection from preview endpoint')
+      t.ok(response.items[0].metadata, 'metadata')
+    })
 })
 
 test('Logs request and response with custom loggers', async (t) => {
@@ -462,4 +474,70 @@ test('Logs request and response with custom loggers', async (t) => {
   t.equal(requestLoggerStub.callCount, 1, 'requestLogger is called')
   t.equal(requestLoggerStub.args[0][0].baseURL, 'https://cdn.contentful.com:443/spaces/ezs1swce23xe/environments/master', 'requestLogger is called with correct base url')
   t.equal(requestLoggerStub.args[0][0].url, 'entries', 'requestLogger is called with correct url')
+})
+
+test('Gets entries with attached metadata and metadata field on cpa', async t => {
+  t.plan(1)
+  const response = await previewClient.getEntries()
+  t.ok(response.items, 'items')
+})
+
+test('Gets entry with attached metadata and metadata field on cpa', async t => {
+  t.plan(4)
+  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW'
+  const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
+  t.ok(response.sys, 'sys')
+  t.ok(response.fields, 'fields')
+  t.ok(response.fields.metadata, 'metadata field')
+  t.ok(response.metadata, 'metadata')
+})
+
+// Embargoed Assets
+
+test('Creates asset key on CDA', async (t) => {
+  t.plan(2)
+  const response = await client.createAssetKey(withExpiryIn48Hours())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Creates asset key on CDA with a different lifetime', async (t) => {
+  t.plan(2)
+  const response = await client.createAssetKey(withExpiryIn1Hour())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Creates asset key on CPA', async (t) => {
+  t.plan(2)
+  const response = await previewClient.createAssetKey(withExpiryIn48Hours())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Does not create asset key if feature is not enabled', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey(withExpiryIn48Hours()))
+})
+
+test('Does not create asset key if no/undefined expiresAt is given', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey(), ValidationError)
+})
+
+test('Does not create asset key if invalid expiresAt is given', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey('invalidExpiresAt'), ValidationError)
+})
+
+test('Does not create asset key if expiresAt is in the past', async (t) => {
+  t.plan(1)
+  const shortExpiresAt = now() - 60
+  await t.shouldReject(localeClient.createAssetKey(shortExpiresAt), ValidationError)
+})
+
+test('Does not create asset key if expiresAt is too far in the future (> 48 hours)', async (t) => {
+  t.plan(1)
+  const longExpiresAt = now() + 72 * 60 * 60
+  await t.shouldReject(localeClient.createAssetKey(longExpiresAt), ValidationError)
 })

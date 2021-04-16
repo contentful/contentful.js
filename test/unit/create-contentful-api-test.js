@@ -3,7 +3,10 @@ import sinon from 'sinon'
 import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
-import { contentTypeMock, assetMock, entryMock, localeMock } from './mocks'
+import { contentTypeMock, assetMock, assetKeyMock, entryMock, localeMock } from './mocks'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
+
+const now = () => Math.floor(Date.now() / 1000)
 
 let entitiesMock
 
@@ -33,6 +36,9 @@ function setupWithData ({
       wrapAsset: sinon.stub(),
       wrapAssetCollection: sinon.stub()
     },
+    assetKey: {
+      wrapAssetKey: sinon.stub()
+    },
     locale: {
       wrapLocale: sinon.stub(),
       wrapLocaleCollection: sinon.stub()
@@ -40,14 +46,20 @@ function setupWithData ({
   }
   createContentfulApiRewireApi.__Rewire__('entities', entitiesMock)
   const getStub = sinon.stub()
+  const postStub = sinon.stub()
   const api = createContentfulApi({
     http: {
       defaults: { baseURL: 'baseURL' },
-      get: getStub.returns(promise)
+      get: getStub.returns(promise),
+      post: postStub.returns(promise)
     },
     getGlobalOptions: getGlobalOptions
   })
-  return { api, getStub }
+  return {
+    api,
+    getStub,
+    postStub
+  }
 }
 
 function teardown () {
@@ -390,6 +402,44 @@ test('API call getAssets fails', async (t) => {
   }
 })
 
+test('API call createAssetKey', async (t) => {
+  t.plan(1)
+  const { api } = setupWithData({
+    promise: Promise.resolve({ data: assetKeyMock })
+  })
+  entitiesMock.assetKey.wrapAssetKey.returns(assetKeyMock)
+
+  try {
+    const r = await api.createAssetKey(now() + 60)
+    t.looseEqual(r, assetKeyMock)
+  } finally {
+    teardown()
+  }
+})
+
+test('API call createAssetKey fails', async (t) => {
+  t.plan(1)
+  const data = {
+    sys: { type: 'Error', id: 'AccessDenied' },
+    message: 'Forbidden',
+    details: { reasons: 'Embargoed assets not enabled for space' }
+  }
+  const rejectError = new Error()
+  rejectError.data = data
+  const { api } = setupWithData({
+    promise: Promise.reject(rejectError)
+  })
+  entitiesMock.assetKey.wrapAssetKey.returns(data)
+
+  try {
+    await api.createAssetKey(now() + 60)
+  } catch (r) {
+    t.looseEqual(r, data)
+  } finally {
+    teardown()
+  }
+})
+
 test('API call getLocales', async (t) => {
   t.plan(1)
   const data = {
@@ -481,20 +531,45 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
   const data = {
     items: [
       {
-        sys: { type: 'Entry', locale: 'en-US' },
+        sys: {
+          type: 'Entry',
+          locale: 'en-US'
+        },
         fields: {
-          animal: { sys: { type: 'Link', linkType: 'Animal', id: 'oink' } },
-          anotheranimal: { sys: { type: 'Link', linkType: 'Animal', id: 'middle-parrot' } }
+          animal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'oink'
+            }
+          },
+          anotheranimal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'middle-parrot'
+            }
+          }
         }
       }
     ],
     includes: {
       Animal: [
         {
-          sys: { type: 'Animal', id: 'oink', locale: 'en-US' },
+          sys: {
+            type: 'Animal',
+            id: 'oink',
+            locale: 'en-US'
+          },
           fields: {
             name: 'Pig',
-            friend: { sys: { type: 'Link', linkType: 'Animal', id: 'groundhog' } }
+            friend: {
+              sys: {
+                type: 'Link',
+                linkType: 'Animal',
+                id: 'groundhog'
+              }
+            }
           }
         }
       ]
@@ -503,5 +578,72 @@ test('Given json should be parsed correctly as a collection of entries', (t) => 
   const parsedData = api.parseEntries(data)
   t.ok(parsedData)
   t.looseEquals(parsedData.items[0].fields.animal.sys, data.includes.Animal[0].sys, 'oink')
+  t.end()
+})
+
+test('Given json should be parsed correctly as a collection of entries with metadata field', (t) => {
+  const api = createContentfulApi({
+    http: {},
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: true })
+  })
+  const data = {
+    items: [
+      {
+        sys: {
+          type: 'Entry',
+          locale: 'en-US'
+        },
+        fields: {
+          metadata: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'oink'
+            }
+          },
+          anotheranimal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Animal',
+              id: 'middle-parrot'
+            }
+          }
+        },
+        metadata: {
+          tags: [{
+            sys: {
+              type: 'Link',
+              linkType: 'Tag',
+              id: 'tagId'
+            }
+          }]
+        }
+      }
+    ],
+    includes: {
+      Metadata: [
+        {
+          sys: {
+            type: 'Animal',
+            id: 'oink',
+            locale: 'en-US'
+          },
+          fields: {
+            name: 'Pig',
+            friend: {
+              sys: {
+                type: 'Link',
+                linkType: 'Animal',
+                id: 'groundhog'
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+  const parsedData = api.parseEntries(data)
+  t.ok(parsedData)
+  t.looseEquals(parsedData.items[0].fields.metadata.sys, data.includes.Metadata[0].sys, 'metadata field is included')
   t.end()
 })
