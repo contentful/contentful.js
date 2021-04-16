@@ -10,7 +10,7 @@
   </a>
 </p>
 
-# contentful.js - Contentful JavaScript Delivery SDK
+# <span style="line-height: 1.1">contentful.js - Contentful JavaScript Delivery SDK</span>
 
 > JavaScript SDK for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your Content stored in Contentful with your JavaScript applications.
 
