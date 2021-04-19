@@ -64,7 +64,7 @@ test('Gets content types', async (t) => {
 
 test('Gets entry', async (t) => {
   t.plan(2)
-  const response = await client.getEntry('5ETMRzkl9KM4omyMwKAOki')
+  const response = await client.getEntry('nyancat')
   t.ok(response.sys, 'sys')
   t.ok(response.fields, 'fields')
 })
