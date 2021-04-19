@@ -169,12 +169,19 @@ test('Gets entry with link resolution', async (t) => {
   t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
 })
 
+test('Gets entry with link resolution and removeUnresolved', async (t) => {
+  t.plan(1)
+  const c = contentful.createClient({ ...params, removeUnresolved: true })
+  const response = await c.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  t.ok(response.fields.bestFriend === undefined, 'unpublished reference field should be undefined')
+})
+
 test('Gets entries with content type query param', async (t) => {
   t.plan(2)
   const response = await client.getEntries({ content_type: 'cat' })
 
-  t.equal(response.total, 3)
-  t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat'])
+  t.equal(response.total, 4)
+  t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat', 'cat'])
 })
 
 test('Gets entries with equality query', async (t) => {
