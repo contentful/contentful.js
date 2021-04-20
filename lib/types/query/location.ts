@@ -7,18 +7,20 @@ type ProximitySearchFilterInput = [number, number]
 type BoundingBoxSearchFilterInput = [number, number, number, number]
 type BoundingCircleSearchFilterInput = [number, number, number]
 
+type NonEmpty<T> = T extends Record<string, never> ? never : T
+
 type BaseLocationQueries<
   Fields,
   SupportedTypes,
   ValueType,
   Prefix extends string,
   QueryFilter extends string = ''
-> = NonNullable<
+> = NonEmpty<NonNullable<
   {
     [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
       FieldName}[${QueryFilter}]`]?: ValueType
   }
->
+>>
 
 /**
  * @desc near - location proximity search
