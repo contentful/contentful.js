@@ -53,64 +53,74 @@ function querySubSet<Fields>(query: SubsetFilters<Fields, 'fields'>) {
 /**
  * Equality
  */
-expectType<{ 'fields.testField'?: number }>(queryEquality<{ testField: EntryFields.Number }>({}))
-expectType<{ 'fields.testField'?: number }>(queryEquality<{ testField: EntryFields.Integer }>({}))
-expectType<{ 'fields.testField'?: string }>(queryEquality<{ testField: EntryFields.Symbol }>({}))
-expectType<{ 'fields.testField'?: string }>(queryEquality<{ testField: EntryFields.Text }>({}))
-expectType<{ 'fields.testField'?: any }>(queryEquality<{ testField: EntryFields.Object }>({}))
-expectType<{ 'fields.testField'?: EntryFields.Date }>(
-  queryEquality<{ testField: EntryFields.Date }>({})
-)
-expectType<{ 'fields.testField'?: boolean }>(queryEquality<{ testField: EntryFields.Boolean }>({}))
-expectAssignable<{ 'fields.testField'?: symbol[] }>(
-  queryEquality<{ testField: EntryFields.Array }>({})
-)
-expectAssignable<{ 'fields.testField'?: Asset[] }>(
-  queryEquality<{ testField: EntryFields.Array<Asset> }>({})
-)
-expectNotType<{ 'fields.testField'?: string }>(
-  queryEquality<{ testField: EntryFields.RichText }>({})
-)
-expectNotType<{ 'fields.testField'?: string }>(
-  queryEquality<{ testField: EntryFields.Location }>({})
-)
+expectType<EqualityQueries<{ testField: EntryFields.Number }, 'fields'>>({
+  'fields.testField': 1
+})
+expectType<EqualityQueries<{ testField: EntryFields.Integer }, 'fields'>>({
+  'fields.testField': 1
+})
+expectType<EqualityQueries<{ testField: EntryFields.Symbol }, 'fields'>>({
+  'fields.testField': 'a'
+})
+expectType<EqualityQueries<{ testField: EntryFields.Text }, 'fields'>>({
+  'fields.testField': 'a'
+})
+expectType<EqualityQueries<{ testField: EntryFields.Object }, 'fields'>>({
+  'fields.testField': {}
+})
+expectType<EqualityQueries<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField': '1-1-1T00:00:00Z'
+})
+expectType<EqualityQueries<{ testField: EntryFields.Boolean }, 'fields'>>({
+  'fields.testField': true
+})
+expectAssignable<EqualityQueries<{ testField: EntryFields.Array }, 'fields'>>({
+  'fields.testField': ['abc']
+})
+// expectAssignable<EqualityQueries<{ testField: EntryFields.Array<Asset> }, 'fields'>>({ 'fields.testField': Asset[] })
+// expectNotType<EqualityQueries<{ testField: EntryFields.RichText }, 'fields'>>({ 'fields.testField': 'a' })
+expectNotType<EqualityQueries<{ testField: EntryFields.Location }, 'fields'>>({
+  'fields.testField': 'a'
+})
 // ???
 // expectType<{ 'fields.testField'?: string }>(queryEquality<{ testField: EntryFields.Link<any> }>({}))
 
 /*
  * InEquality
  */
-expectType<{ 'fields.testField[ne]'?: number }>(
-  queryInEquality<{ testField: EntryFields.Number }>({})
-)
-expectType<{ 'fields.testField[ne]'?: number }>(
-  queryInEquality<{ testField: EntryFields.Integer }>({})
-)
-expectType<{ 'fields.testField[ne]'?: string }>(
-  queryInEquality<{ testField: EntryFields.Symbol }>({})
-)
-expectType<{ 'fields.testField[ne]'?: string }>(
-  queryInEquality<{ testField: EntryFields.Text }>({})
-)
-expectType<{ 'fields.testField[ne]'?: any }>(queryInEquality<{ testField: EntryFields.Object }>({}))
-expectType<{ 'fields.testField[ne]'?: EntryFields.Date }>(
-  queryInEquality<{ testField: EntryFields.Date }>({})
-)
-expectType<{ 'fields.testField[ne]'?: boolean }>(
-  queryInEquality<{ testField: EntryFields.Boolean }>({})
-)
-expectNotType<{ 'fields.testField[ne]'?: string }>(
-  queryInEquality<{ testField: EntryFields.RichText }>({})
-)
-expectNotType<{ 'fields.testField[ne]'?: string }>(
-  queryInEquality<{ testField: EntryFields.Location }>({})
-)
-expectAssignable<{ 'fields.testField[ne]'?: symbol[] }>(
-  queryInEquality<{ testField: EntryFields.Array }>({})
-)
-expectAssignable<{ 'fields.testField[ne]'?: Asset[] }>(
-  queryInEquality<{ testField: EntryFields.Array<Asset> }>({})
-)
+expectType<InequalityQueries<{ testField: EntryFields.Number }, 'fields'>>({
+  'fields.testField[ne]': 1
+})
+expectType<InequalityQueries<{ testField: EntryFields.Integer }, 'fields'>>({
+  'fields.testField[ne]': 1
+})
+expectType<InequalityQueries<{ testField: EntryFields.Symbol }, 'fields'>>({ 
+  'fields.testField[ne]': 'a'
+})
+expectType<InequalityQueries<{ testField: EntryFields.Text }, 'fields'>>({ 
+  'fields.testField[ne]': 'a'
+})
+// expectType<InequalityQueries<{ testField: EntryFields.Object }, 'fields'>>({
+//   'fields.testField[ne]': any
+// })
+expectType<InequalityQueries<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField[ne]': '1-1-1T00:00:00Z'
+})
+expectType<InequalityQueries<{ testField: EntryFields.Boolean }, 'fields'>>({
+  'fields.testField[ne]': true
+})
+expectNotType<InequalityQueries<{ testField: EntryFields.RichText }, 'fields'>>({ 
+  'fields.testField[ne]': 'a'
+})
+expectNotType<InequalityQueries<{ testField: EntryFields.Location }, 'fields'>>({ 
+  'fields.testField[ne]': 'a'
+})
+expectAssignable<InequalityQueries<{ testField: EntryFields.Array }, 'fields'>>({
+  'fields.testField[ne]': ['a']
+})
+// expectAssignable<InequalityQueries<{ testField: EntryFields.Array<A, 'fields'sset> }>>({ 
+//   'fields.testField[ne]'?: Asset[]
+// })
 // ???
 // expectType<{ 'fields.testField'?: string }>(queryEquality<{ testField: EntryFields.Link<any> }>({}))
 
@@ -158,15 +168,30 @@ expectNotType<{ 'fields.testField[exists]'?: boolean }>(
  * Location
  */
 
-type Within = [number, number, number] & [number, number, number, number]
-expectAssignable<{ 'fields.testField[near]'?: [number, number] }>(
-  queryLocation<{ testField: EntryFields.Location }>({})
+type Within = [number, number, number] | [number, number, number, number]
+expectAssignable<LocationSearchFilters<{
+    testField: EntryFields.Location;
+}, "fields">>(
+  {
+    'fields.testField[near]': [1, 1],
+    'fields.testField[within]': [1, 1, 1]
+  }
 )
-expectAssignable<{ 'fields.testField[within]'?: Within }>(
-  queryLocation<{ testField: EntryFields.Location }>({})
-)
-expectNotType<{ 'fields.testField[near]'?: [number, number] }>(
-  queryLocation<{ testField: EntryFields.Number }>({})
+
+// expectAssignable<{ 'fields.testField[within]'?: Within }>(
+//   queryLocation<{ testField: EntryFields.Location }>({})
+// )
+
+type foo = LocationSearchFilters<{
+    testField: EntryFields.Number;
+}, "fields">
+
+expectAssignable<LocationSearchFilters<{
+    testField: EntryFields.Number;
+}, "fields">>(
+  {
+    'fields.testField[near]': [1, 1],
+  }
 )
 expectNotType<{ 'fields.testField[near]'?: [number, number] }>(
   queryLocation<{ testField: EntryFields.Integer }>({})
