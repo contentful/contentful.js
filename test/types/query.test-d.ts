@@ -25,17 +25,6 @@ const nearLocationValue: ProximitySearchFilterInput = [1, 0]
 const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0, 2]
 const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
 
-/*
-type Fields = {
-  number: EntryFields.Number
-  name: EntryFields.Link<Entry<{ myField: EntryFields.Integer }>>
-  collection: EntryFields.Array<EntryFields.Text>
-  date: EntryFields.Date
-  location: EntryFields.Location
-  nested: Entry<{ subField: EntryFields.Text }>
-}
- */
-
 /**
  * Equality
  */
@@ -477,9 +466,15 @@ expectAssignable<EntryFieldsQueries<{ numberField: EntryFields.Number }>>(
 /*
  * Entry
  */
-expectAssignable<EntryQueries<{ stringField: EntryFields.Text }>>(
+expectAssignable<EntryQueries<{
+  stringField: EntryFields.Text,
+  numberField: EntryFields.Number
+}>>(
   {
     'fields.stringField[exists]': booleanValue,
-    'select': ['fields.stringField']
+    'fields.stringField[match]': stringValue,
+    'fields.numberField[gte]': numberValue,
+    'select': ['fields.stringField', 'fields.numberField'],
+    limit: numberValue
   }
 )
