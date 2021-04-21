@@ -4,6 +4,9 @@ export type FieldsType = Record<string, any>
 
 export type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
 
+export type NonEmpty<T> = T extends Record<string, never> ? never : T
+
+
 export type ConditionalFixedQueries<
   Fields,
   SupportedTypes,

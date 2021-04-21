@@ -1,13 +1,12 @@
 import { ConditionalPick } from 'type-fest'
 import { EntryFields } from '../entry'
+import { NonEmpty } from './util'
 
 type Types = EntryFields.Location
 
 export type ProximitySearchFilterInput = [number, number]
 export type BoundingBoxSearchFilterInput = [number, number, number, number]
 export type BoundingCircleSearchFilterInput = [number, number, number]
-
-type NonEmpty<T> = T extends Record<string, never> ? never : T
 
 type BaseLocationQueries<
   Fields,

@@ -1,5 +1,5 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { Asset, EntryFields } from '../../lib'
+import { Asset, EntryFields, EntryQueries } from '../../lib'
 import { EqualityQueries, InequalityQueries } from '../../lib/types/query/equality'
 import { ExistenceQueries } from '../../lib/types/query/existence'
 import {
@@ -8,8 +8,10 @@ import {
   LocationSearchFilters,
   ProximitySearchFilterInput
 } from '../../lib/types/query/location'
+import { EntryFieldsQueries } from '../../lib/types/query/query'
 import { RangeFilters } from '../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../lib/types/query/search'
+import { SelectQueries } from '../../lib/types/query/select'
 import { SubsetFilters } from '../../lib/types/query/subset'
 
 const stringValue = ''
@@ -223,8 +225,7 @@ expectNotAssignable<LocationSearchFilters<{
   }
 )
 
-// `object` some what matches EntryFields.Location
-expectAssignable<LocationSearchFilters<{
+expectNotAssignable<LocationSearchFilters<{
   testField: EntryFields.Object;
 }, 'fields'>>(
   {
@@ -319,11 +320,11 @@ expectAssignable<RangeFilters<{ testField: EntryFields.Integer }, 'fields'>>(
   }
 )
 
-expectAssignable<RangeFilters<{ testField: EntryFields.Symbol }, 'fields'>>(
-  { 'fields.testField[lt]': numberValue }
+expectNotAssignable<RangeFilters<{ testField: EntryFields.Symbol }, 'fields'>>(
+  { 'fields.testField[lt]': stringValue }
 )
 
-expectAssignable<RangeFilters<{ testField: EntryFields.Symbol }, 'fields'>>(
+expectNotAssignable<RangeFilters<{ testField: EntryFields.Symbol }, 'fields'>>(
   { 'fields.testField[lt]': stringValue }
 )
 
@@ -331,11 +332,11 @@ expectAssignable<RangeFilters<{ testField: EntryFields.Integer }, 'fields'>>(
   { 'fields.testField[lt]': numberValue }
 )
 
-expectAssignable<RangeFilters<{ testField: EntryFields.Text }, 'fields'>>(
+expectNotAssignable<RangeFilters<{ testField: EntryFields.Text }, 'fields'>>(
   { 'fields.testField[lt]': stringValue }
 )
 
-expectAssignable<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>(
+expectNotAssignable<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>(
   { 'fields.testField[lt]': objectValue }
 )
 
@@ -361,54 +362,124 @@ expectAssignable<SubsetFilters<{ testField: EntryFields.Text }, 'fields'>>(
 /*
  * Inclusion
  */
+expectAssignable<SubsetFilters<{ testField: EntryFields.Integer }, 'fields'>>(
+  {
+    'fields.testField[in]': numberValue,
+    'fields.testField[nin]': numberValue
+  }
+)
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Number }, 'fields'>>(
+  {
+    'fields.testField[in]': numberValue,
+    'fields.testField[nin]': numberValue
+  }
+)
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Text }, 'fields'>>(
+  {
+    'fields.testField[in]': stringValue,
+    'fields.testField[nin]': stringValue
+  }
+)
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>(
+  {
+    'fields.testField[in]': booleanValue,
+    'fields.testField[nin]': booleanValue
+  }
+)
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Symbol }, 'fields'>>(
+  {
+    'fields.testField[in]': stringValue,
+    'fields.testField[nin]': stringValue
+  }
+)
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>(
+  {
+    'fields.testField[in]': dateValue,
+    'fields.testField[nin]': dateValue
+  }
+)
+
+expectNotAssignable<SubsetFilters<{ testField: EntryFields.RichText }, 'fields'>>(
+  {
+    'fields.testField[in]': stringValue,
+    'fields.testField[nin]': stringValue
+  }
+)
+
+expectNotAssignable<SubsetFilters<{ testField: EntryFields.Location }, 'fields'>>(
+  {
+    'fields.testField[in]': nearLocationValue,
+    'fields.testField[nin]': withinBoxLocationValue
+  }
+)
+
+expectNotAssignable<SubsetFilters<{ testField: EntryFields.Object }, 'fields'>>(
+  {
+    'fields.testField[in]': objectValue,
+    'fields.testField[nin]': objectValue
+  }
+)
+
+expectNotAssignable<SubsetFilters<{ testField: EntryFields.Link<unknown> }, 'fields'>>(
+  {
+    'fields.testField[in]': objectValue,
+    'fields.testField[nin]': objectValue
+  }
+)
 
 /*
-expectAssignable<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Symbol }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Text }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.RichText }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Object }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Date }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: number }>(
-  querySubSet<{ testField: EntryFields.Number }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: number }>(
-  querySubSet<{ testField: EntryFields.Integer }>({})
-)
-expectAssignable<{ 'fields.testField[nin]'?: boolean }>(
-  querySubSet<{ testField: EntryFields.Boolean }>({})
-)
-expectNotType<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Location }>({})
-)
-expectNotType<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Array }>({})
-)
-expectNotType<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Array<Asset> }>({})
-)
-expectNotType<{ 'fields.testField[nin]'?: string }>(
-  querySubSet<{ testField: EntryFields.Link<any> }>({})
+ * Select
+ */
+expectAssignable<SelectQueries<{ testField: EntryFields.Integer }, 'fields'>>(
+  {
+    'select': ['fields.stringField']
+  }
 )
 
-expectAssignable<{
-  'fields.number'?: number
-  'fields.number[exists]'?: boolean
-  'fields.number[gt]'?: number
-  'fields.number[gte]'?: number
-  'fields.number[in]'?: number
-  'fields.number[lt]'?: number
-  'fields.number[lte]'?: number
-  'fields.number[ne]'?: number
-  'fields.number[nin]'?: number
-}>(query<{ number: EntryFields.Number }>({}))
-*/
+expectNotAssignable<SelectQueries<{ testField: EntryFields.Integer }, 'fields'>>(
+  {
+    'select': ['fields.stringFieldUnknown']
+  }
+)
+
+/*
+ * EntryFields
+ */
+expectAssignable<EntryFieldsQueries<{ stringField: EntryFields.Text }>>(
+  {
+    'select': ['fields.stringField'],
+    'fields.stringField[exists]': booleanValue,
+    'fields.stringField': stringValue,
+    'fields.stringField[ne]': stringValue,
+    'fields.stringField[in]': stringValue,
+    'fields.stringField[nin]': stringValue,
+    'fields.stringField[match]': stringValue
+  }
+)
+
+expectAssignable<EntryFieldsQueries<{ numberField: EntryFields.Number }>>(
+  {
+    'select': ['fields.stringField'],
+    'fields.numberField[exists]': booleanValue,
+    'fields.numberField': numberValue,
+    'fields.numberField[ne]': numberValue,
+    'fields.numberField[in]': numberValue,
+    'fields.numberField[nin]': numberValue,
+    'fields.numberField[match]': stringValue
+  }
+)
+
+/*
+ * Entry
+ */
+expectAssignable<EntryQueries<{ stringField: EntryFields.Text }>>(
+  {
+    'fields.stringField[exists]': booleanValue,
+    'select': ['fields.stringField']
+  }
+)

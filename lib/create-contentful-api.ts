@@ -22,6 +22,7 @@ import {
   Space,
   SyncCollection,
 } from './types'
+import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 
@@ -36,11 +37,11 @@ export interface ContentfulClientApi {
 
   getContentTypes(): Promise<ContentTypeCollection>
 
-  getEntries<Fields = Record<string, any>>(
+  getEntries<Fields = FieldsType>(
     query?: EntryQueries<Fields>
   ): Promise<EntryCollection<Fields>>
 
-  getEntry<Fields = Record<string, any>>(
+  getEntry<Fields = FieldsType>(
     id: string,
     query?: EntryQueries<Fields>
   ): Promise<Entry<Fields>>

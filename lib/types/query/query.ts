@@ -27,30 +27,27 @@ export type SysQueries<Sys> = ExistenceQueries<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'> &
   SelectQueries<Sys, 'sys'>
 
-export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<
-  Fields,
-  'fields'
-> &
-  EqualityQueries<Fields, 'fields'> &
-  InequalityQueries<Fields, 'fields'> &
-  SubsetFilters<Fields, 'fields'> &
-  RangeFilters<Fields, 'fields'> &
-  FullTextSearchFilters<Fields, 'fields'> &
-  LocationSearchFilters<Fields, 'fields'> &
-  SelectQueries<Fields, 'fields'>
+export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
+  (
+    ExistenceQueries<Fields, 'fields'> &
+    EqualityQueries<Fields, 'fields'> &
+    InequalityQueries<Fields, 'fields'> &
+    SubsetFilters<Fields, 'fields'> &
+    FullTextSearchFilters<Fields, 'fields'> &
+    SelectQueries<Fields, 'fields'>
+    )
+  | LocationSearchFilters<Fields, 'fields'>
+  | RangeFilters<Fields, 'fields'>
 
 // create-contentful-api complained about non optional fields when initialized with {}
 export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<EntryFieldsQueries<Fields> &
   SysQueries<EntrySys> &
   FixedQueryOptions &
   FixedPagedOptions &
-  Record<string, any>
-  >
+  Record<string, any>>
 
-export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<
-  Fields,
-  'fields'
-> &
+export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<Fields,
+  'fields'> &
   EqualityQueries<Fields, 'fields'> &
   InequalityQueries<Fields, 'fields'> &
   SubsetFilters<Fields, 'fields'> &
