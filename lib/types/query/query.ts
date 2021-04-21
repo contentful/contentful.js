@@ -39,11 +39,13 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> = Existen
   LocationSearchFilters<Fields, 'fields'> &
   SelectQueries<Fields, 'fields'>
 
-export type EntryQueries<Fields extends FieldsType = FieldsType> = EntryFieldsQueries<Fields> &
+// create-contentful-api complained about non optional fields when initialized with {}
+export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<EntryFieldsQueries<Fields> &
   SysQueries<EntrySys> &
   FixedQueryOptions &
   FixedPagedOptions &
   Record<string, any>
+  >
 
 export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<
   Fields,

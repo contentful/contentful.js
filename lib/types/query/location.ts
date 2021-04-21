@@ -3,9 +3,9 @@ import { EntryFields } from '../entry'
 
 type Types = EntryFields.Location
 
-type ProximitySearchFilterInput = [number, number]
-type BoundingBoxSearchFilterInput = [number, number, number, number]
-type BoundingCircleSearchFilterInput = [number, number, number]
+export type ProximitySearchFilterInput = [number, number]
+export type BoundingBoxSearchFilterInput = [number, number, number, number]
+export type BoundingCircleSearchFilterInput = [number, number, number]
 
 type NonEmpty<T> = T extends Record<string, never> ? never : T
 

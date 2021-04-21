@@ -1,6 +1,5 @@
 import { ConditionalPick } from 'type-fest'
-import { Asset } from '../asset'
-import { Entry, EntryFields } from '../entry'
+import { EntryFields } from '../entry'
 import { BaseOrArrayType } from './util'
 
 type RangeFilterTypes = 'lt' | 'lte' | 'gt' | 'gte'

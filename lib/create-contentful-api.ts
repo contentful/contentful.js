@@ -425,7 +425,8 @@ export default function createContentfulApi({
   }
 
   return {
-    version: __VERSION__,
+    // version: __VERSION__,
+    version: 'test-0.0.0',
     getSpace: getSpace,
     getContentType: getContentType,
     getContentTypes: getContentTypes,
