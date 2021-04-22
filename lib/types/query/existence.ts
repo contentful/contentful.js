@@ -6,7 +6,7 @@ import { ConditionalFixedQueries } from './util'
  * @desc check for existence
  * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/existence}
  */
-export type ExistenceQueries<Fields, Prefix extends string> = ConditionalFixedQueries<
+export type ExistenceFilter<Fields, Prefix extends string> = ConditionalFixedQueries<
   Fields,
   BasicEntryField,
   boolean,

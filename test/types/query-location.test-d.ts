@@ -1,7 +1,7 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntryFields } from '../../lib'
-import { EqualityQueries, InequalityQueries } from '../../lib/types/query/equality'
-import { ExistenceQueries } from '../../lib/types/query/existence'
+import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
+import { ExistenceFilter } from '../../lib/types/query/existence'
 import {
   BoundingBoxSearchFilterInput,
   BoundingCircleSearchFilterInput,
@@ -10,7 +10,7 @@ import {
 } from '../../lib/types/query/location'
 import { RangeFilters } from '../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectQueries } from '../../lib/types/query/select'
+import { SelectFilter } from '../../lib/types/query/select'
 import { SubsetFilters } from '../../lib/types/query/subset'
 
 const stringValue = ''
@@ -20,14 +20,14 @@ export const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0,
 export const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
 
 //TODO:  Does this work?
-expectAssignable<EqualityQueries<{ testField: EntryFields.Location }, 'fields'>>({
+expectAssignable<EqualityFilter<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField': { lat: stringValue, lon: stringValue }
 })
 //TODO:  Does this work?
-expectAssignable<InequalityQueries<{ testField: EntryFields.Location }, 'fields'>>({
+expectAssignable<InequalityFilter<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField[ne]': { lat: stringValue, lon: stringValue }
 })
-expectAssignable<ExistenceQueries<{ testField: EntryFields.Location }, 'fields'>>(
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Location }, 'fields'>>(
   { 'fields.testField[exists]': booleanValue }
 )
 expectAssignable<LocationSearchFilters<{
@@ -84,7 +84,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Location }, 'fields'>>
 expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Location }, 'fields'>>(
   { 'fields.testField[match]': stringValue }
 )
-expectAssignable<SelectQueries<{ testField: EntryFields.Location }, 'fields'>>(
+expectAssignable<SelectFilter<{ testField: EntryFields.Location }, 'fields'>>(
   {
     'select': ['fields.testField']
   }

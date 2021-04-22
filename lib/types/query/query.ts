@@ -1,11 +1,11 @@
 import { AssetSys } from '../asset'
 import { EntrySys } from '../entry'
-import { EqualityQueries, InequalityQueries } from './equality'
-import { ExistenceQueries } from './existence'
+import { EqualityFilter, InequalityFilter } from './equality'
+import { ExistenceFilter } from './existence'
 import { LocationSearchFilters } from './location'
 import { RangeFilters } from './range'
 import { FullTextSearchFilters } from './search'
-import { SelectQueries } from './select'
+import { SelectFilter } from './select'
 import { SubsetFilters } from './subset'
 import { FieldsType } from './util'
 
@@ -15,26 +15,26 @@ type FixedPagedOptions = {
 }
 
 type FixedQueryOptions = {
-  include?: number
+  include?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   locale?: string
   query?: string
 }
 
-export type SysQueries<Sys> = ExistenceQueries<Sys, 'sys'> &
-  EqualityQueries<Sys, 'sys'> &
-  InequalityQueries<Sys, 'sys'> &
+export type SysQueries<Sys> = ExistenceFilter<Sys, 'sys'> &
+  EqualityFilter<Sys, 'sys'> &
+  InequalityFilter<Sys, 'sys'> &
   SubsetFilters<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'> &
-  SelectQueries<Sys, 'sys'>
+  SelectFilter<Sys, 'sys'>
 
 export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
   (
-    ExistenceQueries<Fields, 'fields'> &
-    EqualityQueries<Fields, 'fields'> &
-    InequalityQueries<Fields, 'fields'> &
+    ExistenceFilter<Fields, 'fields'> &
+    EqualityFilter<Fields, 'fields'> &
+    InequalityFilter<Fields, 'fields'> &
     SubsetFilters<Fields, 'fields'> &
     FullTextSearchFilters<Fields, 'fields'> &
-    SelectQueries<Fields, 'fields'>
+    SelectFilter<Fields, 'fields'>
     )
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
@@ -46,14 +46,13 @@ export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<Entry
   FixedPagedOptions &
   Record<string, any>>
 
-export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = ExistenceQueries<Fields,
-  'fields'> &
-  EqualityQueries<Fields, 'fields'> &
-  InequalityQueries<Fields, 'fields'> &
+export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = Partial<ExistenceFilter<Fields, 'fields'> &
+  EqualityFilter<Fields, 'fields'> &
+  InequalityFilter<Fields, 'fields'> &
   SubsetFilters<Fields, 'fields'> &
   RangeFilters<Fields, 'fields'> &
   FullTextSearchFilters<Fields, 'fields'> &
-  SelectQueries<Fields, 'fields'>
+  SelectFilter<Fields, 'fields'>>
 
 export type AssetQueries<Fields extends FieldsType = FieldsType> = AssetFieldsQueries<Fields> &
   SysQueries<AssetSys> &

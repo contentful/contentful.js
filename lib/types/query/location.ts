@@ -8,7 +8,7 @@ export type ProximitySearchFilterInput = [number, number]
 export type BoundingBoxSearchFilterInput = [number, number, number, number]
 export type BoundingCircleSearchFilterInput = [number, number, number]
 
-type BaseLocationQueries<
+type BaseLocationFilter<
   Fields,
   SupportedTypes,
   ValueType,
@@ -25,7 +25,7 @@ type BaseLocationQueries<
  * @desc near - location proximity search
  * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/location-proximity-search}
  */
-export type ProximitySearchFilters<Fields, Prefix extends string> = BaseLocationQueries<
+export type ProximitySearchFilter<Fields, Prefix extends string> = BaseLocationFilter<
   Fields,
   Types,
   ProximitySearchFilterInput,
@@ -37,7 +37,7 @@ export type ProximitySearchFilters<Fields, Prefix extends string> = BaseLocation
  * @desc within - location in a bounding rectangle
  * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/locations-in-a-bounding-object}
  */
-type BoundingBoxSearchFilters<Fields, Prefix extends string> = BaseLocationQueries<
+type BoundingBoxSearchFilter<Fields, Prefix extends string> = BaseLocationFilter<
   Fields,
   Types,
   BoundingBoxSearchFilterInput,
@@ -48,7 +48,7 @@ type BoundingBoxSearchFilters<Fields, Prefix extends string> = BaseLocationQueri
  * @desc within - location in a bounding circle
  * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/locations-in-a-bounding-object}
  */
-type BoundingCircleSearchFilters<Fields, Prefix extends string> = BaseLocationQueries<
+type BoundingCircleSearchFilter<Fields, Prefix extends string> = BaseLocationFilter<
   Fields,
   Types,
   BoundingCircleSearchFilterInput,
@@ -58,11 +58,11 @@ type BoundingCircleSearchFilters<Fields, Prefix extends string> = BaseLocationQu
 
 /**
  * @desc location search
- * @see [proximity]{@link ProximitySearchFilters}
- * @see [bounding rectangle]{@link BoundingBoxSearchFilters}
- * @see [bounding circle]{@link BoundingCircleSearchFilters}
+ * @see [proximity]{@link ProximitySearchFilter}
+ * @see [bounding rectangle]{@link BoundingBoxSearchFilter}
+ * @see [bounding circle]{@link BoundingCircleSearchFilter}
  */
 export type LocationSearchFilters<Fields, Prefix extends string> =
-  | ProximitySearchFilters<Fields, Prefix>
-  | BoundingBoxSearchFilters<Fields, Prefix>
-  | BoundingCircleSearchFilters<Fields, Prefix>
+  | ProximitySearchFilter<Fields, Prefix>
+  | BoundingBoxSearchFilter<Fields, Prefix>
+  | BoundingCircleSearchFilter<Fields, Prefix>

@@ -1,24 +1,24 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntryFields } from '../../lib'
-import { EqualityQueries, InequalityQueries } from '../../lib/types/query/equality'
-import { ExistenceQueries } from '../../lib/types/query/existence'
+import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
+import { ExistenceFilter } from '../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../lib/types/query/location'
 import { RangeFilters } from '../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectQueries } from '../../lib/types/query/select'
+import { SelectFilter } from '../../lib/types/query/select'
 import { SubsetFilters } from '../../lib/types/query/subset'
 
 export const dateValue: EntryFields.Date = '2018-05-03T09:18:16.329Z'
 const stringValue = ''
 const booleanValue = true
 
-expectAssignable<EqualityQueries<{ testField: EntryFields.Date }, 'fields'>>({
+expectAssignable<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>({
   'fields.testField': dateValue
 })
-expectAssignable<InequalityQueries<{ testField: EntryFields.Date }, 'fields'>>({
+expectAssignable<InequalityFilter<{ testField: EntryFields.Date }, 'fields'>>({
   'fields.testField[ne]': dateValue
 })
-expectAssignable<ExistenceQueries<{ testField: EntryFields.Date }, 'fields'>>(
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Date }, 'fields'>>(
   { 'fields.testField[exists]': booleanValue }
 )
 expectNotAssignable<LocationSearchFilters<{
@@ -43,7 +43,7 @@ expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'
 expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>(
   { 'fields.testField[match]': dateValue }
 )
-expectAssignable<SelectQueries<{ testField: EntryFields.Date }, 'fields'>>(
+expectAssignable<SelectFilter<{ testField: EntryFields.Date }, 'fields'>>(
   {
     'select': ['fields.testField']
   }

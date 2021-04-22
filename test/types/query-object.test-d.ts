@@ -1,24 +1,24 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntryFields } from '../../lib'
-import { EqualityQueries, InequalityQueries } from '../../lib/types/query/equality'
-import { ExistenceQueries } from '../../lib/types/query/existence'
+import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
+import { ExistenceFilter } from '../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../lib/types/query/location'
 import { RangeFilters } from '../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectQueries } from '../../lib/types/query/select'
+import { SelectFilter } from '../../lib/types/query/select'
 import { SubsetFilters } from '../../lib/types/query/subset'
 
 const stringValue = ''
 const booleanValue = true
 const objectValue = { hello: 'world' }
 
-expectAssignable<EqualityQueries<{ testField: EntryFields.Object }, 'fields'>>({
+expectAssignable<EqualityFilter<{ testField: EntryFields.Object }, 'fields'>>({
   'fields.testField': objectValue
 })
-expectAssignable<InequalityQueries<{ testField: EntryFields.Object }, 'fields'>>({
+expectAssignable<InequalityFilter<{ testField: EntryFields.Object }, 'fields'>>({
   'fields.testField[ne]': objectValue
 })
-expectAssignable<ExistenceQueries<{ testField: EntryFields.Object }, 'fields'>>(
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Object }, 'fields'>>(
   { 'fields.testField[exists]': booleanValue }
 )
 expectNotAssignable<LocationSearchFilters<{
@@ -40,7 +40,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>(
 expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Object }, 'fields'>>(
   { 'fields.testField[match]': stringValue }
 )
-expectAssignable<SelectQueries<{ testField: EntryFields.Object }, 'fields'>>(
+expectAssignable<SelectFilter<{ testField: EntryFields.Object }, 'fields'>>(
   {
     'select': ['fields.testField']
   }
