@@ -1,7 +1,7 @@
 import { BasicEntryField, EntryFields } from '../entry'
 import { ConditionalQueries } from './util'
 
-// Note: Equality and inequality operators are not supported for text fields
+// TODO: Note: Equality and inequality operators are not supported for text fields
 // What types do we hav to exclude here?
 type SupportedTypes = Exclude<BasicEntryField, EntryFields.RichText>
 /**

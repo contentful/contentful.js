@@ -6,7 +6,7 @@ export type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
 
 export type NonEmpty<T> = T extends Record<string, never> ? never : T
 
-
+//TODO: should we also allow ValueType[] for array types
 export type ConditionalFixedQueries<
   Fields,
   SupportedTypes,

@@ -1,6 +1,5 @@
-import { ConditionalPick } from 'type-fest'
 import { BasicEntryField, EntryFields } from '..'
-import { NonEmpty } from './util'
+import { ConditionalQueries, NonEmpty } from './util'
 
 type SubsetFilterTypes = 'in' | 'nin'
 type SupportedTypes = Exclude<BasicEntryField, EntryFields.Location | EntryFields.RichText>
@@ -13,7 +12,8 @@ type SupportedTypes = Exclude<BasicEntryField, EntryFields.Location | EntryField
  * // {'fields.myField', 'singleValue'}
  * // {'fields.myField', 'firstValue,secondValue'}
  */
-export type SubsetFilters<Fields, Prefix extends string> = NonEmpty<NonNullable<{
-  [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
-    FieldName}[${SubsetFilterTypes}]`]?: Fields[FieldName]
-}>>
+export type SubsetFilters<Fields, Prefix extends string> = NonEmpty<NonNullable<ConditionalQueries<Fields,
+  SupportedTypes,
+  Prefix,
+  `[${SubsetFilterTypes}]`>>>
+

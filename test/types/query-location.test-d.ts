@@ -19,11 +19,11 @@ export const nearLocationValue: ProximitySearchFilterInput = [1, 0]
 export const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0, 2]
 export const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
 
-// Does this work?
+//TODO:  Does this work?
 expectAssignable<EqualityQueries<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField': { lat: stringValue, lon: stringValue }
 })
-// Does this work?
+//TODO:  Does this work?
 expectAssignable<InequalityQueries<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField[ne]': { lat: stringValue, lon: stringValue }
 })
