@@ -2,6 +2,8 @@ import { ConditionalPick } from 'type-fest'
 import { BasicEntryField } from '../entry'
 
 type FilterType = 'match'
+
+// TODO: should Boolean field type be excluded? and should the value be always of type string?
 type SupportedTypes = BasicEntryField
 /**
  * @desc match - full text search
