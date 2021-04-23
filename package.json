@@ -84,7 +84,6 @@
     "babel-plugin-rewire": "^1.0.0",
     "blue-tape": "^1.0.0",
     "bundlesize": "^0.18.0",
-    "codecov": "^3.0.0",
     "contentful-sdk-jsdoc": "^2.2.0",
     "core-js": "^3.2.1",
     "cz-conventional-changelog": "^3.0.2",
