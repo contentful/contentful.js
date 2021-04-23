@@ -10,11 +10,6 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run test:cover
-      - run: bash <(curl -s https://codecov.io/bash)
-      - run:
-          name: Build Success
-          when: on_success
-          command: ./node_modules/.bin/codecov
   integration:
     docker:
       - image: circleci/node:12
