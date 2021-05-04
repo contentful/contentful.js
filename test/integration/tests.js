@@ -5,17 +5,17 @@ import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validate-timestamp'
 
 const params = {
-  accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
+  accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
   space: 'ezs1swce23xe'
 }
 const localeSpaceParams = {
-  accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
+  accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
   space: '7dh3w86is8ls'
 }
 
 const previewParams = {
   host: 'preview.contentful.com',
-  accessToken: 'fc9c8a0968c592bd7a0a5a9167d6fb6002dbbc3b8f900a75708ec269332d250a',
+  accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
   space: 'ezs1swce23xe'
 }
 
