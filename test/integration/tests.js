@@ -2,19 +2,20 @@ import test from 'blue-tape'
 import sinon from 'sinon'
 
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
 
 const params = {
-  accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
+  accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
   space: 'ezs1swce23xe'
 }
 const localeSpaceParams = {
-  accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
+  accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
   space: '7dh3w86is8ls'
 }
 
 const previewParams = {
   host: 'preview.contentful.com',
-  accessToken: 'fc9c8a0968c592bd7a0a5a9167d6fb6002dbbc3b8f900a75708ec269332d250a',
+  accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
   space: 'ezs1swce23xe'
 }
 
@@ -34,6 +35,10 @@ const clientWithLoggers = contentful.createClient({
   responseLogger: responseLoggerStub,
   requestLogger: requestLoggerStub
 })
+
+const now = () => Math.floor(Date.now() / 1000)
+const withExpiryIn1Hour = () => now() + 1 * 60 * 60
+const withExpiryIn48Hours = () => now() + 48 * 60 * 60
 
 test('Gets space', async (t) => {
   t.plan(3)
@@ -59,7 +64,7 @@ test('Gets content types', async (t) => {
 
 test('Gets entry', async (t) => {
   t.plan(2)
-  const response = await client.getEntry('5ETMRzkl9KM4omyMwKAOki')
+  const response = await client.getEntry('nyancat')
   t.ok(response.sys, 'sys')
   t.ok(response.fields, 'fields')
 })
@@ -164,12 +169,19 @@ test('Gets entry with link resolution', async (t) => {
   t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
 })
 
+test('Gets entry with link resolution and removeUnresolved', async (t) => {
+  t.plan(1)
+  const c = contentful.createClient({ ...params, removeUnresolved: true })
+  const response = await c.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  t.ok(response.fields.bestFriend === undefined, 'unpublished reference field should be undefined')
+})
+
 test('Gets entries with content type query param', async (t) => {
   t.plan(2)
   const response = await client.getEntries({ content_type: 'cat' })
 
-  t.equal(response.total, 3)
-  t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat'])
+  t.equal(response.total, 4)
+  t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat', 'cat'])
 })
 
 test('Gets entries with equality query', async (t) => {
@@ -357,7 +369,7 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human'], 'orders')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human', 'kangaroo', 'testEntryReferences'], 'orders')
   t.ok(
     response.items[0].sys.id < response.items[1].sys.id,
     'id of entry with index 1 is higher than the one of index 0 since they share content type'
@@ -485,4 +497,54 @@ test('Gets entry with attached metadata and metadata field on cpa', async t => {
   t.ok(response.fields, 'fields')
   t.ok(response.fields.metadata, 'metadata field')
   t.ok(response.metadata, 'metadata')
+})
+
+// Embargoed Assets
+
+test('Creates asset key on CDA', async (t) => {
+  t.plan(2)
+  const response = await client.createAssetKey(withExpiryIn48Hours())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Creates asset key on CDA with a different lifetime', async (t) => {
+  t.plan(2)
+  const response = await client.createAssetKey(withExpiryIn1Hour())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Creates asset key on CPA', async (t) => {
+  t.plan(2)
+  const response = await previewClient.createAssetKey(withExpiryIn48Hours())
+  t.ok(response.policy, 'policy')
+  t.ok(response.secret, 'secret')
+})
+
+test('Does not create asset key if feature is not enabled', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey(withExpiryIn48Hours()))
+})
+
+test('Does not create asset key if no/undefined expiresAt is given', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey(), ValidationError)
+})
+
+test('Does not create asset key if invalid expiresAt is given', async (t) => {
+  t.plan(1)
+  await t.shouldReject(localeClient.createAssetKey('invalidExpiresAt'), ValidationError)
+})
+
+test('Does not create asset key if expiresAt is in the past', async (t) => {
+  t.plan(1)
+  const shortExpiresAt = now() - 60
+  await t.shouldReject(localeClient.createAssetKey(shortExpiresAt), ValidationError)
+})
+
+test('Does not create asset key if expiresAt is too far in the future (> 48 hours)', async (t) => {
+  t.plan(1)
+  const longExpiresAt = now() + 72 * 60 * 60
+  await t.shouldReject(localeClient.createAssetKey(longExpiresAt), ValidationError)
 })

@@ -10,7 +10,7 @@
   </a>
 </p>
 
-# contentful.js - Contentful JavaScript Delivery SDK
+# <span style="line-height: 1.1">contentful.js - Contentful JavaScript Delivery SDK</span>
 
 > JavaScript SDK for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your Content stored in Contentful with your JavaScript applications.
 
@@ -165,7 +165,7 @@ client
   .catch(err => console.log(err));
 ```
 
-You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
+Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
 
 ### Using this SDK with the Preview API
 
@@ -315,6 +315,34 @@ contentful.createClient({
       <td><code>true</code></td>
       <td>
         By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to <code>false</code> to disable this behavior.
+      </td>
+    </tr>
+    <tr>
+      <td><code>application</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Application name and version e.g myApp/version.
+      </td>
+    </tr>
+    <tr>
+      <td><code>integration</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Integration name and version e.g react/version.
+      </td>
+    </tr>
+    <tr>
+      <td><code>timeout</code></td>
+      <td><code>30000</code></td>
+      <td>
+        in milliseconds - connection timeout.
+      </td>
+    </tr>
+    <tr>
+      <td><code>retryLimit</code></td>
+      <td><code>5</code></td>
+      <td>
+        Optional number of retries before failure.
       </td>
     </tr>
     <tr>
