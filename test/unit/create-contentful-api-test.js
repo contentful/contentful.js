@@ -41,6 +41,10 @@ function setupWithData ({
     locale: {
       wrapLocale: sinon.stub(),
       wrapLocaleCollection: sinon.stub()
+    },
+    tag: {
+      wrapTag: sinon.stub(),
+      wrapTagCollection: sinon.stub()
     }
   }
   createContentfulApiRewireApi.__Rewire__('entities', entitiesMock)

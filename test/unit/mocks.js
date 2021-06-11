@@ -74,6 +74,46 @@ const localeMock = {
   code: 'en-US'
 }
 
+const tagMock = {
+  sys: {
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'ezs1swce23xe'
+      }
+    },
+    id: 'publicTag1',
+    type: 'Tag',
+    createdAt: '2021-02-11T14:44:48.594Z',
+    updatedAt: '2021-02-11T14:44:48.594Z',
+    environment: {
+      sys: {
+        id: 'master',
+        type: 'Link',
+        linkType: 'Environment'
+      }
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '1a9rUrb3AjDqTxUGOYxBDe'
+      }
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '1a9rUrb3AjDqTxUGOYxBDe'
+      }
+    },
+    version: 1,
+    visibility: 'public'
+  },
+  name: 'mock tag'
+}
+
 export {
   linkMock,
   sysMock,
@@ -81,5 +121,6 @@ export {
   entryMock,
   assetMock,
   assetKeyMock,
-  localeMock
+  localeMock,
+  tagMock
 }
