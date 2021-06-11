@@ -404,12 +404,32 @@ test('Gets assets', async (t) => {
   const response = await client.getAssets()
   t.ok(response.items, 'items')
 })
+
 test('Gets Locales', async (t) => {
   t.plan(2)
   const response = await client.getLocales()
   t.ok(response.items, 'items')
   t.equals(response.items[0].code, 'en-US', 'first locale is en-US')
 })
+
+test('Gets tag', async (t) => {
+  t.plan(3)
+  const response = await client.getTag('publicTag1')
+  t.ok(response.sys, 'sys')
+  t.ok(response.name, 'name')
+  t.equal(response.name, 'public tag 1')
+})
+
+test('Gets tags', async (t) => {
+  t.plan(3)
+  const response = await client.getTags()
+  t.ok(response.items, 'items')
+
+  const publicTag = response.items.find((tag) => tag.sys.id === 'publicTag1')
+  t.ok(publicTag)
+  t.equal(publicTag.name, 'public tag 1')
+})
+
 test('Sync space', async (t) => {
   t.plan(6)
   const response = await client.sync({ initial: true })
