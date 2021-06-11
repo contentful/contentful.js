@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>entities/locale.js - Documentation</title>
+    <title>entities/tag.js - Documentation</title>
 
     <script src="scripts/hljs/highlight.min.js"></script>
     <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">entities/locale.js</h1>
+    <h1 class="page-title">entities/tag.js</h1>
     
 
     
@@ -41,41 +41,37 @@ import { toPlainObject, freezeSys } from 'contentful-sdk-core'
 
 /**
  * @memberof Entities
- * @typedef Locale
+ * @typedef Tag
  * @prop {Entities.Sys} sys - Standard system metadata with additional entry specific properties
- * @prop {string} name - locale name (example: English)
- * @prop {string} code - locale code (example: en-US)
- * @prop {string} fallbackCode - the locale code to fallback to when there is not content for the current locale
- * @prop {boolean} default - If this is the default locale
- * @prop {boolean} optional - If the locale needs to be filled in on entries or not
- * @prop {function(): Object} toPlainObject() - Returns this Locale as a plain JS object
+ * @prop {string} name - Tag name
+ * @prop {function(): Object} toPlainObject() - Returns this tag as a plain JS object
  */
 
 /**
  * @private
- * @param {Object} data - Raw locale data
- * @return {Locale} Wrapped locale data
+ * @param {Object} data - Raw tag data
+ * @return {Tag} Wrapped tag data
  */
-export function wrapLocale (data) {
+export function wrapTag (data) {
   return freezeSys(toPlainObject(copy(data)))
 }
 
 /**
  * @memberof Entities
- * @typedef LocaleCollection
+ * @typedef TagCollection
  * @prop {number} total
  * @prop {number} skip
  * @prop {number} limit
- * @prop {Array&lt;Entities.Locale>} items
- * @prop {function(): Object} toPlainObject() - Returns this Locale collection as a plain JS object
+ * @prop {Array&lt;Entities.Tag>} items
+ * @prop {function(): Object} toPlainObject() - Returns this Tag collection as a plain JS object
  */
 
 /**
  * @private
- * @param {Object} data - Raw locale collection data
- * @return {LocaleCollection} Wrapped locale collection data
+ * @param {Object} data - Raw tag collection data
+ * @return {TagCollection} Wrapped tag collection data
  */
-export function wrapLocaleCollection (data) {
+export function wrapTagCollection (data) {
   return freezeSys(toPlainObject(copy(data)))
 }
 </code></pre>
