@@ -65,6 +65,7 @@ export interface Asset {
             contentType: string;
         };
     };
+    metadata: Metadata;
     toPlainObject(): object;
 }
 
@@ -81,6 +82,7 @@ export type AssetCollection = ContentfulCollection<Asset>
 export interface Entry<T> {
     sys: Sys;
     fields: T;
+    metadata: Metadata;
     toPlainObject(): object;
     update(): Promise<Entry<T>>;
 }
@@ -252,4 +254,16 @@ interface RichTextContent {
     marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
     value?: string;
     nodeType: RichTextNodeType;
+}
+
+interface TagLink {
+  sys: {
+    type: 'Link';
+    linkType: 'Tag';
+    id: string;
+  }
+}
+
+interface Metadata {
+  tags: TagLink[];
 }
