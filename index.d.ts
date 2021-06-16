@@ -133,7 +133,7 @@ export interface Tag {
       id: string
       type: 'Tag'
       version: number
-      visibility: string
+      visibility: 'public'
     }
 }
 
