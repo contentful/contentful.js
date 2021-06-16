@@ -43,6 +43,8 @@ export interface ContentfulClientApi {
     getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
     getLocales(): Promise<LocaleCollection>;
+    getTag(id: string): Promise<Tag>;
+    getTags(query?: any): Promise<TagCollection>;
     parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
     sync(query: any): Promise<SyncCollection>;
 }
@@ -124,6 +126,18 @@ export interface Locale {
 }
 
 export type LocaleCollection = ContentfulCollection<Locale>;
+
+export interface Tag {
+    name: string
+    sys: {
+      id: string
+      type: 'Tag'
+      version: number
+      visibility: string
+    }
+}
+
+export type TagCollection = ContentfulCollection<Tag>;
 
 export interface SyncCollection {
     entries: Array<Entry<any>>;
