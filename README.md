@@ -136,16 +136,7 @@ Using `contentful@latest` will always get you the latest version, but you can al
 <script src="https://cdn.jsdelivr.net/npm/contentful@5.0.1/dist/contentful.browser.min.js"></script>
 ```
 
-The Contentful Delivery library
-
-
-
-
-
-
-
-
-will be accessible via the `contentful` global variable.
+The Contentful Delivery library will be accessible via the `contentful` global variable.
 
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
 
