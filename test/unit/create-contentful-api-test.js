@@ -4,7 +4,6 @@ import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
 import { contentTypeMock, assetMock, assetKeyMock, entryMock, localeMock } from './mocks'
-import { ValidationError } from '../../lib/utils/validate-timestamp'
 
 const now = () => Math.floor(Date.now() / 1000)
 
@@ -42,6 +41,10 @@ function setupWithData ({
     locale: {
       wrapLocale: sinon.stub(),
       wrapLocaleCollection: sinon.stub()
+    },
+    tag: {
+      wrapTag: sinon.stub(),
+      wrapTagCollection: sinon.stub()
     }
   }
   createContentfulApiRewireApi.__Rewire__('entities', entitiesMock)
@@ -258,7 +261,7 @@ test('API call getEntries', async (t) => {
   }
 })
 
-test('API call getEntries with global resolve links overriden by query', async (t) => {
+test('API call getEntries with global resolve links overridden by query', async (t) => {
   t.plan(1)
 
   const data = { sys: { id: 'id' } }

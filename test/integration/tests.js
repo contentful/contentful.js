@@ -5,17 +5,17 @@ import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validate-timestamp'
 
 const params = {
-  accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
+  accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
   space: 'ezs1swce23xe'
 }
 const localeSpaceParams = {
-  accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
+  accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
   space: '7dh3w86is8ls'
 }
 
 const previewParams = {
   host: 'preview.contentful.com',
-  accessToken: 'fc9c8a0968c592bd7a0a5a9167d6fb6002dbbc3b8f900a75708ec269332d250a',
+  accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
   space: 'ezs1swce23xe'
 }
 
@@ -64,7 +64,7 @@ test('Gets content types', async (t) => {
 
 test('Gets entry', async (t) => {
   t.plan(2)
-  const response = await client.getEntry('5ETMRzkl9KM4omyMwKAOki')
+  const response = await client.getEntry('nyancat')
   t.ok(response.sys, 'sys')
   t.ok(response.fields, 'fields')
 })
@@ -169,12 +169,19 @@ test('Gets entry with link resolution', async (t) => {
   t.ok(response.fields.bestFriend.fields, 'resolved entry has fields')
 })
 
+test('Gets entry with link resolution and removeUnresolved', async (t) => {
+  t.plan(1)
+  const c = contentful.createClient({ ...params, removeUnresolved: true })
+  const response = await c.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  t.ok(response.fields.bestFriend === undefined, 'unpublished reference field should be undefined')
+})
+
 test('Gets entries with content type query param', async (t) => {
   t.plan(2)
   const response = await client.getEntries({ content_type: 'cat' })
 
-  t.equal(response.total, 3)
-  t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat'])
+  t.equal(response.total, 4)
+  t.looseEqual(response.items.map((item) => item.sys.contentType.sys.id), ['cat', 'cat', 'cat', 'cat'])
 })
 
 test('Gets entries with equality query', async (t) => {
@@ -362,7 +369,7 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human'], 'orders')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human', 'kangaroo', 'testEntryReferences'], 'orders')
   t.ok(
     response.items[0].sys.id < response.items[1].sys.id,
     'id of entry with index 1 is higher than the one of index 0 since they share content type'
@@ -397,12 +404,32 @@ test('Gets assets', async (t) => {
   const response = await client.getAssets()
   t.ok(response.items, 'items')
 })
+
 test('Gets Locales', async (t) => {
   t.plan(2)
   const response = await client.getLocales()
   t.ok(response.items, 'items')
   t.equals(response.items[0].code, 'en-US', 'first locale is en-US')
 })
+
+test('Gets tag', async (t) => {
+  t.plan(3)
+  const response = await client.getTag('publicTag1')
+  t.ok(response.sys, 'sys')
+  t.ok(response.name, 'name')
+  t.equal(response.name, 'public tag 1')
+})
+
+test('Gets tags', async (t) => {
+  t.plan(3)
+  const response = await client.getTags()
+  t.ok(response.items, 'items')
+
+  const publicTag = response.items.find((tag) => tag.sys.id === 'publicTag1')
+  t.ok(publicTag)
+  t.equal(publicTag.name, 'public tag 1')
+})
+
 test('Sync space', async (t) => {
   t.plan(6)
   const response = await client.sync({ initial: true })
