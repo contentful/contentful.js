@@ -43,6 +43,8 @@ export interface ContentfulClientApi {
     getEntry<T>(id: string, query?: any): Promise<Entry<T>>;
     getSpace(): Promise<Space>;
     getLocales(): Promise<LocaleCollection>;
+    getTag(id: string): Promise<Tag>;
+    getTags(query?: any): Promise<TagCollection>;
     parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
     sync(query: any): Promise<SyncCollection>;
 }
@@ -65,6 +67,7 @@ export interface Asset {
             contentType: string;
         };
     };
+    metadata: Metadata;
     toPlainObject(): object;
 }
 
@@ -81,6 +84,7 @@ export type AssetCollection = ContentfulCollection<Asset>
 export interface Entry<T> {
     sys: Sys;
     fields: T;
+    metadata: Metadata;
     toPlainObject(): object;
     update(): Promise<Entry<T>>;
 }
@@ -122,6 +126,18 @@ export interface Locale {
 }
 
 export type LocaleCollection = ContentfulCollection<Locale>;
+
+export interface Tag {
+    name: string
+    sys: {
+      id: string
+      type: 'Tag'
+      version: number
+      visibility: 'public'
+    }
+}
+
+export type TagCollection = ContentfulCollection<Tag>;
 
 export interface SyncCollection {
     entries: Array<Entry<any>>;
@@ -252,4 +268,16 @@ interface RichTextContent {
     marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
     value?: string;
     nodeType: RichTextNodeType;
+}
+
+interface TagLink {
+  sys: {
+    type: 'Link';
+    linkType: 'Tag';
+    id: string;
+  }
+}
+
+interface Metadata {
+  tags: TagLink[];
 }
