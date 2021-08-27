@@ -63,7 +63,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "contentful-resolve-response": "^1.3.0",
-    "contentful-sdk-core": "^6.5.0",
+    "contentful-sdk-core": "github:contentful/contentful-sdk-core#fix/os-error-janko",
     "fast-copy": "^2.1.0",
     "json-stringify-safe": "^5.0.1"
   },
