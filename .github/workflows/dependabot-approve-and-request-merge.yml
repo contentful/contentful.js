@@ -9,15 +9,6 @@ jobs:
 
     if: github.actor == 'dependabot[bot]'
     steps:
-      - name: approve-and-request-merge
-        uses: actions/github-script@v4.0.2
+      - uses: contentful/dependabot-auto-merge@v1
         with:
-          script: |
-            github.pulls.createReview({
-              owner: context.payload.repository.owner.login,
-              repo: context.payload.repository.name,
-              pull_number: context.payload.pull_request.number,
-              event: 'APPROVE',
-              body: '@dependabot merge'
-            })
-          github-token: ${{ secrets.WHYDAH_GITHUB_TOKEN_AUTO_APPROVE }}
+          github-token: ${{ secrets.CF_ECOSYSTEM_BOT_GITHUB_TOKEN_AUTO_APPROVE }}
