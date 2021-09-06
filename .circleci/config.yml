@@ -32,10 +32,19 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - unit
-      - integration
+      - unit:
+          filters:
+            branches:
+              ignore: gh-pages
+      - integration:
+          filters:
+            branches:
+              ignore: gh-pages
       - release:
           context: dev-workflows-release
           requires:
             - unit
             - integration
+          filters:
+            branches:
+              ignore: gh-pages
