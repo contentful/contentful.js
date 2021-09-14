@@ -109,7 +109,7 @@ test('API call getSpace fails', async (t) => {
   try {
     await api.getSpace('spaceid')
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -147,7 +147,7 @@ test('API call getContentType fails', async (t) => {
   try {
     await api.getContentType('ctid')
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -191,7 +191,7 @@ test('API call getContentTypes fails', async (t) => {
   try {
     await api.getContentTypes()
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -231,7 +231,7 @@ test('API call getEntry fails', async (t) => {
   try {
     await api.getEntry('eid')
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -317,7 +317,7 @@ test('API call getEntries fails', async (t) => {
   try {
     await api.getEntries()
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -355,7 +355,7 @@ test('API call getAsset fails', async (t) => {
   try {
     await api.getAsset('aid')
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -399,7 +399,7 @@ test('API call getAssets fails', async (t) => {
   try {
     await api.getAssets()
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -437,7 +437,7 @@ test('API call createAssetKey fails', async (t) => {
   try {
     await api.createAssetKey(now() + 60)
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
@@ -481,7 +481,7 @@ test('API call getLocaless fails', async (t) => {
   try {
     await api.getLocales()
   } catch (r) {
-    t.looseEqual(r, data)
+    t.looseEqual(r.data, data)
   } finally {
     teardown()
   }
