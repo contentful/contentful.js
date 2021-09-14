@@ -14,6 +14,35 @@
   - [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
 
 From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+You can upgrade to a major version using `npm update contentful`
+
+## Migration from contentful.js 9.x
+
+We introduced a new error handler that throws a better formed error with details from the server and obscured tokens.
+We also no longer send the axios error object as is for errors without data or response objects.
+
+```
+{
+  "status": 404,
+  "statusText": "Not Found",
+  "message": "datamessage",
+  "details": "errordetails",
+  "request": {
+    "url": "requesturl",
+    "headers": {
+      "Authorization": "Bearer ...token"
+    }
+  },
+  "requestId": "requestid"
+}
+```
+
+## Migration from contentful.js 8.x
+
+We refactored the code, replacing promises with async/await.
+
+Some functions that used to throw synchronously for things like bad parameters now reject the promise.
+In many cases users may not have to do anything assuming the calls already happened within a promise chain, but in rare cases this may need some refactoring of error handling cases.
 
 ## Migration from contentful.js 7.x
 
