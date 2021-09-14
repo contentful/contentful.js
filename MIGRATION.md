@@ -15,7 +15,8 @@
     - [Link resolution](#link-resolution)
   - [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
 
-From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`.
+
 You can upgrade to a major version using `npm update contentful`
 
 ## Migration from contentful.js 9.x
