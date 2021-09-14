@@ -1,6 +1,8 @@
 # Migration information
 
 - [Migration information](#migration-information)
+  - [Migration from contentful.js 9.x](#migration-from-contentfuljs-9x)
+  - [Migration from contentful.js 8.x](#migration-from-contentfuljs-8x)
   - [Migration from contentful.js 7.x](#migration-from-contentfuljs-7x)
   - [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
   - [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
