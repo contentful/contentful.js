@@ -1,4 +1,6 @@
-export interface Link<T extends string> {
+export type LinkType = 'Space' | 'ContentType' | 'Environment'
+
+export interface Link<T extends LinkType> {
   type: 'Link'
   linkType: T
   id: string

@@ -1,4 +1,4 @@
-import { CreateClientParams } from '../../lib'
+import { CreateClientParams, EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
@@ -62,7 +62,7 @@ test('Gets entry', async () => {
 })
 
 test('Gets an entry with a specific locale', async () => {
-  const entry = await client.getEntry('nyancat', {
+  const entry = await client.getEntry<{test: EntryFields.Symbol}>('nyancat', {
     locale: 'tlh',
   })
   expect(entry.sys.locale).toBe('tlh')
@@ -163,7 +163,7 @@ test('Gets entry with link resolution', async () => {
 })
 
 test('Gets entries with content type query param', async () => {
-  const response = await client.getEntries({ content_type: 'cat' })
+  const response = await client.getEntries({ content_type: 'cat', })
 
   expect(response.total).toBe(3)
   expect(response.items.map((item) => item.sys.contentType.sys.id)).toEqual(['cat', 'cat', 'cat'])

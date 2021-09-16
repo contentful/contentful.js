@@ -1,4 +1,4 @@
-import { AssetSys } from '../asset'
+import { AssetMimeType, AssetSys } from '../asset'
 import { EntrySys } from '../entry'
 import { EqualityFilter, InequalityFilter } from './equality'
 import { ExistenceFilter } from './existence'
@@ -27,15 +27,14 @@ export type SysQueries<Sys> = ExistenceFilter<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'> &
   SelectFilter<Sys, 'sys'>
 
-export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
-  (
+export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> = (
     ExistenceFilter<Fields, 'fields'> &
     EqualityFilter<Fields, 'fields'> &
     InequalityFilter<Fields, 'fields'> &
-    SubsetFilters<Fields, 'fields'> &
     FullTextSearchFilters<Fields, 'fields'> &
     SelectFilter<Fields, 'fields'>
     )
+  | SubsetFilters<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
 
@@ -44,18 +43,22 @@ export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<Entry
   SysQueries<EntrySys> &
   FixedQueryOptions &
   FixedPagedOptions &
+  { content_type?: string } &
   Record<string, any>>
 
-export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = Partial<ExistenceFilter<Fields, 'fields'> &
-  EqualityFilter<Fields, 'fields'> &
-  InequalityFilter<Fields, 'fields'> &
-  SubsetFilters<Fields, 'fields'> &
-  RangeFilters<Fields, 'fields'> &
-  FullTextSearchFilters<Fields, 'fields'> &
-  SelectFilter<Fields, 'fields'>>
+export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = (
+    ExistenceFilter<Fields, 'fields'> &
+    EqualityFilter<Fields, 'fields'> &
+    InequalityFilter<Fields, 'fields'> &
+    FullTextSearchFilters<Fields, 'fields'> &
+    SelectFilter<Fields, 'fields'>
+    )
+  | RangeFilters<Fields, 'fields'>
+  | SubsetFilters<Fields, 'fields'>
 
-export type AssetQueries<Fields extends FieldsType = FieldsType> = AssetFieldsQueries<Fields> &
+export type AssetQueries<Fields extends FieldsType = FieldsType> = Partial<AssetFieldsQueries<Fields> &
   SysQueries<AssetSys> &
   FixedQueryOptions &
   FixedPagedOptions &
-  Record<string, any>
+  { mimetype_group?: AssetMimeType } &
+  Record<string, any>>
