@@ -13,47 +13,42 @@ const booleanValue = true
 const objectValue = { hello: 'world' }
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Object }, 'fields'>>({
-  'fields.testField': objectValue
+  'fields.testField': objectValue,
 })
 expectAssignable<InequalityFilter<{ testField: EntryFields.Object }, 'fields'>>({
-  'fields.testField[ne]': objectValue
+  'fields.testField[ne]': objectValue,
 })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Object }, 'fields'>>(
-  { 'fields.testField[exists]': booleanValue }
-)
-expectNotAssignable<LocationSearchFilters<{
-  testField: EntryFields.Object;
-}, 'fields'>>(
-  {
-    'fields.testField[near]': objectValue,
-    'fields.testField[within]': [0, 0, 0]
-  }
-)
-expectNotAssignable<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>(
-  {
-    'fields.testField[lt]': objectValue,
-    'fields.testField[lte]': objectValue,
-    'fields.testField[gt]': objectValue,
-    'fields.testField[gte]': objectValue
-  }
-)
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Object }, 'fields'>>(
-  { 'fields.testField[match]': stringValue }
-)
-expectAssignable<SelectFilter<{ testField: EntryFields.Object }, 'fields'>>(
-  {
-    'select': ['fields.testField']
-  }
-)
-expectNotAssignable<SubsetFilters<{ testField: EntryFields.Object }, 'fields'>>(
-  {
-    'fields.testField[in]': objectValue,
-    'fields.testField[nin]': objectValue
-  }
-)
-expectNotAssignable<SubsetFilters<{ testField: EntryFields.Object }, 'fields'>>(
-  {
-    'fields.testField[in]': stringValue,
-    'fields.testField[nin]': stringValue
-  }
-)
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Object }, 'fields'>>({
+  'fields.testField[exists]': booleanValue,
+})
+expectNotAssignable<
+  LocationSearchFilters<
+    {
+      testField: EntryFields.Object
+    },
+    'fields'
+  >
+>({
+  'fields.testField[near]': objectValue,
+  'fields.testField[within]': [0, 0, 0],
+})
+expectNotAssignable<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>({
+  'fields.testField[lt]': objectValue,
+  'fields.testField[lte]': objectValue,
+  'fields.testField[gt]': objectValue,
+  'fields.testField[gte]': objectValue,
+})
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Object }, 'fields'>>({
+  'fields.testField[match]': stringValue,
+})
+expectAssignable<SelectFilter<{ testField: EntryFields.Object }, 'fields'>>({
+  select: ['fields.testField'],
+})
+expectNotAssignable<SubsetFilters<{ testField: EntryFields.Object }, 'fields'>>({
+  'fields.testField[in]': objectValue,
+  'fields.testField[nin]': objectValue,
+})
+expectNotAssignable<SubsetFilters<{ testField: EntryFields.Object }, 'fields'>>({
+  'fields.testField[in]': stringValue,
+  'fields.testField[nin]': stringValue,
+})

@@ -27,38 +27,36 @@ export type SysQueries<Sys> = ExistenceFilter<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'> &
   SelectFilter<Sys, 'sys'>
 
-export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> = (
-    ExistenceFilter<Fields, 'fields'> &
-    EqualityFilter<Fields, 'fields'> &
-    InequalityFilter<Fields, 'fields'> &
-    FullTextSearchFilters<Fields, 'fields'> &
-    SelectFilter<Fields, 'fields'>
-    )
+export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
+  | (ExistenceFilter<Fields, 'fields'> &
+      EqualityFilter<Fields, 'fields'> &
+      InequalityFilter<Fields, 'fields'> &
+      FullTextSearchFilters<Fields, 'fields'> &
+      SelectFilter<Fields, 'fields'>)
   | SubsetFilters<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
 
 // create-contentful-api complained about non optional fields when initialized with {}
-export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<EntryFieldsQueries<Fields> &
-  SysQueries<EntrySys> &
-  FixedQueryOptions &
-  FixedPagedOptions &
-  { content_type?: string } &
-  Record<string, any>>
+export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<
+  EntryFieldsQueries<Fields> &
+    SysQueries<EntrySys> &
+    FixedQueryOptions &
+    FixedPagedOptions & { content_type?: string } & Record<string, any>
+>
 
-export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> = (
-    ExistenceFilter<Fields, 'fields'> &
-    EqualityFilter<Fields, 'fields'> &
-    InequalityFilter<Fields, 'fields'> &
-    FullTextSearchFilters<Fields, 'fields'> &
-    SelectFilter<Fields, 'fields'>
-    )
+export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> =
+  | (ExistenceFilter<Fields, 'fields'> &
+      EqualityFilter<Fields, 'fields'> &
+      InequalityFilter<Fields, 'fields'> &
+      FullTextSearchFilters<Fields, 'fields'> &
+      SelectFilter<Fields, 'fields'>)
   | RangeFilters<Fields, 'fields'>
   | SubsetFilters<Fields, 'fields'>
 
-export type AssetQueries<Fields extends FieldsType = FieldsType> = Partial<AssetFieldsQueries<Fields> &
-  SysQueries<AssetSys> &
-  FixedQueryOptions &
-  FixedPagedOptions &
-  { mimetype_group?: AssetMimeType } &
-  Record<string, any>>
+export type AssetQueries<Fields extends FieldsType = FieldsType> = Partial<
+  AssetFieldsQueries<Fields> &
+    SysQueries<AssetSys> &
+    FixedQueryOptions &
+    FixedPagedOptions & { mimetype_group?: AssetMimeType } & Record<string, any>
+>

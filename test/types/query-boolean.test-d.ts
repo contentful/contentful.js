@@ -12,41 +12,38 @@ const stringValue = ''
 const booleanValue = true
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Boolean }, 'fields'>>({
-  'fields.testField': booleanValue
+  'fields.testField': booleanValue,
 })
 expectAssignable<InequalityFilter<{ testField: EntryFields.Boolean }, 'fields'>>({
-  'fields.testField[ne]': booleanValue
+  'fields.testField[ne]': booleanValue,
 })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Boolean }, 'fields'>>(
-  { 'fields.testField[exists]': booleanValue }
-)
-expectNotAssignable<LocationSearchFilters<{
-  testField: EntryFields.Boolean;
-}, 'fields'>>(
-  {
-    'fields.testField[near]': booleanValue,
-    'fields.testField[within]': [0, 0, 0]
-  }
-)
-expectNotAssignable<RangeFilters<{ testField: EntryFields.Boolean }, 'fields'>>(
-  {
-    'fields.testField[lt]': booleanValue,
-    'fields.testField[lte]': booleanValue,
-    'fields.testField[gt]': booleanValue,
-    'fields.testField[gte]': booleanValue
-  }
-)
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>(
-  { 'fields.testField[match]': stringValue }
-)
-expectAssignable<SelectFilter<{ testField: EntryFields.Boolean }, 'fields'>>(
-  {
-    'select': ['fields.testField']
-  }
-)
-expectAssignable<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>(
-  {
-    'fields.testField[in]': booleanValue,
-    'fields.testField[nin]': booleanValue
-  }
-)
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Boolean }, 'fields'>>({
+  'fields.testField[exists]': booleanValue,
+})
+expectNotAssignable<
+  LocationSearchFilters<
+    {
+      testField: EntryFields.Boolean
+    },
+    'fields'
+  >
+>({
+  'fields.testField[near]': booleanValue,
+  'fields.testField[within]': [0, 0, 0],
+})
+expectNotAssignable<RangeFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
+  'fields.testField[lt]': booleanValue,
+  'fields.testField[lte]': booleanValue,
+  'fields.testField[gt]': booleanValue,
+  'fields.testField[gte]': booleanValue,
+})
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
+  'fields.testField[match]': stringValue,
+})
+expectAssignable<SelectFilter<{ testField: EntryFields.Boolean }, 'fields'>>({
+  select: ['fields.testField'],
+})
+expectAssignable<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
+  'fields.testField[in]': booleanValue,
+  'fields.testField[nin]': booleanValue,
+})

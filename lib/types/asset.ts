@@ -27,9 +27,8 @@ export interface Asset {
   fields: AssetFields
 }
 
-
 export type AssetMimeType =
-  'attachment'
+  | 'attachment'
   | 'plaintext'
   | 'image'
   | 'audio'

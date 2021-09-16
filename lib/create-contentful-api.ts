@@ -37,14 +37,9 @@ export interface ContentfulClientApi {
 
   getContentTypes(): Promise<ContentTypeCollection>
 
-  getEntries<Fields = FieldsType>(
-    query?: EntryQueries<Fields>
-  ): Promise<EntryCollection<Fields>>
+  getEntries<Fields = FieldsType>(query?: EntryQueries<Fields>): Promise<EntryCollection<Fields>>
 
-  getEntry<Fields = FieldsType>(
-    id: string,
-    query?: EntryQueries<Fields>
-  ): Promise<Entry<Fields>>
+  getEntry<Fields = FieldsType>(id: string, query?: EntryQueries<Fields>): Promise<Entry<Fields>>
 
   getSpace(): Promise<Space>
 

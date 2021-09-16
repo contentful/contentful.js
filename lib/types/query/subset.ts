@@ -12,8 +12,6 @@ type SupportedTypes = Exclude<BasicEntryField, EntryFields.Location | EntryField
  * // {'fields.myField', 'singleValue'}
  * // {'fields.myField', 'firstValue,secondValue'}
  */
-export type SubsetFilters<Fields, Prefix extends string> = NonEmpty<NonNullable<ConditionalQueries<Fields,
-  SupportedTypes,
-  Prefix,
-  `[${SubsetFilterTypes}]`>>>
-
+export type SubsetFilters<Fields, Prefix extends string> = NonEmpty<
+  NonNullable<ConditionalQueries<Fields, SupportedTypes, Prefix, `[${SubsetFilterTypes}]`>>
+>

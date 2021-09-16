@@ -13,44 +13,41 @@ const stringValue = ''
 const booleanValue = true
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField': dateValue
+  'fields.testField': dateValue,
 })
 expectAssignable<InequalityFilter<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[ne]': dateValue
+  'fields.testField[ne]': dateValue,
 })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Date }, 'fields'>>(
-  { 'fields.testField[exists]': booleanValue }
-)
-expectNotAssignable<LocationSearchFilters<{
-  testField: EntryFields.Date;
-}, 'fields'>>(
-  {
-    'fields.testField[near]': dateValue,
-    'fields.testField[within]': [0, 0, 0]
-  }
-)
-expectAssignable<RangeFilters<{ testField: EntryFields.Date }, 'fields'>>(
-  {
-    'fields.testField[lt]': dateValue,
-    'fields.testField[lte]': dateValue,
-    'fields.testField[gt]': dateValue,
-    'fields.testField[gte]': dateValue
-  }
-)
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>(
-  { 'fields.testField[match]': stringValue }
-)
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>(
-  { 'fields.testField[match]': dateValue }
-)
-expectAssignable<SelectFilter<{ testField: EntryFields.Date }, 'fields'>>(
-  {
-    'select': ['fields.testField']
-  }
-)
-expectAssignable<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>(
-  {
-    'fields.testField[in]': dateValue,
-    'fields.testField[nin]': dateValue
-  }
-)
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField[exists]': booleanValue,
+})
+expectNotAssignable<
+  LocationSearchFilters<
+    {
+      testField: EntryFields.Date
+    },
+    'fields'
+  >
+>({
+  'fields.testField[near]': dateValue,
+  'fields.testField[within]': [0, 0, 0],
+})
+expectAssignable<RangeFilters<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField[lt]': dateValue,
+  'fields.testField[lte]': dateValue,
+  'fields.testField[gt]': dateValue,
+  'fields.testField[gte]': dateValue,
+})
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField[match]': stringValue,
+})
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField[match]': dateValue,
+})
+expectAssignable<SelectFilter<{ testField: EntryFields.Date }, 'fields'>>({
+  select: ['fields.testField'],
+})
+expectAssignable<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>({
+  'fields.testField[in]': dateValue,
+  'fields.testField[nin]': dateValue,
+})

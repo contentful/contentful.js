@@ -13,41 +13,38 @@ const stringValue = ''
 const booleanValue = true
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Integer }, 'fields'>>({
-  'fields.testField': numberValue
+  'fields.testField': numberValue,
 })
 expectAssignable<InequalityFilter<{ testField: EntryFields.Integer }, 'fields'>>({
-  'fields.testField[ne]': numberValue
+  'fields.testField[ne]': numberValue,
 })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Integer }, 'fields'>>(
-  { 'fields.testField[exists]': booleanValue }
-)
-expectNotAssignable<LocationSearchFilters<{
-  testField: EntryFields.Integer;
-}, 'fields'>>(
-  {
-    'fields.testField[near]': numberValue,
-    'fields.testField[within]': [0, 0, 0]
-  }
-)
-expectAssignable<RangeFilters<{ testField: EntryFields.Integer }, 'fields'>>(
-  {
-    'fields.testField[lt]': numberValue,
-    'fields.testField[lte]': numberValue,
-    'fields.testField[gt]': numberValue,
-    'fields.testField[gte]': numberValue
-  }
-)
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Integer }, 'fields'>>(
-  { 'fields.testField[match]': stringValue }
-)
-expectAssignable<SelectFilter<{ testField: EntryFields.Integer }, 'fields'>>(
-  {
-    'select': ['fields.testField']
-  }
-)
-expectAssignable<SubsetFilters<{ testField: EntryFields.Integer }, 'fields'>>(
-  {
-    'fields.testField[in]': numberValue,
-    'fields.testField[nin]': numberValue
-  }
-)
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Integer }, 'fields'>>({
+  'fields.testField[exists]': booleanValue,
+})
+expectNotAssignable<
+  LocationSearchFilters<
+    {
+      testField: EntryFields.Integer
+    },
+    'fields'
+  >
+>({
+  'fields.testField[near]': numberValue,
+  'fields.testField[within]': [0, 0, 0],
+})
+expectAssignable<RangeFilters<{ testField: EntryFields.Integer }, 'fields'>>({
+  'fields.testField[lt]': numberValue,
+  'fields.testField[lte]': numberValue,
+  'fields.testField[gt]': numberValue,
+  'fields.testField[gte]': numberValue,
+})
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Integer }, 'fields'>>({
+  'fields.testField[match]': stringValue,
+})
+expectAssignable<SelectFilter<{ testField: EntryFields.Integer }, 'fields'>>({
+  select: ['fields.testField'],
+})
+expectAssignable<SubsetFilters<{ testField: EntryFields.Integer }, 'fields'>>({
+  'fields.testField[in]': numberValue,
+  'fields.testField[nin]': numberValue,
+})

@@ -13,8 +13,6 @@ type SupportedTypes = EntryFields.Date | EntryFields.Number | EntryFields.Intege
  * {string} gte: Greater than or equal to.
  * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
  */
-export type RangeFilters<Fields, Prefix extends string> = NonEmpty<ConditionalQueries<Fields,
-  SupportedTypes,
-  Prefix,
-  `[${RangeFilterTypes}]`>>
-
+export type RangeFilters<Fields, Prefix extends string> = NonEmpty<
+  ConditionalQueries<Fields, SupportedTypes, Prefix, `[${RangeFilterTypes}]`>
+>
