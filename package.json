@@ -7,6 +7,13 @@
   "module": "./dist/contentful.esm.js",
   "jsnext:main": "./dist/contentful.esm.js",
   "types": "./dist/types/index.d.ts",
+  "tsd": {
+    "directory": "test/types",
+    "compilerOptions": {
+      "rootDir": "./lib",
+      "typeRoots": ["./lib"]
+    }
+  },
   "files": [
     "dist",
     "lib",
@@ -43,6 +50,7 @@
     "test:unit:watch": "tsdx test ./test/unit --watch",
     "test:integration": "tsdx test ./test/integration --coverage",
     "test:size": "bundlesize",
+    "test:types": "./node_modules/.bin/tsd",
     "test:prepush": "npm run build && npm run test:unit && npm run test:size",
     "prepublishOnly": "npm run build",
     "postpublish": "npm run docs:publish && npm run clean",
@@ -104,8 +112,10 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.0",
     "semantic-release": "^17.0.4",
+    "tsd": "^0.14.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
+    "type-fest": "^0.20.2",
     "typescript": "^4.1.3"
   },
   "resolutions": {

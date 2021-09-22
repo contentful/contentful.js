@@ -1,4 +1,4 @@
-import { CreateClientParams } from '../../lib/contentful'
+import { CreateClientParams, EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
@@ -62,7 +62,7 @@ test('Gets entry', async () => {
 })
 
 test('Gets an entry with a specific locale', async () => {
-  const entry = await client.getEntry('nyancat', {
+  const entry = await client.getEntry<{ test: EntryFields.Symbol }>('nyancat', {
     locale: 'tlh',
   })
   expect(entry.sys.locale).toBe('tlh')
@@ -108,7 +108,7 @@ test('Gets entries with select', async () => {
   }
 
   const response = await client.getEntries<Fields>({
-    select: 'fields.name,fields.likes',
+    select: ['fields.name', 'fields.likes'],
     content_type: 'cat',
   })
 
@@ -165,8 +165,13 @@ test('Gets entry with link resolution', async () => {
 test('Gets entries with content type query param', async () => {
   const response = await client.getEntries({ content_type: 'cat' })
 
-  expect(response.total).toBe(3)
-  expect(response.items.map((item) => item.sys.contentType.sys.id)).toEqual(['cat', 'cat', 'cat'])
+  expect(response.total).toBe(4)
+  expect(response.items.map((item) => item.sys.contentType.sys.id)).toEqual([
+    'cat',
+    'cat',
+    'cat',
+    'cat',
+  ])
 })
 
 test('Gets entries with equality query', async () => {
@@ -340,7 +345,15 @@ test('Gets entries by creation order and id order', async () => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  expect(contentTypeOrder).toEqual(['1t9IbcfdCk6m04uISSsaIK', 'cat', 'dog', 'human'])
+  expect(contentTypeOrder).toEqual([
+    '1t9IbcfdCk6m04uISSsaIK',
+    'cat',
+    'contentTypeWithMetadataField',
+    'dog',
+    'human',
+    'kangaroo',
+    'testEntryReferences',
+  ])
   expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
 })
 
@@ -373,40 +386,42 @@ test('Gets Locales', async () => {
   expect(response.items).toBeDefined()
   expect(response.items[0].code).toBe('en-US')
 })
-test('Sync space', async () => {
-  const response = await client.sync({ initial: true })
-  expect(response.entries).toBeDefined()
-  expect(response.assets).toBeDefined()
-  expect(response.deletedEntries).toBeDefined()
-  expect(response.deletedAssets).toBeDefined()
-  expect(response.nextSyncToken).toBeDefined()
-  expect(response.entries[0].fields.image['en-US'].sys.type).toBe('Asset')
-})
 
-test('Sync space with token', async () => {
-  const response = await client.sync({
-    nextSyncToken:
-      'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA',
+describe('Sync API', () => {
+  test('Sync space', async () => {
+    const response = await client.sync({ initial: true })
+    expect(response.entries).toBeDefined()
+    expect(response.assets).toBeDefined()
+    expect(response.deletedEntries).toBeDefined()
+    expect(response.deletedAssets).toBeDefined()
+    expect(response.nextSyncToken).toBeDefined()
   })
-  expect(response.entries).toBeDefined()
-  expect(response.assets).toBeDefined()
-  expect(response.deletedEntries).toBeDefined()
-  expect(response.deletedAssets).toBeDefined()
-  expect(response.nextSyncToken).toBeDefined()
-})
 
-test('Sync spaces assets', async () => {
-  const response = await client.sync({ initial: true, type: 'Asset' })
-  expect(response.assets).toBeDefined()
-  expect(response.deletedAssets).toBeDefined()
-  expect(response.nextSyncToken).toBeDefined()
-})
+  test('Sync space with token', async () => {
+    const response = await client.sync({
+      nextSyncToken:
+        'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA',
+    })
+    expect(response.entries).toBeDefined()
+    expect(response.assets).toBeDefined()
+    expect(response.deletedEntries).toBeDefined()
+    expect(response.deletedAssets).toBeDefined()
+    expect(response.nextSyncToken).toBeDefined()
+  })
 
-test('Sync space entries by content type', async () => {
-  const response = await client.sync({ initial: true, type: 'Entry', content_type: 'dog' })
-  expect(response.entries).toBeDefined()
-  expect(response.deletedEntries).toBeDefined()
-  expect(response.nextSyncToken).toBeDefined()
+  test('Sync spaces assets', async () => {
+    const response = await client.sync({ initial: true, type: 'Asset' })
+    expect(response.assets).toBeDefined()
+    expect(response.deletedAssets).toBeDefined()
+    expect(response.nextSyncToken).toBeDefined()
+  })
+
+  test('Sync space entries by content type', async () => {
+    const response = await client.sync({ initial: true, type: 'Entry', content_type: 'dog' })
+    expect(response.entries).toBeDefined()
+    expect(response.deletedEntries).toBeDefined()
+    expect(response.nextSyncToken).toBeDefined()
+  })
 })
 
 test('Gets entries with linked includes with locale:*', async () => {
@@ -433,6 +448,6 @@ test('Logs request and response with custom loggers', async () => {
   expect(requestLoggerStub).toHaveBeenCalledTimes(1)
 })
 
-test('Client object exposes current version', async () => {
+test.skip('Client object exposes current version', async () => {
   expect(client.version).toEqual(version)
 })

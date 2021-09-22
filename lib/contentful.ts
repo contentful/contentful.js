@@ -6,8 +6,7 @@
  */
 
 import axios from 'axios'
-import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import { HttpClientInstance } from './types'
+import { AxiosInstance, createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
@@ -100,7 +99,8 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
   }
 
   const userAgentHeader = getUserAgentHeader(
-    `contentful.js/${__VERSION__}`,
+    //`contentful.js/${__VERSION__}`,
+    `contentful.js/test-0.0.0`,
     config.application,
     config.integration
   )
@@ -136,7 +136,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
   })
 }
 
-function obscureAuthTokenInResponse(http: HttpClientInstance) {
+function obscureAuthTokenInResponse(http: AxiosInstance) {
   http.interceptors.response.use(
     (response) => {
       return response

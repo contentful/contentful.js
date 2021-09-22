@@ -16,7 +16,7 @@ export declare namespace EntryFields {
   type Text = string
   type Integer = number
   type Number = number
-  type Date = string
+  type Date = `${number}-${number}-${number}T${number}:${number}:${number}Z`
   type Boolean = boolean
 
   interface Location {
@@ -26,7 +26,7 @@ export declare namespace EntryFields {
 
   type Link<T> = Asset | Entry<T>
   type Array<T = any> = symbol[] | Entry<T>[] | Asset[]
-  type Object<T = any> = T
+  type Object<T extends Record<string, any> = Record<string, unknown>> = T
   type RichText = RichTextDocument
 }
 
