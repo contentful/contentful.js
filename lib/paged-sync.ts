@@ -2,9 +2,8 @@
  * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
  * @namespace Sync
  */
-import { createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
+import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import resolveResponse from 'contentful-resolve-response'
-import { AxiosInstance } from 'contentful-sdk-core/dist/types/types'
 import mixinStringifySafe from './mixins/stringify-safe'
 
 /**
