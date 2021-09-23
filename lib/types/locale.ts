@@ -8,6 +8,9 @@ export interface LocaleSys extends BaseSys {
   version: number
 }
 
+/**
+ * @category Entities
+ */
 export interface Locale {
   code: string
   name: string

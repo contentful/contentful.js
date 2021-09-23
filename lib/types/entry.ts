@@ -44,6 +44,10 @@ export type BasicEntryField =
   | EntryFields.RichText
   | EntryFields.Object
 
+
+/**
+ * @category Entities
+ */
 export interface Entry<T> {
   sys: EntrySys
   fields: T
