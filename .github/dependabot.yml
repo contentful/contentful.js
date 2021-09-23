@@ -1,0 +1,17 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "00:00"
+      timezone: UTC
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: husky
+        versions:
+          - ">=5.0.0"
+    commit-message:
+      prefix: build
+      include: scope
