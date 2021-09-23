@@ -11,7 +11,9 @@
     "directory": "test/types",
     "compilerOptions": {
       "rootDir": "./lib",
-      "typeRoots": ["./lib"]
+      "typeRoots": [
+        "./lib"
+      ]
     }
   },
   "files": [
