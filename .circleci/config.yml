@@ -1,35 +1,5 @@
 version: 2.1
 jobs:
-  unit:
-    docker:
-      - image: circleci/node:12
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
-      - run: npm run build
-      - run: npm run test:unit
-      - run: bash <(curl -s https://codecov.io/bash) -F unittests
-      - run:
-          name: Build Success
-          when: on_success
-          command: ./node_modules/.bin/codecov
-  integration:
-    docker:
-      - image: circleci/node:12
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
-      - run: npm run build
-      - run: npm run test:integration
-      - run: bash <(curl -s https://codecov.io/bash) -F integrationtests
-      - run:
-          name: Build Success
-          when: on_success
-          command: ./node_modules/.bin/codecov
   lint:
     docker:
       - image: circleci/node:12
@@ -40,6 +10,28 @@ jobs:
       - run: npm install
       - run: npm run lint
       - run: npm run prettier:check
+      - run: npm run build
+      - run: npm run test:types
+  unit:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:unit
+  integration:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:integration
   release:
     docker:
       - image: circleci/node:12
@@ -56,12 +48,8 @@ workflows:
       - unit
       - integration
       - release:
+          context: dev-workflows-release
           requires:
             - lint
             - unit
             - integration
-          filters:
-            branches:
-              only:
-                - master
-
