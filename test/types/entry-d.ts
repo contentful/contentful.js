@@ -14,14 +14,14 @@ const entrySysValue: EntrySys = {
   type: '', //?
   updatedAt: dateValue,
   id: stringValue,
-  createdAt: dateValue
+  createdAt: dateValue,
 }
 
 expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
   sys: entrySysValue,
   fields: {
-    stringField: stringValue
-  }
+    stringField: stringValue,
+  },
 })
 
 expectAssignable<LocalizedEntry<{ stringField: EntryFields.Text }, 'US' | 'DE'>>({
@@ -30,11 +30,11 @@ expectAssignable<LocalizedEntry<{ stringField: EntryFields.Text }, 'US' | 'DE'>>
     stringField: {
       US: stringValue,
       DE: stringValue,
-    }
-  }
+    },
+  },
 })
 
-
+// TODO fix test
 /*
 expectAssignable<ResolvedEntry<{ referenceField: EntryLink }>>({
   sys: entrySysValue,
