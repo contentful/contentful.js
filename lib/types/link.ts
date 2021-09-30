@@ -1,4 +1,4 @@
-export type LinkType = 'Space' | 'ContentType' | 'Environment'
+export type LinkType = 'Space' | 'ContentType' | 'Environment' | 'Entry'
 
 export interface Link<T extends LinkType> {
   type: 'Link'
@@ -9,3 +9,4 @@ export interface Link<T extends LinkType> {
 export type SpaceLink = Link<'Space'>
 export type ContentTypeLink = Link<'ContentType'>
 export type EnvironmentLink = Link<'Environment'>
+export type EntryLink = Link<'Entry'>

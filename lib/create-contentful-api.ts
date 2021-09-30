@@ -15,18 +15,58 @@ import {
   AssetQueries,
   ContentType,
   ContentTypeCollection,
+  EntriesQueries,
   Entry,
   EntryCollection,
-  EntryQueries,
   LocaleCollection,
+  LocaleValue,
+  LocalizedEntry,
+  LocalizedEntryCollection,
+  ResolvedEntry,
+  ResolvedEntryCollection,
+  ResolvedLocalizedEntry,
+  ResolvedLocalizedEntryCollection,
   Space,
   SyncCollection,
 } from './types'
+import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 
-export interface ContentfulClientApi {
+export type UnresolvedClient = {
+  getEntry<Fields extends FieldsType>(id: string, query?: EntryQueries): Promise<Entry<Fields>>
+  getEntries<Fields extends FieldsType>(
+    query?: EntriesQueries<Fields>
+  ): Promise<EntryCollection<Fields>>
+  localized: UnresolvedLocalizedClient
+}
+
+export type UnresolvedLocalizedClient = {
+  getEntry<Fields extends FieldsType, Locale extends LocaleValue = any>(
+    id: string,
+    query?: EntryQueries,
+    locale?: Locale
+  ): Promise<LocalizedEntry<Fields, Locale>>
+  getEntries<Fields extends FieldsType, Locale extends LocaleValue = any>(
+    query?: EntriesQueries<Fields>,
+    locale?: Locale
+  ): Promise<LocalizedEntryCollection<Fields, Locale>>
+}
+
+export type LocalizedClient = {
+  getEntry<Fields extends FieldsType, Locale extends LocaleValue = any>(
+    id: string,
+    query?: EntryQueries,
+    locale?: Locale
+  ): Promise<ResolvedLocalizedEntry<Fields, Locale>>
+  getEntries<Fields extends FieldsType, Locale extends LocaleValue = any>(
+    query?: EntriesQueries<Fields>,
+    locale?: Locale
+  ): Promise<ResolvedLocalizedEntryCollection<Fields, Locale>>
+}
+
+export type ContentfulClientApi = {
   version: string
 
   getAsset(id: string): Promise<Asset>
@@ -37,10 +77,6 @@ export interface ContentfulClientApi {
 
   getContentTypes(): Promise<ContentTypeCollection>
 
-  getEntries<Fields = FieldsType>(query?: EntryQueries<Fields>): Promise<EntryCollection<Fields>>
-
-  getEntry<Fields = FieldsType>(id: string, query?: EntryQueries<Fields>): Promise<Entry<Fields>>
-
   getSpace(): Promise<Space>
 
   getLocales(): Promise<LocaleCollection>
@@ -48,6 +84,19 @@ export interface ContentfulClientApi {
   parseEntries<T>(raw: any): EntryCollection<T>
 
   sync(query: any): Promise<SyncCollection>
+
+  getEntry<Fields extends FieldsType>(
+    id: string,
+    query?: EntryQueries
+  ): Promise<ResolvedEntry<Fields>>
+
+  getEntries<Fields extends FieldsType>(
+    query?: EntriesQueries<Fields>
+  ): Promise<ResolvedEntryCollection<Fields>>
+
+  unresolved: UnresolvedClient
+
+  localized: LocalizedClient
 }
 
 /**
@@ -215,17 +264,81 @@ export default function createContentfulApi({
    * const entry = await client.getEntry('<entry_id>')
    * console.log(entry)
    */
+
   async function getEntry<Fields>(
     id: string,
-    query: EntryQueries<Fields> = {}
+    query: EntryQueries = {}
+  ): Promise<ResolvedEntry<Fields>> {
+    return internalGetEntry<ResolvedEntry<Fields>>(id, query, true)
+  }
+
+  async function getEntries<Fields>(
+    query: EntriesQueries<Fields> = {}
+  ): Promise<ResolvedEntryCollection<Fields>> {
+    return internalGetEntries<ResolvedEntryCollection<Fields>>(query, true)
+  }
+
+  async function getLocalizedEntry<Fields, Locale extends LocaleValue = any>(
+    id: string,
+    query: EntryQueries = {},
+    locale: LocaleValue = '*'
+  ): Promise<ResolvedLocalizedEntry<Fields, Locale>> {
+    return internalGetEntry<ResolvedLocalizedEntry<Fields, Locale>>(id, { locale, ...query }, true)
+  }
+
+  async function getLocalizedEntries<Fields, Locale extends LocaleValue = any>(
+    query: EntriesQueries<Fields> = {},
+    locale: LocaleValue = '*'
+  ): Promise<ResolvedLocalizedEntryCollection<Fields, Locale>> {
+    return internalGetEntries<ResolvedLocalizedEntryCollection<Fields, Locale>>(
+      { locale, ...query },
+      true
+    )
+  }
+
+  async function getUnresolvedEntry<Fields>(
+    id: string,
+    query: EntryQueries = {}
   ): Promise<Entry<Fields>> {
+    return internalGetEntry<Entry<Fields>>(id, query, false)
+  }
+
+  async function getUnresolvedEntries<Fields>(
+    query: EntriesQueries<Fields> = {}
+  ): Promise<EntryCollection<Fields>> {
+    return internalGetEntries<EntryCollection<Fields>>(query, false)
+  }
+
+  async function getUnresolvedLocalizedEntry<Fields, Locale extends LocaleValue = any>(
+    id: string,
+    query: EntryQueries = {},
+    locale: LocaleValue = '*'
+  ): Promise<LocalizedEntry<Fields, Locale>> {
+    return internalGetEntry<LocalizedEntry<Fields, Locale>>(id, { locale, ...query }, false)
+  }
+
+  async function getUnresolvedLocalizedEntries<Fields, Locale extends LocaleValue = any>(
+    query: EntriesQueries<Fields> = {},
+    locale: LocaleValue = '*'
+  ): Promise<LocalizedEntryCollection<Fields, Locale>> {
+    return internalGetEntries<LocalizedEntryCollection<Fields, Locale>>({ locale, ...query }, false)
+  }
+
+  async function internalGetEntry<RValue>(
+    id: string,
+    query,
+    resolveLinks: boolean
+  ): Promise<RValue> {
     if (!id) {
       throw notFoundError(id)
     }
     try {
-      const response = await this.getEntries({ 'sys.id': id, ...query })
+      const response = await internalGetEntries<{ items: RValue[] }>(
+        { 'sys.id': id, ...query },
+        resolveLinks
+      )
       if (response.items.length > 0) {
-        return response.items[0]
+        return response.items[0] as RValue
       } else {
         throw notFoundError(id)
       }
@@ -234,33 +347,18 @@ export default function createContentfulApi({
     }
   }
 
-  /**
-   * Gets a collection of Entries
-   * @memberof ContentfulClientAPI
-   * @param  {Object=} query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
-   * @return {Promise<Entities.EntryCollection>} Promise for a collection of Entries
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getEntries()
-   * .console.log(response.items)
-   */
-  async function getEntries<Fields>(
-    query: EntryQueries<Fields> = {}
-  ): Promise<EntryCollection<Fields>> {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions({})
+  async function internalGetEntries<RType>(
+    query: Record<string, any>,
+    resolveLinks = false
+  ): Promise<RType> {
+    const { removeUnresolved } = getGlobalOptions({})
     try {
       const entries = await get({
         context: 'environment',
         path: 'entries',
         config: createRequestConfig({ query: normalizeSelect(query) }),
       })
-      return resolveCircular(entries, { resolveLinks, removeUnresolved })
+      return resolveCircular(entries, { resolveLinks, removeUnresolved }) as RType
     } catch (error) {
       errorHandler(error)
     }
@@ -420,18 +518,36 @@ export default function createContentfulApi({
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
-  return {
+  return <ContentfulClientApi>{
     // version: __VERSION__,
     version: 'test-0.0.0',
     getSpace: getSpace,
     getContentType: getContentType,
     getContentTypes: getContentTypes,
-    getEntry: getEntry,
-    getEntries: getEntries,
+
     getAsset: getAsset,
     getAssets: getAssets,
+
     getLocales: getLocales,
     parseEntries: parseEntries,
     sync: sync,
+
+    getEntry: getEntry,
+    getEntries: getEntries,
+
+    localized: {
+      getEntry: getLocalizedEntry,
+      getEntries: getLocalizedEntries,
+    },
+
+    unresolved: {
+      getEntry: getUnresolvedEntry,
+      getEntries: getUnresolvedEntries,
+
+      localized: {
+        getEntry: getUnresolvedLocalizedEntry,
+        getEntries: getUnresolvedLocalizedEntries,
+      },
+    },
   }
 }

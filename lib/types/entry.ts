@@ -1,8 +1,10 @@
+import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { EntitySys } from './sys'
-import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { ContentTypeLink } from './link'
+import { LocaleValue } from './locale'
+import { FieldsType } from './query/util'
+import { EntitySys } from './sys'
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
@@ -45,7 +47,68 @@ export interface Entry<T> {
   fields: T
 }
 
-export interface EntryCollection<T> extends ContentfulCollection<Entry<T>> {
-  errors?: Array<any>
-  includes?: any
+interface EntryLink<T> {
+  sys: {
+    type: 'Link'
+    linkType: 'Entry'
+    id: string
+  }
 }
+
+export interface LocalizedEntry<Fields extends FieldsType, Locale extends LocaleValue> {
+  sys: EntrySys
+  fields: {
+    [FieldName in keyof Fields]: {
+      [LocaleName in Locale]?: Fields[FieldName]
+    }
+  }
+}
+
+export type ResolvedEntry<Fields extends FieldsType> = {
+  sys: EntrySys
+  fields: {
+    [FieldName in keyof Fields]: Fields[FieldName] extends
+      | EntryLink<infer LinkedEntryFields>
+      | undefined
+      ? ResolvedEntry<LinkedEntryFields>
+      : Fields[FieldName] extends Array<EntryLink<infer LinkedEntryFields>> | undefined
+      ? Array<ResolvedEntry<LinkedEntryFields>>
+      : Fields[FieldName]
+  }
+}
+
+export type ResolvedLocalizedEntry<Fields extends FieldsType, Locales extends LocaleValue> = {
+  sys: EntrySys
+  fields: {
+    [FieldName in keyof Fields]: {
+      [LocaleName in Locales]?: Fields[FieldName] extends
+        | EntryLink<infer LinkedEntryFields>
+        | undefined
+        ? ResolvedLocalizedEntry<LinkedEntryFields, Locales>
+        : Fields[FieldName] extends Array<EntryLink<infer LinkedEntryFields>> | undefined
+        ? Array<ResolvedLocalizedEntry<LinkedEntryFields, Locales>>
+        : Fields[FieldName]
+    }
+  }
+}
+
+export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TEntry> {
+  errors?: Array<any>
+  includes?: {
+    Entry?: any[]
+    Asset?: any[]
+  }
+}
+
+export type EntryCollection<T> = AbstractEntryCollection<Entry<T>>
+
+export type ResolvedEntryCollection<T> = AbstractEntryCollection<ResolvedEntry<T>>
+
+export type LocalizedEntryCollection<Fields, Locales extends LocaleValue> = AbstractEntryCollection<
+  LocalizedEntry<Fields, Locales>
+>
+
+export type ResolvedLocalizedEntryCollection<
+  Fields,
+  Locales extends LocaleValue
+> = AbstractEntryCollection<ResolvedLocalizedEntry<Fields, Locales>>

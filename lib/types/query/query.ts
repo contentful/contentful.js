@@ -16,7 +16,7 @@ type FixedPagedOptions = {
 
 type FixedQueryOptions = {
   include?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-  locale?: string
+  // locale?: string
   query?: string
 }
 
@@ -38,12 +38,14 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
   | RangeFilters<Fields, 'fields'>
 
 // create-contentful-api complained about non optional fields when initialized with {}
-export type EntryQueries<Fields extends FieldsType = FieldsType> = Partial<
+export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
   EntryFieldsQueries<Fields> &
     SysQueries<EntrySys> &
     FixedQueryOptions &
     FixedPagedOptions & { content_type?: string } & Record<string, any>
 >
+
+export type EntryQueries = Partial<FixedQueryOptions & Record<string, any>>
 
 export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> =
   | (ExistenceFilter<Fields, 'fields'> &

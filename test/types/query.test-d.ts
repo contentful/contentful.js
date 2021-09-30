@@ -1,5 +1,5 @@
 import { expectAssignable } from 'tsd'
-import { EntryFields, EntryQueries } from '../../lib'
+import { EntryFields, EntriesQueries } from '../../lib'
 import { EntryFieldsQueries } from '../../lib/types/query/query'
 
 export const stringValue = ''
@@ -33,7 +33,7 @@ expectAssignable<EntryFieldsQueries<{ numberField: EntryFields.Number }>>({
  * Entry
  */
 expectAssignable<
-  EntryQueries<{
+  EntriesQueries<{
     stringField: EntryFields.Text
     numberField: EntryFields.Number
   }>

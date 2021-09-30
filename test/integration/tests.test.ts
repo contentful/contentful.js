@@ -62,9 +62,7 @@ test('Gets entry', async () => {
 })
 
 test('Gets an entry with a specific locale', async () => {
-  const entry = await client.getEntry<{ test: EntryFields.Symbol }>('nyancat', {
-    locale: 'tlh',
-  })
+  const entry = await client.localized.getEntry<{ test: EntryFields.Symbol }>('nyancat', {}, 'tlh')
   expect(entry.sys.locale).toBe('tlh')
 })
 
@@ -81,11 +79,12 @@ test('Get entry with fallback locale', async () => {
   type Fields = { title: string }
 
   const entries = await Promise.all([
-    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'af' }),
-    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
-    localeClient.getEntry<Fields>('no-zu-ZA', { locale: 'zu-ZA' }),
-    localeClient.getEntry<Fields>('no-ne-NP', { locale: 'ne-NP' }),
-    localeClient.getEntry<Fields>('no-af', { locale: 'af' }),
+    localeClient.localized.getEntry<Fields>('no-af-and-no-zu-za', {}, 'af'),
+    localeClient.localized.getEntry<Fields>('no-af-and-no-zu-za', {}, 'zu-ZA'),
+    localeClient.localized.getEntry<Fields>('no-zu-ZA', {}, 'zu-ZA'),
+    localeClient.localized.getEntry<Fields>('no-ne-NP', {}, 'ne-NP'),
+    localeClient.localized.getEntry<Fields>('no-af', {}, 'af'),
+    localeClient.localized.getEntry<Fields, 'af'>('no-af', {}, 'af'),
   ])
 
   expect(entries[0].fields.title).not.toBe('')
@@ -119,9 +118,7 @@ test('Gets entries with select', async () => {
 })
 
 test('Gets entries with a specific locale', async () => {
-  const response = await client.getEntries({
-    locale: 'tlh',
-  })
+  const response = await client.localized.getEntries({}, 'tlh')
 
   expect(response.items[0].sys.locale).toBe('tlh')
   expect(response.items).toBeDefined()
@@ -149,8 +146,8 @@ test('Gets entries with linked includes', async () => {
   const response = await client.getEntries({ include: 2, 'sys.id': 'nyancat' })
 
   expect(response.includes).toBeDefined()
-  expect(response.includes.Asset).toBeDefined()
-  expect(Object.keys(response.includes.Asset).length).toBeGreaterThan(0)
+  expect(response.includes!.Asset).toBeDefined()
+  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
   expect(response.items[0].fields.bestFriend.sys.type).toEqual('Entry')
   expect(response.items[0].fields.bestFriend.fields).toBeDefined()
 })
@@ -425,19 +422,23 @@ describe('Sync API', () => {
 })
 
 test('Gets entries with linked includes with locale:*', async () => {
-  const response = await client.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
+  const response = await client.localized.getEntries({ include: 5, 'sys.id': 'nyancat' }, '*')
   expect(response.includes).toBeDefined()
-  expect(response.includes.Asset).toBeDefined()
-  expect(Object.keys(response.includes.Asset).length).toBeGreaterThan(0)
+  expect(response.includes!.Asset).toBeDefined()
+  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
   expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
   expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
 })
 
 test('Gets entries with linked includes with local:* in preview', async () => {
-  const response = await previewClient.getEntries({ locale: '*', include: 5, 'sys.id': 'nyancat' })
+  const response = await previewClient.localized.getEntries({
+    locale: '*',
+    include: 5,
+    'sys.id': 'nyancat',
+  })
   expect(response.includes).toBeDefined()
-  expect(response.includes.Asset).toBeDefined()
-  expect(Object.keys(response.includes.Asset).length).toBeGreaterThan(0)
+  expect(response.includes!.Asset).toBeDefined()
+  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
   expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
   expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
 })
