@@ -159,6 +159,9 @@ export interface Sys {
     space?: {
         sys: SpaceLink;
     };
+    environment?: {
+        sys: SpaceLink;
+    };
     contentType: {
         sys: ContentTypeLink;
     };
