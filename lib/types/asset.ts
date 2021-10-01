@@ -1,4 +1,5 @@
 import { ContentfulCollection } from './collection'
+import { Metadata } from './metadata'
 import { EntitySys } from './sys'
 
 export interface AssetDetails {
@@ -25,6 +26,7 @@ export interface AssetFields {
 export interface Asset {
   sys: AssetSys
   fields: AssetFields
+  metadata: Metadata
 }
 
 export type AssetMimeType =

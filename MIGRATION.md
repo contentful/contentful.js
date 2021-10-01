@@ -1,7 +1,9 @@
 # Migration information
 
 - [Migration information](#migration-information)
-  - [Migration from contentful.js 6.x](#migration-from-contentfuljs-6x)
+  - [Migration from contentful.js 9.x](#migration-from-contentfuljs-9x)
+  - [Migration from contentful.js 8.x](#migration-from-contentfuljs-8x)
+  - [Migration from contentful.js 7.x](#migration-from-contentfuljs-7x)
   - [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
   - [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
   - [Migration from contentful.js 3.x](#migration-from-contentfuljs-3x)
@@ -13,9 +15,39 @@
     - [Link resolution](#link-resolution)
   - [Migration from contentful.js 2.x and older](#migration-from-contentfuljs-2x-and-older)
 
-From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`
+From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`.
 
-## Migration from contentful.js 6.x
+You can upgrade to a major version using `npm update contentful`
+
+## Migration from contentful.js 9.x
+
+We introduced a new error handler that throws a better formed error with details from the server and obscured tokens.
+We also no longer send the axios error object as is for errors without data or response objects.
+
+```
+{
+  "status": 404,
+  "statusText": "Not Found",
+  "message": "datamessage",
+  "details": "errordetails",
+  "request": {
+    "url": "requesturl",
+    "headers": {
+      "Authorization": "Bearer ...token"
+    }
+  },
+  "requestId": "requestid"
+}
+```
+
+## Migration from contentful.js 8.x
+
+We refactored the code, replacing promises with async/await.
+
+Some functions that used to throw synchronously for things like bad parameters now reject the promise.
+In many cases users may not have to do anything assuming the calls already happened within a promise chain, but in rare cases this may need some refactoring of error handling cases.
+
+## Migration from contentful.js 7.x
 
 We dropped support for Node v11 and older. Please ensure you are running Node v12 or newer.
 We also made browser support track https://github.com/contentful/browserslist-config
@@ -48,7 +80,7 @@ From version 4.0.0 and up contentful.js is exported as a single `umd` bundle the
 
 ## Migration to contentful.js 3.x from previous versions
 
-__(March 8th, 2016)__
+**(March 8th, 2016)**
 
 contentful.js 3.x was a major rewrite, with some API changes. While the base functionality remains the same, some method names have changed, as well as some internal behaviors.
 
@@ -68,16 +100,16 @@ This helps bring the API of this SDK more in line with that of [contentful-manag
 
 For contentful.js, all of these methods were renamed, apart from `sync()`. The complete list is on the following table:
 
-Old name | New name
----------|---------
-`space()` | `getSpace()`
-`entry()` | `getEntry()`
-`entries()` | `getEntries()`
-`contentType()` | `getContentType()`
-`contentTypes()` | `getContentTypes()`
-`asset()` | `getAsset()`
-`assets()` | `getAssets()`
-`sync()` | `sync()`
+| Old name         | New name            |
+| ---------------- | ------------------- |
+| `space()`        | `getSpace()`        |
+| `entry()`        | `getEntry()`        |
+| `entries()`      | `getEntries()`      |
+| `contentType()`  | `getContentType()`  |
+| `contentTypes()` | `getContentTypes()` |
+| `asset()`        | `getAsset()`        |
+| `assets()`       | `getAssets()`       |
+| `sync()`         | `sync()`            |
 
 ### Format of collection replies
 

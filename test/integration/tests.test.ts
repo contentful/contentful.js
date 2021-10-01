@@ -1,20 +1,22 @@
 import { CreateClientParams, EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
 
 const params: CreateClientParams = {
-  accessToken: '59fceefbb829023353b4961933b699896e2e5d92078f5e752aaee8d7c2612dfc',
+  accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
   space: 'ezs1swce23xe',
 }
 const localeSpaceParams = {
-  accessToken: 'da1dc0e316213fe11e6139d3cd02f853b12da3f3fd0b4f146a1613a9cca277cd',
+  accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
   space: '7dh3w86is8ls',
 }
 
 const previewParams = {
   host: 'preview.contentful.com',
-  accessToken: 'fc9c8a0968c592bd7a0a5a9167d6fb6002dbbc3b8f900a75708ec269332d250a',
+  accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
   space: 'ezs1swce23xe',
 }
 
@@ -36,6 +38,10 @@ const clientWithLoggers = contentful.createClient({
   requestLogger: requestLoggerStub,
 })
 
+const now = () => Math.floor(Date.now() / 1000)
+const withExpiryIn1Hour = () => now() + 1 * 60 * 60
+const withExpiryIn48Hours = () => now() + 48 * 60 * 60
+
 test('Gets space', async () => {
   const response = await client.getSpace()
   expect(response.sys).toBeDefined()
@@ -56,7 +62,7 @@ test('Gets content types', async () => {
 })
 
 test('Gets entry', async () => {
-  const response = await client.getEntry('5ETMRzkl9KM4omyMwKAOki')
+  const response = await client.getEntry('nyancat')
   expect(response.sys).toBeDefined()
   expect(response.fields).toBeDefined()
 })
@@ -157,6 +163,14 @@ test('Gets entry with link resolution', async () => {
 
   expect(response.fields.bestFriend.sys.type).toEqual('Entry')
   expect(response.fields.bestFriend.fields).toBeDefined()
+})
+
+// TODO fix test
+test.skip('Gets entry with link resolution and removeUnresolved', async () => {
+  const response = await client.unresolved.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+
+  expect(response.fields).toBeDefined()
+  expect(response.fields.bestFriend).toBeUndefined()
 })
 
 test('Gets entries with content type query param', async () => {
@@ -354,6 +368,13 @@ test('Gets entries by creation order and id order', async () => {
   expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
 })
 
+test('Gets an entry with a specific locale', async () => {
+  const entry = await client.getEntry('jake', {
+    locale: 'tlh',
+  })
+  expect(entry.sys.locale).toBe('tlh')
+})
+
 test('Gets assets with only images', async () => {
   const response = await client.getAssets({
     mimetype_group: 'image',
@@ -367,21 +388,30 @@ test('Gets asset', async () => {
   expect(response.fields).toBeDefined()
 })
 
-test('Gets an entry with a specific locale', async () => {
-  const entry = await client.getEntry('jake', {
-    locale: 'tlh',
-  })
-  expect(entry.sys.locale).toBe('tlh')
-})
-
 test('Gets assets', async () => {
   const response = await client.getAssets()
   expect(response.items).toBeDefined()
 })
+
 test('Gets Locales', async () => {
   const response = await client.getLocales()
   expect(response.items).toBeDefined()
   expect(response.items[0].code).toBe('en-US')
+})
+
+test('Gets tag', async () => {
+  const response = await client.getTag('publicTag1')
+  expect(response.sys).toBeDefined()
+  expect(response.name).toBeDefined()
+  expect(response.name).toEqual('public tag 1')
+})
+
+test('Gets tags', async () => {
+  const response = await client.getTags()
+  expect(response.items).toBeDefined()
+  const publicTag = response.items.find((tag) => tag.sys.id === 'publicTag1')
+  expect(publicTag).toBeDefined()
+  expect(publicTag?.name).toEqual('public tag 1')
 })
 
 describe('Sync API', () => {
@@ -392,6 +422,14 @@ describe('Sync API', () => {
     expect(response.deletedEntries).toBeDefined()
     expect(response.deletedAssets).toBeDefined()
     expect(response.nextSyncToken).toBeDefined()
+  })
+
+  test('Sync space asset links are resolved', async () => {
+    const response = await client.sync({ initial: true })
+    expect(response.entries).toBeDefined()
+
+    const entryWithImageLink = response.entries.find((entry) => entry.fields && entry.fields.image)
+    expect(entryWithImageLink?.fields?.image['en-US']?.sys?.type).toEqual('Asset')
   })
 
   test('Sync space with token', async () => {
@@ -428,25 +466,85 @@ test('Gets entries with linked includes with locale:*', async () => {
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
   expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
   expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
+  expect(response.items[0].metadata).toEqual({ tags: [] })
 })
 
-test('Gets entries with linked includes with local:* in preview', async () => {
-  const response = await previewClient.localized.getEntries({
-    locale: '*',
-    include: 5,
-    'sys.id': 'nyancat',
-  })
+test('Gets entries with linked includes with locale:* in preview', async () => {
+  const response = await previewClient.localized.getEntries(
+    { include: 5, 'sys.id': 'nyancat' },
+    '*'
+  )
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
   expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
   expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
+  expect(response.items[0].metadata).toEqual({ tags: [] })
 })
 
 test('Logs request and response with custom loggers', async () => {
   await clientWithLoggers.getEntries()
   expect(responseLoggerStub).toHaveBeenCalledTimes(1)
   expect(requestLoggerStub).toHaveBeenCalledTimes(1)
+})
+
+describe('Metadata', () => {
+  test('Gets entries with attached metadata and metadata field on preview', async () => {
+    const response = await previewClient.getEntries()
+    // TODO what else to expect in this test
+    expect(response.items).toBeDefined()
+  })
+
+  test('Gets entry with attached metadata and metadata field on preview', async () => {
+    const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW'
+    const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
+    expect(response.sys).toBeDefined()
+    expect(response.fields).toBeDefined()
+    expect(response.fields.metadata).toBeDefined()
+    expect(response.metadata).toBeDefined()
+  })
+})
+
+describe('Embargoed Assets', () => {
+  test('Creates asset key on CDA', async () => {
+    const response = await client.createAssetKey(withExpiryIn48Hours())
+    expect(response.policy).toBeDefined()
+    expect(response.secret).toBeDefined()
+  })
+
+  test('Creates asset key on CDA with a different lifetime', async () => {
+    const response = await client.createAssetKey(withExpiryIn1Hour())
+    expect(response.policy).toBeDefined()
+    expect(response.secret).toBeDefined()
+  })
+
+  test('Creates asset key on CPA', async () => {
+    const response = await previewClient.createAssetKey(withExpiryIn48Hours())
+    expect(response.policy).toBeDefined()
+    expect(response.secret).toBeDefined()
+  })
+
+  test('Does not create asset key if feature is not enabled', async () => {
+    await expect(localeClient.createAssetKey(withExpiryIn48Hours())).rejects.toThrowError()
+  })
+
+  test('Does not create asset key if no/undefined expiresAt is given', async () => {
+    await expect(localeClient.createAssetKey()).rejects.toThrow(ValidationError)
+  })
+
+  test('Does not create asset key if invalid expiresAt is given', async () => {
+    await expect(localeClient.createAssetKey('invalidExpiresAt')).rejects.toThrow(ValidationError)
+  })
+
+  test('Does not create asset key if expiresAt is in the past', async () => {
+    const shortExpiresAt = now() - 60
+    await expect(localeClient.createAssetKey(shortExpiresAt)).rejects.toThrow(ValidationError)
+  })
+
+  test('Does not create asset key if expiresAt is too far in the future (> 48 hours)', async () => {
+    const longExpiresAt = now() + 72 * 60 * 60
+    await expect(localeClient.createAssetKey(longExpiresAt)).rejects.toThrow(ValidationError)
+  })
 })
 
 test.skip('Client object exposes current version', async () => {

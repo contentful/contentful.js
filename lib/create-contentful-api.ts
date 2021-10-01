@@ -5,13 +5,14 @@
  * @see Entities
  */
 
-import { AxiosInstance, createRequestConfig } from 'contentful-sdk-core'
+import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
 import {
   Asset,
   AssetCollection,
   AssetFields,
+  AssetKey,
   AssetQueries,
   ContentType,
   ContentTypeCollection,
@@ -28,11 +29,16 @@ import {
   ResolvedLocalizedEntryCollection,
   Space,
   SyncCollection,
+  Tag,
+  TagCollection,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
+import validateTimestamp from './utils/validate-timestamp'
+
+const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 export type UnresolvedClient = {
   getEntry<Fields extends FieldsType>(id: string, query?: EntryQueries): Promise<Entry<Fields>>
@@ -94,6 +100,13 @@ export type ContentfulClientApi = {
     query?: EntriesQueries<Fields>
   ): Promise<ResolvedEntryCollection<Fields>>
 
+  getTag(id: string): Promise<Tag>
+
+  // TODO type query
+  getTags(query?: any): Promise<TagCollection>
+
+  createAssetKey(expeiresAt: number): Promise<AssetKey>
+
   unresolved: UnresolvedClient
 
   localized: LocalizedClient
@@ -140,19 +153,6 @@ export default function createContentfulApi({
 }: CreateContentfulApiParams): ContentfulClientApi {
   const notFoundError = (id = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
-  }
-
-  // eslint-disable-next-line no-undef
-  function errorHandler(error): never {
-    if (error.data) {
-      throw error.data
-    }
-
-    if (error.response && error.response.data) {
-      throw error.response.data
-    }
-
-    throw error
   }
 
   interface GetConfig {
@@ -239,6 +239,7 @@ export default function createContentfulApi({
    * const response = await client.getContentTypes()
    * console.log(response.items)
    */
+  // TODO: Reconfirm that getContentTypes doesn't take query param
   async function getContentTypes(): Promise<ContentTypeCollection> {
     return get<ContentTypeCollection>({
       context: 'environment',
@@ -414,6 +415,84 @@ export default function createContentfulApi({
   }
 
   /**
+   * Gets a Tag
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @return {Promise<Entities.Tag>} Promise for a Tag
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const tag = await client.getTag('<asset_id>')
+   * console.log(tag)
+   */
+  async function getTag(id: string): Promise<Tag> {
+    return get<Tag>({
+      context: 'environment',
+      path: `tags/${id}`,
+    })
+  }
+
+  /**
+   * Gets a collection of Tags
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters.
+   * @return {Promise<Entities.TagCollection>} Promise for a collection of Tags
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getTags()
+   * console.log(response.items)
+   */
+  async function getTags(query = {}): Promise<TagCollection> {
+    return get<TagCollection>({
+      context: 'environment',
+      path: 'tags',
+      config: createRequestConfig({ query: normalizeSelect(query) }),
+    })
+  }
+
+  /**
+   * Creates an asset key for signing asset URLs (Embargoed Assets)
+   * @memberof ContentfulClientAPI
+   * @param {number} expiresAt - UNIX timestamp in the future, maximum of 48h from now
+   * @return {Promise<Entities.AssetKey>} Promise for an AssetKey
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const assetKey = await client.getAssetKey(<UNIX timestamp>)
+   * console.log(assetKey)
+   */
+  async function createAssetKey(expiresAt: number): Promise<AssetKey> {
+    try {
+      const now = Math.floor(Date.now() / 1000)
+      const currentMaxLifetime = now + ASSET_KEY_MAX_LIFETIME
+      validateTimestamp('expiresAt', expiresAt, { maximum: currentMaxLifetime, now })
+
+      const params = { expiresAt }
+      // TODO check if http.post params are still correct
+      const response = await http.post('asset_keys', params)
+      return response.data
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+  /**
    * Gets a collection of Locale
    * @memberof ContentfulClientAPI
    * @param  {Object=} query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
@@ -521,19 +600,26 @@ export default function createContentfulApi({
   return <ContentfulClientApi>{
     // version: __VERSION__,
     version: 'test-0.0.0',
-    getSpace: getSpace,
-    getContentType: getContentType,
-    getContentTypes: getContentTypes,
 
-    getAsset: getAsset,
-    getAssets: getAssets,
+    getSpace,
 
-    getLocales: getLocales,
-    parseEntries: parseEntries,
-    sync: sync,
+    getContentType,
+    getContentTypes,
 
-    getEntry: getEntry,
-    getEntries: getEntries,
+    getAsset,
+    getAssets,
+
+    getTag,
+    getTags,
+
+    getLocales,
+    parseEntries,
+    sync,
+
+    getEntry,
+    getEntries,
+
+    createAssetKey,
 
     localized: {
       getEntry: getLocalizedEntry,
