@@ -160,24 +160,24 @@ export interface Sys {
         sys: SpaceLink;
     };
     environment?: {
-        sys: SpaceLink;
+        sys: EnvironmentLink;
     };
     contentType: {
         sys: ContentTypeLink;
     };
 }
 
-export interface SpaceLink {
-    type: 'Link';
-    linkType: 'Space';
-    id: string;
+export type LinkType = 'Space' | 'ContentType' | 'Environment'
+
+export interface Link<T extends LinkType> {
+  type: 'Link'
+  linkType: T
+  id: string
 }
 
-export interface ContentTypeLink {
-    type: 'Link';
-    linkType: 'ContentType';
-    id: string;
-}
+export type SpaceLink = Link<'Space'>
+export type EnvironmentLink = Link<'Environment'>
+export type ContentTypeLink = Link<'ContentType'>
 
 export interface Field {
     disabled: boolean;
