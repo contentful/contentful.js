@@ -61,7 +61,7 @@
     "dist"
   ],
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.22.0",
     "contentful-resolve-response": "^1.3.0",
     "contentful-sdk-core": "^6.9.0",
     "fast-copy": "^2.1.0",
