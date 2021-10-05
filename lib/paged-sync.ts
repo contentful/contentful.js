@@ -2,9 +2,10 @@
  * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
  * @namespace Sync
  */
-import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import resolveResponse from 'contentful-resolve-response'
+import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import mixinStringifySafe from './mixins/stringify-safe'
+import { SyncCollection } from './types'
 
 /**
  * @memberof Sync
@@ -61,11 +62,11 @@ export default async function pagedSync(http: AxiosInstance, query, options = {}
   const defaultOptions = { resolveLinks: true, removeUnresolved: false, paginate: true }
   const { resolveLinks, removeUnresolved, paginate } = {
     ...defaultOptions,
-    ...options,
+    ...options
   }
 
   const syncOptions = {
-    paginate,
+    paginate
   }
 
   const response = await getSyncPage(http, [], query, syncOptions)
@@ -106,7 +107,7 @@ function mapResponseItems(items): any {
     entries: items.reduce(reducer('Entry'), []),
     assets: items.reduce(reducer('Asset'), []),
     deletedEntries: items.reduce(reducer('DeletedEntry'), []),
-    deletedAssets: items.reduce(reducer('DeletedAsset'), []),
+    deletedAssets: items.reduce(reducer('DeletedAsset'), [])
   }
 }
 
@@ -143,7 +144,8 @@ async function getSyncPage(http: AxiosInstance, items, query, { paginate }) {
     delete query.limit
   }
 
-  const response = await http.get('sync', createRequestConfig({ query: query }))
+  // Todo: better type sync response (SyncCollection)
+  const response = await http.get<any>('sync', createRequestConfig({ query: query }))
   const data = response.data || {}
   items = items.concat(data.items || [])
   if (data.nextPageUrl) {
@@ -154,12 +156,12 @@ async function getSyncPage(http: AxiosInstance, items, query, { paginate }) {
     }
     return {
       items: items,
-      nextPageToken: getToken(data.nextPageUrl),
+      nextPageToken: getToken(data.nextPageUrl)
     }
   } else if (data.nextSyncUrl) {
     return {
       items: items,
-      nextSyncToken: getToken(data.nextSyncUrl),
+      nextSyncToken: getToken(data.nextSyncUrl)
     }
   } else {
     return { items: [] }

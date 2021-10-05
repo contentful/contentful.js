@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "./dist/module",
     "rootDir": "./lib",
     "lib": [
       "dom",

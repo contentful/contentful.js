@@ -90,7 +90,6 @@
 - [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
 - [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
 - Built in rate limiting with recovery procedures
-- ES6 modules / bundler support (**since v5.0.1 - 17. October 2017**)
 - Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/) (**since v6.0.0 - 06. April 2018**)
 
 ### Supported browsers and Node.js versions:
@@ -98,11 +97,17 @@
 - Chrome
 - Firefox
 - Edge
-- IE11 (with [legacy version](#legacy-browsers) of the library)
 - Safari
 - node.js (LTS)
 
-Other browsers should also work, but at the moment we're only running automated tests on the browsers and Node.js versions specified above.
+> See list of min supported browser version here [@contentful/browserslist-config
+](https://github.com/contentful/browserslist-config/blob/master/index.js)
+
+The default export is an `es9` compliant module. in order to import the `commonJS` bundle, please use:
+
+```js
+const contentful = require("contentful/contentful.node")
+```
 
 ## Getting started
 
@@ -133,18 +138,12 @@ If you'd like to use a standalone built file you can use the following script ta
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/contentful@5.0.1/dist/contentful.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@9.0.1/dist/contentful.browser.min.js"></script>
 ```
 
 The Contentful Delivery library will be accessible via the `contentful` global variable.
 
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
-
-#### Legacy browsers:
-
-This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
-
-To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
 
 ### Your first request
 
