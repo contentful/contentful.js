@@ -3,7 +3,7 @@ import { ContentfulCollection } from './collection'
 import { UserLink } from './link'
 
 export interface TagSys extends Omit<EntitySys, 'locale' | 'version'> {
-  type: 'tag'
+  type: 'Tag'
   version: number
   visibility: 'public'
   createdBy: { sys: UserLink }
