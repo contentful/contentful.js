@@ -1,4 +1,4 @@
-import { EntitySys } from './../../dist/types/types/sys.d'
+import { EntitySys } from './sys'
 import { ContentfulCollection } from './collection'
 import { UserLink } from './link'
 
