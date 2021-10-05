@@ -6,7 +6,7 @@
  */
 
 import axios from 'axios'
-import { AxiosInstance, createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
+import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
@@ -131,38 +131,4 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
     http,
     getGlobalOptions,
   })
-}
-
-function obscureAuthTokenInResponse(http: AxiosInstance) {
-  http.interceptors.response.use(
-    (response) => {
-      return response
-    },
-    (error) => {
-      if (error.response && error.response.config.headers.Authorization) {
-        const token = error.response.config.headers.Authorization
-
-        error.response.config.headers.Authorization = error.response.config.headers.Authorization.replace(
-          token,
-          `Bearer...${token.substr(-5)}`
-        )
-
-        if (error.response.request._headers && error.response.request._headers.authorization) {
-          error.response.request._headers.authorization = error.response.request._headers.authorization.replace(
-            token,
-            `Bearer...${token.substr(-5)}`
-          )
-        }
-
-        if (error.response.request._header) {
-          error.response.request._header = error.response.request._header.replace(
-            token,
-            `Bearer...${token.substr(-5)}`
-          )
-        }
-      }
-
-      return Promise.reject(error)
-    }
-  )
 }

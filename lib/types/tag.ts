@@ -1,18 +1,13 @@
+import { EntitySys } from './../../dist/types/types/sys.d'
 import { ContentfulCollection } from './collection'
-import { EntryFields } from './entry'
-import { EnvironmentLink, SpaceLink, UserLink } from './link'
-import { BaseSys } from './sys'
+import { UserLink } from './link'
 
-export interface TagSys extends BaseSys {
-  type: 'Tag'
-  createdAt: EntryFields.Date
-  updatedAt: EntryFields.Date
+export interface TagSys extends Omit<EntitySys, 'locale' | 'version'> {
+  type: 'tag'
   version: number
   visibility: 'public'
   createdBy: { sys: UserLink }
   updatedBy: { sys: UserLink }
-  space: { sys: SpaceLink }
-  environment: { sys: EnvironmentLink }
 }
 
 export type Tag = {

@@ -529,10 +529,12 @@ describe('Embargoed Assets', () => {
   })
 
   test('Does not create asset key if no/undefined expiresAt is given', async () => {
+    // @ts-ignore
     await expect(localeClient.createAssetKey()).rejects.toThrow(ValidationError)
   })
 
   test('Does not create asset key if invalid expiresAt is given', async () => {
+    // @ts-ignore
     await expect(localeClient.createAssetKey('invalidExpiresAt')).rejects.toThrow(ValidationError)
   })
 

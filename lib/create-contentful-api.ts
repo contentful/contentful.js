@@ -105,7 +105,7 @@ export type ContentfulClientApi = {
   // TODO type query
   getTags(query?: any): Promise<TagCollection>
 
-  createAssetKey(expeiresAt: number): Promise<AssetKey>
+  createAssetKey(expiresAt: number): Promise<AssetKey>
 
   unresolved: UnresolvedClient
 

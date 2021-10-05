@@ -42,6 +42,7 @@ export type BasicEntryField =
   | EntryFields.Boolean
   | EntryFields.Location
   | EntryFields.RichText
+  | EntryFields.Object
 
 export interface Entry<T> {
   sys: EntrySys
