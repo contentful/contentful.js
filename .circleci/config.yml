@@ -7,7 +7,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: npm ci
       - run: npm run lint
       - run: npm run prettier:check
       - run: npm run build
@@ -19,7 +19,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run test:unit
   integration:
@@ -29,7 +29,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run test:integration
   release:
@@ -37,7 +37,7 @@ jobs:
       - image: cimg/node:16.10
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run semantic-release
 workflows:
