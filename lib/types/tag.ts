@@ -2,7 +2,7 @@ import { EntitySys } from './sys'
 import { ContentfulCollection } from './collection'
 import { UserLink } from './link'
 
-export interface TagSys extends Omit<EntitySys, 'locale' | 'version'> {
+export interface TagSys extends Omit<EntitySys, 'locale' | 'revision'> {
   type: 'Tag'
   version: number
   visibility: 'public'
