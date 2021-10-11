@@ -7,7 +7,6 @@
   "browser": "./dist/contentful.browser.js",
   "modules": "./dist/contentful.browser.js",
   "types": "./dist/types/index.d.ts",
-  "type": "module",
   "tsd": {
     "directory": "test/types",
     "compilerOptions": {
