@@ -63,18 +63,6 @@ browserBundle.module.rules = [
 ]
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
-// Legacy browsers like IE11, with bundled regenerator-runtime
-const legacyBundle = copy(baseBundleConfig)
-legacyBundle.module.rules = [
-  Object.assign({}, defaultBabelLoader, {
-    options: Object.assign({}, defaultBabelLoader.options, {
-      envName: 'legacy'
-    })
-  })
-]
-
-legacyBundle.output.filename = `${baseFileName}.legacy${PROD ? '.min' : ''}.js`
-
 // Node - bundled umd file
 const nodeBundle = copy(baseBundleConfig)
 nodeBundle.module.rules = [
@@ -91,6 +79,5 @@ delete nodeBundle.node
 
 module.exports = [
   browserBundle,
-  legacyBundle,
   nodeBundle
 ]
