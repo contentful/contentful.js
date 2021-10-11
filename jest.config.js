@@ -6,4 +6,4 @@ module.exports = {
   globals: {
     __VERSION__: require('./package.json').version,
   },
-};
+}

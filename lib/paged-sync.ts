@@ -62,11 +62,11 @@ export default async function pagedSync(http: AxiosInstance, query, options = {}
   const defaultOptions = { resolveLinks: true, removeUnresolved: false, paginate: true }
   const { resolveLinks, removeUnresolved, paginate } = {
     ...defaultOptions,
-    ...options
+    ...options,
   }
 
   const syncOptions = {
-    paginate
+    paginate,
   }
 
   const response = await getSyncPage(http, [], query, syncOptions)
@@ -107,7 +107,7 @@ function mapResponseItems(items): any {
     entries: items.reduce(reducer('Entry'), []),
     assets: items.reduce(reducer('Asset'), []),
     deletedEntries: items.reduce(reducer('DeletedEntry'), []),
-    deletedAssets: items.reduce(reducer('DeletedAsset'), [])
+    deletedAssets: items.reduce(reducer('DeletedAsset'), []),
   }
 }
 
@@ -156,12 +156,12 @@ async function getSyncPage(http: AxiosInstance, items, query, { paginate }) {
     }
     return {
       items: items,
-      nextPageToken: getToken(data.nextPageUrl)
+      nextPageToken: getToken(data.nextPageUrl),
     }
   } else if (data.nextSyncUrl) {
     return {
       items: items,
-      nextSyncToken: getToken(data.nextSyncUrl)
+      nextSyncToken: getToken(data.nextSyncUrl),
     }
   } else {
     return { items: [] }
