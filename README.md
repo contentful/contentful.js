@@ -10,9 +10,9 @@
   </a>
 </p>
 
-# contentful.js - Contentful JavaScript Delivery SDK
+# <span style="line-height: 1.1">contentful.js - Contentful JavaScript Content Delivery Library</span>
 
-> JavaScript SDK for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your Content stored in Contentful with your JavaScript applications.
+> JavaScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your Content stored in Contentful with your JavaScript applications.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Maintained-green.svg" alt="This repository is actively maintained" /> &nbsp;
@@ -52,7 +52,7 @@
 
 <!-- TOC -->
 
-- [contentful.js - Contentful JavaScript Delivery SDK](#contentfuljs---contentful-javascript-delivery-sdk)
+- [contentful.js - Contentful JavaScript Delivery library](#contentfuljs---contentful-javascript-delivery-library)
   - [Core Features](#core-features)
     - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
   - [Getting started](#getting-started)
@@ -61,7 +61,7 @@
       - [Legacy browsers:](#legacy-browsers)
       - [React Native & Server Side Rendering:](#react-native--server-side-rendering)
     - [Your first request](#your-first-request)
-    - [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
+    - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
     - [Authentication](#authentication)
   - [Documentation & References](#documentation--references)
     - [Configuration](#configuration)
@@ -106,11 +106,11 @@ Other browsers should also work, but at the moment we're only running automated 
 
 ## Getting started
 
-In order to get started with the Contentful JS SDK you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.
+In order to get started with the Contentful JS library you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.
 
 - [Installation](#installation)
 - [Your first request](#your-first-request)
-- [Using this SDK with the Preview API](#using-this-sdk-with-the-preview-api)
+- [Using this library with the Preview API](#using-this-library-with-the-preview-api)
 - [Authentication](#authentication)
 - [Documentation & References](#documentation--references)
 
@@ -122,7 +122,7 @@ npm install contentful
 
 #### Using it directly in the browser:
 
-For browsers, we recommend to download the SDK via npm or yarn to ensure 100% availability.
+For browsers, we recommend to download the library via npm or yarn to ensure 100% availability.
 
 If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
 
@@ -136,7 +136,7 @@ Using `contentful@latest` will always get you the latest version, but you can al
 <script src="https://cdn.jsdelivr.net/npm/contentful@5.0.1/dist/contentful.browser.min.js"></script>
 ```
 
-The Contentful Delivery SDK will be accessible via the `contentful` global variable.
+The Contentful Delivery library will be accessible via the `contentful` global variable.
 
 Check the [releases](https://github.com/contentful/contentful.js/releases) page to know which versions are available.
 
@@ -148,7 +148,7 @@ To support legacy browsers in your application, use `contentful.legacy.min.js` i
 
 ### Your first request
 
-The following code snippet is the most basic one you can use to get some content from Contentful with this SDK:
+The following code snippet is the most basic one you can use to get some content from Contentful with this library:
 
 ```js
 const contentful = require("contentful");
@@ -165,11 +165,11 @@ client
   .catch(err => console.log(err));
 ```
 
-You can try and change the above example at [Tonic](https://tonicdev.com/npm/contentful), or if you'd prefer a more Browser oriented example, check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
+Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
 
-### Using this SDK with the Preview API
+### Using this library with the Preview API
 
-This SDK can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
+This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
 const contentful = require("contentful");
@@ -201,7 +201,7 @@ For more information, check the [Contentful REST API reference on Authentication
 - [Advanced Concepts](#advanced-concepts)
 - [Migration](#migration)
 
-To help you get the most out of this SDK, we've prepared all available client configuration options, a reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
+To help you get the most out of this library, we've prepared all available client configuration options, a reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
 
 ### Configuration
 
@@ -314,7 +314,35 @@ contentful.createClient({
       <td><code>retryOnError</code></td>
       <td><code>true</code></td>
       <td>
-        By default, this SDK is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to <code>false</code> to disable this behavior.
+        By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to <code>false</code> to disable this behavior.
+      </td>
+    </tr>
+    <tr>
+      <td><code>application</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Application name and version e.g myApp/version.
+      </td>
+    </tr>
+    <tr>
+      <td><code>integration</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Integration name and version e.g react/version.
+      </td>
+    </tr>
+    <tr>
+      <td><code>timeout</code></td>
+      <td><code>30000</code></td>
+      <td>
+        in milliseconds - connection timeout.
+      </td>
+    </tr>
+    <tr>
+      <td><code>retryLimit</code></td>
+      <td><code>5</code></td>
+      <td>
+        Optional number of retries before failure.
       </td>
     </tr>
     <tr>
@@ -343,7 +371,7 @@ contentful.createClient({
 
 ### Reference documentation
 
-The [JS SDK reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
+The [JS library reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
 
 Most methods also have examples which show you how to use them.
 
@@ -359,9 +387,9 @@ For versions prior to 3.0.0, you can access documentation at [https://github.com
 
 ### Troubleshooting
 
-- **I get the error: Unable to resolve module `http`** - Our SDK is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
+- **I get the error: Unable to resolve module `http`** - Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
 - **Can I use it with typescript?** - Yes, there is also a type definition file
-- **Is the SDK doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
+- **Is the library doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
 
 ### Advanced Concepts
 

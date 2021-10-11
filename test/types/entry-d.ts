@@ -5,6 +5,7 @@ export const stringValue = ''
 export const numberValue = 123
 export const booleanValue = true
 export const dateValue = '2018-05-03T09:18:16.329Z'
+export const metadataValue = { tags: [] }
 
 const entrySysValue: EntrySys = {
   contentType: { sys: { id: stringValue, type: 'Link', linkType: 'ContentType' } },
@@ -22,6 +23,7 @@ expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
   fields: {
     stringField: stringValue,
   },
+  metadata: metadataValue,
 })
 
 expectAssignable<LocalizedEntry<{ stringField: EntryFields.Text }, 'US' | 'DE'>>({
@@ -32,6 +34,7 @@ expectAssignable<LocalizedEntry<{ stringField: EntryFields.Text }, 'US' | 'DE'>>
       DE: stringValue,
     },
   },
+  metadata: metadataValue,
 })
 
 // TODO fix test

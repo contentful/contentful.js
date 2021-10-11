@@ -1,7 +1,6 @@
 import createContentfulApi from '../../lib/create-contentful-api'
 import createGlobalOptions from '../../lib/create-global-options'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
-// @ts-ignore
 import * as mocks from './mocks'
 
 class RejectError extends Error {
@@ -12,6 +11,8 @@ class RejectError extends Error {
     this.data = data
   }
 }
+
+const now = () => Math.floor(Date.now() / 1000)
 
 function setupWithData({
   promise,
@@ -24,17 +25,21 @@ function setupWithData({
   }),
 }) {
   const getStub = jest.fn()
+  const postStub = jest.fn()
   const api = createContentfulApi({
     // @ts-ignore
     http: {
       defaults: { baseURL: 'baseURL', logHandler: jest.fn() },
       get: getStub.mockReturnValue(promise),
+      post: postStub.mockReturnValue(promise),
     },
-    getGlobalOptions: getGlobalOptions,
+    getGlobalOptions,
   })
+
   return {
     api,
     getStub,
+    postStub,
   }
 }
 
@@ -78,7 +83,7 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getSpace()).rejects.toEqual(data)
+    await expect(api.getSpace()).rejects.toHaveProperty('data', data)
   })
 
   test('API call getContentType', async () => {
@@ -98,7 +103,7 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getContentType('ctid')).rejects.toEqual(data)
+    await expect(api.getContentType('ctid')).rejects.toHaveProperty('data', data)
   })
 
   test('API call getContentTypes', async () => {
@@ -124,7 +129,7 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getContentTypes()).rejects.toEqual(data)
+    await expect(api.getContentTypes()).rejects.toHaveProperty('data', data)
   })
 
   // skip it for now cause it relying on old implementation
@@ -147,7 +152,7 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getEntry<mocks.EntryFields>('eid')).rejects.toEqual(data)
+    await expect(api.getEntry<mocks.EntryFields>('eid')).rejects.toHaveProperty('data', data)
   })
 
   test('API call getEntries', async () => {
@@ -206,7 +211,7 @@ describe('create-contentful-api', () => {
       promise: Promise.reject(rejectError),
     })
 
-    await expect(api.getEntries()).rejects.toEqual(data)
+    await expect(api.getEntries()).rejects.toHaveProperty('data', data)
   })
 
   test('API call getAsset', async () => {
@@ -228,7 +233,7 @@ describe('create-contentful-api', () => {
       promise: Promise.reject(rejectError),
     })
 
-    await expect(api.getAsset('aid')).rejects.toEqual(data)
+    await expect(api.getAsset('aid')).rejects.toHaveProperty('data', data)
   })
 
   test('API call getAssets', async () => {
@@ -255,7 +260,77 @@ describe('create-contentful-api', () => {
       promise: Promise.reject(rejectError),
     })
 
-    await expect(api.getAssets()).rejects.toEqual(data)
+    await expect(api.getAssets()).rejects.toHaveProperty('data', data)
+  })
+
+  test('API call getTag', async () => {
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: mocks.tagMock }),
+    })
+
+    await expect(api.getTag('tid')).resolves.toEqual(mocks.tagMock)
+  })
+
+  test('API call getTag fails', async () => {
+    const data = {
+      sys: {
+        id: 'id',
+      },
+    }
+    const rejectError = new RejectError(data)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
+    })
+
+    await expect(api.getTag('tid')).rejects.toHaveProperty('data', data)
+  })
+
+  test('API call getTags', async () => {
+    const data = {
+      total: 1,
+      skip: 0,
+      limit: 100,
+      items: [mocks.tagMock],
+    }
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
+    })
+    await expect(api.getTags()).resolves.toEqual(data)
+  })
+
+  test('API call getTags fails', async () => {
+    const data = {
+      sys: {
+        id: 'id',
+      },
+    }
+    const rejectError = new RejectError(data)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
+    })
+    await expect(api.getTags()).rejects.toHaveProperty('data', data)
+  })
+
+  test('API call createAssetKey', async () => {
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: mocks.assetKeyMock }),
+    })
+
+    await expect(api.createAssetKey(now() + 60)).resolves.toEqual(mocks.assetKeyMock)
+  })
+
+  test('API call createAssetKey fails', async () => {
+    const data = {
+      sys: { type: 'Error', id: 'AccessDenied' },
+      message: 'Forbidden',
+      details: { reasons: 'Embargoed assets not enabled for space' },
+    }
+    const rejectError = new RejectError(data)
+    const { api } = setupWithData({
+      promise: Promise.reject(rejectError),
+    })
+
+    await expect(api.createAssetKey(now() + 60)).rejects.toHaveProperty('data', data)
   })
 
   test('API call getLocales', async () => {
@@ -281,7 +356,7 @@ describe('create-contentful-api', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getLocales()).rejects.toEqual(data)
+    await expect(api.getLocales()).rejects.toHaveProperty('data', data)
   })
 
   test('CDA call sync', async () => {
@@ -308,6 +383,6 @@ describe('create-contentful-api', () => {
       promise: Promise.reject(rejectError),
     })
 
-    await expect(api.sync({ initial: true })).rejects.toEqual(new RejectError('error'))
+    await expect(api.sync({ initial: true })).rejects.toHaveProperty('data', 'error')
   })
 })

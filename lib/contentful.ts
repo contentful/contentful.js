@@ -6,7 +6,7 @@
  */
 
 import axios from 'axios'
-import { AxiosInstance, createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
+import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 
@@ -63,7 +63,7 @@ export interface CreateClientParams {
  * @prop {boolean=?} params.resolveLinks - If we should resolve links between entries (default: true)
  * @prop {boolean=?} params.removeUnresolved - If we should remove links to entries which could not be resolved (default: false)
  * @prop {boolean=?} params.retryOnError - If we should retry on errors and 429 rate limit exceptions (default: true)
- * @prop {function=} params.logHandler - A log handler function to process given log messages & errors. Receives the log level (error, warning & info) and the actual log data (Error object or string). (The default can be found at: https://github.com/contentful/contentful-sdk-core/blob/master/lib/create-http-client.js)
+ * @prop {function=} params.logHandler - A log handler function to process given log messages & errors. Receives the log level (error, warning & info) and the actual log data (Error object or string). (The default can be found at: https://github.com/contentful/contentful-sdk-core/blob/master/src/create-http-client.ts)
  * @prop {string=?} params.application - Application name and version e.g myApp/version
  * @prop {string=?} params.integration - Integration name and version e.g react/version
  * @prop {number=} params.timeout in milliseconds - connection timeout (default:30000)
@@ -127,45 +127,8 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
   // Append environment to baseURL
   http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl
 
-  // Intercepts response and obscure the token
-  obscureAuthTokenInResponse(http)
-
   return createContentfulApi({
     http,
     getGlobalOptions,
   })
-}
-
-function obscureAuthTokenInResponse(http: AxiosInstance) {
-  http.interceptors.response.use(
-    (response) => {
-      return response
-    },
-    (error) => {
-      if (error.response && error.response.config.headers.Authorization) {
-        const token = error.response.config.headers.Authorization
-
-        error.response.config.headers.Authorization = error.response.config.headers.Authorization.replace(
-          token,
-          `Bearer...${token.substr(-5)}`
-        )
-
-        if (error.response.request._headers && error.response.request._headers.authorization) {
-          error.response.request._headers.authorization = error.response.request._headers.authorization.replace(
-            token,
-            `Bearer...${token.substr(-5)}`
-          )
-        }
-
-        if (error.response.request._header) {
-          error.response.request._header = error.response.request._header.replace(
-            token,
-            `Bearer...${token.substr(-5)}`
-          )
-        }
-      }
-
-      return Promise.reject(error)
-    }
-  )
 }

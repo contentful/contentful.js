@@ -2,42 +2,42 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.10
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: npm ci
       - run: npm run lint
       - run: npm run prettier:check
       - run: npm run build
       - run: npm run test:types
   unit:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.10
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run test:unit
   integration:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.10
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run test:integration
   release:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.10
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run semantic-release
 workflows:

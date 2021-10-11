@@ -1,10 +1,11 @@
 import { ContentfulCollection } from './collection'
+import { EntryFields } from './entry'
 import { SpaceLink, EnvironmentLink } from './link'
 import { BaseSys } from './sys'
 
 export interface ContentTypeSys extends BaseSys {
-  createdAt: string
-  updatedAt: string
+  createdAt: EntryFields.Date
+  updatedAt: EntryFields.Date
   revision: number
   space: { sys: SpaceLink }
   environment: { sys: EnvironmentLink }

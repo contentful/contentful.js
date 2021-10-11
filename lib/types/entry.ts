@@ -3,6 +3,7 @@ import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
 import { ContentTypeLink } from './link'
 import { LocaleValue } from './locale'
+import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
 import { EntitySys } from './sys'
 
@@ -41,12 +42,15 @@ export type BasicEntryField =
   | EntryFields.Boolean
   | EntryFields.Location
   | EntryFields.RichText
+  | EntryFields.Object
 
 export interface Entry<T> {
   sys: EntrySys
   fields: T
+  metadata: Metadata
 }
 
+// TODO use EntryLink from link.ts instead
 interface EntryLink<T> {
   sys: {
     type: 'Link'
@@ -62,6 +66,7 @@ export interface LocalizedEntry<Fields extends FieldsType, Locale extends Locale
       [LocaleName in Locale]?: Fields[FieldName]
     }
   }
+  metadata: Metadata
 }
 
 export type ResolvedEntry<Fields extends FieldsType> = {
@@ -75,6 +80,7 @@ export type ResolvedEntry<Fields extends FieldsType> = {
       ? Array<ResolvedEntry<LinkedEntryFields>>
       : Fields[FieldName]
   }
+  metadata: Metadata
 }
 
 export type ResolvedLocalizedEntry<Fields extends FieldsType, Locales extends LocaleValue> = {
@@ -90,6 +96,7 @@ export type ResolvedLocalizedEntry<Fields extends FieldsType, Locales extends Lo
         : Fields[FieldName]
     }
   }
+  metadata: Metadata
 }
 
 export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TEntry> {

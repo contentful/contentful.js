@@ -5,13 +5,15 @@
  * @see Entities
  */
 
-import { AxiosInstance, createRequestConfig } from 'contentful-sdk-core'
+import { AxiosError } from 'axios'
+import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
 import {
   Asset,
   AssetCollection,
   AssetFields,
+  AssetKey,
   AssetQueries,
   ContentType,
   ContentTypeCollection,
@@ -28,15 +30,20 @@ import {
   ResolvedLocalizedEntryCollection,
   Space,
   SyncCollection,
+  Tag,
+  TagCollection,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
+import validateTimestamp from './utils/validate-timestamp'
+
+const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 export type UnresolvedClient = {
   getEntry<Fields extends FieldsType>(id: string, query?: EntryQueries): Promise<Entry<Fields>>
-  getEntries<Fields extends FieldsType>(
+  getEntries<Fields extends FieldsType = FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollection<Fields>>
   localized: UnresolvedLocalizedClient
@@ -48,19 +55,19 @@ export type UnresolvedLocalizedClient = {
     query?: EntryQueries,
     locale?: Locale
   ): Promise<LocalizedEntry<Fields, Locale>>
-  getEntries<Fields extends FieldsType, Locale extends LocaleValue = any>(
+  getEntries<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     query?: EntriesQueries<Fields>,
     locale?: Locale
   ): Promise<LocalizedEntryCollection<Fields, Locale>>
 }
 
 export type LocalizedClient = {
-  getEntry<Fields extends FieldsType, Locale extends LocaleValue = any>(
+  getEntry<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     id: string,
     query?: EntryQueries,
     locale?: Locale
   ): Promise<ResolvedLocalizedEntry<Fields, Locale>>
-  getEntries<Fields extends FieldsType, Locale extends LocaleValue = any>(
+  getEntries<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     query?: EntriesQueries<Fields>,
     locale?: Locale
   ): Promise<ResolvedLocalizedEntryCollection<Fields, Locale>>
@@ -93,6 +100,13 @@ export type ContentfulClientApi = {
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<ResolvedEntryCollection<Fields>>
+
+  getTag(id: string): Promise<Tag>
+
+  // TODO type query
+  getTags(query?: any): Promise<TagCollection>
+
+  createAssetKey(expiresAt: number): Promise<AssetKey>
 
   unresolved: UnresolvedClient
 
@@ -142,19 +156,6 @@ export default function createContentfulApi({
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
 
-  // eslint-disable-next-line no-undef
-  function errorHandler(error): never {
-    if (error.data) {
-      throw error.data
-    }
-
-    if (error.response && error.response.data) {
-      throw error.response.data
-    }
-
-    throw error
-  }
-
   interface GetConfig {
     context: 'space' | 'environment'
     path: string
@@ -177,7 +178,7 @@ export default function createContentfulApi({
       const response = await http.get(baseUrl + path, config)
       return response.data
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
@@ -239,6 +240,7 @@ export default function createContentfulApi({
    * const response = await client.getContentTypes()
    * console.log(response.items)
    */
+  // TODO: Reconfirm that getContentTypes doesn't take query param
   async function getContentTypes(): Promise<ContentTypeCollection> {
     return get<ContentTypeCollection>({
       context: 'environment',
@@ -343,7 +345,7 @@ export default function createContentfulApi({
         throw notFoundError(id)
       }
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
@@ -360,7 +362,7 @@ export default function createContentfulApi({
       })
       return resolveCircular(entries, { resolveLinks, removeUnresolved }) as RType
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
@@ -411,6 +413,84 @@ export default function createContentfulApi({
       path: 'assets',
       config: createRequestConfig({ query: normalizeSelect(query) }),
     })
+  }
+
+  /**
+   * Gets a Tag
+   * @memberof ContentfulClientAPI
+   * @param  {string} id
+   * @return {Promise<Entities.Tag>} Promise for a Tag
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const tag = await client.getTag('<asset_id>')
+   * console.log(tag)
+   */
+  async function getTag(id: string): Promise<Tag> {
+    return get<Tag>({
+      context: 'environment',
+      path: `tags/${id}`,
+    })
+  }
+
+  /**
+   * Gets a collection of Tags
+   * @memberof ContentfulClientAPI
+   * @param  {Object=} query - Object with search parameters.
+   * @return {Promise<Entities.TagCollection>} Promise for a collection of Tags
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getTags()
+   * console.log(response.items)
+   */
+  async function getTags(query = {}): Promise<TagCollection> {
+    return get<TagCollection>({
+      context: 'environment',
+      path: 'tags',
+      config: createRequestConfig({ query: normalizeSelect(query) }),
+    })
+  }
+
+  /**
+   * Creates an asset key for signing asset URLs (Embargoed Assets)
+   * @memberof ContentfulClientAPI
+   * @param {number} expiresAt - UNIX timestamp in the future, maximum of 48h from now
+   * @return {Promise<Entities.AssetKey>} Promise for an AssetKey
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const assetKey = await client.getAssetKey(<UNIX timestamp>)
+   * console.log(assetKey)
+   */
+  async function createAssetKey(expiresAt: number): Promise<AssetKey> {
+    try {
+      const now = Math.floor(Date.now() / 1000)
+      const currentMaxLifetime = now + ASSET_KEY_MAX_LIFETIME
+      validateTimestamp('expiresAt', expiresAt, { maximum: currentMaxLifetime, now })
+
+      const params = { expiresAt }
+      // TODO check if http.post params are still correct
+      const response = await http.post('asset_keys', params)
+      return response.data
+    } catch (error) {
+      errorHandler(error as AxiosError)
+    }
   }
 
   /**
@@ -521,19 +601,26 @@ export default function createContentfulApi({
   return <ContentfulClientApi>{
     // version: __VERSION__,
     version: 'test-0.0.0',
-    getSpace: getSpace,
-    getContentType: getContentType,
-    getContentTypes: getContentTypes,
 
-    getAsset: getAsset,
-    getAssets: getAssets,
+    getSpace,
 
-    getLocales: getLocales,
-    parseEntries: parseEntries,
-    sync: sync,
+    getContentType,
+    getContentTypes,
 
-    getEntry: getEntry,
-    getEntries: getEntries,
+    getAsset,
+    getAssets,
+
+    getTag,
+    getTags,
+
+    getLocales,
+    parseEntries,
+    sync,
+
+    getEntry,
+    getEntries,
+
+    createAssetKey,
 
     localized: {
       getEntry: getLocalizedEntry,
