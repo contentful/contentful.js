@@ -98,7 +98,6 @@
 - Chrome
 - Firefox
 - Edge
-- IE11 (with [legacy version](#legacy-browsers) of the library)
 - Safari
 - node.js (LTS)
 
@@ -142,9 +141,9 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 
 #### Legacy browsers:
 
-This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.
+~~This library also comes with a legacy version to support Internet Explorer 11 and other older browsers. It already contains a polyfill for Promises.~~
 
-To support legacy browsers in your application, use `contentful.legacy.min.js` instead of `contentful.browser.min.js`
+> With version `9.0.4` we dropped the support for IE 11. The legacy bundle will only be available for older versions. The full list of supported browsers can be found here [@contentful/browserslist-config](https://github.com/contentful/browserslist-config/blob/master/index.js)
 
 ### Your first request
 
