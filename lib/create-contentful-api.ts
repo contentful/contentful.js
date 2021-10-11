@@ -5,6 +5,7 @@
  * @see Entities
  */
 
+import { AxiosError } from 'axios'
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
@@ -42,7 +43,7 @@ const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 export type UnresolvedClient = {
   getEntry<Fields extends FieldsType>(id: string, query?: EntryQueries): Promise<Entry<Fields>>
-  getEntries<Fields extends FieldsType>(
+  getEntries<Fields extends FieldsType = FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollection<Fields>>
   localized: UnresolvedLocalizedClient
@@ -54,19 +55,19 @@ export type UnresolvedLocalizedClient = {
     query?: EntryQueries,
     locale?: Locale
   ): Promise<LocalizedEntry<Fields, Locale>>
-  getEntries<Fields extends FieldsType, Locale extends LocaleValue = any>(
+  getEntries<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     query?: EntriesQueries<Fields>,
     locale?: Locale
   ): Promise<LocalizedEntryCollection<Fields, Locale>>
 }
 
 export type LocalizedClient = {
-  getEntry<Fields extends FieldsType, Locale extends LocaleValue = any>(
+  getEntry<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     id: string,
     query?: EntryQueries,
     locale?: Locale
   ): Promise<ResolvedLocalizedEntry<Fields, Locale>>
-  getEntries<Fields extends FieldsType, Locale extends LocaleValue = any>(
+  getEntries<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     query?: EntriesQueries<Fields>,
     locale?: Locale
   ): Promise<ResolvedLocalizedEntryCollection<Fields, Locale>>
@@ -177,7 +178,7 @@ export default function createContentfulApi({
       const response = await http.get(baseUrl + path, config)
       return response.data
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
@@ -344,7 +345,7 @@ export default function createContentfulApi({
         throw notFoundError(id)
       }
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
@@ -361,7 +362,7 @@ export default function createContentfulApi({
       })
       return resolveCircular(entries, { resolveLinks, removeUnresolved }) as RType
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
@@ -488,7 +489,7 @@ export default function createContentfulApi({
       const response = await http.post('asset_keys', params)
       return response.data
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error as AxiosError)
     }
   }
 
