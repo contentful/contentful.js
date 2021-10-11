@@ -15,12 +15,10 @@ type BaseLocationFilter<
   Prefix extends string,
   QueryFilter extends string = ''
 > = NonEmpty<
-  NonNullable<
-    {
-      [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
-        FieldName}[${QueryFilter}]`]?: ValueType
-    }
-  >
+  NonNullable<{
+    [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
+      FieldName}[${QueryFilter}]`]?: ValueType
+  }>
 >
 
 /**

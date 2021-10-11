@@ -156,13 +156,19 @@ export default function createContentfulApi({
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
 
+  type Context = 'space' | 'environment'
+
   interface GetConfig {
-    context: 'space' | 'environment'
+    context: Context
     path: string
     config?: any
   }
 
-  async function get<T>({ context, path, config }: GetConfig): Promise<T> {
+  interface PostConfig extends GetConfig {
+    data?: any
+  }
+
+  const getBaseUrl = (context: Context) => {
     let baseUrl =
       context === 'space' ? getGlobalOptions().spaceBaseUrl : getGlobalOptions().environmentBaseUrl
 
@@ -174,8 +180,24 @@ export default function createContentfulApi({
       baseUrl += '/'
     }
 
+    return baseUrl
+  }
+
+  async function get<T>({ context, path, config }: GetConfig): Promise<T> {
+    const baseUrl = getBaseUrl(context)
+
     try {
       const response = await http.get(baseUrl + path, config)
+      return response.data
+    } catch (error) {
+      errorHandler(error as AxiosError)
+    }
+  }
+
+  async function post<T>({ context, path, data, config }: PostConfig): Promise<T> {
+    const baseUrl = getBaseUrl(context)
+    try {
+      const response = await http.post(baseUrl + path, data, config)
       return response.data
     } catch (error) {
       errorHandler(error as AxiosError)
@@ -483,14 +505,15 @@ export default function createContentfulApi({
       const now = Math.floor(Date.now() / 1000)
       const currentMaxLifetime = now + ASSET_KEY_MAX_LIFETIME
       validateTimestamp('expiresAt', expiresAt, { maximum: currentMaxLifetime, now })
-
-      const params = { expiresAt }
-      // TODO check if http.post params are still correct
-      const response = await http.post('asset_keys', params)
-      return response.data
     } catch (error) {
       errorHandler(error as AxiosError)
     }
+
+    return post<AssetKey>({
+      context: 'environment',
+      path: 'asset_keys',
+      data: { expiresAt },
+    })
   }
 
   /**
