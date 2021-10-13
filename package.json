@@ -3,9 +3,9 @@
   "description": "Client for Contentful's Content Delivery API",
   "version": "0.0.0-determined-by-semantic-release",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
-  "main": "./dist/contentful.node.js",
-  "module": "./dist/contentful.esm.js",
-  "jsnext:main": "./dist/contentful.esm.js",
+  "main": "./dist/contentful.browser.js",
+  "browser": "./dist/contentful.browser.js",
+  "modules": "./dist/contentful.browser.js",
   "types": "./dist/types/index.d.ts",
   "tsd": {
     "directory": "test/types",
@@ -34,23 +34,23 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && tsdx build --entry lib/index.ts --format cjs,umd,esm --name contentful",
-    "postbuild": "npm run check:browser && npm run check:node && npm run check:modules",
-    "check:modules": "es-check es6 --module ./dist/contentful.esm.js",
-    "check:browser": "es-check es5 ./dist/contentful.browser.js ./dist/contentful.browser.min.js",
-    "check:node": "es-check es2017 ./dist/contentful.node.js ./dist/contentful.node.min.js",
+    "build": "node build.mjs && npm run build:types",
+    "build:types": "tsc --declaration --emitDeclarationOnly",
+    "postbuild": "npm run check:browser && npm run check:node && npm run test:size",
+    "check:browser": "es-check es2017 --module ./dist/contentful.browser.js",
+    "check:node": "es-check es2017 ./dist/contentful.node.js",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
-    "lint": "tsdx lint && eslint \"lib/**\" \"test/**\"",
+    "lint": "eslint \"lib/**\" \"test/**\"",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx}'",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx}'",
     "pretest": "rimraf coverage",
     "test": "npm run test:unit && npm run test:integration && npm run lint",
-    "test:unit": "tsdx test ./test/unit --coverage",
-    "test:unit:watch": "tsdx test ./test/unit --watch",
-    "test:integration": "tsdx test ./test/integration --coverage",
+    "test:unit": "jest ./test/unit --coverage",
+    "test:unit:watch": "jest ./test/unit --watch",
+    "test:integration": "jest ./test/integration --coverage",
     "test:size": "bundlesize",
     "test:types": "./node_modules/.bin/tsd",
     "test:prepush": "npm run build && npm run test:unit && npm run test:size",
@@ -58,38 +58,29 @@
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
     "precommit": "npm run lint && npm run prettier:check",
-    "prepush": "npm run test:prepush",
-    "postinstall": "rimraf node_modules/tsdx/node_modules"
+    "prepush": "npm run test:prepush"
   },
   "dependencies": {
-    "@contentful/rich-text-types": "^15.3.6",
-    "axios": "^0.21.4",
+    "axios": "^0.22.0",
     "contentful-resolve-response": "^1.3.0",
-    "contentful-sdk-core": "^6.9.0",
+    "contentful-sdk-core": "^6.10.3",
     "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
-    "@babel/node": "^7.6.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "@babel/register": "^7.6.2",
     "@contentful/browserslist-config": "^2.0.0",
+    "@contentful/rich-text-types": "^15.3.6",
     "@semantic-release/changelog": "^5.0.1",
-    "@types/axios": "^0.14.0",
+    "@types/jest": "^27.0.2",
     "@types/json-stringify-safe": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",
-    "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-inline-replace-variables": "^1.3.1",
     "better-docs": "^2.3.2",
     "bundlesize": "^0.18.1",
     "contentful-sdk-jsdoc": "^2.2.0",
     "core-js": "^3.2.1",
     "cz-conventional-changelog": "^3.0.2",
-    "es-check": "^6.0.0",
+    "es-check": "^5.1.0",
+    "esbuild": "^0.13.3",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-config-standard": "^16.0.0",
@@ -102,6 +93,7 @@
     "husky": "^4.3.8",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
+    "jest": "^25.5.4",
     "jest-when": "^3.0.1",
     "jsdoc": "^3.4.0",
     "json": "^11.0.0",
@@ -110,18 +102,11 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.0",
     "semantic-release": "^17.0.4",
+    "ts-jest": "^25.5.1",
     "tsd": "^0.17.0",
-    "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
     "type-fest": "^0.20.2",
     "typescript": "^4.1.3"
-  },
-  "resolutions": {
-    "**/@typescript-eslint/eslint-plugin": "^4.11.1",
-    "**/@typescript-eslint/parser": "^4.11.1",
-    "**/jest": "^26.6.3",
-    "**/ts-jest": "^26.4.4",
-    "**/typescript": "^4.1.3"
   },
   "engines": {
     "node": ">=12"
@@ -134,23 +119,19 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "40Kb"
+      "maxSize": "35Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "16Kb"
-    },
-    {
-      "path": "./dist/contentful.esm.js",
-      "maxSize": "64Kb"
+      "maxSize": "25Kb"
     },
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "55Kb"
+      "maxSize": "45Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "25Kb"
+      "maxSize": "32Kb"
     }
   ],
   "release": {

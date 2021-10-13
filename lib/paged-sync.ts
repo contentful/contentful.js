@@ -2,9 +2,10 @@
  * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
  * @namespace Sync
  */
-import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import resolveResponse from 'contentful-resolve-response'
+import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import mixinStringifySafe from './mixins/stringify-safe'
+import { SyncCollection } from './types'
 
 /**
  * @memberof Sync
@@ -143,7 +144,8 @@ async function getSyncPage(http: AxiosInstance, items, query, { paginate }) {
     delete query.limit
   }
 
-  const response = await http.get('sync', createRequestConfig({ query: query }))
+  // Todo: better type sync response (SyncCollection)
+  const response = await http.get<any>('sync', createRequestConfig({ query: query }))
   const data = response.data || {}
   items = items.concat(data.items || [])
   if (data.nextPageUrl) {
