@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   unit:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.11
     steps:
       - checkout
       - restore_cache:
@@ -12,7 +12,7 @@ jobs:
       - run: npm run test:cover
   integration:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.11
     steps:
       - checkout
       - restore_cache:
@@ -22,7 +22,7 @@ jobs:
       - run: npm run test:integration
   release:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.11
     steps:
       - checkout
       - run: npm install
