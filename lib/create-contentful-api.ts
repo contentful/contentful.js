@@ -286,11 +286,53 @@ export type ContentfulClientApi = {
    */
   sync(query: any): Promise<SyncCollection>
 
+  /**
+   * Gets a Tag
+   * @category API
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const tag = await client.getTag('<asset_id>')
+   * console.log(tag)
+   */
   getTag(id: string): Promise<Tag>
 
+  /**
+   * Gets a collection of Tags
+   * @category API
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getTags()
+   * console.log(response.items)
+   */
   // TODO type query
   getTags(query?: any): Promise<TagCollection>
 
+  /**
+   * Creates an asset key for signing asset URLs (Embargoed Assets)
+   * @category API
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const assetKey = await client.getAssetKey(<UNIX timestamp>)
+   * console.log(assetKey)
+   */
   createAssetKey(expiresAt: number): Promise<AssetKey>
 
   unresolved: UnresolvedClient
@@ -512,22 +554,6 @@ export default function createContentfulApi({
     })
   }
 
-  /**
-   * Gets a Tag
-   * @memberof ContentfulClientAPI
-   * @param  {string} id
-   * @return {Promise<Entities.Tag>} Promise for a Tag
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const tag = await client.getTag('<asset_id>')
-   * console.log(tag)
-   */
   async function getTag(id: string): Promise<Tag> {
     return get<Tag>({
       context: 'environment',
@@ -535,22 +561,6 @@ export default function createContentfulApi({
     })
   }
 
-  /**
-   * Gets a collection of Tags
-   * @memberof ContentfulClientAPI
-   * @param  {Object=} query - Object with search parameters.
-   * @return {Promise<Entities.TagCollection>} Promise for a collection of Tags
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getTags()
-   * console.log(response.items)
-   */
   async function getTags(query = {}): Promise<TagCollection> {
     return get<TagCollection>({
       context: 'environment',
@@ -559,22 +569,6 @@ export default function createContentfulApi({
     })
   }
 
-  /**
-   * Creates an asset key for signing asset URLs (Embargoed Assets)
-   * @memberof ContentfulClientAPI
-   * @param {number} expiresAt - UNIX timestamp in the future, maximum of 48h from now
-   * @return {Promise<Entities.AssetKey>} Promise for an AssetKey
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const assetKey = await client.getAssetKey(<UNIX timestamp>)
-   * console.log(assetKey)
-   */
   async function createAssetKey(expiresAt: number): Promise<AssetKey> {
     try {
       const now = Math.floor(Date.now() / 1000)
