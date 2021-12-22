@@ -165,12 +165,35 @@ test('Gets entry with link resolution', async () => {
   expect(response.fields.bestFriend.fields).toBeDefined()
 })
 
-// TODO fix test
-test.skip('Gets entry with link resolution and removeUnresolved', async () => {
+test('Gets entry with unresolved includes', async () => {
   const response = await client.unresolved.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  expect(response.fields).toBeDefined()
+  expect(response.fields.bestFriend).toMatchObject({
+    sys: {
+      type: 'Link',
+      linkType: 'Entry',
+      id: '6SiPbntBPYYjnVHmipxJBF',
+    },
+  })
+})
 
+test('Gets entry with resolved includes and removes unresolved', async () => {
+  const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
+  const response = await removeUnresolvedClient.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toBeUndefined()
+})
+
+test('Gets entry with resolved includes and keeps unresolved', async () => {
+  const response = await client.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  expect(response.fields).toBeDefined()
+  expect(response.fields.bestFriend).toMatchObject({
+    sys: {
+      type: 'Link',
+      linkType: 'Entry',
+      id: '6SiPbntBPYYjnVHmipxJBF',
+    },
+  })
 })
 
 test('Gets entries with content type query param', async () => {

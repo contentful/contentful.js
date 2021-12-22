@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/node:16.11
     steps:
       - checkout
       - restore_cache:
@@ -14,27 +14,25 @@ jobs:
       - run: npm run test:types
   unit:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/node:16.11
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run: npm ci
-      - run: npm run build
       - run: npm run test:unit
   integration:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/node:16.11
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run: npm ci
-      - run: npm run build
       - run: npm run test:integration
   release:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/node:16.11
     steps:
       - checkout
       - run: npm ci
