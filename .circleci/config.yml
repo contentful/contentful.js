@@ -10,7 +10,6 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run prettier:check
-      - run: npm run build
       - run: npm run test:types
   unit:
     docker:
@@ -20,7 +19,6 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run: npm ci
-      - run: npm run build
       - run: npm run test:unit
   integration:
     docker:
@@ -30,7 +28,6 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run: npm ci
-      - run: npm run build
       - run: npm run test:integration
   release:
     docker:
