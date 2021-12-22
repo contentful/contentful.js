@@ -5,6 +5,9 @@ export interface SpaceSys extends BaseSys {
   type: 'Space'
 }
 
+/**
+ * @category Entities
+ */
 export interface Space {
   sys: SpaceSys
   name: string
