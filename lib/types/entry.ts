@@ -44,7 +44,6 @@ export type BasicEntryField =
   | EntryFields.RichText
   | EntryFields.Object
 
-
 /**
  * @category Entities
  */
