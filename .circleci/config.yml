@@ -10,6 +10,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run prettier:check
+      - run: npm run build
       - run: npm run test:types
   unit:
     docker:

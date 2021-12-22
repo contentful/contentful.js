@@ -184,7 +184,7 @@ test('Gets entry with resolved includes and removes unresolved', async () => {
   expect(response.fields.bestFriend).toBeUndefined()
 })
 
-test('Gets entry with resolved includes and removes unresolved', async () => {
+test('Gets entry with resolved includes and keeps unresolved', async () => {
   const response = await client.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toMatchObject({
