@@ -135,7 +135,12 @@
   "release": {
     "branches": [
       "master",
-      "next"
+      "next",
+      {
+        "name": "next-typescript",
+        "channel": "next-typescript",
+        "prerelease": true
+      }
     ],
     "plugins": [
       [
