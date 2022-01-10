@@ -19,20 +19,22 @@ const build = (options) => esbuild
 const browserConfig = {
   bundle: true,
   format: 'esm',
-  outfile: 'dist/contentful.browser.js',
-  target: transformedBrowserList
+  outfile: 'dist/contentful.esm.js',
+  platform: 'node',
+  target: ['node16'],
+  // target: transformedBrowserList
 }
 
 // browser (esm) minified
 const browserConfigMinified = {
   ...browserConfig,
-  outfile: 'dist/contentful.browser.min.js',
+  outfile: 'dist/contentful.esm.min.js',
   minify: true
 }
 
 const nodeConfig = {
   bundle: true,
-  outfile: 'dist/contentful.node.js',
+  outfile: 'dist/contentful.cjs.cjs',
   format: 'cjs',
   target: ['node12'],
   platform: 'node'
@@ -41,7 +43,7 @@ const nodeConfig = {
 // node (cjs) minified
 const nodeConfigMinified = {
   ...nodeConfig,
-  outfile: 'dist/contentful.node.min.js',
+  outfile: 'dist/contentful.cjs.min.cjs',
   minify: true
 }
 

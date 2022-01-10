@@ -35,7 +35,7 @@ This library is able to handle Server Side Rendering and React Native. Depending
 ```js
 const contentful = require("contentful");
 // will become the following to enforce the browser version
-const contentful = require("contentful/dist/contentful.browser.min.js");
+const contentful = require("contentful/dist/contentful.esm.min.js");
 ```
 
 ### Angular universal:

@@ -38,8 +38,8 @@
     <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
   </a>
   &nbsp;
-  <a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
-    <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
+  <a href="https://unpkg.com/contentful/dist/contentful.esm.min.js">
+    <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.esm.min.js?compression=gzip" alt="GZIP bundle size">
   </a>
 </p>
 
@@ -106,7 +106,7 @@
 The default export is an `es9` compliant module. in order to import the `commonJS` bundle, please use:
 
 ```js
-const contentful = require("contentful/contentful.node")
+const contentful = require("contentful/contentful.cjs")
 ```
 
 ## Getting started
@@ -132,13 +132,13 @@ For browsers, we recommend to download the library via npm or yarn to ensure 100
 If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.esm.min.js"></script>
 ```
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/contentful@9.0.1/dist/contentful.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@9.0.1/dist/contentful.esm.min.js"></script>
 ```
 
 The Contentful Delivery library will be accessible via the `contentful` global variable.
@@ -386,7 +386,7 @@ For versions prior to 3.0.0, you can access documentation at [https://github.com
 
 ### Troubleshooting
 
-- **I get the error: Unable to resolve module `http`** - Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
+- **I get the error: Unable to resolve module `http`** - Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.esm.min.js')`
 - **Can I use it with typescript?** - Yes, there is also a type definition file
 - **Is the library doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
 

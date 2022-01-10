@@ -3,9 +3,14 @@
   "description": "Client for Contentful's Content Delivery API",
   "version": "0.0.0-determined-by-semantic-release",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
-  "main": "./dist/contentful.node.js",
-  "browser": "./dist/contentful.browser.js",
-  "modules": "./dist/contentful.browser.js",
+  "type": "module",
+  "exports": {
+    "import": "./dist/contentful.esm.js", 
+    "require": "./dist/contentful.cjs.cjs"
+  },
+  "main": "./dist/contentful.esm.js",
+  "browser": "./dist/contentful.esm.js",
+  "modules": "./dist/contentful.esm.js",
   "types": "./dist/types/index.d.ts",
   "tsd": {
     "directory": "test/types",
@@ -37,8 +42,8 @@
     "build": "node build.mjs && npm run build:types",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "postbuild": "npm run check:browser && npm run check:node && npm run test:size",
-    "check:browser": "es-check es2017 --module ./dist/contentful.browser.js",
-    "check:node": "es-check es2017 ./dist/contentful.node.js",
+    "check:browser": "es-check es2017 --module ./dist/contentful.esm_.js",
+    "check:node": "es-check es2017 ./dist/contentful.cjs.js",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
@@ -116,19 +121,19 @@
   },
   "bundlesize": [
     {
-      "path": "./dist/contentful.browser.js",
+      "path": "./dist/contentful.esm.js",
       "maxSize": "35Kb"
     },
     {
-      "path": "./dist/contentful.browser.min.js",
+      "path": "./dist/contentful.esm.min.js",
       "maxSize": "25Kb"
     },
     {
-      "path": "./dist/contentful.node.js",
+      "path": "./dist/contentful.cjs.js",
       "maxSize": "45Kb"
     },
     {
-      "path": "./dist/contentful.node.min.js",
+      "path": "./dist/contentful.cjs.min.js",
       "maxSize": "32Kb"
     }
   ],
