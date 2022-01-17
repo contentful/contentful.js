@@ -5,4 +5,4 @@ export * from './utils/normalize-select'
 export * from './utils/resolve-circular'
 
 export * from './types'
-export { ContentfulClientApi } from './create-contentful-api'
+export type { ContentfulClientApi } from './create-contentful-api'

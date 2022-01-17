@@ -7,7 +7,6 @@ import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
-
 export interface AxiosProxyConfig {
   host: string
   port: number
