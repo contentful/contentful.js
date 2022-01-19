@@ -10,6 +10,10 @@
     "import": "./dist/contentful.esm.js",
     "require": "./dist/contentful.cjs.js"
   },
+  "types": "./dist/types/index.d.ts",
+  "targets": {
+    "types": false
+  },
   "tsd": {
     "directory": "test/types",
     "compilerOptions": {
