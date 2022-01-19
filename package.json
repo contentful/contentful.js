@@ -18,9 +18,7 @@
     "directory": "test/types",
     "compilerOptions": {
       "rootDir": "./lib",
-      "typeRoots": [
-        "./lib"
-      ]
+      "typeRoots": ["./lib"]
     }
   },
   "files": [
@@ -41,8 +39,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && npx parcel build --no-source-maps && tsc --emitDeclarationOnly",
-    "build:dev": "npm run clean && npx parcel build && tsc --emitDeclarationOnly",
+    "build": "npm run clean && parcel build --no-source-maps && tsc --emitDeclarationOnly",
+    "build:dev": "npm run clean && parcel build && tsc --emitDeclarationOnly",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "postbuild": "npm run check:browser && npm run check:node && npm run test:size",
     "check:browser": "es-check es2017 --module ./dist/contentful.esm.js",
@@ -76,8 +74,8 @@
   "devDependencies": {
     "@contentful/browserslist-config": "^2.0.0",
     "@contentful/rich-text-types": "^15.3.6",
-    "@parcel/packager-ts": "^2.0.0-nightly.982",
-    "@parcel/transformer-typescript-types": "^2.0.0-nightly.982",
+    "@parcel/packager-ts": "^2.2.1",
+    "@parcel/transformer-typescript-types": "^2.2.1",
     "@semantic-release/changelog": "^5.0.1",
     "@types/jest": "^27.0.2",
     "@types/json-stringify-safe": "^5.0.0",
@@ -105,7 +103,7 @@
     "json": "^11.0.0",
     "mkdirp": "^1.0.3",
     "nodemon": "^2.0.2",
-    "parcel": "^2.0.0-nightly.980",
+    "parcel": "^2.2.1",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.0",
     "semantic-release": "^17.0.4",
@@ -143,10 +141,7 @@
     }
   ],
   "release": {
-    "branches": [
-      "master",
-      "next"
-    ],
+    "branches": ["master", "next"],
     "plugins": [
       [
         "@semantic-release/commit-analyzer",
