@@ -5,9 +5,9 @@
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "source": "./lib/index.ts",
   "main": "./dist/contentful.cjs.js",
-  "module": "./dist/contentful.esm.mjs",
+  "module": "./dist/contentful.esm.js",
   "exports": {
-    "import": "./dist/contentful.esm.mjs", 
+    "import": "./dist/contentful.esm.js",
     "require": "./dist/contentful.cjs.js"
   },
   "types": "./dist/types/index.d.ts",
@@ -45,7 +45,7 @@
     "build:dev": "npm run clean && npx parcel build && tsc --emitDeclarationOnly",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "postbuild": "npm run check:browser && npm run check:node && npm run test:size",
-    "check:browser": "es-check es2017 --module ./dist/contentful.esm_.js",
+    "check:browser": "es-check es2017 --module ./dist/contentful.esm.js",
     "check:node": "es-check es2017 ./dist/contentful.cjs.js",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
