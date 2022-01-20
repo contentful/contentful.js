@@ -37,7 +37,9 @@
     "directory": "test/types",
     "compilerOptions": {
       "rootDir": "./lib",
-      "typeRoots": ["./lib"]
+      "typeRoots": [
+        "./lib"
+      ]
     }
   },
   "files": [
@@ -85,7 +87,6 @@
     "prepush": "npm run test:prepush"
   },
   "dependencies": {
-    "@swc/helpers": "^0.3.2",
     "axios": "^0.22.0",
     "contentful-resolve-response": "^1.3.0",
     "contentful-sdk-core": "^6.10.3",
