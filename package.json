@@ -6,14 +6,14 @@
   "source": "./lib/index.ts",
   "main": "./dist/contentful.cjs.js",
   "module": "./dist/contentful.esm.js",
-  "main-optimized": "./dist/contentful.cjs.min.js",
-  "module-optimized": "./dist/contentful.esm.min.js",
+  "main-minified": "./dist/contentful.cjs.min.js",
+  "module-minified": "./dist/contentful.esm.min.js",
   "exports": {
     "import": "./dist/contentful.esm.js",
     "require": "./dist/contentful.cjs.js"
   },
   "types": "./dist/types/index.d.ts",
-  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "browserslist": "defaults",
   "targets": {
     "types": false,
     "main": {
@@ -24,11 +24,11 @@
       "optimize": false,
       "outputFormat": "esmodule"
     },
-    "main-optimized": {
+    "main-minified": {
       "optimize": true,
       "outputFormat": "commonjs"
     },
-    "module-optimized": {
+    "module-minified": {
       "optimize": true,
       "outputFormat": "esmodule"
     }
@@ -62,7 +62,7 @@
     "build:dev": "npm run clean && parcel build && tsc --emitDeclarationOnly",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "postbuild": "npm run check:browser && npm run check:node && npm run test:size",
-    "check:browser": "es-check es2019 --module ./dist/contentful.esm.js",
+    "check:browser": "es-check es2018 --module ./dist/contentful.esm.js",
     "check:node": "es-check es2015 ./dist/contentful.cjs.js",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
