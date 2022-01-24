@@ -13,7 +13,7 @@
     "require": "./dist/contentful.cjs.js"
   },
   "types": "./dist/types/index.d.ts",
-  "browserslist": "defaults",
+  "browserslist": ["extends @contentful/browserslist-config", "maintained node versions"],
   "targets": {
     "types": false,
     "main": {
@@ -63,9 +63,9 @@
     "build": "npm run clean && parcel build --no-source-maps && tsc --emitDeclarationOnly",
     "build:dev": "npm run clean && parcel build && tsc --emitDeclarationOnly",
     "build:types": "tsc --declaration --emitDeclarationOnly",
-    "postbuild": "npm run check:browser && npm run check:node && npm run test:size",
-    "check:browser": "es-check es2018 --module ./dist/contentful.esm.js",
-    "check:node": "es-check es2015 ./dist/contentful.cjs.js",
+    "postbuild": "npm run check:esm && npm run check:cjs && npm run test:size",
+    "check:esm": "es-check es2018 --module ./dist/contentful.esm.js",
+    "check:cjs": "es-check es2018 ./dist/contentful.cjs.js",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
