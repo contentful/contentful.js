@@ -57,8 +57,8 @@
   "author": "Contentful <opensource@contentful.com>",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "npm run clean && parcel build --no-source-maps && tsc --emitDeclarationOnly",
+    "clean": "rimraf dist .parcel_cache",
+    "build": "npm run clean && parcel build --log-level verbose --no-source-maps && tsc --emitDeclarationOnly",
     "build:dev": "npm run clean && parcel build && tsc --emitDeclarationOnly",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "postbuild": "npm run check:esm && npm run check:cjs && npm run test:size",
