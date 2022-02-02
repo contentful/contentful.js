@@ -68,7 +68,7 @@ test('Gets entry', async () => {
 })
 
 test('Gets an entry with a specific locale', async () => {
-  const entry = await client.localized.getEntry<{ test: EntryFields.Symbol }>('nyancat', {}, 'tlh')
+  const entry = await client.getEntry<{ test: EntryFields.Symbol }>('nyancat', { locale: 'tlh' })
   expect(entry.sys.locale).toBe('tlh')
 })
 
@@ -85,12 +85,11 @@ test('Get entry with fallback locale', async () => {
   type Fields = { title: string }
 
   const entries = await Promise.all([
-    localeClient.localized.getEntry<Fields>('no-af-and-no-zu-za', {}, 'af'),
-    localeClient.localized.getEntry<Fields>('no-af-and-no-zu-za', {}, 'zu-ZA'),
-    localeClient.localized.getEntry<Fields>('no-zu-ZA', {}, 'zu-ZA'),
-    localeClient.localized.getEntry<Fields>('no-ne-NP', {}, 'ne-NP'),
-    localeClient.localized.getEntry<Fields>('no-af', {}, 'af'),
-    localeClient.localized.getEntry<Fields, 'af'>('no-af', {}, 'af'),
+    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'af' }),
+    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
+    localeClient.getEntry<Fields>('no-zu-ZA', { locale: 'zu-ZA' }),
+    localeClient.getEntry<Fields>('no-ne-NP', { locale: 'ne-NP' }),
+    localeClient.getEntry<Fields>('no-af', { locale: 'af' }),
   ])
 
   expect(entries[0].fields.title).not.toBe('')
@@ -124,7 +123,7 @@ test('Gets entries with select', async () => {
 })
 
 test('Gets entries with a specific locale', async () => {
-  const response = await client.localized.getEntries({}, 'tlh')
+  const response = await client.getEntries({ locale: 'tlh' })
 
   expect(response.items[0].sys.locale).toBe('tlh')
   expect(response.items).toBeDefined()
@@ -165,8 +164,10 @@ test('Gets entry with link resolution', async () => {
   expect(response.fields.bestFriend.fields).toBeDefined()
 })
 
-test('Gets entry with unresolved includes', async () => {
-  const response = await client.unresolved.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+test('Gets entry with without link resolution but with includes', async () => {
+  const response = await client.withoutLinkResolution.getEntry('4SEhTg8sYJ1H3wDAinzhTp', {
+    include: 2,
+  })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toMatchObject({
     sys: {
@@ -177,14 +178,15 @@ test('Gets entry with unresolved includes', async () => {
   })
 })
 
-test('Gets entry with resolved includes and removes unresolved', async () => {
+// TODO: add same test with client.withoutUnresolvable once that is implemented
+test('Gets entry with link resolution and includes, removing unresolvable links', async () => {
   const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
   const response = await removeUnresolvedClient.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toBeUndefined()
 })
 
-test('Gets entry with resolved includes and keeps unresolved', async () => {
+test('Gets entry with link resolution, and includes, keeping unresolvable links', async () => {
   const response = await client.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toMatchObject({
@@ -217,8 +219,7 @@ test('Gets entries with equality query', async () => {
 
 test('Gets entries with inequality query', async () => {
   const response = await client.getEntries({ 'sys.id[ne]': 'nyancat' })
-
-  expect(response.total > 0).toBeDefined()
+  expect(response.total).toBeGreaterThan(0)
   expect(response.items.filter((item) => item.sys.id === 'nyancat')).toHaveLength(0)
 })
 
@@ -266,8 +267,7 @@ test('Gets entries with exists query', async () => {
     content_type: 'cat',
     'fields.likes[exists]': 'true',
   })
-
-  expect(response.items.map((item) => item.fields.likes)).toHaveLength(response.total)
+  expect(response.items.filter((item) => item.fields.likes)).toHaveLength(response.total)
 })
 
 test('Gets entries with inverse exists query', async () => {
@@ -275,8 +275,7 @@ test('Gets entries with inverse exists query', async () => {
     content_type: 'cat',
     'fields.likes[exists]': 'false',
   })
-
-  expect(response.items.map((item) => item.fields.likes)).toHaveLength(0)
+  expect(response.items.filter((item) => item.fields.likes)).toHaveLength(0)
 })
 
 test('Gets entries with field link query', async () => {
@@ -318,7 +317,7 @@ test('Gets entries with full text search query on field', async () => {
     'fields.description[match]': 'bacon pancakes',
   })
 
-  expect(response.items[0].fields.description).toMatch(/bacon/)
+  expect(response.items[0].fields.description).toMatch(/bacon pancakes/)
 })
 
 test('Gets entries with location proximity search', async () => {
@@ -337,8 +336,16 @@ test('Gets entries with location in bounding object', async () => {
     'fields.center[within]': '40,-124,36,-120',
   })
 
-  expect(response.items[0].fields.center.lat).toBeDefined()
-  expect(response.items[0].fields.center.lon).toBeDefined()
+  const lat = response.items[0].fields.center.lat
+  const lon = response.items[0].fields.center.lon
+
+  expect(lat).toBeDefined()
+  expect(lat).toBeGreaterThan(36)
+  expect(lat).toBeLessThan(40)
+
+  expect(lon).toBeDefined()
+  expect(lon).toBeGreaterThan(-124)
+  expect(lon).toBeLessThan(-120)
 })
 
 test('Gets entries by creation order', async () => {
@@ -391,13 +398,6 @@ test('Gets entries by creation order and id order', async () => {
   expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
 })
 
-test('Gets an entry with a specific locale', async () => {
-  const entry = await client.getEntry('jake', {
-    locale: 'tlh',
-  })
-  expect(entry.sys.locale).toBe('tlh')
-})
-
 test('Gets assets with only images', async () => {
   const response = await client.getAssets({
     mimetype_group: 'image',
@@ -414,6 +414,7 @@ test('Gets asset', async () => {
 test('Gets assets', async () => {
   const response = await client.getAssets()
   expect(response.items).toBeDefined()
+  expect(response.items.length).toBeGreaterThan(0)
 })
 
 test('Gets Locales', async () => {
@@ -482,27 +483,31 @@ describe('Sync API', () => {
   })
 })
 
-test('Gets entries with linked includes with locale:*', async () => {
-  const response = await client.localized.getEntries({ include: 5, 'sys.id': 'nyancat' }, '*')
-  expect(response.includes).toBeDefined()
-  expect(response.includes!.Asset).toBeDefined()
-  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
-  expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
-  expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
-  expect(response.items[0].metadata).toEqual({ tags: [] })
+test("Gets entries with linked includes with all locales using locale:'*' parameter", async () => {
+  const response = await client.getEntries({ include: 5, 'sys.id': 'nyancat', locale: '*' })
+  assertLocalizedAssetResponse(response)
 })
 
-test('Gets entries with linked includes with locale:* in preview', async () => {
-  const response = await previewClient.localized.getEntries(
-    { include: 5, 'sys.id': 'nyancat' },
-    '*'
-  )
-  expect(response.includes).toBeDefined()
-  expect(response.includes!.Asset).toBeDefined()
-  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
-  expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
-  expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
-  expect(response.items[0].metadata).toEqual({ tags: [] })
+test('Gets entries with linked includes with all locales using withAllLocales client modifier', async () => {
+  const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
+  assertLocalizedAssetResponse(response)
+})
+
+test("Gets entries with linked includes with all locales using locale:'*' parameter in preview", async () => {
+  const response = await previewClient.getEntries({
+    include: 5,
+    'sys.id': 'nyancat',
+    locale: '*',
+  })
+  assertLocalizedAssetResponse(response)
+})
+
+test('Gets entries with linked includes with all locales using withAllLocales client modifier in preview', async () => {
+  const response = await previewClient.withAllLocales.getEntries({
+    include: 5,
+    'sys.id': 'nyancat',
+  })
+  assertLocalizedAssetResponse(response)
 })
 
 test('Logs request and response with custom loggers', async () => {
@@ -512,13 +517,15 @@ test('Logs request and response with custom loggers', async () => {
 })
 
 describe('Metadata', () => {
-  test('Gets entries with attached metadata and metadata field on preview', async () => {
+  test('Gets entries with attached metadata and field called "metadata" on preview', async () => {
     const response = await previewClient.getEntries()
-    // TODO what else to expect in this test
+
     expect(response.items).toBeDefined()
+    expect(response.items.filter(({ fields }) => fields.metadata).length).toBeGreaterThan(0)
+    expect(response.items.filter(({ fields }) => fields.metadata)[0].metadata).toBeDefined()
   })
 
-  test('Gets entry with attached metadata and metadata field on preview', async () => {
+  test('Gets entry with attached metadata and field called "metadata"on preview', async () => {
     const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW'
     const response = await previewClient.getEntry(entryWithMetadataFieldAndMetadata)
     expect(response.sys).toBeDefined()
@@ -572,6 +579,17 @@ describe('Embargoed Assets', () => {
   })
 })
 
+// TODO fix version
 test.skip('Client object exposes current version', async () => {
   expect(client.version).toEqual(version)
 })
+
+// Assertion helpers
+function assertLocalizedAssetResponse(response) {
+  expect(response.includes).toBeDefined()
+  expect(response.includes!.Asset).toBeDefined()
+  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
+  expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
+  expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
+  expect(response.items[0].metadata).toEqual({ tags: [] })
+}

@@ -306,7 +306,7 @@ contentful.createClient({
       <td><code>removeUnresolved</code></td>
       <td><code>false</code></td>
       <td>
-        Remove fields from response for unresolved links.
+        Remove fields from response for unresolvable links.
       </td>
     </tr>
     <tr>

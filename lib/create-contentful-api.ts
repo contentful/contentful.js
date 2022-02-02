@@ -44,7 +44,7 @@ export type UnresolvedClient = {
   getEntries<Fields extends FieldsType = FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollection<Fields>>
-  localized: UnresolvedLocalizedClient
+  withAllLocales: UnresolvedLocalizedClient
 }
 
 export type UnresolvedLocalizedClient = {
@@ -335,9 +335,9 @@ export type ContentfulClientApi = {
    */
   createAssetKey(expiresAt: number): Promise<AssetKey>
 
-  unresolved: UnresolvedClient
+  withoutLinkResolution: UnresolvedClient
 
-  localized: LocalizedClient
+  withAllLocales: LocalizedClient
 }
 
 interface CreateContentfulApiParams {
@@ -452,6 +452,9 @@ export default function createContentfulApi({
     return internalGetEntries<ResolvedEntryCollection<Fields>>(query, true)
   }
 
+  // TODO: third param and second type param are irrelevant,
+  // as the only configuration which returns localized fields is `locale='*'`
+  // so we make this the default and remove the `locale` param
   async function getLocalizedEntry<Fields, Locale extends LocaleValue = any>(
     id: string,
     query: EntryQueries = {},
@@ -634,16 +637,16 @@ export default function createContentfulApi({
 
     createAssetKey,
 
-    localized: {
+    withAllLocales: {
       getEntry: getLocalizedEntry,
       getEntries: getLocalizedEntries,
     },
 
-    unresolved: {
+    withoutLinkResolution: {
       getEntry: getUnresolvedEntry,
       getEntries: getUnresolvedEntries,
 
-      localized: {
+      withAllLocales: {
         getEntry: getUnresolvedLocalizedEntry,
         getEntries: getUnresolvedLocalizedEntries,
       },
