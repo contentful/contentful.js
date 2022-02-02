@@ -2,7 +2,7 @@ import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
 import { ContentTypeLink } from './link'
-import { LocaleValue } from './locale'
+import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
 import { EntitySys } from './sys'
@@ -63,15 +63,14 @@ interface EntryLink<T> {
   }
 }
 
-// TODO remove Locale param
 export interface EntryWithAllLocalesAndWithoutLinkResolution<
   Fields extends FieldsType,
-  Locale extends LocaleValue
+  Locales extends LocaleCode
 > {
   sys: EntrySys
   fields: {
     [FieldName in keyof Fields]: {
-      [LocaleName in Locale]?: Fields[FieldName]
+      [LocaleName in Locales]?: Fields[FieldName]
     }
   }
   metadata: Metadata
@@ -93,7 +92,7 @@ export type EntryWithLinkResolution<Fields extends FieldsType> = {
 
 export type EntryWithAllLocalesAndWithLinkResolution<
   Fields extends FieldsType,
-  Locales extends LocaleValue
+  Locales extends LocaleCode
 > = {
   sys: EntrySys
   fields: {
@@ -130,10 +129,10 @@ export type EntryCollectionWithLinkResolution<T> = AbstractEntryCollection<
 
 export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
   Fields,
-  Locales extends LocaleValue
+  Locales extends LocaleCode
 > = AbstractEntryCollection<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 
 export type EntryCollectionWithAllLocalesAndWithLinkResolution<
   Fields,
-  Locales extends LocaleValue
+  Locales extends LocaleCode
 > = AbstractEntryCollection<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
