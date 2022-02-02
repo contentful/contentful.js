@@ -118,11 +118,11 @@ export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TE
   }
 }
 
+export type EntryCollection<T> = AbstractEntryCollection<Entry<T>>
+
 export type EntryWithoutLinkResolution<T> = Entry<T>
 
-export type EntryCollectionWithoutLinkResolution<T> = AbstractEntryCollection<
-  EntryWithoutLinkResolution<T>
->
+export type EntryCollectionWithoutLinkResolution<T> = EntryCollection<T>
 
 export type EntryCollectionWithLinkResolution<T> = AbstractEntryCollection<
   EntryWithLinkResolution<T>
