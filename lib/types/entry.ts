@@ -54,6 +54,7 @@ export interface Entry<T> {
 }
 
 // TODO use EntryLink from link.ts instead
+// TODO remove generic
 interface EntryLink<T> {
   sys: {
     type: 'Link'
@@ -62,7 +63,11 @@ interface EntryLink<T> {
   }
 }
 
-export interface LocalizedEntry<Fields extends FieldsType, Locale extends LocaleValue> {
+// TODO remove Locale param
+export interface EntryWithAllLocalesAndWithoutLinkResolution<
+  Fields extends FieldsType,
+  Locale extends LocaleValue
+> {
   sys: EntrySys
   fields: {
     [FieldName in keyof Fields]: {
@@ -72,30 +77,33 @@ export interface LocalizedEntry<Fields extends FieldsType, Locale extends Locale
   metadata: Metadata
 }
 
-export type ResolvedEntry<Fields extends FieldsType> = {
+export type EntryWithLinkResolution<Fields extends FieldsType> = {
   sys: EntrySys
   fields: {
     [FieldName in keyof Fields]: Fields[FieldName] extends
       | EntryLink<infer LinkedEntryFields>
       | undefined
-      ? ResolvedEntry<LinkedEntryFields>
+      ? EntryWithLinkResolution<LinkedEntryFields>
       : Fields[FieldName] extends Array<EntryLink<infer LinkedEntryFields>> | undefined
-      ? Array<ResolvedEntry<LinkedEntryFields>>
+      ? Array<EntryWithLinkResolution<LinkedEntryFields>>
       : Fields[FieldName]
   }
   metadata: Metadata
 }
 
-export type ResolvedLocalizedEntry<Fields extends FieldsType, Locales extends LocaleValue> = {
+export type EntryWithAllLocalesAndWithLinkResolution<
+  Fields extends FieldsType,
+  Locales extends LocaleValue
+> = {
   sys: EntrySys
   fields: {
     [FieldName in keyof Fields]: {
       [LocaleName in Locales]?: Fields[FieldName] extends
         | EntryLink<infer LinkedEntryFields>
         | undefined
-        ? ResolvedLocalizedEntry<LinkedEntryFields, Locales>
+        ? EntryWithAllLocalesAndWithLinkResolution<LinkedEntryFields, Locales>
         : Fields[FieldName] extends Array<EntryLink<infer LinkedEntryFields>> | undefined
-        ? Array<ResolvedLocalizedEntry<LinkedEntryFields, Locales>>
+        ? Array<EntryWithAllLocalesAndWithLinkResolution<LinkedEntryFields, Locales>>
         : Fields[FieldName]
     }
   }
@@ -110,15 +118,22 @@ export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TE
   }
 }
 
-export type EntryCollection<T> = AbstractEntryCollection<Entry<T>>
+export type EntryWithoutLinkResolution<T> = Entry<T>
 
-export type ResolvedEntryCollection<T> = AbstractEntryCollection<ResolvedEntry<T>>
-
-export type LocalizedEntryCollection<Fields, Locales extends LocaleValue> = AbstractEntryCollection<
-  LocalizedEntry<Fields, Locales>
+export type EntryCollectionWithoutLinkResolution<T> = AbstractEntryCollection<
+  EntryWithoutLinkResolution<T>
 >
 
-export type ResolvedLocalizedEntryCollection<
+export type EntryCollectionWithLinkResolution<T> = AbstractEntryCollection<
+  EntryWithLinkResolution<T>
+>
+
+export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
   Fields,
   Locales extends LocaleValue
-> = AbstractEntryCollection<ResolvedLocalizedEntry<Fields, Locales>>
+> = AbstractEntryCollection<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+
+export type EntryCollectionWithAllLocalesAndWithLinkResolution<
+  Fields,
+  Locales extends LocaleValue
+> = AbstractEntryCollection<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>

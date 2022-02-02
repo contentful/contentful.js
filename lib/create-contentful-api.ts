@@ -16,16 +16,16 @@ import {
   ContentType,
   ContentTypeCollection,
   EntriesQueries,
-  Entry,
-  EntryCollection,
+  EntryWithoutLinkResolution,
+  EntryCollectionWithoutLinkResolution,
   LocaleCollection,
   LocaleValue,
-  LocalizedEntry,
-  LocalizedEntryCollection,
-  ResolvedEntry,
-  ResolvedEntryCollection,
-  ResolvedLocalizedEntry,
-  ResolvedLocalizedEntryCollection,
+  EntryWithAllLocalesAndWithoutLinkResolution,
+  EntryCollectionWithAllLocalesAndWithoutLinkResolution,
+  EntryWithLinkResolution,
+  EntryCollectionWithLinkResolution,
+  EntryWithAllLocalesAndWithLinkResolution,
+  EntryCollectionWithAllLocalesAndWithLinkResolution,
   Space,
   SyncCollection,
   Tag,
@@ -39,36 +39,39 @@ import validateTimestamp from './utils/validate-timestamp'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
-export type UnresolvedClient = {
-  getEntry<Fields extends FieldsType>(id: string, query?: EntryQueries): Promise<Entry<Fields>>
+export type ClientWithoutLinkResolution = {
+  getEntry<Fields extends FieldsType>(
+    id: string,
+    query?: EntryQueries
+  ): Promise<EntryWithoutLinkResolution<Fields>>
   getEntries<Fields extends FieldsType = FieldsType>(
     query?: EntriesQueries<Fields>
-  ): Promise<EntryCollection<Fields>>
-  withAllLocales: UnresolvedLocalizedClient
+  ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
+  withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
 }
 
-export type UnresolvedLocalizedClient = {
+export type ClientWithAllLocalesAndWithoutLinkResolution = {
   getEntry<Fields extends FieldsType, Locale extends LocaleValue = any>(
     id: string,
     query?: EntryQueries,
     locale?: Locale
-  ): Promise<LocalizedEntry<Fields, Locale>>
+  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locale>>
   getEntries<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     query?: EntriesQueries<Fields>,
     locale?: Locale
-  ): Promise<LocalizedEntryCollection<Fields, Locale>>
+  ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locale>>
 }
 
-export type LocalizedClient = {
+export type ClientWithAllLocalesAndWithLinkResoution = {
   getEntry<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     id: string,
     query?: EntryQueries,
     locale?: Locale
-  ): Promise<ResolvedLocalizedEntry<Fields, Locale>>
+  ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locale>>
   getEntries<Fields extends FieldsType = FieldsType, Locale extends LocaleValue = any>(
     query?: EntriesQueries<Fields>,
     locale?: Locale
-  ): Promise<ResolvedLocalizedEntryCollection<Fields, Locale>>
+  ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locale>>
 }
 
 export type ContentfulClientApi = {
@@ -165,7 +168,7 @@ export type ContentfulClientApi = {
    */
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
-  ): Promise<ResolvedEntryCollection<Fields>>
+  ): Promise<EntryCollectionWithLinkResolution<Fields>>
 
   /**
    * Gets an Entry
@@ -186,7 +189,7 @@ export type ContentfulClientApi = {
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
-  ): Promise<ResolvedEntry<Fields>>
+  ): Promise<EntryWithLinkResolution<Fields>>
 
   /**
    * Gets the Space which the client is currently configured to use
@@ -226,7 +229,7 @@ export type ContentfulClientApi = {
   getLocales(): Promise<LocaleCollection>
 
   /**
-   * Parse raw json data into collection of entry objects.Links will be resolved also
+   * Parse raw json data into collection of entry objects. Link resolution depends on global configuration.
    * @category API
    * @example
    * ```javascript
@@ -256,7 +259,7 @@ export type ContentfulClientApi = {
    * console.log( parsedData.items[0].fields.foo ); // foo
    * ```
    */
-  parseEntries<T>(raw: any): EntryCollection<T>
+  parseEntries<T>(raw: any): EntryCollectionWithoutLinkResolution<T>
 
   /**
    * Synchronizes either all the content or only new content since last sync
@@ -335,9 +338,9 @@ export type ContentfulClientApi = {
    */
   createAssetKey(expiresAt: number): Promise<AssetKey>
 
-  withoutLinkResolution: UnresolvedClient
+  withoutLinkResolution: ClientWithoutLinkResolution
 
-  withAllLocales: LocalizedClient
+  withAllLocales: ClientWithAllLocalesAndWithLinkResoution
 }
 
 interface CreateContentfulApiParams {
@@ -442,63 +445,85 @@ export default function createContentfulApi({
   async function getEntry<Fields>(
     id: string,
     query: EntryQueries = {}
-  ): Promise<ResolvedEntry<Fields>> {
-    return internalGetEntry<ResolvedEntry<Fields>>(id, query, true)
+  ): Promise<EntryWithLinkResolution<Fields>> {
+    return internalGetEntry<EntryWithLinkResolution<Fields>>(id, query, true)
   }
 
   async function getEntries<Fields>(
     query: EntriesQueries<Fields> = {}
-  ): Promise<ResolvedEntryCollection<Fields>> {
-    return internalGetEntries<ResolvedEntryCollection<Fields>>(query, true)
+  ): Promise<EntryCollectionWithLinkResolution<Fields>> {
+    return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
   }
 
   // TODO: third param and second type param are irrelevant,
   // as the only configuration which returns localized fields is `locale='*'`
   // so we make this the default and remove the `locale` param
-  async function getLocalizedEntry<Fields, Locale extends LocaleValue = any>(
+  async function getEntryWithAllLocalesAndWithLinkResolution<
+    Fields,
+    Locale extends LocaleValue = any
+  >(
     id: string,
     query: EntryQueries = {},
     locale: LocaleValue = '*'
-  ): Promise<ResolvedLocalizedEntry<Fields, Locale>> {
-    return internalGetEntry<ResolvedLocalizedEntry<Fields, Locale>>(id, { locale, ...query }, true)
-  }
-
-  async function getLocalizedEntries<Fields, Locale extends LocaleValue = any>(
-    query: EntriesQueries<Fields> = {},
-    locale: LocaleValue = '*'
-  ): Promise<ResolvedLocalizedEntryCollection<Fields, Locale>> {
-    return internalGetEntries<ResolvedLocalizedEntryCollection<Fields, Locale>>(
+  ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locale>> {
+    return internalGetEntry<EntryWithAllLocalesAndWithLinkResolution<Fields, Locale>>(
+      id,
       { locale, ...query },
       true
     )
   }
 
-  async function getUnresolvedEntry<Fields>(
+  async function getEntriesWithAllLocalesAndWithLinkResolution<
+    Fields,
+    Locale extends LocaleValue = any
+  >(
+    query: EntriesQueries<Fields> = {},
+    locale: LocaleValue = '*'
+  ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locale>> {
+    return internalGetEntries<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locale>>(
+      { locale, ...query },
+      true
+    )
+  }
+
+  async function getEntryWithoutLinkResolution<Fields>(
     id: string,
     query: EntryQueries = {}
-  ): Promise<Entry<Fields>> {
-    return internalGetEntry<Entry<Fields>>(id, query, false)
+  ): Promise<EntryWithoutLinkResolution<Fields>> {
+    return internalGetEntry<EntryWithoutLinkResolution<Fields>>(id, query, false)
   }
 
-  async function getUnresolvedEntries<Fields>(
+  async function getEntriesWithoutLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollection<Fields>> {
-    return internalGetEntries<EntryCollection<Fields>>(query, false)
+  ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
+    return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, false)
   }
 
-  async function getUnresolvedLocalizedEntry<Fields, Locale extends LocaleValue = any>(
+  async function getEntryWithAllLocalesAndWithoutLinkResolution<
+    Fields,
+    Locale extends LocaleValue = any
+  >(
     id: string,
     query: EntryQueries = {},
     locale: LocaleValue = '*'
-  ): Promise<LocalizedEntry<Fields, Locale>> {
-    return internalGetEntry<LocalizedEntry<Fields, Locale>>(id, { locale, ...query }, false)
+  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locale>> {
+    return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locale>>(
+      id,
+      { locale, ...query },
+      false
+    )
   }
 
-  async function getUnresolvedLocalizedEntries<Fields, Locale extends LocaleValue = any>(
+  async function getEntriesWithAllLocalesAndWithoutLinkResolution<
+    Fields,
+    Locale extends LocaleValue = any
+  >(
     query: EntriesQueries<Fields> = {},
     locale: LocaleValue = '*'
-  ): Promise<LocalizedEntryCollection<Fields, Locale>> {
-    return internalGetEntries<LocalizedEntryCollection<Fields, Locale>>({ locale, ...query }, false)
+  ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locale>> {
+    return internalGetEntries<
+      EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locale>
+    >({ locale, ...query }, false)
   }
 
   async function internalGetEntry<RValue>(
@@ -638,17 +663,17 @@ export default function createContentfulApi({
     createAssetKey,
 
     withAllLocales: {
-      getEntry: getLocalizedEntry,
-      getEntries: getLocalizedEntries,
+      getEntry: getEntryWithAllLocalesAndWithLinkResolution,
+      getEntries: getEntriesWithAllLocalesAndWithLinkResolution,
     },
 
     withoutLinkResolution: {
-      getEntry: getUnresolvedEntry,
-      getEntries: getUnresolvedEntries,
+      getEntry: getEntryWithoutLinkResolution,
+      getEntries: getEntriesWithoutLinkResolution,
 
       withAllLocales: {
-        getEntry: getUnresolvedLocalizedEntry,
-        getEntries: getUnresolvedLocalizedEntries,
+        getEntry: getEntryWithAllLocalesAndWithoutLinkResolution,
+        getEntries: getEntriesWithAllLocalesAndWithoutLinkResolution,
       },
     },
   }
