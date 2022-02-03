@@ -46,7 +46,7 @@ const baseBundleConfig = {
 const nodeBundle = copy(baseBundleConfig)
 nodeBundle.output.library = {
   type: 'umd2',
-  name: "contentful"
+  name: 'contentful',
 }
 
 nodeBundle.target = 'node'
@@ -55,7 +55,7 @@ nodeBundle.output.filename = `${baseFileName}.node${PROD ? '.min' : ''}.js`
 const browserBundle = copy(baseBundleConfig)
 browserBundle.output.library = {
   type: 'umd2',
-  name: "contentful",
+  name: 'contentful',
 }
 
 browserBundle.target = 'browserslist'

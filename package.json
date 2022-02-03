@@ -13,7 +13,9 @@
     "directory": "test/types",
     "compilerOptions": {
       "rootDir": "./lib",
-      "typeRoots": ["./lib"]
+      "typeRoots": [
+        "./lib"
+      ]
     }
   },
   "files": [
@@ -122,15 +124,15 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "35Kb"
+      "maxSize": "70Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "25Kb"
+      "maxSize": "30Kb"
     },
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "45Kb"
+      "maxSize": "50Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
@@ -138,7 +140,10 @@
     }
   ],
   "release": {
-    "branches": ["master", "next"],
+    "branches": [
+      "master",
+      "next"
+    ],
     "plugins": [
       [
         "@semantic-release/commit-analyzer",
