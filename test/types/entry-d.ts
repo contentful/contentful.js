@@ -1,5 +1,10 @@
 import { expectAssignable, expectType } from 'tsd'
-import { Entry, EntryFields, EntrySys, LocalizedEntry } from '../../lib'
+import {
+  Entry,
+  EntryFields,
+  EntrySys,
+  EntryWithAllLocalesAndWithoutLinkResolution,
+} from '../../lib'
 
 export const stringValue = ''
 export const numberValue = 123
@@ -26,7 +31,9 @@ expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
   metadata: metadataValue,
 })
 
-expectAssignable<LocalizedEntry<{ stringField: EntryFields.Text }, 'US' | 'DE'>>({
+expectAssignable<
+  EntryWithAllLocalesAndWithoutLinkResolution<{ stringField: EntryFields.Text }, 'US' | 'DE'>
+>({
   sys: entrySysValue,
   fields: {
     stringField: {
@@ -39,7 +46,7 @@ expectAssignable<LocalizedEntry<{ stringField: EntryFields.Text }, 'US' | 'DE'>>
 
 // TODO fix test
 /*
-expectAssignable<ResolvedEntry<{ referenceField: EntryLink }>>({
+expectAssignable<EntryWithLinkResolution<{ referenceField: EntryLink }>>({
   sys: entrySysValue,
   fields: {
     referenceField: {

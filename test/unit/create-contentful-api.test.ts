@@ -168,7 +168,7 @@ describe('create-contentful-api', () => {
     await expect(api.getEntries()).resolves.toEqual(data)
   })
 
-  test('API call getEntries with global resolve links overridden by query', async () => {
+  test('API call getEntries with global resolveLinks overridden by chained modifier', async () => {
     const data = { sys: { id: 'id' } }
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data }),
@@ -179,11 +179,11 @@ describe('create-contentful-api', () => {
       }),
     })
 
-    await expect(api.unresolved.getEntries()).resolves.toEqual(data)
+    await expect(api.withoutLinkResolution.getEntries()).resolves.toEqual(data)
     expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeFalsy()
   })
 
-  test('API call getEntries with global resolve links turned off', async () => {
+  test('API call getEntries with global resolveLinks turned on', async () => {
     const data = { sys: { id: 'id' } }
 
     const { api } = setupWithData({
