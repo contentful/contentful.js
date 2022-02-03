@@ -32,6 +32,10 @@ import {
   Tag,
   TagCollection,
 } from './types'
+import {
+  ClientWithoutLinkResolution,
+  ClientWithAllLocalesAndWithLinkResolution,
+} from './types/client'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
@@ -39,37 +43,6 @@ import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
-
-export type ClientWithoutLinkResolution = {
-  getEntry<Fields extends FieldsType>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithoutLinkResolution<Fields>>
-  getEntries<Fields extends FieldsType = FieldsType>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
-  withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
-}
-
-export type ClientWithAllLocalesAndWithoutLinkResolution = {
-  getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
-  getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
-}
-
-export type ClientWithAllLocalesAndWithLinkResoution = {
-  getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
-  getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
-}
 
 export type ContentfulClientApi = {
   version: string
@@ -338,7 +311,7 @@ export type ContentfulClientApi = {
 
   withoutLinkResolution: ClientWithoutLinkResolution
 
-  withAllLocales: ClientWithAllLocalesAndWithLinkResoution
+  withAllLocales: ClientWithAllLocalesAndWithLinkResolution
 }
 
 interface CreateContentfulApiParams {
