@@ -2,6 +2,7 @@ module.exports = {
   plugins: ['standard', 'promise'],
   env: {
     jest: true,
+    node: true,
   },
   globals: {
     __VERSION__: true,
