@@ -1,3 +1,5 @@
+import createContentfulApi, { ContentfulClientApi } from '../create-contentful-api'
+
 export type ChainOptions = {
   withoutLinkResolution?: boolean
   withAllLocales?: boolean
@@ -16,7 +18,9 @@ export interface ClientChain<ResponseType extends EntriesResponse> {
   getEntries(): Promise<ResponseType>
 }
 
-export type DefaultClient = ClientWithLinkResolution
+// Adding the defaults from ContentfulClientApi. Only getEntries,
+// and the chains will be added afterwards.
+export type DefaultClient = ClientWithLinkResolution & ContentfulClientApi
 export type ClientWithLinkResolution = ClientChain<EntriesResponse.WithLinkResolution>
 export type ClientWithAllLocalesAndWithoutLinkResolution =
   ClientChain<EntriesResponse.WithAllLocalesAndWithoutLinkResolution>

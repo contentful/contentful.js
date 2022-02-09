@@ -136,9 +136,10 @@ export type ContentfulClientApi = {
    * .console.log(response.items)
    * ```
    */
-  getEntries<Fields extends FieldsType>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithLinkResolution<Fields>>
+  // TODO
+  // getEntries<Fields extends FieldsType>(
+  //   query?: EntriesQueries<Fields>
+  // ): Promise<EntryCollectionWithLinkResolution<Fields>>
 
   /**
    * Gets an Entry
@@ -309,9 +310,10 @@ export type ContentfulClientApi = {
    */
   createAssetKey(expiresAt: number): Promise<AssetKey>
 
-  withoutLinkResolution: ClientWithoutLinkResolution
+  // WIP
+  // withoutLinkResolution: ClientWithoutLinkResolution
 
-  withAllLocales: ClientWithAllLocalesAndWithLinkResolution
+  // withAllLocales: ClientWithAllLocalesAndWithLinkResolution
 }
 
 interface CreateContentfulApiParams {
@@ -625,19 +627,19 @@ export default function createContentfulApi({
 
     createAssetKey,
 
-    withAllLocales: {
-      getEntry: getEntryWithAllLocalesAndWithLinkResolution,
-      getEntries: getEntriesWithAllLocalesAndWithLinkResolution,
-    },
+    // withAllLocales: {
+    //   getEntry: getEntryWithAllLocalesAndWithLinkResolution,
+    //   getEntries: getEntriesWithAllLocalesAndWithLinkResolution,
+    // },
 
-    withoutLinkResolution: {
-      getEntry: getEntryWithoutLinkResolution,
-      getEntries: getEntriesWithoutLinkResolution,
+    // withoutLinkResolution: {
+    //   getEntry: getEntryWithoutLinkResolution,
+    //   getEntries: getEntriesWithoutLinkResolution,
 
-      withAllLocales: {
-        getEntry: getEntryWithAllLocalesAndWithoutLinkResolution,
-        getEntries: getEntriesWithAllLocalesAndWithoutLinkResolution,
-      },
-    },
+    //   withAllLocales: {
+    //     getEntry: getEntryWithAllLocalesAndWithoutLinkResolution,
+    //     getEntries: getEntriesWithAllLocalesAndWithoutLinkResolution,
+    //   },
+    // },
   }
 }

@@ -43,7 +43,20 @@ function isClientWithAllLocalesAndWithoutLinkResolution(
 
 // "makeGreeter"
 // createContentfulApi
-function createChainedClient<ReturnType extends EntriesResponse, OptionType>(
+function createChainedClient<ReturnType extends EntriesResponse, OptionType extends ChainOptions>(
+  options: OptionType
+): ClientChain<ReturnType> {
+  if (!options.withoutLinkResolution && !options.withAllLocales) {
+    // This is the default client instantiation so
+    // return the client with all its default methods.
+  }
+  // If not, only return getEntries, as we are an innerClient
+  return {
+    getEntries: makeGetEntries(options) as unknown as ClientChain<ReturnType>['getEntries'],
+  }
+}
+
+function createDefaultClient<ReturnType extends EntriesResponse, OptionType>(
   options: OptionType
 ): ClientChain<ReturnType> {
   // Refactor: move "as unknown" logic into makeGetEntries
@@ -155,6 +168,7 @@ export const makeClient = ({ http, getGlobalOptions }): Client => {
     )
   }
 
+  // This client most likely needs to be instantiated with ALL methods, not just getEntries
   const client = createChainedClient<EntriesResponse.Default, DefaultChainOption>({
     withoutLinkResolution: false,
     withAllLocales: false,
@@ -170,5 +184,3 @@ export const makeClient = ({ http, getGlobalOptions }): Client => {
     },
   }
 }
-
-// return createContentfulApi({ http, getGlobalOptions })
