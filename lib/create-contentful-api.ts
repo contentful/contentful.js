@@ -630,8 +630,7 @@ export default function createContentfulApi({
   }
 
   return <ContentfulClientApi>{
-    // version: __VERSION__,
-    version: 'test-0.0.0',
+    version: __VERSION__,
 
     getSpace,
 

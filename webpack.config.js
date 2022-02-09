@@ -1,6 +1,7 @@
 const path = require('path')
 const copy = require('fast-copy')
 const webpack = require('webpack')
+const __VERSION__ = require('./package.json').version
 
 const PROD = process.env.NODE_ENV === 'production'
 const baseFileName = 'contentful'
@@ -8,6 +9,7 @@ const baseFileName = 'contentful'
 const plugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    __VERSION__: JSON.stringify(__VERSION__),
   }),
 ]
 
