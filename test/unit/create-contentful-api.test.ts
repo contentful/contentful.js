@@ -25,12 +25,11 @@ function setupWithData({
     environmentBaseUrl: 'environmentUrl',
   }),
 }) {
-
   const getStub = jest.fn()
   const postStub = jest.fn()
   const api = createContentfulApi({
     http: {
-    // @ts-expect-error
+      // @ts-expect-error
       defaults: { baseURL: 'baseURL', logHandler: jest.fn(), headers: {} as HeadersDefaults },
       get: getStub.mockReturnValue(promise),
       post: postStub.mockReturnValue(promise),
