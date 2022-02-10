@@ -405,7 +405,7 @@ class NotFoundError extends Error {
 
 export default function createContentfulApi<OptionType>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
-  options: OptionType
+  options?: OptionType
 ): BaseClient {
   const notFoundError = (id = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
@@ -586,20 +586,26 @@ export default function createContentfulApi<OptionType>(
     }
   }
 
-  async function makeGetEntries<Fields>(query, options: ChainOptions) {
+  async function makeGetEntries<Fields>(
+    query,
+    options: ChainOptions = {
+      withoutLinkResolution: false,
+      withAllLocales: false,
+    }
+  ) {
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
-      return () => getEntriesWithAllLocalesAndWithoutLinkResolution<Fields>(query)
+      return getEntriesWithAllLocalesAndWithoutLinkResolution<Fields>(query)
     }
     if (isClientWithAllLocalesAndWithLinkResolution(options)) {
-      return () => getEntriesWithAllLocalesAndWithLinkResolution<Fields>(query)
+      return getEntriesWithAllLocalesAndWithLinkResolution<Fields>(query)
     }
     if (isClientWithoutLinkResolution(options)) {
-      return () => getEntriesWithoutLinkResolution<Fields>(query)
+      return getEntriesWithoutLinkResolution<Fields>(query)
     }
     if (isClientWithLinkResolution(options)) {
-      return () => getEntriesWithLinkResolution<Fields>(query)
+      return getEntriesWithLinkResolution<Fields>(query)
     }
-    return () => getEntriesDefault<Fields>(query)
+    return getEntriesDefault<Fields>(query)
   }
 
   async function internalGetEntries<RType>(
