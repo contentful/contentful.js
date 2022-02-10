@@ -37,41 +37,74 @@ import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
+import {
+  ChainOptions,
+  isClientWithAllLocalesAndWithLinkResolution,
+  isClientWithAllLocalesAndWithoutLinkResolution,
+  isClientWithLinkResolution,
+  isClientWithoutLinkResolution,
+} from './utils/client-helpers'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
-export type ClientWithoutLinkResolution = {
-  getEntry<Fields extends FieldsType>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithoutLinkResolution<Fields>>
-  getEntries<Fields extends FieldsType = FieldsType>(
+export interface ClientWithLinkResolution extends BaseClient {
+  getEntries<Fields extends FieldsType>(
+    query?: EntriesQueries<Fields>
+  ): Promise<EntryCollectionWithLinkResolution<Fields>>
+}
+export interface ClientWithoutLinkResolution extends BaseClient {
+  getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
-  withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
 }
-
-export type ClientWithAllLocalesAndWithoutLinkResolution = {
-  getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
-  getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
+export interface ClientWithAllLocalesAndWithLinkResolution extends Omit<BaseClient, 'getEntries'> {
+  getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
+    query?: EntriesQueries<Fields>
+  ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
+}
+export interface ClientWithAllLocalesAndWithoutLinkResolution
+  extends Omit<BaseClient, 'getEntries'> {
+  getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
-export type ClientWithAllLocalesAndWithLinkResoution = {
-  getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
-  getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
-}
+export type DefaultClient = ClientWithLinkResolution
 
-export type ContentfulClientApi = {
+// Previous implementation client types for reference:
+
+// export type ClientWithoutLinkResolution = {
+//   getEntry<Fields extends FieldsType>(
+//     id: string,
+//     query?: EntryQueries
+//   ): Promise<EntryWithoutLinkResolution<Fields>>
+//   getEntries<Fields extends FieldsType = FieldsType>(
+//     query?: EntriesQueries<Fields>
+//   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
+//   withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
+// }
+
+// export type ClientWithAllLocalesAndWithoutLinkResolution = {
+//   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
+//     id: string,
+//     query?: EntryQueries
+//   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+//   getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
+//     query?: EntriesQueries<Fields>
+//   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+// }
+
+// export type ClientWithAllLocalesAndWithLinkResolution = {
+//   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
+//     id: string,
+//     query?: EntryQueries
+//   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
+//   getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
+//     query?: EntriesQueries<Fields>
+//   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
+// }
+
+export interface BaseClient {
   version: string
 
   /**
@@ -335,16 +368,21 @@ export type ContentfulClientApi = {
    * console.log(assetKey)
    */
   createAssetKey(expiresAt: number): Promise<AssetKey>
-
-  withoutLinkResolution: ClientWithoutLinkResolution
-
-  withAllLocales: ClientWithAllLocalesAndWithLinkResoution
 }
 
-interface CreateContentfulApiParams {
+export interface CreateContentfulApiParams {
   http: AxiosInstance
   getGlobalOptions: GetGlobalOptions
 }
+
+export type ContentfulClientApi = {
+  withAllLocales: {
+    withoutLinkResolution: ClientWithAllLocalesAndWithoutLinkResolution
+  } & ClientWithAllLocalesAndWithLinkResolution
+  withoutLinkResolution: {
+    withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
+  } & ClientWithoutLinkResolution
+} & DefaultClient
 
 class NotFoundError extends Error {
   public readonly sys: { id: string; type: string }
@@ -365,10 +403,10 @@ class NotFoundError extends Error {
   }
 }
 
-export default function createContentfulApi({
-  http,
-  getGlobalOptions,
-}: CreateContentfulApiParams): ContentfulClientApi {
+export default function createContentfulApi<OptionType>(
+  { http, getGlobalOptions }: CreateContentfulApiParams,
+  options: OptionType
+): BaseClient {
   const notFoundError = (id = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
@@ -447,10 +485,18 @@ export default function createContentfulApi({
     return internalGetEntry<EntryWithLinkResolution<Fields>>(id, query, true)
   }
 
-  async function getEntries<Fields>(
+  async function getEntriesWithLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolution<Fields>> {
     return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
+  }
+
+  // TODO Decide how we want to deal with defaults
+  const getEntriesDefault = getEntriesWithLinkResolution
+
+  // TODO test if this works for the different getEntries implementations
+  async function getEntries<Fields>(query: EntriesQueries<Fields> = {}) {
+    return makeGetEntries<Fields>(query, options) as unknown
   }
 
   async function getEntryWithAllLocalesAndWithLinkResolution<
@@ -540,11 +586,27 @@ export default function createContentfulApi({
     }
   }
 
+  async function makeGetEntries<Fields>(query, options: ChainOptions) {
+    if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
+      return () => getEntriesWithAllLocalesAndWithoutLinkResolution<Fields>(query)
+    }
+    if (isClientWithAllLocalesAndWithLinkResolution(options)) {
+      return () => getEntriesWithAllLocalesAndWithLinkResolution<Fields>(query)
+    }
+    if (isClientWithoutLinkResolution(options)) {
+      return () => getEntriesWithoutLinkResolution<Fields>(query)
+    }
+    if (isClientWithLinkResolution(options)) {
+      return () => getEntriesWithLinkResolution<Fields>(query)
+    }
+    return () => getEntriesDefault<Fields>(query)
+  }
+
   async function internalGetEntries<RType>(
     query: Record<string, any>,
     resolveLinks = false
   ): Promise<RType> {
-    const { removeUnresolved } = getGlobalOptions({})
+    const { removeUnresolved } = getGlobalOptions()
     try {
       const entries = await get({
         context: 'environment',
@@ -629,6 +691,7 @@ export default function createContentfulApi({
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
+  // TODO: implement getEntry as done with getEntries
   return <ContentfulClientApi>{
     version: __VERSION__,
 
@@ -651,20 +714,5 @@ export default function createContentfulApi({
     getEntries,
 
     createAssetKey,
-
-    withAllLocales: {
-      getEntry: getEntryWithAllLocalesAndWithLinkResolution,
-      getEntries: getEntriesWithAllLocalesAndWithLinkResolution,
-    },
-
-    withoutLinkResolution: {
-      getEntry: getEntryWithoutLinkResolution,
-      getEntries: getEntriesWithoutLinkResolution,
-
-      withAllLocales: {
-        getEntry: getEntryWithAllLocalesAndWithoutLinkResolution,
-        getEntries: getEntriesWithAllLocalesAndWithoutLinkResolution,
-      },
-    },
   }
 }

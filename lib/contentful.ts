@@ -5,8 +5,9 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import createContentfulApi, { ContentfulClientApi } from './create-contentful-api'
+import { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
+import { makeClient } from './make-client'
 
 export interface AxiosProxyConfig {
   host: string
@@ -90,7 +91,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
   // Append environment to baseURL
   http.defaults.baseURL = getGlobalOptions({}).environmentBaseUrl
 
-  return createContentfulApi({
+  return makeClient({
     http,
     getGlobalOptions,
   })
