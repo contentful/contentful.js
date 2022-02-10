@@ -1,3 +1,4 @@
+import { AxiosRequestHeaders, HeadersDefaults } from 'axios'
 import createContentfulApi from '../../lib/create-contentful-api'
 import createGlobalOptions from '../../lib/create-global-options'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
@@ -27,9 +28,9 @@ function setupWithData({
   const getStub = jest.fn()
   const postStub = jest.fn()
   const api = createContentfulApi({
-    // @ts-ignore
     http: {
-      defaults: { baseURL: 'baseURL', logHandler: jest.fn() },
+      // @ts-expect-error
+      defaults: { baseURL: 'baseURL', logHandler: jest.fn(), headers: {} as HeadersDefaults },
       get: getStub.mockReturnValue(promise),
       post: postStub.mockReturnValue(promise),
     },
