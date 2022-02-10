@@ -46,7 +46,7 @@ describe('contentful', () => {
   })
 
   // version currently not set correctly
-  test.skip('Generate the correct User Agent Header', () => {
+  test('Generate the correct User Agent Header', () => {
     createClient({
       accessToken: 'accessToken',
       space: 'spaceId',
