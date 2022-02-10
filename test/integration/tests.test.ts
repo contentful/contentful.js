@@ -99,6 +99,32 @@ test('Get entry with fallback locale', async () => {
   expect(entries[4].fields.title).not.toBe('')
 })
 
+// TODO:
+// move to new file
+// expand to cover all clients
+// decide on useful queries/expected results (this is just an example)
+// choose proper naming of tests
+describe.only('getEntries via', () => {
+  const defaultClient = client
+
+  const matrix = [
+    ['client', defaultClient, { 'sys.id': 'nyancat' }, 'rainbow'],
+    [
+      'client.withAllLocales',
+      defaultClient.withAllLocales,
+      { 'sys.id': 'nyancat' },
+      { 'en-US': 'rainbow' },
+    ],
+  ]
+
+  // @ts-ignore
+  test.each(matrix)('%s', async (_name, client, query, expected) => {
+    // @ts-ignore
+    const entries = await client.getEntries(query)
+    expect(entries.items[0].fields.color).toEqual(expected)
+  })
+})
+
 test('Gets entries', async () => {
   const response = await client.getEntries()
 
@@ -485,12 +511,12 @@ describe('Sync API', () => {
 
 test("Gets entries with linked includes with all locales using locale:'*' parameter", async () => {
   const response = await client.getEntries({ include: 5, 'sys.id': 'nyancat', locale: '*' })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test('Gets entries with linked includes with all locales using withAllLocales client modifier', async () => {
   const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test("Gets entries with linked includes with all locales using locale:'*' parameter in preview", async () => {
@@ -499,7 +525,7 @@ test("Gets entries with linked includes with all locales using locale:'*' parame
     'sys.id': 'nyancat',
     locale: '*',
   })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test('Gets entries with linked includes with all locales using withAllLocales client modifier in preview', async () => {
@@ -507,7 +533,7 @@ test('Gets entries with linked includes with all locales using withAllLocales cl
     include: 5,
     'sys.id': 'nyancat',
   })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test('Logs request and response with custom loggers', async () => {
@@ -584,7 +610,7 @@ test('Client object exposes current version', async () => {
 })
 
 // Assertion helpers
-function assertLocalizedAssetResponse(response) {
+function assertLocalizedEntriesResponse(response) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
