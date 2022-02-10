@@ -14,6 +14,7 @@ module.exports = {
     'prettier',
     'prettier/@typescript-eslint',
   ],
+  ignorePatterns: ['**/test/output-integration/**'],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
