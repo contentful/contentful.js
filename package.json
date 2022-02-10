@@ -64,9 +64,9 @@
     "prepush": "npm run test:prepush"
   },
   "dependencies": {
-    "axios": "^0.22.0",
+    "axios": "^0.25.0",
     "contentful-resolve-response": "^1.3.0",
-    "contentful-sdk-core": "^6.10.3",
+    "contentful-sdk-core": "^7.0.1",
     "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
