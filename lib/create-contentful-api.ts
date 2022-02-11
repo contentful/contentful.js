@@ -406,7 +406,7 @@ class NotFoundError extends Error {
 export default function createContentfulApi<OptionType>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options?: OptionType
-): BaseClient {
+): DefaultClient {
   const notFoundError = (id = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
