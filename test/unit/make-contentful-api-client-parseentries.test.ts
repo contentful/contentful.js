@@ -1,4 +1,4 @@
-import { makeClient } from './../../lib/make-client'
+import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
 
 test('Given json should be parsed correctly as a collection of entries', () => {
