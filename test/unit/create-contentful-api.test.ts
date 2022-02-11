@@ -1,6 +1,6 @@
 import { AxiosRequestHeaders, HeadersDefaults } from 'axios'
-import createContentfulApi from '../../lib/create-contentful-api'
 import createGlobalOptions from '../../lib/create-global-options'
+import { makeClient } from '../../lib/make-client'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
 import * as mocks from './mocks'
 
@@ -27,7 +27,8 @@ function setupWithData({
 }) {
   const getStub = jest.fn()
   const postStub = jest.fn()
-  const api = createContentfulApi({
+  const api = makeClient({
+    // @ts-ignore
     http: {
       // @ts-expect-error
       defaults: { baseURL: 'baseURL', logHandler: jest.fn(), headers: {} as HeadersDefaults },
@@ -44,7 +45,7 @@ function setupWithData({
   }
 }
 
-describe('create-contentful-api', () => {
+describe('make Contentful API client', () => {
   const resolveCircularMock = jest.fn()
   // @ts-ignore
   resolveCircular.default = resolveCircularMock
