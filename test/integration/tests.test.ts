@@ -104,7 +104,7 @@ test('Get entry with fallback locale', async () => {
 // expand to cover all clients
 // decide on useful queries/expected results (this is just an example)
 // choose proper naming of tests
-describe.only('getEntries via', () => {
+describe('getEntries via', () => {
   const defaultClient = client
 
   const matrix = [
