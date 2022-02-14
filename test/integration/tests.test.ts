@@ -1,24 +1,10 @@
-import { CreateClientParams, EntryFields } from '../../lib'
+import { EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validate-timestamp'
+import { localeSpaceParams, params, previewParams } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
-
-const params: CreateClientParams = {
-  accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
-  space: 'ezs1swce23xe',
-}
-const localeSpaceParams = {
-  accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
-  space: '7dh3w86is8ls',
-}
-
-const previewParams = {
-  host: 'preview.contentful.com',
-  accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
-  space: 'ezs1swce23xe',
-}
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -97,32 +83,6 @@ test('Get entry with fallback locale', async () => {
   expect(entries[2].fields.title).not.toBe('')
   expect(entries[3].fields.title).not.toBe('')
   expect(entries[4].fields.title).not.toBe('')
-})
-
-// TODO:
-// move to new file
-// expand to cover all clients
-// decide on useful queries/expected results (this is just an example)
-// choose proper naming of tests
-describe('getEntries via', () => {
-  const defaultClient = client
-
-  const matrix = [
-    ['client', defaultClient, { 'sys.id': 'nyancat' }, 'rainbow'],
-    [
-      'client.withAllLocales',
-      defaultClient.withAllLocales,
-      { 'sys.id': 'nyancat' },
-      { 'en-US': 'rainbow' },
-    ],
-  ]
-
-  // @ts-ignore
-  test.each(matrix)('%s', async (_name, client, query, expected) => {
-    // @ts-ignore
-    const entries = await client.getEntries(query)
-    expect(entries.items[0].fields.color).toEqual(expected)
-  })
 })
 
 test('Gets entries', async () => {
