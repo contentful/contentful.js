@@ -579,8 +579,7 @@ describe('Embargoed Assets', () => {
   })
 })
 
-// TODO fix version
-test.skip('Client object exposes current version', async () => {
+test('Client object exposes current version', async () => {
   expect(client.version).toEqual(version)
 })
 

@@ -45,7 +45,6 @@ describe('contentful', () => {
     expect(() => createClient({ accessToken: 'accessToken' })).toThrow(/Expected parameter space/)
   })
 
-  // version currently not set correctly
   test('Generate the correct User Agent Header', () => {
     createClient({
       accessToken: 'accessToken',
