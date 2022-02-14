@@ -83,4 +83,51 @@ describe('getEntries via chained clients', () => {
         : expect(entries.items[0].fields.bestFriend).toEqual(unresolvedLink)
     }
   )
+  describe('Restricted client params', () => {
+    describe('default client', () => {
+      it('throws a warning when locale is passed to the options', async () => {
+        // warning
+        const entries = await client.getEntries({ 'sys.id': 'nyancat', locale: '*' })
+
+        expect(entries).toBeDefined()
+      })
+    })
+
+    describe('Localized client', () => {
+      it('throws a warning when locale is passed to the options', async () => {
+        try {
+          const entries = await client.withAllLocales.getEntries({
+            'sys.id': 'nyancat',
+            // @ts-ignore
+            locale: '*',
+          })
+          expect(entries).toBe('this should throw an error')
+        } catch (err) {
+          // @ts-ignore
+          // for (const prop in err) {
+          //   console.log(`Log: ${prop}`)
+          // }
+          // console.log(err)
+          // console.log(typeof err)
+          // console.log(JSON.stringify(err, null, 2))
+          // console.log(err)
+
+          // TODO: check why the error doesn't have prop 'message' and make a better assertion
+          expect(err).toBeDefined()
+        }
+      })
+      it('.withoutLinkResolution: throws a warning when locale is passed to the options', async () => {
+        try {
+          const entries = await client.withAllLocales.withoutLinkResolution.getEntries({
+            'sys.id': 'nyancat',
+            // @ts-ignore
+            locale: '*',
+          })
+          expect(entries).toBe('this should throw an error')
+        } catch (err) {
+          expect(err).toBeDefined()
+        }
+      })
+    })
+  })  
 })
