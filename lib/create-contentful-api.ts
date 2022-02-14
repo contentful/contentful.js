@@ -511,6 +511,9 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>> {
+    if (query.locale) {
+      throw new Error('locale parameter is not allowed')
+    }
     return internalGetEntries<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>(
       { ...query, locale: '*' },
       true
@@ -550,6 +553,9 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
+    if (query.locale) {
+      throw new Error('locale parameter is not allowed')
+    }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
     >({ ...query, locale: '*' }, false)
