@@ -74,7 +74,7 @@ export interface ClientWithAllLocalesAndWithLinkResolution
     query?: EntryQueries
   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
 }
 export interface ClientWithAllLocalesAndWithoutLinkResolution
@@ -84,7 +84,7 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
     query?: EntryQueries
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
