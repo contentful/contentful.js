@@ -48,61 +48,47 @@ import {
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 export interface ClientWithLinkResolution extends BaseClient {
+  getEntry<Fields extends FieldsType>(
+    id: string,
+    query?: EntriesQueries<Fields>
+  ): Promise<EntryWithLinkResolution<Fields>>
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithLinkResolution<Fields>>
+  // TODO: think about using collection generic as response type:
+  // ): Promise<Collection<EntryWithLinkResolution<Fields>>>
 }
 export interface ClientWithoutLinkResolution extends BaseClient {
+  getEntry<Fields extends FieldsType>(
+    id: string,
+    query?: EntryQueries
+  ): Promise<EntryWithoutLinkResolution<Fields>>
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
 }
-export interface ClientWithAllLocalesAndWithLinkResolution extends Omit<BaseClient, 'getEntries'> {
+export interface ClientWithAllLocalesAndWithLinkResolution
+  extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+  getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
+    id: string,
+    query?: EntryQueries
+  ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
 }
 export interface ClientWithAllLocalesAndWithoutLinkResolution
-  extends Omit<BaseClient, 'getEntries'> {
+  extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+  getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
+    id: string,
+    query?: EntryQueries
+  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
 export type DefaultClient = ClientWithLinkResolution
-
-// Previous implementation client types for reference:
-
-// export type ClientWithoutLinkResolution = {
-//   getEntry<Fields extends FieldsType>(
-//     id: string,
-//     query?: EntryQueries
-//   ): Promise<EntryWithoutLinkResolution<Fields>>
-//   getEntries<Fields extends FieldsType = FieldsType>(
-//     query?: EntriesQueries<Fields>
-//   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
-//   withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
-// }
-
-// export type ClientWithAllLocalesAndWithoutLinkResolution = {
-//   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
-//     id: string,
-//     query?: EntryQueries
-//   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
-//   getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-//     query?: EntriesQueries<Fields>
-//   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
-// }
-
-// export type ClientWithAllLocalesAndWithLinkResolution = {
-//   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-//     id: string,
-//     query?: EntryQueries
-//   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
-//   getEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
-//     query?: EntriesQueries<Fields>
-//   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
-// }
 
 export interface BaseClient {
   version: string
@@ -478,7 +464,21 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntry<Fields>(
+  async function getEntry<Fields>(id: string, query: EntriesQueries<Fields> = {}) {
+    return makeGetEntry<Fields>(id, query, options) as unknown
+  }
+
+  async function getEntries<Fields>(query: EntriesQueries<Fields> = {}) {
+    return makeGetEntries<Fields>(query, options) as unknown
+  }
+
+  // TODO Decide how we want to deal with defaults
+
+  const getEntryDefault = getEntryWithLinkResolution
+
+  const getEntriesDefault = getEntriesWithLinkResolution
+
+  async function getEntryWithLinkResolution<Fields>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolution<Fields>> {
@@ -489,14 +489,6 @@ export default function createContentfulApi<OptionType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolution<Fields>> {
     return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
-  }
-
-  // TODO Decide how we want to deal with defaults
-  const getEntriesDefault = getEntriesWithLinkResolution
-
-  // TODO test if this works for the different getEntries implementations
-  async function getEntries<Fields>(query: EntriesQueries<Fields> = {}) {
-    return makeGetEntries<Fields>(query, options) as unknown
   }
 
   async function getEntryWithAllLocalesAndWithLinkResolution<
@@ -561,6 +553,29 @@ export default function createContentfulApi<OptionType>(
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
     >({ ...query, locale: '*' }, false)
+  }
+
+  async function makeGetEntry<Fields>(
+    id: string,
+    query,
+    options: ChainOptions = {
+      withoutLinkResolution: false,
+      withAllLocales: false,
+    }
+  ) {
+    if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
+      return getEntryWithAllLocalesAndWithoutLinkResolution<Fields>(id, query)
+    }
+    if (isClientWithAllLocalesAndWithLinkResolution(options)) {
+      return getEntryWithAllLocalesAndWithLinkResolution<Fields>(id, query)
+    }
+    if (isClientWithoutLinkResolution(options)) {
+      return getEntryWithoutLinkResolution<Fields>(id, query)
+    }
+    if (isClientWithLinkResolution(options)) {
+      return getEntryWithLinkResolution<Fields>(id, query)
+    }
+    return getEntryDefault<Fields>(id, query)
   }
 
   async function internalGetEntry<RValue>(
@@ -697,8 +712,7 @@ export default function createContentfulApi<OptionType>(
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
-  // TODO: implement getEntry as done with getEntries
-  return <ContentfulClientApi>{
+  return <DefaultClient>{
     version: __VERSION__,
 
     getSpace,
