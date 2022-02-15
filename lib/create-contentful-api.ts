@@ -71,7 +71,7 @@ export interface ClientWithAllLocalesAndWithLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
     query?: EntriesQueries<Fields> & { locale?: never }
@@ -81,7 +81,7 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
     query?: EntriesQueries<Fields> & { locale?: never }
@@ -482,6 +482,11 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolution<Fields>> {
+    if (query.locale === '*') {
+      console.warn(
+        'If you want to fetch all the locales, we recommend you to use client.withAllLocales'
+      )
+    }
     return internalGetEntry<EntryWithLinkResolution<Fields>>(id, query, true)
   }
 
@@ -503,6 +508,9 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, SpaceLocales>> {
+    if (query.locale) {
+      throw new ValidationError('locale', 'locale parameter is not allowed')
+    }
     return internalGetEntry<EntryWithAllLocalesAndWithLinkResolution<Fields, SpaceLocales>>(
       id,
       { ...query, locale: '*' },
@@ -545,6 +553,9 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
+    if (query.locale) {
+      throw new ValidationError('locale', 'locale parameter is not allowed')
+    }
     return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
       id,
       { ...query, locale: '*' },
