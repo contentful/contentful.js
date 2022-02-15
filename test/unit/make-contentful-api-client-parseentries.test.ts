@@ -1,8 +1,8 @@
-import createContentfulApi from '../../lib/create-contentful-api'
+import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
 
 test('Given json should be parsed correctly as a collection of entries', () => {
-  const api = createContentfulApi({
+  const api = makeClient({
     // @ts-ignore
     http: {},
     // @ts-ignore
@@ -61,7 +61,7 @@ test('Given json should be parsed correctly as a collection of entries', () => {
 })
 
 test('Given json should be parsed correctly as a collection of entries where an item is called metadata', () => {
-  const api = createContentfulApi({
+  const api = makeClient({
     // @ts-ignore
     http: {},
     // @ts-ignore

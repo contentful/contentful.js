@@ -1,24 +1,10 @@
-import { CreateClientParams, EntryFields } from '../../lib'
+import { EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validate-timestamp'
+import { localeSpaceParams, params, previewParams } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
-
-const params: CreateClientParams = {
-  accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
-  space: 'ezs1swce23xe',
-}
-const localeSpaceParams = {
-  accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
-  space: '7dh3w86is8ls',
-}
-
-const previewParams = {
-  host: 'preview.contentful.com',
-  accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
-  space: 'ezs1swce23xe',
-}
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -485,12 +471,12 @@ describe('Sync API', () => {
 
 test("Gets entries with linked includes with all locales using locale:'*' parameter", async () => {
   const response = await client.getEntries({ include: 5, 'sys.id': 'nyancat', locale: '*' })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test('Gets entries with linked includes with all locales using withAllLocales client modifier', async () => {
   const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test("Gets entries with linked includes with all locales using locale:'*' parameter in preview", async () => {
@@ -499,7 +485,7 @@ test("Gets entries with linked includes with all locales using locale:'*' parame
     'sys.id': 'nyancat',
     locale: '*',
   })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test('Gets entries with linked includes with all locales using withAllLocales client modifier in preview', async () => {
@@ -507,7 +493,7 @@ test('Gets entries with linked includes with all locales using withAllLocales cl
     include: 5,
     'sys.id': 'nyancat',
   })
-  assertLocalizedAssetResponse(response)
+  assertLocalizedEntriesResponse(response)
 })
 
 test('Logs request and response with custom loggers', async () => {
@@ -584,7 +570,7 @@ test('Client object exposes current version', async () => {
 })
 
 // Assertion helpers
-function assertLocalizedAssetResponse(response) {
+function assertLocalizedEntriesResponse(response) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
