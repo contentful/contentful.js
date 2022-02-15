@@ -1,4 +1,5 @@
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validate-timestamp'
 import { localeSpaceParams, params, previewParams } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -94,40 +95,24 @@ describe('getEntries via chained clients', () => {
     })
 
     describe('Localized client', () => {
-      it('throws a warning when locale is passed to the options', async () => {
-        try {
-          const entries = await client.withAllLocales.getEntries({
+      it('throws an error when locale is passed to the options', async () => {
+        await expect(
+          client.withAllLocales.getEntries({
             'sys.id': 'nyancat',
             // @ts-ignore
             locale: '*',
           })
-          expect(entries).toBe('this should throw an error')
-        } catch (err) {
-          // @ts-ignore
-          // for (const prop in err) {
-          //   console.log(`Log: ${prop}`)
-          // }
-          // console.log(err)
-          // console.log(typeof err)
-          // console.log(JSON.stringify(err, null, 2))
-          // console.log(err)
-
-          // TODO: check why the error doesn't have prop 'message' and make a better assertion
-          expect(err).toBeDefined()
-        }
+        ).rejects.toThrow(ValidationError)
       })
-      it('.withoutLinkResolution: throws a warning when locale is passed to the options', async () => {
-        try {
-          const entries = await client.withAllLocales.withoutLinkResolution.getEntries({
+      it('.withoutLinkResolution: throws an error when locale is passed to the options', async () => {
+        await expect(
+          client.withAllLocales.withoutLinkResolution.getEntries({
             'sys.id': 'nyancat',
             // @ts-ignore
             locale: '*',
           })
-          expect(entries).toBe('this should throw an error')
-        } catch (err) {
-          expect(err).toBeDefined()
-        }
+        ).rejects.toThrow(ValidationError)
       })
     })
-  })  
+  })
 })
