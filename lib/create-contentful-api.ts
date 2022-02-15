@@ -36,7 +36,8 @@ import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
-import validateTimestamp, { ValidationError } from './utils/validate-timestamp'
+import validateTimestamp from './utils/validate-timestamp'
+import { ValidationError } from './utils/validation-error'
 import {
   ChainOptions,
   isClientWithAllLocalesAndWithLinkResolution,
