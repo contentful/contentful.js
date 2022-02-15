@@ -1,6 +1,6 @@
 import { EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
-import { ValidationError } from '../../lib/utils/validate-timestamp'
+import { ValidationError } from '../../lib/utils/validation-error'
 import { localeSpaceParams, params, previewParams } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

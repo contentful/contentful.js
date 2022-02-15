@@ -1,5 +1,4 @@
 import * as contentful from '../../lib/contentful'
-import { ValidationError } from '../../lib/utils/validation-error'
 import { localeSpaceParams, params, previewParams } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {

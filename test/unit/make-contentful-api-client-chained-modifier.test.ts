@@ -1,9 +1,7 @@
 import { AxiosRequestHeaders, HeadersDefaults } from 'axios'
-import createGlobalOptions from '../../lib/create-global-options'
 import { makeClient } from '../../lib/make-client'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
 import { ValidationError } from '../../lib/utils/validation-error'
-import * as mocks from './mocks'
 
 function setupWithData({
   promise,
@@ -20,8 +18,11 @@ function setupWithData({
   const api = makeClient({
     // @ts-ignore
     http: {
-      // @ts-expect-error
-      defaults: { baseURL: 'baseURL', logHandler: jest.fn(), headers: {} as HeadersDefaults },
+      defaults: {
+        baseURL: 'baseURL',
+        logHandler: jest.fn(),
+        headers: {} as AxiosRequestHeaders & HeadersDefaults,
+      },
       get: getStub.mockReturnValue(promise),
       post: postStub.mockReturnValue(promise),
     },
@@ -41,9 +42,13 @@ describe('Contentful API client chained modifier', () => {
   resolveCircular.default = resolveCircularMock
 
   const data = {
-    sys: {
-      id: 'id',
-    },
+    items: [
+      {
+        sys: {
+          id: 'id',
+        },
+      },
+    ],
   }
 
   const { api } = setupWithData({
@@ -61,19 +66,31 @@ describe('Contentful API client chained modifier', () => {
   })
 
   describe('Restricted client params', () => {
-    describe('default client', () => {
-      it('throws a warning when locale is passed to the options', () => {
+    describe('Default client', () => {
+      it('getEntries: throws a warning when locale is passed to the options', () => {
         const consoleWarnSpy = jest.spyOn(global.console, 'warn')
-        api.getEntries({ 'sys.id': 'nyancat', locale: '*' })
+        api.getEntries({ locale: '*' })
         expect(consoleWarnSpy).toBeCalled()
         expect(consoleWarnSpy.mock.calls[0][0]).toBe(
           'If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales'
         )
+        consoleWarnSpy.mockRestore()
+      })
+
+      it('getEntry: throws a warning when locale is passed to the options', async () => {
+        const consoleWarnSpy = jest.spyOn(global.console, 'warn')
+        await api.getEntry('id', { locale: '*' })
+
+        expect(consoleWarnSpy).toBeCalled()
+        expect(consoleWarnSpy.mock.calls[0][0]).toBe(
+          'If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales'
+        )
+        consoleWarnSpy.mockRestore()
       })
     })
 
-    describe('Localized api', () => {
-      it('throws an error when locale is passed to the options', async () => {
+    describe('Localized client', () => {
+      it('getEntries: throws an error when locale is passed to the options', async () => {
         await expect(
           api.withAllLocales.getEntries({
             // @ts-ignore
@@ -81,9 +98,28 @@ describe('Contentful API client chained modifier', () => {
           })
         ).rejects.toThrow(ValidationError)
       })
-      it('.withoutLinkResolution: throws an error when locale is passed to the options', async () => {
+
+      it('getEntries: .withoutLinkResolution: throws an error when locale is passed to the options', async () => {
         await expect(
           api.withAllLocales.withoutLinkResolution.getEntries({
+            // @ts-ignore
+            locale: '*',
+          })
+        ).rejects.toThrow(ValidationError)
+      })
+
+      it('getEntry: throws an error when locale is passed to the options', async () => {
+        await expect(
+          api.withAllLocales.getEntry('id', {
+            // @ts-ignore
+            locale: '*',
+          })
+        ).rejects.toThrow(ValidationError)
+      })
+
+      it('getEntry: .withoutLinkResolution: throws an error when locale is passed to the options', async () => {
+        await expect(
+          api.withAllLocales.withoutLinkResolution.getEntry('id', {
             // @ts-ignore
             locale: '*',
           })
