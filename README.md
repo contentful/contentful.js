@@ -65,8 +65,8 @@
     - [Authentication](#authentication)
   - [Documentation & References](#documentation--references)
     - [Configuration](#configuration)
+    - [Chained clients](#chained-clients)
     - [Reference documentation](#reference-documentation)
-      - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
     - [Tutorials & other resources](#tutorials--other-resources)
     - [Troubleshooting](#troubleshooting)
     - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
@@ -296,18 +296,18 @@ contentful.createClient({
       </td>
     </tr>
     <tr>
-      <td><code>resolveLinks</code></td>
-      <td><code>true</code></td>
+      <td><s><code>resolveLinks</code></s></td>
+      <td></td>
       <td>
-        Turn off to disable link resolving.
+        <i><strong>deprecated</strong></i> see [chained clients](#chained-clients).
       </td>
     </tr>
     <tr>
-      <td><code>removeUnresolved</code></td>
-      <td><code>false</code></td>
+      <td><s><code>removeUnresolved</code></s></td>
+      <td></td>
       <td>
-        Remove fields from response for unresolvable links.
-      </td>
+        <i><strong>deprecated</strong></i> see [chained clients](#chained-clients).
+    </td>
     </tr>
     <tr>
       <td><code>retryOnError</code></td>
@@ -368,16 +368,42 @@ contentful.createClient({
   </tbody>
 </table>
 
+### Chained Clients
+
+> Introduced in `v10.0.0`
+
+The contentful.js library returns calls to `getEntries` (and `getEntry`) in six different shapes, 
+depending on the three configurations listed below.
+
+In order to provide type support for each configuration, we will provide the possibility to chain modifiers to the contentful client, 
+providing the correct return types corresponding to the used modifiers.
+
+This way, we make developing with `contentful.js` much more predictable and safer.
+
+When initialising a client, you will receive an instance of the [`DefaultClient`](#link-to-TS-definition) shape.
+
+| Chain                      | Modifier                                                                        |
+|----------------------------|---------------------------------------------------------------------------------|
+| default                    | with link resolution, including unresolvable links, single locale               |
+| `withAllLocales`           | entries for all locales                                                         |
+| `withoutLinkResolution`    | inline linked entries                                                           |
+| `withoutUnresolvableLinks` | remove unresolvable links from response (if not, they are left as Link objects) |
+
+#### Example
+```js
+const entries = await client.withoutUnresolvableLinks.getEntries()
+```
+
+You can also combine client chains:
+```js
+const entries = await client.withoutLinkResolution.withAllLocales.getEntries()
+```
+
 ### Reference documentation
 
 The [JS library reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
 
 Most methods also have examples which show you how to use them.
-
-#### Legacy contentful.js documentation
-
-For versions prior to 3.0.0, you can access documentation at [https://github.com/contentful/contentful.js/tree/legacy](https://github.com/contentful/contentful.js/tree/legacy)
-
 
 ### Tutorials & other resources
 

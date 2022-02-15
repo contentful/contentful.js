@@ -1,6 +1,7 @@
 # Migration information
 
 - [Migration information](#migration-information)
+  - [Migration to contentful.js 10.x](#migration-to-contentfuljs-10x)
   - [Migration from contentful.js 9.x](#migration-from-contentfuljs-9x)
   - [Migration from contentful.js 8.x](#migration-from-contentfuljs-8x)
   - [Migration from contentful.js 7.x](#migration-from-contentfuljs-7x)
@@ -18,6 +19,37 @@
 From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`.
 
 You can upgrade to a major version using `npm update contentful`
+
+## Migration to contentful.js 10.x
+Version `10.0.0` is a complete rewrite in Typescript. This version introduces a new concept of [chained clients](#chained-clients). 
+
+### Version compatibility
+- Node: >= 12 (LTS)
+- Chrome: >= 80,
+- Edge >= 80,
+- Firefox >= 75,
+- Safari >= 13,
+
+We completely dropped support for old IE browsers (no `legacy` bundle)
+> You can always find the supported browsers in our shared [browserlist-config](https://github.com/contentful/browserslist-config/blob/master/index.js)
+
+### Client config
+The fields `resolveLinks` and `removeUnresolved` have been removed from the TS config interface for `createClient`. We still respect them for now, but you will see a warning in the console when using them. Instead, you should use one of the [chained clients](#chained-clients) to achieve the same result.
+We kept the defaults. If you want to get a response without resolved links, please use the client chain `withoutLinkResolution`.
+
+#### Example
+```js
+const entriesWithoutResolvedLinks = await client.withoutLinkResolution.getEntries()
+```
+```js
+const entriesWithoutUnresolvableLinks = await client.withoutUnresolvableLinks.getEntries()
+```
+
+### Query param `locale='*'`
+The query param `locale='*'` has been deprecated in favor of the client chain `withALlLocales`. This is due to its special response format.
+
+### Typescript
+We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](ADVANCED.md#Typescript).
 
 ## Migration from contentful.js 9.x
 
