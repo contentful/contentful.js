@@ -484,7 +484,7 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryWithLinkResolution<Fields>> {
     if (query.locale === '*') {
       console.warn(
-        'If you want to fetch all the locales, we recommend you to use client.withAllLocales'
+        'If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales'
       )
     }
     return internalGetEntry<EntryWithLinkResolution<Fields>>(id, query, true)
@@ -495,7 +495,7 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryCollectionWithLinkResolution<Fields>> {
     if (query.locale === '*') {
       console.warn(
-        'If you want to fetch all the locales, we recommend you to use client.withAllLocales'
+        'If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales'
       )
     }
     return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
@@ -509,7 +509,7 @@ export default function createContentfulApi<OptionType>(
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, SpaceLocales>> {
     if (query.locale) {
-      throw new ValidationError('locale', 'locale parameter is not allowed')
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
     }
     return internalGetEntry<EntryWithAllLocalesAndWithLinkResolution<Fields, SpaceLocales>>(
       id,
@@ -525,7 +525,7 @@ export default function createContentfulApi<OptionType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>> {
     if (query.locale) {
-      throw new ValidationError('locale', 'locale parameter is not allowed')
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
     }
     return internalGetEntries<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>(
       { ...query, locale: '*' },
@@ -554,7 +554,7 @@ export default function createContentfulApi<OptionType>(
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
     if (query.locale) {
-      throw new ValidationError('locale', 'locale parameter is not allowed')
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
     }
     return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
       id,
@@ -570,7 +570,7 @@ export default function createContentfulApi<OptionType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
     if (query.locale) {
-      throw new ValidationError('locale', 'locale parameter is not allowed')
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
     }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
