@@ -86,11 +86,13 @@ describe('getEntries via chained clients', () => {
   )
   describe('Restricted client params', () => {
     describe('default client', () => {
-      it('throws a warning when locale is passed to the options', async () => {
-        // warning
-        const entries = await client.getEntries({ 'sys.id': 'nyancat', locale: '*' })
-
-        expect(entries).toBeDefined()
+      it('throws a warning when locale is passed to the options', () => {
+        const consoleWarnSpy = jest.spyOn(global.console, 'warn')
+        client.getEntries({ 'sys.id': 'nyancat', locale: '*' })
+        expect(consoleWarnSpy).toBeCalled()
+        expect(consoleWarnSpy.mock.calls[0][0]).toBe(
+          'If you want to fetch all the locales, we recommend to use the .withAllLocales'
+        )
       })
     })
 
