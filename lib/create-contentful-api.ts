@@ -36,7 +36,7 @@ import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
-import validateTimestamp from './utils/validate-timestamp'
+import validateTimestamp, { ValidationError } from './utils/validate-timestamp'
 import {
   ChainOptions,
   isClientWithAllLocalesAndWithLinkResolution,
@@ -512,7 +512,7 @@ export default function createContentfulApi<OptionType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>> {
     if (query.locale) {
-      throw new Error('locale parameter is not allowed')
+      throw new ValidationError('locale', 'locale parameter is not allowed')
     }
     return internalGetEntries<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>(
       { ...query, locale: '*' },
@@ -554,7 +554,7 @@ export default function createContentfulApi<OptionType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
     if (query.locale) {
-      throw new Error('locale parameter is not allowed')
+      throw new ValidationError('locale', 'locale parameter is not allowed')
     }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
