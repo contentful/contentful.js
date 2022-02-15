@@ -489,7 +489,9 @@ export default function createContentfulApi<OptionType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolution<Fields>> {
     if (query.locale === '*') {
-      console.warn('If you want to fetch all the locales, we recommend to use the .withAllLocales')
+      console.warn(
+        'If you want to fetch all the locales, we recommend you to use client.withAllLocales'
+      )
     }
     return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
   }

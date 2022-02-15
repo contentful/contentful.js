@@ -91,7 +91,7 @@ describe('getEntries via chained clients', () => {
         client.getEntries({ 'sys.id': 'nyancat', locale: '*' })
         expect(consoleWarnSpy).toBeCalled()
         expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-          'If you want to fetch all the locales, we recommend to use the .withAllLocales'
+          'If you want to fetch all the locales, we recommend you to use client.withAllLocales'
         )
       })
     })
