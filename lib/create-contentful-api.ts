@@ -37,6 +37,7 @@ import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
+import { ValidationError } from './utils/validation-error'
 import {
   ChainOptions,
   isClientWithAllLocalesAndWithLinkResolution,
@@ -71,20 +72,20 @@ export interface ClientWithAllLocalesAndWithLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>
 }
 export interface ClientWithAllLocalesAndWithoutLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
@@ -482,12 +483,22 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolution<Fields>> {
+    if (query.locale === '*') {
+      console.warn(
+        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter`
+      )
+    }
     return internalGetEntry<EntryWithLinkResolution<Fields>>(id, query, true)
   }
 
   async function getEntriesWithLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolution<Fields>> {
+    if (query.locale === '*') {
+      console.warn(
+        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter`
+      )
+    }
     return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
   }
 
@@ -498,6 +509,9 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithLinkResolution<Fields, SpaceLocales>> {
+    if (query.locale) {
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
+    }
     return internalGetEntry<EntryWithAllLocalesAndWithLinkResolution<Fields, SpaceLocales>>(
       id,
       { ...query, locale: '*' },
@@ -511,6 +525,9 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>> {
+    if (query.locale) {
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
+    }
     return internalGetEntries<EntryCollectionWithAllLocalesAndWithLinkResolution<Fields, Locales>>(
       { ...query, locale: '*' },
       true
@@ -537,6 +554,9 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
+    if (query.locale) {
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
+    }
     return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
       id,
       { ...query, locale: '*' },
@@ -550,6 +570,9 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
+    if (query.locale) {
+      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
+    }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
     >({ ...query, locale: '*' }, false)
