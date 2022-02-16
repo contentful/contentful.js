@@ -72,7 +72,7 @@ describe('Contentful API client chained modifier', () => {
         api.getEntries({ locale: '*' })
         expect(consoleWarnSpy).toBeCalled()
         expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-          'If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales'
+          `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter`
         )
         consoleWarnSpy.mockRestore()
       })
@@ -83,7 +83,7 @@ describe('Contentful API client chained modifier', () => {
 
         expect(consoleWarnSpy).toBeCalled()
         expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-          'If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales'
+          `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter`
         )
         consoleWarnSpy.mockRestore()
       })
