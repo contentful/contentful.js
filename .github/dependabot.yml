@@ -25,3 +25,14 @@ updates:
     commit-message:
       prefix: build
       include: scope
+  - package-ecosystem: npm
+    target-branch: "next-typescript"
+    directory: '/'
+    schedule:
+      interval: daily
+      time: '00:00'
+      timezone: UTC
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: build
+      include: scope
