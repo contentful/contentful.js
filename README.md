@@ -211,162 +211,28 @@ contentful.createClient({
   ... your config here ...
 })
 ```
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Default</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>accessToken</code></td>
-      <td></td>
-      <td>
-        <strong>Required</strong>. Your CDA access token.
-      </td>
-    </tr>
-    <tr>
-      <td><code>space</code></td>
-      <td></td>
-      <td>
-        <strong>Required</strong>. Your Space ID.
-      </td>
-    </tr>
-    <tr>
-      <td><code>environment</code></td>
-      <td><code>'master'</code></td>
-      <td>
-        Set the environment that the API key has access to.
-      </td>
-    </tr>
-    <tr>
-      <td><code>host</code></td>
-      <td><code>'cdn.contentful.com'</code></td>
-      <td>
-        Set the host used to build the request URI's.
-      </td>
-    </tr>
-    <tr>
-      <td><code>basePath</code></td>
-      <td><code>''</code></td>
-      <td>
-        This path gets appended to the host to allow request urls like <code>https://gateway.example.com/contentful/</code> for custom gateways/proxies.
-      </td>
-    </tr>
-    <tr>
-      <td><code>httpAgent</code></td>
-      <td><code>undefined</code></td>
-      <td>
-        Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
-      </td>
-    </tr>
-    <tr>
-      <td><code>httpsAgent</code></td>
-      <td><code>undefined</code></td>
-      <td>
-        Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
-      </td>
-    </tr>
-    <tr>
-      <td><code>adapter</code></td>
-      <td><code>undefined</code></td>
-      <td>
-        Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).
-      </td>
-    </tr>
-    <tr>
-      <td><code>headers</code></td>
-      <td><code>{}</code></td>
-      <td>
-        <p>Additional headers to attach to the requests. We add/overwrite the following headers:</p>
-        <ul>
-          <li>Content-Type: <code>application/vnd.contentful.management.v1+json</code></li>
-          <li>X-Contentful-User-Agent: <code>sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3</code> (Automatically generated)</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td><code>proxy</code></td>
-      <td><code>undefined</code></td>
-      <td>
-        Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.
-      </td>
-    </tr>
-    <tr>
-      <td><s><code>resolveLinks</code></s></td>
-      <td></td>
-      <td>
-        <i><strong>deprecated</strong></i> see [chained clients](#chained-clients).
-      </td>
-    </tr>
-    <tr>
-      <td><s><code>removeUnresolved</code></s></td>
-      <td></td>
-      <td>
-        <i><strong>deprecated</strong></i> see [chained clients](#chained-clients).
-    </td>
-    </tr>
-    <tr>
-      <td><code>retryOnError</code></td>
-      <td><code>true</code></td>
-      <td>
-        By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to <code>false</code> to disable this behavior.
-      </td>
-    </tr>
-    <tr>
-      <td><code>application</code></td>
-      <td><code>undefined</code></td>
-      <td>
-        Application name and version e.g myApp/version.
-      </td>
-    </tr>
-    <tr>
-      <td><code>integration</code></td>
-      <td><code>undefined</code></td>
-      <td>
-        Integration name and version e.g react/version.
-      </td>
-    </tr>
-    <tr>
-      <td><code>timeout</code></td>
-      <td><code>30000</code></td>
-      <td>
-        in milliseconds - connection timeout.
-      </td>
-    </tr>
-    <tr>
-      <td><code>retryLimit</code></td>
-      <td><code>5</code></td>
-      <td>
-        Optional number of retries before failure.
-      </td>
-    </tr>
-    <tr>
-      <td><code>logHandler</code></td>
-      <td><code>function (level, data) {}</code></td>
-      <td>
-        Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.
-      </td>
-    </tr>
-        <tr>
-      <td><code>requestLogger</code></td>
-      <td><code>function (config) {}</code></td>
-      <td>
-        Interceptor called on every request. Takes Axios request config as an arg.
-      </td>
-    </tr>
-        <tr>
-      <td><code>responseLogger</code></td>
-      <td><code>function (response) {}</code></td>
-      <td>
-        Interceptor called on every response. Takes Axios response object as an arg.
-      </td>
-    </tr>
-  </tbody>
-</table>
+| Name                                 | Default                     | Description                                                                                                                                                                                                                                                                                                      |
+|--------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessToken`                        |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                             |
+| `space`                              |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                     |
+| `environment`                        | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                              |
+| `host`                               | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                    |
+| `basePath`                           | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                            |
+| `httpAgent`                          | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                 |
+| `httpsAgent`                         | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                |
+| `adapter`                            | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                          |
+| `headers`                            | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.management.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
+| `proxy`                              | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.                                                                                                                                  |
+| <s><code>resolveLinks</code></s>     |                             | _**deprecated**_ see [chained clients](#chained-clients).                                                                                                                                                                                                                                                        |
+| <s><code>removeUnresolved</code></s> |                             | _**deprecated**_ see [chained clients](#chained-clients).                                                                                                                                                                                                                                                        |
+| `retryOnError`                       | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                    |
+| `application`                        | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                  |
+| `integration`                        | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                  |
+| `timeout`                            | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                            |
+| `retryLimit`                         | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                       |
+| `logHandler`                         | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                      |
+| `requestLogger`                      | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                       |
+| `responseLogger`                     | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                     |
 
 ### Chained Clients
 
@@ -380,7 +246,7 @@ providing the correct return types corresponding to the used modifiers.
 
 This way, we make developing with `contentful.js` much more predictable and safer.
 
-When initialising a client, you will receive an instance of the [`DefaultClient`](#link-to-TS-definition) shape.
+When initialising a client, you will receive an instance of the [`DefaultClient`](lib/create-contentful-api.ts#L91) shape.
 
 | Chain                      | Modifier                                                                        |
 |----------------------------|---------------------------------------------------------------------------------|
