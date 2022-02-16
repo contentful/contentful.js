@@ -69,6 +69,7 @@
     - [Reference documentation](#reference-documentation)
     - [Tutorials & other resources](#tutorials--other-resources)
     - [Troubleshooting](#troubleshooting)
+    - [Typscript](#typescript)
     - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
     - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
   - [Reach out to us](#reach-out-to-us)
@@ -265,6 +266,10 @@ You can also combine client chains:
 const entries = await client.withoutLinkResolution.withAllLocales.getEntries()
 ```
 
+The default behaviour didn't change, you can still do
+```js
+const entries = await client.getEntries()
+```
 ### Reference documentation
 
 The [JS library reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
@@ -281,6 +286,10 @@ Most methods also have examples which show you how to use them.
 - **I get the error: Unable to resolve module `http`** - Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
 - **Can I use it with typescript?** - Yes, there is also a type definition file
 - **Is the library doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
+
+### Typescript
+
+This library is 100% written in Typescript. type definitions are bundled. Find out more about the advantages of using this library in conjunction with Typescript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
 
 ### Advanced Concepts
 

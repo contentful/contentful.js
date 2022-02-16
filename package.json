@@ -21,11 +21,13 @@
   "files": [
     "dist",
     "lib",
+    "images",
     "ADVANCED.md",
     "CONTRIBUTING.md",
     "README.md",
     "SETUP.md",
     "SECURITY.md",
+    "TYPESCRIPT.md",
     "LICENSE"
   ],
   "repository": {

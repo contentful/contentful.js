@@ -1,13 +1,47 @@
-# Typescript
-With version `10.0.0` we have completely rewritten the client to give the user more support on types.
+<!-- shared header  START --> 
+
+<p align="center">
+  <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
+    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="250">
+  </a>
+</p>
+<h3 align="center">Typescript</h3>
+
+<p align='center'>Contentful Delivery API</p>
+<p align="center">
+  <a href="https://www.contentful.com/slack/">
+    <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
+  </a>
+  &nbsp;
+  <a href="https://www.contentfulcommunity.com/">
+    <img src="https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600"
+      alt="Join Contentful Community Forum">
+  </a>
+</p>
+<p align="center">
+  <a href="README.md">Readme</a> | 
+  <a href="CONTRIBUTING.md">Contributing</a> | 
+  <a href="SETUP.md">Setup</a> | 
+  <a href="TYPESCRIPT.md">Typescript</a> | 
+  <a href="ADVANCED.md">Advanced</a> | 
+  <a href="SECURITY.md">Security</a>
+</p>
+
+<!-- shared header  END --> 
 
 ## Table of contents
+- [Introduction](#introduction)
 - [Query types](#query-types)
   - [Static query types](#static-query-keys)
   - [Dynamic query types](#dynamic-field-query-keys)
 - [Response types](#response-types)
   - [withAllLocales](#withalllocales)
 - [Generating type definitions](#generating-type-definitions-for-content-types)
+
+## Introduction
+With version `10.0.0` we have completely rewritten the client to give the user more support on types.
+
+
 
 ## Query types
 When querying for entries and assets, you get full type support for keys and values.
@@ -20,7 +54,7 @@ This applies to:
 We have 2 levels of support:
 
 ### Static query keys
-![](docs/static-query-keys.png)
+![](images/static-query-keys.png)
 
 ```
 getEntries({
@@ -31,7 +65,7 @@ getEntries({
 ```
 
 ### Dynamic (field) query keys
-![](docs/dynamic-query-keys.png)
+![](images/dynamic-query-keys.png)
 
 Dynamic query keys are based on the given shape of the expected entries content type.
 To calculate dynamic keys, we have to pass-in the shape of the fields:
@@ -51,10 +85,16 @@ getEntries<ExampleEntryFields>({
 })
 ```
 
+#### Limitation
+Due to the limitation with recursive types, we can only calculate keys on the root level of your content type.
+There is currently no way to calculate keys for nested (recursive) content types.
+
 ## Response types
-With version `10.0.0` we introduce chained clients to make better assumptions on response types. 
+With version `10.0.0` we introduce chained clients to make better assumptions on response types.
 
 ### withAllLocales
+If the current chain includes `withAllLocales`, `getEntry` and `getEntries` expect an optional second generic parameter for all existing locales in your space.
+If the `Locale` type is provided, your response type will define all locale keys for your field values:
 
 ```typescript
 import * as contentful from "contentful";
@@ -66,10 +106,10 @@ const client = contentful.createClient({
 
 const Fields = { productName: Contentful.EntryFields.Text }
 const Locales = 'en-US' | 'de-DE';
-const entries = client.withAllLocales.getEntry<Fields, Locales>() 
+const entry = client.withAllLocales.getEntry<Fields, Locales>() 
 ```
 
-The returned type of `getEntry` is matching the shape
+The return type of `getEntry` is matching the shape
 ```json
 {
   "fields": {
@@ -81,9 +121,8 @@ The returned type of `getEntry` is matching the shape
 }
 ```
 
-
-
 ## Generating type definitions for content types
+It is recommended to define field types for all your content types. This helps the type system to infer all possible query keys/value types for you.
 There are several OSS projects out there to generate type definitions for content types:
 
 - [cf-content-types-generator](https://github.com/contentful-userland/cf-content-types-generator)
