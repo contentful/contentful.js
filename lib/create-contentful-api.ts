@@ -62,10 +62,10 @@ export interface ClientWithLinkResolution extends BaseClient {
 export interface ClientWithoutLinkResolution extends BaseClient {
   getEntry<Fields extends FieldsType>(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries & { resolveLinks?: never }
   ): Promise<EntryWithoutLinkResolution<Fields>>
   getEntries<Fields extends FieldsType>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & { resolveLinks?: never }
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
 }
 export interface ClientWithAllLocalesAndWithLinkResolution
@@ -82,10 +82,10 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntryQueries & { locale?: never }
+    query?: EntryQueries & { locale?: never; resolveLinks?: never }
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = string>(
-    query?: EntriesQueries<Fields> & { locale?: never }
+    query?: EntriesQueries<Fields> & { locale?: never; resolveLinks?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
@@ -485,7 +485,12 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryWithLinkResolution<Fields>> {
     if (query.locale === '*') {
       console.warn(
-        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter`
+        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
+      )
+    }
+    if ('resolveLinks' in query) {
+      console.warn(
+        'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
       )
     }
     return internalGetEntry<EntryWithLinkResolution<Fields>>(id, query, true)
@@ -496,7 +501,12 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryCollectionWithLinkResolution<Fields>> {
     if (query.locale === '*') {
       console.warn(
-        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter`
+        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
+      )
+    }
+    if ('resolveLinks' in query) {
+      console.warn(
+        'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
       )
     }
     return internalGetEntries<EntryCollectionWithLinkResolution<Fields>>(query, true)
@@ -538,12 +548,18 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithoutLinkResolution<Fields>> {
+    if ('resolveLinks' in query) {
+      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
+    }
     return internalGetEntry<EntryWithoutLinkResolution<Fields>>(id, query, false)
   }
 
   async function getEntriesWithoutLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
+    if ('resolveLinks' in query) {
+      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
+    }
     return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, false)
   }
 
@@ -556,6 +572,9 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
     if (query.locale) {
       throw new ValidationError('locale', 'The `locale` parameter is not allowed')
+    }
+    if ('resolveLinks' in query) {
+      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
     }
     return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
       id,
@@ -572,6 +591,9 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
     if (query.locale) {
       throw new ValidationError('locale', 'The `locale` parameter is not allowed')
+    }
+    if ('resolveLinks' in query) {
+      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
     }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
