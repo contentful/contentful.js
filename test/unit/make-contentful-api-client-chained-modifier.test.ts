@@ -56,13 +56,10 @@ describe('Contentful API client chained modifier', () => {
   })
 
   beforeEach(() => {
+    jest.clearAllMocks()
     resolveCircularMock.mockImplementation((args) => {
       return args
     })
-  })
-
-  afterEach(() => {
-    resolveCircularMock.mockReset()
   })
 
   describe('Restricted client params', () => {
@@ -75,7 +72,6 @@ describe('Contentful API client chained modifier', () => {
           expect(consoleWarnSpy.mock.calls[0][0]).toBe(
             `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
           )
-          consoleWarnSpy.mockRestore()
         })
 
         it('throws a warning when resolveLinks is explicitly set to false', async () => {
@@ -85,7 +81,6 @@ describe('Contentful API client chained modifier', () => {
           expect(consoleWarnSpy.mock.calls[0][0]).toBe(
             'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
           )
-          consoleWarnSpy.mockRestore()
         })
       })
 
@@ -97,7 +92,6 @@ describe('Contentful API client chained modifier', () => {
           expect(consoleWarnSpy.mock.calls[0][0]).toBe(
             `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
           )
-          consoleWarnSpy.mockRestore()
         })
 
         it('throws a warning when resolveLinks parameter is explicitly set to false', async () => {
@@ -107,7 +101,6 @@ describe('Contentful API client chained modifier', () => {
           expect(consoleWarnSpy.mock.calls[0][0]).toBe(
             'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
           )
-          consoleWarnSpy.mockRestore()
         })
       })
     })
