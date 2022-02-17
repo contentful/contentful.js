@@ -5,7 +5,7 @@ import createContentfulApi, {
   ClientWithoutLinkResolution,
   ContentfulClientApi,
   CreateContentfulApiParams,
-  DefaultClient,
+  DefaultClient
 } from './create-contentful-api'
 import {
   ChainOptions,
@@ -17,10 +17,10 @@ import {
   isClientWithAllLocalesAndWithLinkResolution,
   isClientWithAllLocalesAndWithoutLinkResolution,
   isClientWithLinkResolution,
-  isClientWithoutLinkResolution,
+  isClientWithoutLinkResolution
 } from './utils/client-helpers'
 
-function create<OptionsType, ClientType>(
+function create<OptionsType extends ChainOptions, ClientType>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options: OptionsType,
   makeInnerClient: (options: OptionsType) => ClientType
@@ -28,24 +28,29 @@ function create<OptionsType, ClientType>(
   const client = createContentfulApi<OptionsType>(
     {
       http,
-      getGlobalOptions,
+      getGlobalOptions
     },
     options
   )
   const response: any = client
   Object.defineProperty(response, 'withAllLocales', {
-    get: () => makeInnerClient({ ...options, withAllLocales: true }),
+    get: () => makeInnerClient({ ...options, withAllLocales: true })
   })
   Object.defineProperty(response, 'withoutLinkResolution', {
-    get: () => makeInnerClient({ ...options, withoutLinkResolution: true }),
+    get: () => makeInnerClient({ ...options, withoutLinkResolution: true })
   })
+
+  Object.defineProperty(response, 'chainOptions', {
+    get: () => ({ ...options })
+  })
+
   return Object.create(response) as ClientType
 }
 
 export const makeClient = ({
-  http,
-  getGlobalOptions,
-}: CreateContentfulApiParams): ContentfulClientApi => {
+                             http,
+                             getGlobalOptions
+                           }: CreateContentfulApiParams): ContentfulClientApi => {
   // TODO: how to deal with default based on global config.
   // maybe we should get default from global options as such:
   // const { removeUnresolved, resolveLinks } = getGlobalOptions()
@@ -75,17 +80,13 @@ export const makeClient = ({
     | ClientWithAllLocalesAndWithLinkResolution
     | ClientWithAllLocalesAndWithoutLinkResolution {
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
-      return create<
-        ChainOptionWithAllLocalesAndWithoutLinkResolution,
-        ClientWithAllLocalesAndWithoutLinkResolution
-      >({ http, getGlobalOptions }, options, makeInnerClient)
+      return create<ChainOptionWithAllLocalesAndWithoutLinkResolution,
+        ClientWithAllLocalesAndWithoutLinkResolution>({ http, getGlobalOptions }, options, makeInnerClient)
     }
 
     if (isClientWithAllLocalesAndWithLinkResolution(options)) {
-      return create<
-        ChainOptionWithAllLocalesAndWithLinkResolution,
-        ClientWithAllLocalesAndWithLinkResolution
-      >({ http, getGlobalOptions }, options, makeInnerClient)
+      return create<ChainOptionWithAllLocalesAndWithLinkResolution,
+        ClientWithAllLocalesAndWithLinkResolution>({ http, getGlobalOptions }, options, makeInnerClient)
     }
 
     if (isClientWithLinkResolution(options)) {
@@ -108,7 +109,7 @@ export const makeClient = ({
       { http, getGlobalOptions },
       {
         withoutLinkResolution: false,
-        withAllLocales: false,
+        withAllLocales: false
       },
       makeInnerClient
     )
@@ -118,7 +119,7 @@ export const makeClient = ({
     { http, getGlobalOptions },
     {
       withoutLinkResolution: false,
-      withAllLocales: false,
+      withAllLocales: false
     }
   )
 
@@ -129,6 +130,6 @@ export const makeClient = ({
     },
     get withoutLinkResolution() {
       return makeInnerClient({ withAllLocales: false, withoutLinkResolution: true })
-    },
+    }
   }
 }

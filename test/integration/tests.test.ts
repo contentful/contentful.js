@@ -21,7 +21,7 @@ const clientWithLoggers = contentful.createClient({
   ...params,
   // @ts-ignore
   responseLogger: responseLoggerStub,
-  requestLogger: requestLoggerStub,
+  requestLogger: requestLoggerStub
 })
 
 const now = () => Math.floor(Date.now() / 1000)
@@ -75,7 +75,7 @@ test('Get entry with fallback locale', async () => {
     localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
     localeClient.getEntry<Fields>('no-zu-ZA', { locale: 'zu-ZA' }),
     localeClient.getEntry<Fields>('no-ne-NP', { locale: 'ne-NP' }),
-    localeClient.getEntry<Fields>('no-af', { locale: 'af' }),
+    localeClient.getEntry<Fields>('no-af', { locale: 'af' })
   ])
 
   expect(entries[0].fields.title).not.toBe('')
@@ -99,7 +99,7 @@ test('Gets entries with select', async () => {
 
   const response = await client.getEntries<Fields>({
     select: ['fields.name', 'fields.likes'],
-    content_type: 'cat',
+    content_type: 'cat'
   })
 
   expect(response.items).toBeDefined()
@@ -117,7 +117,7 @@ test('Gets entries with a specific locale', async () => {
 
 test('Gets entries with a limit parameter', async () => {
   const response = await client.getEntries({
-    limit: 2,
+    limit: 2
   })
 
   expect(response.items).toBeDefined()
@@ -126,7 +126,7 @@ test('Gets entries with a limit parameter', async () => {
 
 test('Gets entries with a skip parameter', async () => {
   const response = await client.getEntries({
-    skip: 2,
+    skip: 2
   })
 
   expect(response.items).toBeDefined()
@@ -152,15 +152,15 @@ test('Gets entry with link resolution', async () => {
 
 test('Gets entry with without link resolution but with includes', async () => {
   const response = await client.withoutLinkResolution.getEntry('4SEhTg8sYJ1H3wDAinzhTp', {
-    include: 2,
+    include: 2
   })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toMatchObject({
     sys: {
       type: 'Link',
       linkType: 'Entry',
-      id: '6SiPbntBPYYjnVHmipxJBF',
-    },
+      id: '6SiPbntBPYYjnVHmipxJBF'
+    }
   })
 })
 
@@ -179,8 +179,8 @@ test('Gets entry with link resolution, and includes, keeping unresolvable links'
     sys: {
       type: 'Link',
       linkType: 'Entry',
-      id: '6SiPbntBPYYjnVHmipxJBF',
-    },
+      id: '6SiPbntBPYYjnVHmipxJBF'
+    }
   })
 })
 
@@ -192,7 +192,7 @@ test('Gets entries with content type query param', async () => {
     'cat',
     'cat',
     'cat',
-    'cat',
+    'cat'
   ])
 })
 
@@ -212,7 +212,7 @@ test('Gets entries with inequality query', async () => {
 test('Gets entries with array equality query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes': 'lasagna',
+    'fields.likes': 'lasagna'
   })
 
   expect(response.total).toBe(1)
@@ -222,7 +222,7 @@ test('Gets entries with array equality query', async () => {
 test('Gets entries with array inequality query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[ne]': 'lasagna',
+    'fields.likes[ne]': 'lasagna'
   })
 
   expect(response.total).toBeGreaterThan(0)
@@ -240,7 +240,7 @@ test('Gets entries with inclusion query', async () => {
 test('Gets entries with exclusion query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[nin]': 'rainbows,lasagna',
+    'fields.likes[nin]': 'rainbows,lasagna'
   })
 
   expect(response.total).toBeGreaterThan(0)
@@ -251,7 +251,7 @@ test('Gets entries with exclusion query', async () => {
 test('Gets entries with exists query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[exists]': 'true',
+    'fields.likes[exists]': 'true'
   })
   expect(response.items.filter((item) => item.fields.likes)).toHaveLength(response.total)
 })
@@ -259,7 +259,7 @@ test('Gets entries with exists query', async () => {
 test('Gets entries with inverse exists query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.likes[exists]': 'false',
+    'fields.likes[exists]': 'false'
   })
   expect(response.items.filter((item) => item.fields.likes)).toHaveLength(0)
 })
@@ -267,7 +267,7 @@ test('Gets entries with inverse exists query', async () => {
 test('Gets entries with field link query', async () => {
   const response = await client.getEntries({
     content_type: 'cat',
-    'fields.bestFriend.sys.id': 'happycat',
+    'fields.bestFriend.sys.id': 'happycat'
   })
 
   expect(response.items[0].sys.id).toEqual('nyancat')
@@ -275,7 +275,7 @@ test('Gets entries with field link query', async () => {
 
 test('Gets entries with gte range query', async () => {
   const response = await client.getEntries({
-    'sys.updatedAt[gte]': '2013-01-01T00:00:00Z',
+    'sys.updatedAt[gte]': '2013-01-01T00:00:00Z'
   })
 
   expect(response.total).toBeGreaterThan(0)
@@ -283,7 +283,7 @@ test('Gets entries with gte range query', async () => {
 
 test('Gets entries with lte range query', async () => {
   const response = await client.getEntries({
-    'sys.updatedAt[lte]': '2013-01-01T00:00:00Z',
+    'sys.updatedAt[lte]': '2013-01-01T00:00:00Z'
   })
 
   expect(response.total).toBe(0)
@@ -291,7 +291,7 @@ test('Gets entries with lte range query', async () => {
 
 test('Gets entries with full text search query', async () => {
   const response = await client.getEntries({
-    query: 'bacon',
+    query: 'bacon'
   })
 
   expect(response.items[0].fields.description).toMatch(/bacon/)
@@ -300,7 +300,7 @@ test('Gets entries with full text search query', async () => {
 test('Gets entries with full text search query on field', async () => {
   const response = await client.getEntries({
     content_type: 'dog',
-    'fields.description[match]': 'bacon pancakes',
+    'fields.description[match]': 'bacon pancakes'
   })
 
   expect(response.items[0].fields.description).toMatch(/bacon pancakes/)
@@ -309,7 +309,7 @@ test('Gets entries with full text search query on field', async () => {
 test('Gets entries with location proximity search', async () => {
   const response = await client.getEntries({
     content_type: '1t9IbcfdCk6m04uISSsaIK',
-    'fields.center[near]': '38,-122',
+    'fields.center[near]': '38,-122'
   })
 
   expect(response.items[0].fields.center.lat).toBeDefined()
@@ -319,7 +319,7 @@ test('Gets entries with location proximity search', async () => {
 test('Gets entries with location in bounding object', async () => {
   const response = await client.getEntries({
     content_type: '1t9IbcfdCk6m04uISSsaIK',
-    'fields.center[within]': '40,-124,36,-120',
+    'fields.center[within]': '40,-124,36,-120'
   })
 
   const lat = response.items[0].fields.center.lat
@@ -336,7 +336,7 @@ test('Gets entries with location in bounding object', async () => {
 
 test('Gets entries by creation order', async () => {
   const response = await client.getEntries({
-    order: 'sys.createdAt',
+    order: 'sys.createdAt'
   })
 
   expect(new Date(response.items[0].sys.createdAt).getTime()).toBeLessThan(
@@ -346,7 +346,7 @@ test('Gets entries by creation order', async () => {
 
 test('Gets entries by inverse creation order', async () => {
   const response = await client.getEntries({
-    order: '-sys.createdAt',
+    order: '-sys.createdAt'
   })
 
   expect(new Date(response.items[0].sys.createdAt).getTime()).toBeGreaterThan(
@@ -365,7 +365,7 @@ test('Gets entries by inverse creation order', async () => {
  */
 test('Gets entries by creation order and id order', async () => {
   const response = await client.getEntries({
-    order: 'sys.contentType.sys.id,sys.id',
+    order: 'sys.contentType.sys.id,sys.id'
   })
 
   const contentTypeOrder = response.items
@@ -379,14 +379,14 @@ test('Gets entries by creation order and id order', async () => {
     'dog',
     'human',
     'kangaroo',
-    'testEntryReferences',
+    'testEntryReferences'
   ])
   expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
 })
 
 test('Gets assets with only images', async () => {
   const response = await client.getAssets({
-    mimetype_group: 'image',
+    mimetype_group: 'image'
   })
   expect(response.items[0].fields.file.contentType).toMatch(/image/)
 })
@@ -445,7 +445,7 @@ describe('Sync API', () => {
   test('Sync space with token', async () => {
     const response = await client.sync({
       nextSyncToken:
-        'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA',
+        'w5ZGw6JFwqZmVcKsE8Kow4grw45QdybDsm4DWMK6OVYsSsOJwqPDksOVFXUFw54Hw65Tw6MAwqlWw5QkdcKjwqrDlsOiw4zDolvDq8KRRwUVBn3CusK6wpB3w690w6vDtMKkwrHDmsKSwobCuMKww57Cl8OGwp_Dq1QZCA'
     })
     expect(response.entries).toBeDefined()
     expect(response.assets).toBeDefined()
@@ -469,7 +469,7 @@ describe('Sync API', () => {
   })
 })
 
-test("Gets entries with linked includes with all locales using locale:'*' parameter", async () => {
+test('Gets entries with linked includes with all locales using locale:\'*\' parameter', async () => {
   const response = await client.getEntries({ include: 5, 'sys.id': 'nyancat', locale: '*' })
   assertLocalizedEntriesResponse(response)
 })
@@ -479,11 +479,11 @@ test('Gets entries with linked includes with all locales using withAllLocales cl
   assertLocalizedEntriesResponse(response)
 })
 
-test("Gets entries with linked includes with all locales using locale:'*' parameter in preview", async () => {
+test('Gets entries with linked includes with all locales using locale:\'*\' parameter in preview', async () => {
   const response = await previewClient.getEntries({
     include: 5,
     'sys.id': 'nyancat',
-    locale: '*',
+    locale: '*'
   })
   assertLocalizedEntriesResponse(response)
 })
@@ -491,7 +491,7 @@ test("Gets entries with linked includes with all locales using locale:'*' parame
 test('Gets entries with linked includes with all locales using withAllLocales client modifier in preview', async () => {
   const response = await previewClient.withAllLocales.getEntries({
     include: 5,
-    'sys.id': 'nyancat',
+    'sys.id': 'nyancat'
   })
   assertLocalizedEntriesResponse(response)
 })
@@ -567,6 +567,21 @@ describe('Embargoed Assets', () => {
 
 test('Client object exposes current version', async () => {
   expect(client.version).toEqual(version)
+})
+
+test('Client object exposes chainOptions', async () => {
+  expect(client.chainOptions).toMatchObject({
+    withAllLocales: false,
+    withoutLinkResolution: false
+  })
+  expect(client.withAllLocales.chainOptions).toMatchObject({
+    withAllLocales: true,
+    withoutLinkResolution: false
+  })
+  expect(client.withAllLocales.withoutLinkResolution.chainOptions).toMatchObject({
+    withAllLocales: true,
+    withoutLinkResolution: true
+  })
 })
 
 // Assertion helpers

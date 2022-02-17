@@ -94,6 +94,8 @@ export type DefaultClient = ClientWithLinkResolution
 export interface BaseClient {
   version: string
 
+  chainOptions: ChainOptions
+
   /**
    * Gets an Asset
    * @category API
