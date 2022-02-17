@@ -1,47 +1,56 @@
-![header](https://github.com/contentful/contentful.js/raw/master/.github/header.png)
+<!-- shared header  START --> 
+
+<p align="center">
+  <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
+    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="150">
+  </a>
+</p>
+
+<h1 align='center'>Content Delivery API</h1>
+
+<h3 align="center">Javascript</h3>
+
+<p align="center">
+  <a href="README.md">Readme</a> · 
+  <a href="SETUP.md">Setup</a> · 
+  <a href="MIGRATION.md">Migration</a> · 
+  <a href="ADVANCED.md">Advanced</a> · 
+  <a href="TYPESCRIPT.md">Typescript</a> · 
+  <a href="CONTRIBUTING.md">Contributing</a> · 
+  <a href="SECURITY.md">Security</a>
+</p>
+
 <p align="center">
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
   </a>
-  &nbsp;
-  <a href="https://www.contentfulcommunity.com/">
-    <img src="https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600"
-      alt="Join Contentful Community Forum">
-  </a>
 </p>
 
-# <span style="line-height: 1.1">contentful.js - Contentful JavaScript Content Delivery Library</span>
+<!-- shared header  END --> 
 
-> JavaScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your Content stored in Contentful with your JavaScript applications.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Maintained-green.svg" alt="This repository is actively maintained" /> &nbsp;
-  <a href="LICENSE">
+
+## Introduction
+<a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
-  </a>
-  &nbsp;
-  <a href="https://travis-ci.org/contentful/contentful.js">
+  </a><a href="https://travis-ci.org/contentful/contentful.js">
     <img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status">
   </a>
-</p>
-
-
-<p align="center">
-  <a href="https://www.npmjs.com/package/contentful">
+ <a href="https://www.npmjs.com/package/contentful">
     <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
   </a>
    <a href="https://www.jsdelivr.com/package/npm/contentful">
     <img src="https://data.jsdelivr.com/v1/package/npm/contentful/badge" alt="jsDelivr Hits">
   </a>
-  &nbsp;
-  <a href="https://npm-stat.com/charts.html?package=contentful">
+<a href="https://npm-stat.com/charts.html?package=contentful">
     <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
   </a>
-  &nbsp;
-  <a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
+<a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
     <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
   </a>
-</p>
+
+JavaScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your Content stored in Contentful with your JavaScript applications.
+
 
 **What is Contentful?**
 

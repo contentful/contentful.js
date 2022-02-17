@@ -2,38 +2,61 @@
 
 <p align="center">
   <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
-    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="250">
+    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="150">
   </a>
 </p>
+
+<h1 align='center'>Content Delivery API</h1>
+
 <h3 align="center">Typescript</h3>
 
-<p align='center'>Contentful Delivery API</p>
+<p align="center">
+  <a href="README.md">Readme</a> · 
+  <a href="SETUP.md">Setup</a> · 
+  <a href="MIGRATION.md">Migration</a> · 
+  <a href="ADVANCED.md">Advanced</a> · 
+  <a href="TYPESCRIPT.md">Typescript</a> · 
+  <a href="CONTRIBUTING.md">Contributing</a> · 
+  <a href="SECURITY.md">Security</a>
+</p>
+
 <p align="center">
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
   </a>
 </p>
-<p align="center">
-  <a href="README.md">Readme</a> | 
-  <a href="CONTRIBUTING.md">Contributing</a> | 
-  <a href="SETUP.md">Setup</a> | 
-  <a href="TYPESCRIPT.md">Typescript</a> | 
-  <a href="ADVANCED.md">Advanced</a> | 
-  <a href="SECURITY.md">Security</a>
-</p>
 
 <!-- shared header  END --> 
+
 
 ## Table of contents
 - [Introduction](#introduction)
 - [Query types](#query-types)
-  - [Static query types](#static-query-keys)
-  - [Dynamic query types](#dynamic-field-query-keys)
+    - [Static query types](#static-query-keys)
+    - [Dynamic query types](#dynamic-field-query-keys)
 - [Response types](#response-types)
-  - [withAllLocales](#withalllocales)
+    - [withAllLocales](#withalllocales)
 - [Generating type definitions](#generating-type-definitions-for-content-types)
 
 ## Introduction
+<a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
+  </a><a href="https://travis-ci.org/contentful/contentful.js">
+    <img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status">
+  </a>
+ <a href="https://www.npmjs.com/package/contentful">
+    <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
+  </a>
+   <a href="https://www.jsdelivr.com/package/npm/contentful">
+    <img src="https://data.jsdelivr.com/v1/package/npm/contentful/badge" alt="jsDelivr Hits">
+  </a>
+<a href="https://npm-stat.com/charts.html?package=contentful">
+    <img src="https://img.shields.io/npm/dm/contentful.svg" alt="NPM downloads">
+  </a>
+<a href="https://unpkg.com/contentful/dist/contentful.browser.min.js">
+    <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
+  </a>
+
 With version `10.0.0` we have completely rewritten the client to give the user more support on types.
 
 
