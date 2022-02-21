@@ -251,7 +251,7 @@ contentful.createClient({
 The contentful.js library returns calls to `getEntries` (and `getEntry`) in six different shapes, 
 depending on the three configurations listed below.
 
-In order to provide type support for each configuration, we will provide the possibility to chain modifiers to the contentful client, 
+In order to provide type support for each configuration, we provide the possibility to chain modifiers to the contentful client, 
 providing the correct return types corresponding to the used modifiers.
 
 This way, we make developing with `contentful.js` much more predictable and safer.
