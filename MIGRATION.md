@@ -77,6 +77,23 @@ const entriesWithoutUnresolvableLinks = await client.withoutUnresolvableLinks.ge
 ### Query param `locale='*'`
 The query param `locale='*'` has been deprecated in favor of the client chain `withAllLocales`. This is due to its special response format.
 
+### Query param `resolveLinks`
+The query param `resolveLink` has been deprecated in favor of the client chain `withoutLinkResolution`. This is due to its special response format.
+
+Instead of 
+
+```js
+const entries = client.getEntries({resolveLinks: false})
+````
+
+You should do
+
+```js
+const entries = client.withoutLinkResolution.getEntries()
+````
+
+We will still respect the query parameter, but a deprecation warning is thrown.
+
 ### Typescript
 We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](ADVANCED.md#Typescript).
 
