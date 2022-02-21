@@ -62,7 +62,8 @@ We completely dropped support for old IE browsers (no `legacy` bundle)
 > You can always find the supported browsers in our shared [browserlist-config](https://github.com/contentful/browserslist-config/blob/master/index.js)
 
 ### Client config
-The fields `resolveLinks` and `removeUnresolved` have been removed from the TS config interface for `createClient`. We still respect them for now, but you will see a warning in the console when using them. Instead, you should use one of the [chained clients](#chained-clients) to achieve the same result.
+The fields `resolveLinks` and `removeUnresolved` have been removed from the TS config interface for `createClient`. 
+We still respect them for now, but you will see a warning in the console when using them. Instead, you should use one of the [chained clients](./README.md#chained-clients) to achieve the same result.
 We kept the defaults. If you want to get a response without resolved links, please use the client chain `withoutLinkResolution`.
 
 #### Example
