@@ -298,7 +298,7 @@ Most methods also have examples which show you how to use them.
 
 ### Typescript
 
-This library is 100% written in Typescript. type definitions are bundled. Find out more about the advantages of using this library in conjunction with Typescript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
+This library is 100% written in Typescript. Type definitions are bundled. Find out more about the advantages of using this library in conjunction with Typescript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
 
 ### Advanced Concepts
 
