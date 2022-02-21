@@ -20,6 +20,15 @@ describe('getEntries via chained clients', () => {
   const clientWithoutLinkResolutionAndWithoutLinkResolution =
     client.withAllLocales.withoutLinkResolution
 
+  // TODO:
+  // add tests for these three clients
+  // (some tests are in tests.test.ts currently)
+  const clientWithoutUnresolvableLinks = client.withoutUnresolvableLinks
+  const clientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks =
+    client.withAllLocales.withoutUnresolvableLinks
+  const clientWithoutUnresolvableLinksAndWithAllLocales =
+    client.withoutUnresolvableLinks.withAllLocales
+
   const query = { 'sys.id': 'nyancat' }
 
   const matrix = [

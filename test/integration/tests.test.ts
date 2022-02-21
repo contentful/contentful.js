@@ -164,10 +164,55 @@ test('Gets entry with without link resolution but with includes', async () => {
   })
 })
 
-// TODO: add same test with client.withoutUnresolvable once that is implemented
+test('Gets entries with link resolution and includes, removing unresolvable links', async () => {
+  const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
+  const response = await removeUnresolvedClient.getEntries({
+    'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
+    include: 2,
+  })
+  expect(response.items[0].fields).toBeDefined()
+  expect(response.items[0].fields.bestFriend).toBeUndefined()
+})
 test('Gets entry with link resolution and includes, removing unresolvable links', async () => {
   const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
   const response = await removeUnresolvedClient.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  expect(response.fields).toBeDefined()
+  expect(response.fields.bestFriend).toBeUndefined()
+})
+
+// TODO move tests with client.withoutUnresolvableLinks to getEntries/getEntry integration test files
+// TODO add localized
+test('Gets entry with link resolution and includes, removing unresolvable links via client chain', async () => {
+  const response = await client.withoutUnresolvableLinks.getEntries({
+    'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
+    include: 2,
+  })
+  expect(response.items[0].fields).toBeDefined()
+  expect(response.items[0].fields.bestFriend).toBeUndefined()
+})
+test('Gets entry with link resolution and includes, removing unresolvable links via client chain', async () => {
+  const response = await client.withoutUnresolvableLinks.getEntry('4SEhTg8sYJ1H3wDAinzhTp', {
+    include: 2,
+  })
+  expect(response.fields).toBeDefined()
+  expect(response.fields.bestFriend).toBeUndefined()
+})
+
+test('Gets entries with link resolution and includes, removing unresolvable links, overriding client config with client chain', async () => {
+  const keepUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: false })
+  const response = await keepUnresolvedClient.withoutUnresolvableLinks.getEntries({
+    'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
+    include: 2,
+  })
+  expect(response.items[0].fields).toBeDefined()
+  expect(response.items[0].fields.bestFriend).toBeUndefined()
+})
+test('Gets entry with link resolution and includes, removing unresolvable links, overriding client config with client chain', async () => {
+  const keepUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: false })
+  const response = await keepUnresolvedClient.withoutUnresolvableLinks.getEntry(
+    '4SEhTg8sYJ1H3wDAinzhTp',
+    { include: 2 }
+  )
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toBeUndefined()
 })

@@ -1,7 +1,9 @@
 import createContentfulApi, {
-  ClientWithAllLocalesAndWithLinkResolution,
+  ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+  ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   ClientWithAllLocalesAndWithoutLinkResolution,
-  ClientWithLinkResolution,
+  ClientWithLinkResolutionAndWithoutUnresolvableLinks,
+  ClientWithLinkResolutionAndWithUnresolvableLinks,
   ClientWithoutLinkResolution,
   ContentfulClientApi,
   CreateContentfulApiParams,
@@ -9,15 +11,19 @@ import createContentfulApi, {
 } from './create-contentful-api'
 import {
   ChainOptions,
-  ChainOptionWithAllLocalesAndWithLinkResolution,
+  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   ChainOptionWithAllLocalesAndWithoutLinkResolution,
-  ChainOptionWithLinkResolution,
+  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+  ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
   ChainOptionWithoutLinkResolution,
+  ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
   DefaultChainOption,
-  isClientWithAllLocalesAndWithLinkResolution,
+  isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   isClientWithAllLocalesAndWithoutLinkResolution,
-  isClientWithLinkResolution,
+  isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+  isClientWithLinkResolutionAndWithUnresolvableLinks,
   isClientWithoutLinkResolution,
+  isClientWithLinkResolutionAndWithoutUnresolvableLinks,
 } from './utils/client-helpers'
 
 function create<OptionsType, ClientType>(
@@ -51,8 +57,9 @@ export const makeClient = ({
   // const { removeUnresolved, resolveLinks } = getGlobalOptions()
 
   function makeInnerClient(options: DefaultChainOption): DefaultClient & {
-    withAllLocales: ClientWithAllLocalesAndWithLinkResolution
+    withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
     withoutLinkResolution: ClientWithoutLinkResolution
+    withoutUnresolvableLinks: ClientWithLinkResolutionAndWithoutUnresolvableLinks
   }
   function makeInnerClient(
     options: ChainOptionWithoutLinkResolution
@@ -60,20 +67,30 @@ export const makeClient = ({
     withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
   }
   function makeInnerClient(
-    options: ChainOptionWithAllLocalesAndWithLinkResolution
-  ): ClientWithAllLocalesAndWithLinkResolution & {
+    options: ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+  ): ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks & {
     withoutLinkResolution: ClientWithAllLocalesAndWithoutLinkResolution
+    withoutUnresolvableLinks: ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
   }
   function makeInnerClient(
     options: ChainOptionWithAllLocalesAndWithoutLinkResolution
   ): ClientWithAllLocalesAndWithoutLinkResolution
   function makeInnerClient(
-    options: ChainOptions
-  ):
-    | ClientWithLinkResolution
+    options: ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+  ): ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+
+  function makeInnerClient(
+    options: ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks
+  ): ClientWithLinkResolutionAndWithoutUnresolvableLinks & {
+    withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+  }
+  function makeInnerClient(options: ChainOptions):
+    | ClientWithLinkResolutionAndWithUnresolvableLinks
     | ClientWithoutLinkResolution
-    | ClientWithAllLocalesAndWithLinkResolution
-    | ClientWithAllLocalesAndWithoutLinkResolution {
+    | ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+    | ClientWithAllLocalesAndWithoutLinkResolution
+    | ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks // TODO
+    | ClientWithLinkResolutionAndWithoutUnresolvableLinks {
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
       return create<
         ChainOptionWithAllLocalesAndWithoutLinkResolution,
@@ -81,19 +98,32 @@ export const makeClient = ({
       >({ http, getGlobalOptions }, options, makeInnerClient)
     }
 
-    if (isClientWithAllLocalesAndWithLinkResolution(options)) {
+    if (isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks(options)) {
       return create<
-        ChainOptionWithAllLocalesAndWithLinkResolution,
-        ClientWithAllLocalesAndWithLinkResolution
+        ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
+        ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
       >({ http, getGlobalOptions }, options, makeInnerClient)
     }
 
-    if (isClientWithLinkResolution(options)) {
-      return create<ChainOptionWithLinkResolution, ClientWithLinkResolution>(
-        { http, getGlobalOptions },
-        options,
-        makeInnerClient
-      )
+    if (isClientWithLinkResolutionAndWithUnresolvableLinks(options)) {
+      return create<
+        ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
+        ClientWithLinkResolutionAndWithUnresolvableLinks
+      >({ http, getGlobalOptions }, options, makeInnerClient)
+    }
+
+    if (isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
+      return create<
+        ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+        ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+      >({ http, getGlobalOptions }, options, makeInnerClient)
+    }
+
+    if (isClientWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
+      return create<
+        ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
+        ClientWithLinkResolutionAndWithoutUnresolvableLinks
+      >({ http, getGlobalOptions }, options, makeInnerClient)
     }
 
     if (isClientWithoutLinkResolution(options)) {
@@ -109,6 +139,7 @@ export const makeClient = ({
       {
         withoutLinkResolution: false,
         withAllLocales: false,
+        withoutUnresolvableLinks: false,
       },
       makeInnerClient
     )
@@ -119,16 +150,28 @@ export const makeClient = ({
     {
       withoutLinkResolution: false,
       withAllLocales: false,
+      withoutUnresolvableLinks: false,
     }
   )
 
   return {
     ...client,
     get withAllLocales() {
-      return makeInnerClient({ withAllLocales: true, withoutLinkResolution: false })
+      return makeInnerClient({
+        withAllLocales: true,
+        withoutLinkResolution: false,
+        withoutUnresolvableLinks: false,
+      })
     },
     get withoutLinkResolution() {
       return makeInnerClient({ withAllLocales: false, withoutLinkResolution: true })
+    },
+    get withoutUnresolvableLinks() {
+      return makeInnerClient({
+        withAllLocales: false,
+        withoutLinkResolution: false,
+        withoutUnresolvableLinks: true,
+      })
     },
   }
 }
