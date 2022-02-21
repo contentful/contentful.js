@@ -12,12 +12,10 @@
 
 <p align="center">
   <a href="README.md">Readme</a> · 
-  <a href="SETUP.md">Setup</a> · 
   <a href="MIGRATION.md">Migration</a> · 
   <a href="ADVANCED.md">Advanced</a> · 
   <a href="TYPESCRIPT.md">Typescript</a> · 
-  <a href="CONTRIBUTING.md">Contributing</a> · 
-  <a href="SECURITY.md">Security</a>
+  <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 <p align="center">
