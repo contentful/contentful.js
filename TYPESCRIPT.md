@@ -34,6 +34,8 @@
     - [Dynamic query types](#dynamic-field-query-keys)
 - [Response types](#response-types)
     - [withAllLocales](#withalllocales)
+    - [withoutLinkResolution](#withoutlinkresolution)
+    - [withoutUnresolvableLinks](#withoutunresolvablelinks)
 - [Generating type definitions](#generating-type-definitions-for-content-types)
 
 ## Introduction
@@ -106,9 +108,10 @@ Due to the limitation with recursive types, we can only calculate keys on the ro
 There is currently no way to calculate keys for nested (recursive) content types.
 
 ## Response types
-With version `10.0.0` we introduce chained clients to make better assumptions on response types.
+With version `10.0.0` we introduce [chained clients](./README.md#chained-clients) to make better assumptions on response types. 
 
-### withAllLocales
+
+### `withAllLocales`
 If the current chain includes `withAllLocales`, `getEntry` and `getEntries` expect an optional second generic parameter for all existing locales in your space.
 If the `Locale` type is provided, your response type will define all locale keys for your field values:
 
@@ -136,6 +139,64 @@ The return type of `getEntry` is matching the shape
   }
 }
 ```
+
+### `withoutLinkResolution`
+If the current chain includes `withoutLinkResolution`, the returned type doesn't define linked entities as Link objects.
+
+```typescript
+import * as contentful from "contentful";
+
+const client = contentful.createClient({
+  space: "<space-id>",
+  accessToken: "<content-delivery-token>",
+});
+
+const Fields = { 
+  relatedProduct: Contentful.EntryFields.Entry 
+}
+const Locales = 'en-US' | 'de-DE';
+const entry = client.withoutLinkResolution.getEntry<Fields, Locales>() 
+```
+
+The return type of `getEntry` is matching the shape
+
+```json
+{
+  "fields": {
+    "productName": {
+      "type": "Link",
+      "linkType": "Entry",
+      "id": "linkedProductId" 
+    }
+  }
+}
+```
+### `withoutUnresolvableLinks`
+If the current chain includes `withoutUnresolvableLinks`, the returned type doesn't include linked fields that are not resolvable.
+
+```typescript
+import * as contentful from "contentful";
+
+const client = contentful.createClient({
+  space: "<space-id>",
+  accessToken: "<content-delivery-token>",
+});
+
+const Fields = { 
+  relatedProduct: Contentful.EntryFields.Entry 
+}
+const Locales = 'en-US' | 'de-DE';
+const entry = client.withoutUnresolvableLinks.getEntry<Fields, Locales>() 
+```
+
+The return type of `getEntry` is matching the shape
+
+```json
+{
+  "fields": {}
+}
+```
+
 
 ## Generating type definitions for content types
 It is recommended to define field types for all your content types. This helps the type system to infer all possible query keys/value types for you.
