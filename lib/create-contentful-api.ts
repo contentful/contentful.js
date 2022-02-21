@@ -530,7 +530,8 @@ export default function createContentfulApi<OptionType>(
       )
     }
     return internalGetEntry<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>(id, query, {
-      withLinkResolution: true,
+      withoutLinkResolution: false,
+      isUsingDefaultClient: true,
     })
   }
 
@@ -549,7 +550,7 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
       query,
-      { withLinkResolution: true }
+      { withoutLinkResolution: false, isUsingDefaultClient: true }
     )
   }
 
@@ -558,7 +559,7 @@ export default function createContentfulApi<OptionType>(
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
     return internalGetEntry<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(id, query, {
-      withLinkResolution: true,
+      withoutLinkResolution: false,
       withoutUnresolvableLinks: true,
     })
   }
@@ -568,7 +569,7 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
       query,
-      { withLinkResolution: true, withoutUnresolvableLinks: true }
+      { withoutLinkResolution: false, withoutUnresolvableLinks: true }
     )
   }
 
@@ -586,7 +587,7 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntry<
       EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
-    >(id, { ...query, locale: '*' }, { withLinkResolution: true })
+    >(id, { ...query, locale: '*' }, { withoutLinkResolution: false })
   }
 
   async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
@@ -602,7 +603,7 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    >({ ...query, locale: '*' }, { withLinkResolution: true })
+    >({ ...query, locale: '*' }, { withoutLinkResolution: false })
   }
 
   async function getEntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
@@ -619,7 +620,11 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntry<
       EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
-    >(id, { ...query, locale: '*' }, { withLinkResolution: true, withoutUnresolvableLinks: true })
+    >(
+      id,
+      { ...query, locale: '*' },
+      { withoutLinkResolution: false, withoutUnresolvableLinks: true }
+    )
   }
 
   async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
@@ -635,7 +640,7 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    >({ ...query, locale: '*' }, { withLinkResolution: true, withoutUnresolvableLinks: true })
+    >({ ...query, locale: '*' }, { withoutLinkResolution: false, withoutUnresolvableLinks: true })
   }
 
   async function getEntryWithoutLinkResolution<Fields>(
@@ -646,7 +651,7 @@ export default function createContentfulApi<OptionType>(
       throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
     }
     return internalGetEntry<EntryWithoutLinkResolution<Fields>>(id, query, {
-      withLinkResolution: false,
+      withoutLinkResolution: true,
     })
   }
 
@@ -657,7 +662,7 @@ export default function createContentfulApi<OptionType>(
       throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
     }
     return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, {
-      withLinkResolution: false,
+      withoutLinkResolution: true,
     })
   }
 
@@ -677,7 +682,7 @@ export default function createContentfulApi<OptionType>(
     return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
       id,
       { ...query, locale: '*' },
-      { withLinkResolution: false }
+      { withoutLinkResolution: true }
     )
   }
 
@@ -695,7 +700,7 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
-    >({ ...query, locale: '*' }, { withLinkResolution: false })
+    >({ ...query, locale: '*' }, { withoutLinkResolution: true })
   }
 
   async function makeGetEntry<Fields>(
@@ -733,7 +738,11 @@ export default function createContentfulApi<OptionType>(
   async function internalGetEntry<RValue>(
     id: string,
     query,
-    options: { withLinkResolution: boolean; withoutUnresolvableLinks?: boolean }
+    options: {
+      withoutLinkResolution: boolean
+      withoutUnresolvableLinks?: boolean
+      isUsingDefaultClient?: boolean
+    }
   ): Promise<RValue> {
     if (!id) {
       throw notFoundError(id)
@@ -783,9 +792,17 @@ export default function createContentfulApi<OptionType>(
 
   async function internalGetEntries<RType>(
     query: Record<string, any>,
-    options: { withLinkResolution: boolean; withoutUnresolvableLinks?: boolean }
+    options: {
+      withoutLinkResolution: boolean
+      withoutUnresolvableLinks?: boolean
+      isUsingDefaultClient?: boolean
+    }
   ): Promise<RType> {
-    const { withLinkResolution, withoutUnresolvableLinks } = options
+    const {
+      withoutLinkResolution,
+      withoutUnresolvableLinks,
+      isUsingDefaultClient = false,
+    } = options
     const { resolveLinks: resolveLinksGlobal, removeUnresolved: removeUnresolvedGlobal } =
       getGlobalOptions()
 
@@ -800,8 +817,12 @@ export default function createContentfulApi<OptionType>(
       // This override is a bit fragile at the moment, as it relies on some options being undefined.
       // TODO: make it more resilient & add tests if overrides work correctly in all cases
       return resolveCircular(entries, {
-        resolveLinks: withLinkResolution ?? query.resolveLinks ?? resolveLinksGlobal ?? true,
-        removeUnresolved: withoutUnresolvableLinks ?? removeUnresolvedGlobal ?? false,
+        resolveLinks: !isUsingDefaultClient
+          ? !withoutLinkResolution
+          : query.resolveLinks ?? resolveLinksGlobal ?? true,
+        removeUnresolved: !isUsingDefaultClient
+          ? withoutUnresolvableLinks
+          : removeUnresolvedGlobal ?? false,
       }) as RType
     } catch (error) {
       errorHandler(error as AxiosError)

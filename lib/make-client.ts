@@ -26,7 +26,7 @@ import {
   isClientWithLinkResolutionAndWithoutUnresolvableLinks,
 } from './utils/client-helpers'
 
-function create<OptionsType, ClientType>(
+function create<OptionsType extends ChainOptions, ClientType>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options: OptionsType,
   makeInnerClient: (options: OptionsType) => ClientType
