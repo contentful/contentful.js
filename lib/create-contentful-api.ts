@@ -800,7 +800,7 @@ export default function createContentfulApi<OptionType>(
       // This override is a bit fragile at the moment, as it relies on some options being undefined.
       // TODO: make it more resilient & add tests if overrides work correctly in all cases
       return resolveCircular(entries, {
-        resolveLinks: withLinkResolution ?? query.resolveLinks ?? resolveLinksGlobal ?? false,
+        resolveLinks: withLinkResolution ?? query.resolveLinks ?? resolveLinksGlobal ?? true,
         removeUnresolved: withoutUnresolvableLinks ?? removeUnresolvedGlobal ?? false,
       }) as RType
     } catch (error) {
