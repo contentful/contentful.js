@@ -76,7 +76,7 @@ const entriesWithoutUnresolvableLinks = await client.withoutUnresolvableLinks.ge
 ```
 
 ### Query param `locale='*'`
-The query param `locale='*'` has been deprecated in favor of the client chain `withALlLocales`. This is due to its special response format.
+The query param `locale='*'` has been deprecated in favor of the client chain `withAllLocales`. This is due to its special response format.
 
 ### Typescript
 We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](ADVANCED.md#Typescript).
