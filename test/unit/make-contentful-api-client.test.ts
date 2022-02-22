@@ -2,6 +2,7 @@ import { HeadersDefaults } from 'axios'
 import createGlobalOptions from '../../lib/create-global-options'
 import { makeClient } from '../../lib/make-client'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
+// @ts-ignore
 import * as mocks from './mocks'
 
 class RejectError extends Error {

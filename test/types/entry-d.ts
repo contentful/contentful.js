@@ -2,12 +2,17 @@
 // explicitly reference it here once.
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
-import { expectAssignable } from 'tsd'
+import { expectAssignable, expectNotAssignable } from 'tsd'
 import {
   Entry,
   EntryFields,
+  EntryLink,
   EntrySys,
+  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   EntryWithAllLocalesAndWithoutLinkResolution,
+  EntryWithLinkResolutionAndWithoutUnresolvableLinks,
+  EntryWithLinkResolutionAndWithUnresolvableLinks,
 } from '../../lib'
 
 export const stringValue = ''
@@ -15,6 +20,11 @@ export const numberValue = 123
 export const booleanValue = true
 export const dateValue = '2018-05-03T09:18:16.329Z'
 export const metadataValue = { tags: [] }
+export const entryLinkValue: EntryLink = {
+  type: 'Link',
+  linkType: 'Entry',
+  id: stringValue,
+}
 
 const entrySysValue: EntrySys = {
   contentType: { sys: { id: stringValue, type: 'Link', linkType: 'ContentType' } },
@@ -27,38 +37,275 @@ const entrySysValue: EntrySys = {
   createdAt: dateValue,
 }
 
-expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
+const entryBasics = {
   sys: entrySysValue,
+  metadata: metadataValue,
+}
+
+type ExampleEntryFields = {
+  numberField: EntryFields.Integer
+}
+
+/**
+ * @namespace: Typescript - type test
+ * @description: A simple Entry with generic fields
+ */
+expectAssignable<Entry<Record<string, any>>>({
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    anyRandomFieldName: numberValue,
+  },
+})
+
+/**
+ * @namespace: Typescript - type test
+ * @description: A simple Entry generic
+ */
+expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
+  ...entryBasics,
   fields: {
     stringField: stringValue,
   },
-  metadata: metadataValue,
 })
 
+/**
+ * @namespace: Typescript - type test
+ * @description: A simple Entry generic with a referenced fields wildcard
+ */
 expectAssignable<
-  EntryWithAllLocalesAndWithoutLinkResolution<{ stringField: EntryFields.Text }, 'US' | 'DE'>
+  Entry<{
+    stringField: EntryFields.Text
+    referenceField: EntryFields.Link<Record<string, any>>
+  }>
 >({
-  sys: entrySysValue,
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    referenceField: {
+      ...entryBasics,
+      fields: {},
+    },
+  },
+})
+
+/**
+ * @namespace: Typescript - type test
+ * @description: EntryWithLinkResolutionAndWithUnresolvableLinks referenced entries can be either resolved or unresolved.
+ * unresolved entries are referenced as entry links. Fields with multiple references can have resolved and unresolved mixed.
+ */
+expectAssignable<
+  EntryWithLinkResolutionAndWithUnresolvableLinks<{
+    stringField: EntryFields.Text
+    resolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+    unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+    resolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    unresolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    mixedMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    resolvableReferenceField: {
+      ...entryBasics,
+      fields: {
+        numberField: numberValue,
+      },
+    },
+    unresolvableReferenceField: entryLinkValue,
+    resolvableMultiReferenceField: [
+      {
+        ...entryBasics,
+        fields: {
+          numberField: numberValue,
+        },
+      },
+    ],
+    unresolvableMultiReferenceField: [entryLinkValue],
+    mixedMultiReferenceField: [
+      {
+        ...entryBasics,
+        fields: {
+          numberField: numberValue,
+        },
+      },
+      entryLinkValue,
+    ],
+  },
+})
+
+/**
+ * @namespace: Typescript - type test
+ * @description: EntryWithAllLocalesAndWithoutLinkResolution All fields are mapped to the given set of locales.
+ * linked entries are all rendered as entry links.
+ */
+expectAssignable<
+  EntryWithAllLocalesAndWithoutLinkResolution<
+    {
+      stringField: EntryFields.Text
+      referenceField: EntryFields.Link<ExampleEntryFields>
+      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
   fields: {
     stringField: {
       US: stringValue,
       DE: stringValue,
     },
+    referenceField: {
+      DE: entryLinkValue,
+      US: entryLinkValue,
+    },
+    multiReferenceField: {
+      DE: [entryLinkValue],
+      US: [entryLinkValue],
+    },
   },
-  metadata: metadataValue,
 })
 
-// TODO fix test
-/*
-expectAssignable<EntryWithLinkResolution<{ referenceField: EntryLink }>>({
-  sys: entrySysValue,
+/* resolved links are NOT assignable */
+expectNotAssignable<
+  EntryWithAllLocalesAndWithoutLinkResolution<
+    {
+      referenceField: EntryFields.Link<ExampleEntryFields>
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
   fields: {
     referenceField: {
-      sys: entrySysValue,
-      fields: {
-        stringField: stringValue
-      }
-    }
-  }
+      DE: { numberField: { US: numberValue, DE: numberValue } },
+      US: { numberField: { US: numberValue, DE: numberValue } },
+    },
+  },
 })
+
+/**
+ * @namespace: Typescript - type test
+ * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
+ * linked entries are all rendered as inlined references, or if not resolvable, as entry links. multi reference fields can have mixed content.
  */
+expectAssignable<
+  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+    {
+      stringField: EntryFields.Text
+      referenceField: EntryFields.Link<ExampleEntryFields>
+      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    stringField: {
+      US: stringValue,
+      DE: stringValue,
+    },
+    referenceField: {
+      DE: {
+        ...entryBasics,
+        fields: { numberField: { US: numberValue, DE: numberValue } },
+      },
+      US: {
+        ...entryBasics,
+        fields: { numberField: { US: numberValue } },
+      },
+    },
+    multiReferenceField: {
+      DE: [
+        {
+          ...entryBasics,
+          fields: { numberField: { US: numberValue, DE: numberValue } },
+        },
+      ],
+      US: [
+        {
+          ...entryBasics,
+          fields: { numberField: { US: numberValue, DE: numberValue } },
+        },
+      ],
+    },
+  },
+})
+
+/**
+ * @namespace: Typescript - type test
+ * @description: EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entries are present.
+ * unresolved entries are completely removed.
+ */
+expectAssignable<
+  EntryWithLinkResolutionAndWithoutUnresolvableLinks<{
+    stringField: EntryFields.Text
+    resolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+    unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+    resolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    unresolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    resolvableReferenceField: {
+      ...entryBasics,
+      fields: {
+        numberField: numberValue,
+      },
+    },
+    unresolvableReferenceField: undefined,
+    resolvableMultiReferenceField: [
+      {
+        ...entryBasics,
+        fields: {
+          numberField: numberValue,
+        },
+      },
+    ],
+    unresolvableMultiReferenceField: undefined,
+  },
+})
+
+/**
+ * @namespace: Typescript - type test
+ * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
+ */
+expectAssignable<
+  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+    {
+      stringField: EntryFields.Text
+      referenceField: EntryFields.Link<ExampleEntryFields>
+      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    stringField: {
+      US: stringValue,
+      DE: stringValue,
+    },
+    referenceField: {
+      DE: {
+        ...entryBasics,
+        fields: { numberField: { US: numberValue, DE: numberValue } },
+      },
+      US: {
+        ...entryBasics,
+        fields: { numberField: { US: numberValue } },
+      },
+    },
+    multiReferenceField: {
+      DE: [
+        {
+          ...entryBasics,
+          fields: { numberField: { US: numberValue, DE: numberValue } },
+        },
+      ],
+    },
+  },
+})
