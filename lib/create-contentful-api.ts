@@ -531,7 +531,6 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntry<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>(id, query, {
       withoutLinkResolution: false,
-      isUsingDefaultClient: true,
     })
   }
 
@@ -550,7 +549,7 @@ export default function createContentfulApi<OptionType>(
     }
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
       query,
-      { withoutLinkResolution: false, isUsingDefaultClient: true }
+      { withoutLinkResolution: false }
     )
   }
 
@@ -741,7 +740,6 @@ export default function createContentfulApi<OptionType>(
     options: {
       withoutLinkResolution: boolean
       withoutUnresolvableLinks?: boolean
-      isUsingDefaultClient?: boolean
     }
   ): Promise<RValue> {
     if (!id) {
@@ -795,16 +793,9 @@ export default function createContentfulApi<OptionType>(
     options: {
       withoutLinkResolution: boolean
       withoutUnresolvableLinks?: boolean
-      isUsingDefaultClient?: boolean
     }
   ): Promise<RType> {
-    const {
-      withoutLinkResolution,
-      withoutUnresolvableLinks,
-      isUsingDefaultClient = false,
-    } = options
-    const { resolveLinks: resolveLinksGlobal, removeUnresolved: removeUnresolvedGlobal } =
-      getGlobalOptions()
+    const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     try {
       const entries = await get({
@@ -812,17 +803,10 @@ export default function createContentfulApi<OptionType>(
         path: 'entries',
         config: createRequestConfig({ query: normalizeSelect(query) }),
       })
-      // overrides:
-      // client chains > resolveLinks in getEntries > resolveLinks in global config
-      // This override is a bit fragile at the moment, as it relies on some options being undefined.
-      // TODO: make it more resilient & add tests if overrides work correctly in all cases
+
       return resolveCircular(entries, {
-        resolveLinks: !isUsingDefaultClient
-          ? !withoutLinkResolution
-          : query.resolveLinks ?? resolveLinksGlobal ?? true,
-        removeUnresolved: !isUsingDefaultClient
-          ? withoutUnresolvableLinks
-          : removeUnresolvedGlobal ?? false,
+        resolveLinks: !withoutLinkResolution,
+        removeUnresolved: !!withoutUnresolvableLinks,
       }) as RType
     } catch (error) {
       errorHandler(error as AxiosError)
