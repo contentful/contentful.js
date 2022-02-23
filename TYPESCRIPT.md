@@ -85,7 +85,7 @@ getEntries({
 ### Dynamic (field) query keys
 ![](images/dynamic-query-keys.png)
 
-Dynamic query keys are based on the given shape of the expected entries content type.
+Dynamic query keys are based on the given shape of the expected entries' content type.
 To calculate dynamic keys, we have to pass-in the shape of the fields:
 ```typescript
 type ExampleEntryFields = {
