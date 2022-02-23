@@ -92,7 +92,6 @@ You should do
 const entries = client.withoutLinkResolution.getEntries()
 ````
 
-We will still respect the query parameter, but a deprecation warning is thrown.
 
 ### TypeScript
 We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](TYPESCRIPT.md).
