@@ -8,13 +8,13 @@
 
 <h1 align='center'>Content Delivery API</h1>
 
-<h3 align="center">Typescript</h3>
+<h3 align="center">TypeScript</h3>
 
 <p align="center">
   <a href="README.md">Readme</a> · 
   <a href="MIGRATION.md">Migration</a> · 
   <a href="ADVANCED.md">Advanced</a> · 
-  <a href="TYPESCRIPT.md">Typescript</a> · 
+  <a href="TYPESCRIPT.md">TypeScript</a> · 
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 

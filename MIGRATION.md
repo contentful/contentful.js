@@ -14,7 +14,7 @@
   <a href="README.md">Readme</a> · 
   <a href="MIGRATION.md">Migration</a> · 
   <a href="ADVANCED.md">Advanced</a> · 
-  <a href="TYPESCRIPT.md">Typescript</a> · 
+  <a href="TYPESCRIPT.md">TypeScript</a> · 
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -49,7 +49,7 @@ From version 3.0.0 onwards, you can access documentation for a specific version 
 You can upgrade to a major version using `npm update contentful`
 
 ## Migration to contentful.js 10.x
-Version `10.0.0` is a complete rewrite in Typescript. This version introduces a new concept of [chained clients](#chained-clients). 
+Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a new concept of [chained clients](#chained-clients). 
 
 ### Version compatibility
 - Node: >= 12 (LTS)
@@ -94,7 +94,7 @@ const entries = client.withoutLinkResolution.getEntries()
 
 We will still respect the query parameter, but a deprecation warning is thrown.
 
-### Typescript
+### TypeScript
 We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](TYPESCRIPT.md).
 
 ## Migration from contentful.js 9.x

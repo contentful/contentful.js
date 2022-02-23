@@ -14,7 +14,7 @@
   <a href="README.md">Readme</a> · 
   <a href="MIGRATION.md">Migration</a> · 
   <a href="ADVANCED.md">Advanced</a> · 
-  <a href="TYPESCRIPT.md">Typescript</a> · 
+  <a href="TYPESCRIPT.md">TypeScript</a> · 
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -294,9 +294,9 @@ Most methods also have examples which show you how to use them.
 - **Can I use it with typescript?** - Yes, there is also a type definition file
 - **Is the library doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos
 
-### Typescript
+### TypeScript
 
-This library is 100% written in Typescript. Type definitions are bundled. Find out more about the advantages of using this library in conjunction with Typescript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
+This library is 100% written in TypeScript. Type definitions are bundled. Find out more about the advantages of using this library in conjunction with TypeScript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
 
 ### Advanced Concepts
 
