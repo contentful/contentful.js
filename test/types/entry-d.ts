@@ -236,7 +236,7 @@ expectAssignable<
 /**
  * @namespace: Typescript - type test
  * @description: EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entries are present.
- * unresolved entries are completely removed.
+ * unresolvable entries are completely removed.
  */
 expectAssignable<
   EntryWithLinkResolutionAndWithoutUnresolvableLinks<{
