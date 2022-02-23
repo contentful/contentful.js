@@ -1,7 +1,7 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { ContentTypeLink } from './link'
+import { ContentTypeLink, EntryLink } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
@@ -11,9 +11,6 @@ export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
 }
 
-/**
- * Types of fields found in an Entry
- */
 export declare namespace EntryFields {
   type Symbol = string
   type Text = string
@@ -22,7 +19,7 @@ export declare namespace EntryFields {
   type Date = `${number}-${number}-${number}T${number}:${number}:${number}Z`
   type Boolean = boolean
 
-  interface Location {
+  type Location = {
     lat: string
     lon: string
   }
@@ -49,99 +46,104 @@ export type BasicEntryField =
  */
 export interface Entry<T> {
   sys: EntrySys
-  fields: T
   metadata: Metadata
+  fields: T
 }
 
-// TODO use EntryLink from link.ts instead
-// TODO remove generic
-interface EntryLink<T> {
-  sys: {
-    type: 'Link'
-    linkType: 'Entry'
-    id: string
-  }
-}
-
-// TODO check if this type is properly named.
-// This looks like it is with link resolution, not without
-// without would mean that EntryLink is returned for all linked entries
-// TYPE SHOULD BE: localized, all linked entries are EntryLink objects
 export interface EntryWithAllLocalesAndWithoutLinkResolution<
   Fields extends FieldsType,
   Locales extends LocaleCode
 > {
   sys: EntrySys
+  metadata: Metadata
   fields: {
     [FieldName in keyof Fields]: {
-      [LocaleName in Locales]?: Fields[FieldName]
+      [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<any>
+        ? EntryLink
+        : Fields[FieldName] extends EntryFields.Link<any>[]
+        ? EntryLink[]
+        : Fields[FieldName]
     }
   }
-  metadata: Metadata
 }
 
-// TODO check if this type is properly named.
-// Return type should include resolved entries and (if unresolvable), EntryLink types
-// TYPE SHOULD BE: all linked entries are EITHER resolved entries OR EntryLink objects
 export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> = {
   sys: EntrySys
+  metadata: Metadata
   fields: {
-    [FieldName in keyof Fields]: Fields[FieldName] extends
-      | EntryLink<infer LinkedEntryFields>
-      | undefined
-      ? EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields>
-      : Fields[FieldName] extends Array<EntryLink<infer LinkedEntryFields>> | undefined
-      ? Array<EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields>>
+    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
+      ? EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink
+      : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
+      ? (EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink)[]
       : Fields[FieldName]
   }
-  metadata: Metadata
 }
 
-// TYPE SHOULD BE: localized, all linked entries are EITHER resolved entries OR EntryLink objects
 export type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
 > = {
   sys: EntrySys
+  metadata: Metadata
   fields: {
     [FieldName in keyof Fields]: {
-      [LocaleName in Locales]?: Fields[FieldName] extends
-        | EntryLink<infer LinkedEntryFields>
-        | undefined
-        ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-            LinkedEntryFields,
-            Locales
-          >
-        : Fields[FieldName] extends Array<EntryLink<infer LinkedEntryFields>> | undefined
-        ? Array<
-            EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-              LinkedEntryFields,
-              Locales
-            >
-          >
+      [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
+        ?
+            | EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+                LinkedEntryFields,
+                Locales
+              >
+            | undefined
+        : Fields[FieldName] extends Array<EntryFields.Link<infer LinkedEntryFields>>
+        ?
+            | EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+                LinkedEntryFields,
+                Locales
+              >[]
+            | undefined
         : Fields[FieldName]
     }
   }
-  metadata: Metadata
 }
-// TODO: the two below entry types' return shape still need to be defined,
-// assigning them some other Entry types now just to ease implementation, but they're wrong.
 
-// TODO define return shape
-// linked entries will be resolved. there will be no case where EntryLink is returned
-// (because links are either resolved or, if unresolvable, removed)
-// TYPE SHOULD BE: all linked entries are resolved entries. NO EntryLink objects
-export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> =
-  EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
+export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> = {
+  sys: EntrySys
+  metadata: Metadata
+  fields: {
+    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
+      ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields> | undefined
+      : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
+      ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields>[] | undefined
+      : Fields[FieldName]
+  }
+}
 
-// TODO define return shape
-// linked entries will be resolved. there will be no case where EntryLink is returned
-// (because links are either resolved or, if unresolvable, removed)
-// TYPE SHOULD BE: localized, all linked entries are resolved entries. NO EntryLink objects
 export type EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+> = {
+  sys: EntrySys
+  metadata: Metadata
+  fields: {
+    [FieldName in keyof Fields]: {
+      [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
+        ?
+            | EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+                LinkedEntryFields,
+                Locales
+              >
+            | undefined
+        : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
+        ?
+            | EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+                LinkedEntryFields,
+                Locales
+              >[]
+            | undefined
+        : Fields[FieldName]
+    }
+  }
+}
 
 export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TEntry> {
   errors?: Array<any>

@@ -50,7 +50,7 @@
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx}'",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx}'",
     "pretest": "rimraf coverage",
-    "test": "npm run test:unit && npm run test:integration && npm run lint",
+    "test": "npm run test:unit && npm run test:integration && npm run lint && npm run test:types",
     "test:unit": "jest ./test/unit",
     "test:unit:watch": "jest ./test/unit --watch",
     "test:integration": "jest ./test/integration",
