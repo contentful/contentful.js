@@ -273,7 +273,7 @@ You can also combine client chains:
 const entries = await client.withoutLinkResolution.withAllLocales.getEntries()
 ```
 
-The default behaviour didn't change, you can still do
+The default behaviour doesn't change, you can still do:
 ```js
 const entries = await client.getEntries()
 ```
