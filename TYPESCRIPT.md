@@ -86,7 +86,7 @@ getEntries({
 ![](images/dynamic-query-keys.png)
 
 Dynamic query keys are based on the given shape of the expected entries' content type.
-To calculate dynamic keys, we have to pass-in the shape of the fields:
+To calculate dynamic keys, we have to define the shape of the fields of the entries' content type:
 ```typescript
 type ExampleEntryFields = {
   productName: Contentful.EntryFields.Text,
