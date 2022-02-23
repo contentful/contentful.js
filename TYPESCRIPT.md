@@ -96,7 +96,7 @@ type ExampleEntryFields = {
 }
 ```
 
-This gives us the relevant information needed, to calculate the dynamic keys and their possible value types.
+We can then pass this shape to our `getEntries` call. This gives us the relevant information needed to calculate the dynamic keys and their possible value types.
 ```typescript
 getEntries<ExampleEntryFields>({
     'fields.price[in]': [10, 20]
