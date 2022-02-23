@@ -805,8 +805,8 @@ export default function createContentfulApi<OptionType>(
       })
 
       return resolveCircular(entries, {
-        resolveLinks: !withoutLinkResolution,
-        removeUnresolved: !!withoutUnresolvableLinks,
+        resolveLinks: !withoutLinkResolution ?? true,
+        removeUnresolved: withoutUnresolvableLinks ?? false,
       }) as RType
     } catch (error) {
       errorHandler(error as AxiosError)
