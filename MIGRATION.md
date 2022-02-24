@@ -1,6 +1,35 @@
+<!-- shared header  START --> 
+
+<p align="center">
+  <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
+    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="150">
+  </a>
+</p>
+
+<h1 align='center'>Content Delivery API</h1>
+
+<h3 align="center">Migration</h3>
+
+<p align="center">
+  <a href="README.md">Readme</a> · 
+  <a href="MIGRATION.md">Migration</a> · 
+  <a href="ADVANCED.md">Advanced</a> · 
+  <a href="TYPESCRIPT.md">TypeScript</a> · 
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
+
+<p align="center">
+  <a href="https://www.contentful.com/slack/">
+    <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
+  </a>
+</p>
+
+<!-- shared header  END --> 
+
 # Migration information
 
 - [Migration information](#migration-information)
+  - [Migration to contentful.js 10.x](#migration-to-contentfuljs-10x)
   - [Migration from contentful.js 9.x](#migration-from-contentfuljs-9x)
   - [Migration from contentful.js 8.x](#migration-from-contentfuljs-8x)
   - [Migration from contentful.js 7.x](#migration-from-contentfuljs-7x)
@@ -18,6 +47,55 @@
 From version 3.0.0 onwards, you can access documentation for a specific version by visiting `https://contentful.github.io/contentful.js/contentful/<VERSION>`.
 
 You can upgrade to a major version using `npm update contentful`
+
+## Migration to contentful.js 10.x
+Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a new concept of [chained clients](#chained-clients). 
+
+### Version compatibility
+- Node: >= 12 (LTS)
+- Chrome: >= 80,
+- Edge >= 80,
+- Firefox >= 75,
+- Safari >= 13,
+
+We completely dropped support for old IE browsers (no `legacy` bundle)
+> You can always find the supported browsers in our shared [browserlist-config](https://github.com/contentful/browserslist-config/blob/master/index.js)
+
+### Client config
+The fields `resolveLinks` and `removeUnresolved` have been removed from the TS config interface for `createClient`. 
+Instead, you should use one of the [chained clients](README.md#chained-clients) to achieve the same result.
+We kept the defaults (linked entities are by default resolved, and, if unresolvable, represented as a Link object). 
+If you want to get a response without resolved links, please use the client chain `withoutLinkResolution`.
+
+#### Example
+```js
+const entriesWithoutResolvedLinks = await client.withoutLinkResolution.getEntries()
+```
+```js
+const entriesWithoutUnresolvableLinks = await client.withoutUnresolvableLinks.getEntries()
+```
+
+### Query param `locale='*'`
+The query param `locale='*'` has been deprecated in favor of the client chain `withAllLocales`. This is due to its special response format.
+
+### Query param `resolveLinks`
+The query param `resolveLink` has been deprecated in favor of the client chain `withoutLinkResolution`. This is due to its special response format.
+
+Instead of 
+
+```js
+const entries = client.getEntries({resolveLinks: false})
+````
+
+You should do
+
+```js
+const entries = client.withoutLinkResolution.getEntries()
+````
+
+
+### TypeScript
+We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](TYPESCRIPT.md).
 
 ## Migration from contentful.js 9.x
 
