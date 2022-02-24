@@ -45,6 +45,9 @@ function create<OptionsType extends ChainOptions, ClientType>(
   Object.defineProperty(response, 'withoutLinkResolution', {
     get: () => makeInnerClient({ ...options, withoutLinkResolution: true }),
   })
+  Object.defineProperty(response, 'withoutUnresolvableLinks', {
+    get: () => makeInnerClient({ ...options, withoutUnresolvableLinks: true }),
+  })
   return Object.create(response) as ClientType
 }
 
@@ -84,12 +87,14 @@ export const makeClient = ({
   ): ClientWithLinkResolutionAndWithoutUnresolvableLinks & {
     withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
   }
-  function makeInnerClient(options: ChainOptions):
+  function makeInnerClient(
+    options: ChainOptions
+  ):
     | ClientWithLinkResolutionAndWithUnresolvableLinks
     | ClientWithoutLinkResolution
     | ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
     | ClientWithAllLocalesAndWithoutLinkResolution
-    | ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks // TODO
+    | ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
     | ClientWithLinkResolutionAndWithoutUnresolvableLinks {
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
       return create<

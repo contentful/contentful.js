@@ -185,7 +185,7 @@ test.skip('Gets entry with link resolution and includes, removing unresolvable l
 
 // TODO move tests with client.withoutUnresolvableLinks to getEntries/getEntry integration test files
 // TODO add localized
-test('Gets entry with link resolution and includes, removing unresolvable links via client chain', async () => {
+test('Gets entries with link resolution and includes, removing unresolvable links via client chain', async () => {
   const response = await client.withoutUnresolvableLinks.getEntries({
     'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
     include: 2,
