@@ -200,7 +200,7 @@ The return type of `getEntry` is matching the shape
 
 ## Generating type definitions for content types
 It is recommended to define field types for all your content types. This helps the type system to infer all possible query keys/value types for you.
-There are several OSS projects out there to generate type definitions for content types:
+There are several OSS projects out there to generate type definitions for Contentful content types:
 
 - [cf-content-types-generator](https://github.com/contentful-userland/cf-content-types-generator)
 - [contentful-typescript-codegen](https://github.com/intercom/contentful-typescript-codegen)
