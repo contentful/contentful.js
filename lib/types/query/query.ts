@@ -37,7 +37,7 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
 
-// create-contentful-api complained about non optional fields when initialized with {}
+// create-contentful-api complained about non-optional fields when initialized with {}
 export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
   EntryFieldsQueries<Fields> &
     SysQueries<EntrySys> &

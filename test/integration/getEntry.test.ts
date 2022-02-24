@@ -1,4 +1,5 @@
 import * as contentful from '../../lib/contentful'
+// @ts-ignore
 import { localeSpaceParams, params, previewParams } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -18,7 +19,7 @@ describe('getEntry via chained clients', () => {
   const clientWithoutLinkResolution = client.withoutLinkResolution
   const clientWithAllLocalesAndWithoutLinkResolution = client.withAllLocales.withoutLinkResolution
   const clientWithoutLinkResolutionAndWithoutLinkResolution =
-    client.withAllLocales.withoutLinkResolution
+    client.withoutLinkResolution.withAllLocales
 
   const entryId = 'nyancat'
 

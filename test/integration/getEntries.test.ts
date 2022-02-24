@@ -1,4 +1,5 @@
 import * as contentful from '../../lib/contentful'
+// @ts-ignore
 import { localeSpaceParams, params, previewParams } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -18,7 +19,16 @@ describe('getEntries via chained clients', () => {
   const clientWithoutLinkResolution = client.withoutLinkResolution
   const clientWithAllLocalesAndWithoutLinkResolution = client.withAllLocales.withoutLinkResolution
   const clientWithoutLinkResolutionAndWithoutLinkResolution =
-    client.withAllLocales.withoutLinkResolution
+    client.withoutLinkResolution.withAllLocales
+
+  // TODO:
+  // add tests for these three clients
+  // (some tests are in tests.test.ts currently)
+  const clientWithoutUnresolvableLinks = client.withoutUnresolvableLinks
+  const clientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks =
+    client.withAllLocales.withoutUnresolvableLinks
+  const clientWithoutUnresolvableLinksAndWithAllLocales =
+    client.withoutUnresolvableLinks.withAllLocales
 
   const query = { 'sys.id': 'nyancat' }
 
