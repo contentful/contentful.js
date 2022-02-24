@@ -172,7 +172,7 @@ The return type of `getEntry` is matching the shape
 }
 ```
 ### `withoutUnresolvableLinks`
-If the current chain includes `withoutUnresolvableLinks`, the returned type doesn't include linked fields that are not resolvable.
+If the current chain includes `withoutUnresolvableLinks`, the returned type doesn't include linked fields that are not resolvable, for example if the linked entity does not exist anymore or is not yet published.
 
 ```typescript
 import * as contentful from "contentful";
