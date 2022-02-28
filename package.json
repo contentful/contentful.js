@@ -62,7 +62,7 @@
     "test:demo-browser": "rimraf ./test/output-integration/browser/node-modules && npm --prefix ./test/output-integration/browser install && npm --prefix ./test/output-integration/browser run test",
     "test:types": "./node_modules/.bin/tsd",
     "test:prepush": "npm run build && npm run test:unit && npm run test:size",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "export PUBLISH_RUN=true && npm run build && unset PUBLISH_RUN",
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
     "precommit": "npm run lint && npm run prettier:check",
