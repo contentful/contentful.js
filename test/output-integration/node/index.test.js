@@ -15,3 +15,15 @@ test('Gets entry', async () => {
   expect(response.sys).toBeDefined()
   expect(response.fields).toBeDefined()
 })
+
+test('Has correct user agent version', async () => {
+  const version = require('../../../package.json').version
+  // When we make a publish run, we need to ensure that semantic-release has set a valid package version
+  if (process.env.PUBLISH_RUN === 'true') {
+    expect(client.version).toEqual(expect.not.stringContaining('semantic-release'))
+    expect(client.version).toEqual(version)
+  } else {
+    expect(client.version).toEqual(version)
+  }
+  console.log(`Client version: ${client.version}`)
+})

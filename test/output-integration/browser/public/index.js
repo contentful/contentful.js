@@ -11,6 +11,8 @@ async function run() {
 
   const response = await client.getEntry('nyancat')
   document.querySelector('#content').innerHTML = response.sys.id
+
+  document.querySelector('#version').innerHTML = client.version
 }
 
 run()
