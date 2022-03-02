@@ -77,7 +77,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
   const http = createHttpClient(axios, config)
 
   if (!http.defaults.baseURL) {
-    throw new Error('Please define a bseURL')
+    throw new Error('Please define a baseURL')
   }
 
   const getGlobalOptions = createGlobalOptions({

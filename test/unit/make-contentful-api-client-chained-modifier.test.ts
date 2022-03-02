@@ -65,13 +65,13 @@ describe('Contentful API client chained modifier', () => {
   describe('Restricted client params', () => {
     describe('Default client', () => {
       describe('getEntries', () => {
-        it('throws a warning when locale is passed to the options', async () => {
-          const consoleWarnSpy = jest.spyOn(global.console, 'warn')
-          await api.getEntries({ locale: '*' })
-          expect(consoleWarnSpy).toBeCalled()
-          expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-            `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
-          )
+        it('throws an error when locale=* is passed to the options', async () => {
+          await expect(
+            api.getEntries({
+              // @ts-ignore
+              locale: '*',
+            })
+          ).rejects.toThrow(ValidationError)
         })
 
         it('throws a warning when resolveLinks is explicitly set to false', async () => {
@@ -85,13 +85,13 @@ describe('Contentful API client chained modifier', () => {
       })
 
       describe('getEntry', () => {
-        it('throws a warning when locale is passed to the options', async () => {
-          const consoleWarnSpy = jest.spyOn(global.console, 'warn')
-          await api.getEntry('id', { locale: '*' })
-          expect(consoleWarnSpy).toBeCalled()
-          expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-            `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
-          )
+        it('throws an error when locale=* is passed to the options', async () => {
+          await expect(
+            api.getEntry('id', {
+              // @ts-ignore
+              locale: '*',
+            })
+          ).rejects.toThrow(ValidationError)
         })
 
         it('throws a warning when resolveLinks parameter is explicitly set to false', async () => {

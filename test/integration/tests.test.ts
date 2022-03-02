@@ -509,8 +509,8 @@ describe('Sync API', () => {
   })
 })
 
-test("Gets entries with linked includes with all locales using locale:'*' parameter", async () => {
-  const response = await client.getEntries({ include: 5, 'sys.id': 'nyancat', locale: '*' })
+test('Gets entries with linked includes with all locales using the withAllLocales client chain modifier', async () => {
+  const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
   assertLocalizedEntriesResponse(response)
 })
 
@@ -519,11 +519,10 @@ test('Gets entries with linked includes with all locales using withAllLocales cl
   assertLocalizedEntriesResponse(response)
 })
 
-test("Gets entries with linked includes with all locales using locale:'*' parameter in preview", async () => {
-  const response = await previewClient.getEntries({
+test('Gets entries with linked includes with all locales using the withAllLocales client chain modifier', async () => {
+  const response = await previewClient.withAllLocales.getEntries({
     include: 5,
     'sys.id': 'nyancat',
-    locale: '*',
   })
   assertLocalizedEntriesResponse(response)
 })
