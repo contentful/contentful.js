@@ -41,7 +41,6 @@ import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
-import { ValidationError } from './utils/validation-error'
 import {
   ChainOptions,
   isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
@@ -51,13 +50,14 @@ import {
   isClientWithLinkResolutionAndWithUnresolvableLinks,
   isClientWithoutLinkResolution,
 } from './utils/client-helpers'
+import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseClient {
   getEntry<Fields extends FieldsType>(
     id: string,
-    query?: EntriesQueries<Fields>
+    query?: EntryQueries
   ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
@@ -68,10 +68,10 @@ export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseCl
 export interface ClientWithoutLinkResolution extends BaseClient {
   getEntry<Fields extends FieldsType>(
     id: string,
-    query?: EntryQueries & { resolveLinks?: never }
+    query?: EntryQueries
   ): Promise<EntryWithoutLinkResolution<Fields>>
   getEntries<Fields extends FieldsType>(
-    query?: EntriesQueries<Fields> & { resolveLinks?: never }
+    query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
 }
 export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
@@ -90,10 +90,10 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntryQueries & { locale?: never; resolveLinks?: never }
+    query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
-    query?: EntriesQueries<Fields> & { locale?: never; resolveLinks?: never }
+    query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
@@ -101,7 +101,7 @@ export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType>(
     id: string,
-    query?: EntriesQueries<Fields>
+    query?: EntryQueries
   ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
@@ -111,11 +111,11 @@ export interface ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvable
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
-    query?: EntriesQueries<Fields>
+    query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>>
 
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<
     EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
   >
@@ -509,8 +509,6 @@ export default function createContentfulApi<OptionType>(
     return makeGetEntries<Fields>(query, options) as unknown
   }
 
-  // TODO Decide how we want to deal with defaults
-
   const getEntryDefault = getEntryWithLinkResolutionAndWithUnresolvableLinks
 
   const getEntriesDefault = getEntriesWithLinkResolutionAndWithUnresolvableLinks
@@ -519,12 +517,6 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    validateLocaleParam(query)
-    if ('resolveLinks' in query) {
-      console.warn(
-        'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
-      )
-    }
     return internalGetEntry<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>(id, query, {
       withoutLinkResolution: false,
     })
@@ -533,12 +525,6 @@ export default function createContentfulApi<OptionType>(
   async function getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    validateLocaleParam(query)
-    if ('resolveLinks' in query) {
-      console.warn(
-        'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
-      )
-    }
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
       query,
       { withoutLinkResolution: false }
@@ -549,8 +535,6 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
-    validateLocaleParam(query)
-
     return internalGetEntry<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(id, query, {
       withoutLinkResolution: false,
       withoutUnresolvableLinks: true,
@@ -560,8 +544,6 @@ export default function createContentfulApi<OptionType>(
   async function getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
-    validateLocaleParam(query)
-
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
       query,
       { withoutLinkResolution: false, withoutUnresolvableLinks: true }
@@ -577,9 +559,6 @@ export default function createContentfulApi<OptionType>(
   ): Promise<
     EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
   > {
-    if (query.locale) {
-      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
-    }
     return internalGetEntry<
       EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
     >(id, { ...query, locale: '*' }, { withoutLinkResolution: false })
@@ -593,9 +572,6 @@ export default function createContentfulApi<OptionType>(
   ): Promise<
     EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
   > {
-    if (query.locale) {
-      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
-    }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
     >({ ...query, locale: '*' }, { withoutLinkResolution: false })
@@ -610,9 +586,6 @@ export default function createContentfulApi<OptionType>(
   ): Promise<
     EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
   > {
-    if (query.locale) {
-      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
-    }
     return internalGetEntry<
       EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
     >(
@@ -630,9 +603,6 @@ export default function createContentfulApi<OptionType>(
   ): Promise<
     EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
   > {
-    if (query.locale) {
-      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
-    }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
     >({ ...query, locale: '*' }, { withoutLinkResolution: false, withoutUnresolvableLinks: true })
@@ -642,11 +612,6 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithoutLinkResolution<Fields>> {
-    validateLocaleParam(query)
-
-    if ('resolveLinks' in query) {
-      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
-    }
     return internalGetEntry<EntryWithoutLinkResolution<Fields>>(id, query, {
       withoutLinkResolution: true,
     })
@@ -655,11 +620,6 @@ export default function createContentfulApi<OptionType>(
   async function getEntriesWithoutLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
-    validateLocaleParam(query)
-
-    if ('resolveLinks' in query) {
-      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
-    }
     return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, {
       withoutLinkResolution: true,
     })
@@ -672,12 +632,6 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
-    if (query.locale) {
-      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
-    }
-    if ('resolveLinks' in query) {
-      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
-    }
     return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
       id,
       { ...query, locale: '*' },
@@ -691,12 +645,6 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
-    if (query.locale) {
-      throw new ValidationError('locale', 'The `locale` parameter is not allowed')
-    }
-    if ('resolveLinks' in query) {
-      throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
-    }
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
     >({ ...query, locale: '*' }, { withoutLinkResolution: true })
@@ -710,6 +658,11 @@ export default function createContentfulApi<OptionType>(
       withAllLocales: false,
     }
   ) {
+    const { withAllLocales } = options
+
+    validateLocaleParam(query, withAllLocales as boolean)
+    validateResolveLinksParam(query)
+
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
       return getEntryWithAllLocalesAndWithoutLinkResolution<Fields>(id, query)
     }
@@ -767,6 +720,11 @@ export default function createContentfulApi<OptionType>(
       withAllLocales: false,
     }
   ) {
+    const { withAllLocales } = options
+
+    validateLocaleParam(query, withAllLocales as boolean)
+    validateResolveLinksParam(query)
+
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
       return getEntriesWithAllLocalesAndWithoutLinkResolution<Fields>(query)
     }
@@ -876,15 +834,6 @@ export default function createContentfulApi<OptionType>(
   function parseEntries(data) {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     return resolveCircular(data, { resolveLinks, removeUnresolved })
-  }
-
-  function validateLocaleParam(query) {
-    if (query.locale === '*') {
-      throw new ValidationError(
-        'locale',
-        `To fetch an entry in all existing locales use client.withAllLocales instead of the locale='*' parameter.`
-      )
-    }
   }
 
   /*
