@@ -519,11 +519,7 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    if (query.locale === '*') {
-      console.warn(
-        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
-      )
-    }
+    validateLocaleParam(query)
     if ('resolveLinks' in query) {
       console.warn(
         'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
@@ -537,11 +533,7 @@ export default function createContentfulApi<OptionType>(
   async function getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    if (query.locale === '*') {
-      console.warn(
-        `If you want to fetch entries in all existing locales, we recommend you to use client.withAllLocales instead of the locale='*' parameter.`
-      )
-    }
+    validateLocaleParam(query)
     if ('resolveLinks' in query) {
       console.warn(
         'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
@@ -557,6 +549,8 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
+    validateLocaleParam(query)
+
     return internalGetEntry<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(id, query, {
       withoutLinkResolution: false,
       withoutUnresolvableLinks: true,
@@ -566,6 +560,8 @@ export default function createContentfulApi<OptionType>(
   async function getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
+    validateLocaleParam(query)
+
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
       query,
       { withoutLinkResolution: false, withoutUnresolvableLinks: true }
@@ -646,6 +642,8 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithoutLinkResolution<Fields>> {
+    validateLocaleParam(query)
+
     if ('resolveLinks' in query) {
       throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
     }
@@ -657,6 +655,8 @@ export default function createContentfulApi<OptionType>(
   async function getEntriesWithoutLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
+    validateLocaleParam(query)
+
     if ('resolveLinks' in query) {
       throw new ValidationError('resolveLinks', 'The `resolveLinks` parameter is not allowed')
     }
@@ -876,6 +876,15 @@ export default function createContentfulApi<OptionType>(
   function parseEntries(data) {
     const { resolveLinks, removeUnresolved } = getGlobalOptions({})
     return resolveCircular(data, { resolveLinks, removeUnresolved })
+  }
+
+  function validateLocaleParam(query) {
+    if (query.locale === '*') {
+      throw new ValidationError(
+        'locale',
+        `To fetch an entry in all existing locales use client.withAllLocales instead of the locale='*' parameter.`
+      )
+    }
   }
 
   /*
