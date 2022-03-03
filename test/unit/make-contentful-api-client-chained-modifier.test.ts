@@ -65,26 +65,28 @@ describe('Contentful API client chained modifier', () => {
   describe('Restricted client params', () => {
     describe('Default client', () => {
       describe('getEntries', () => {
+        it('passes when locale=en-US is passed to the options', async () => {
+          const entries = await api.getEntries({ locale: 'en-US' })
+          expect(entries.items).toBeDefined()
+        })
         it('throws an error when locale=* is passed to the options', async () => {
           await expect(
-            api.getEntries({
-              // @ts-ignore
-              locale: '*',
-            })
+            // @ts-ignore
+            api.getEntries({ locale: '*' })
           ).rejects.toThrow(ValidationError)
         })
 
-        it('throws a warning when resolveLinks is explicitly set to false', async () => {
-          const consoleWarnSpy = jest.spyOn(global.console, 'warn')
-          await api.getEntries({ resolveLinks: false })
-          expect(consoleWarnSpy).toBeCalled()
-          expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-            'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
-          )
+        it('throws an error when resolveLinks parameter is used', async () => {
+          // @ts-ignore
+          await expect(api.getEntries({ resolveLinks: false })).rejects.toThrow(ValidationError)
         })
       })
 
       describe('getEntry', () => {
+        it('passes when locale=en-US is passed to the options', async () => {
+          const entry = await api.getEntry('id', { locale: 'en-US' })
+          expect(entry).toBeDefined()
+        })
         it('throws an error when locale=* is passed to the options', async () => {
           await expect(
             api.getEntry('id', {
@@ -94,33 +96,29 @@ describe('Contentful API client chained modifier', () => {
           ).rejects.toThrow(ValidationError)
         })
 
-        it('throws a warning when resolveLinks parameter is explicitly set to false', async () => {
-          const consoleWarnSpy = jest.spyOn(global.console, 'warn')
-          await api.getEntry('id', { resolveLinks: false })
-          expect(consoleWarnSpy).toBeCalled()
-          expect(consoleWarnSpy.mock.calls[0][0]).toBe(
-            'The use of the `resolveLinks` parameter is discouraged. By default, links are resolved. If you do not want to resolve links, we recommend you to use client.withoutLinkResolution.'
-          )
+        it('throws an error when resolveLinks parameter is used', async () => {
+          // @ts-ignore
+          await expect(api.getEntry('id', { resolveLinks: false })).rejects.toThrow(ValidationError)
         })
       })
     })
 
     describe('client with chained modifiers', () => {
       describe('getEntries', () => {
-        it('throws error when locale parameter is passed to client.withAllLocales', async () => {
+        it('throws error when any locale parameter is passed to client.withAllLocales', async () => {
           await expect(
             api.withAllLocales.getEntries({
               // @ts-ignore
-              locale: '*',
+              locale: 'en-US',
             })
           ).rejects.toThrow(ValidationError)
         })
 
-        it('throws error when locale parameter is passed to client.withAllLocales.withoutLinkResolution', async () => {
+        it('throws error when any locale parameter is passed to client.withAllLocales.withoutLinkResolution', async () => {
           await expect(
             api.withAllLocales.withoutLinkResolution.getEntries({
               // @ts-ignore
-              locale: '*',
+              locale: 'en-US',
             })
           ).rejects.toThrow(ValidationError)
         })
@@ -155,20 +153,20 @@ describe('Contentful API client chained modifier', () => {
       })
 
       describe('getEntry', () => {
-        it('throws error when locale parameter is passed to client.withAllLocales', async () => {
+        it('throws error when any locale parameter is passed to client.withAllLocales', async () => {
           await expect(
             api.withAllLocales.getEntry('id', {
               // @ts-ignore
-              locale: '*',
+              locale: 'en-US',
             })
           ).rejects.toThrow(ValidationError)
         })
 
-        it('throws error when locale parameter is passed to client.withAllLocales.withoutLinkResolution', async () => {
+        it('throws error when any locale parameter is passed to client.withAllLocales.withoutLinkResolution', async () => {
           await expect(
             api.withAllLocales.withoutLinkResolution.getEntry('id', {
               // @ts-ignore
-              locale: '*',
+              locale: 'en-US',
             })
           ).rejects.toThrow(ValidationError)
         })

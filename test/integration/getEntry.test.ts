@@ -38,7 +38,7 @@ describe('getEntry via chained clients', () => {
       expect(response.fields.bestFriend).toBeUndefined()
     })
 
-    test.skip('client.withoutUnresolvableLinks.withAllLocales', async () => {
+    test('client.withoutUnresolvableLinks.withAllLocales', async () => {
       const response = await client.withoutUnresolvableLinks.withAllLocales.getEntry(
         entryWithUnresolvableLink,
         {
@@ -47,8 +47,7 @@ describe('getEntry via chained clients', () => {
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
-      //TODO: why are we returning an empty object?
-      expect(response.fields.bestFriend).toBeUndefined()
+      expect(response.fields.bestFriend).toEqual({})
     })
   })
 
@@ -73,7 +72,7 @@ describe('getEntry via chained clients', () => {
       expect(response.fields.bestFriend['en-US'].sys.type).toBe('Link')
     })
 
-    test.skip('client.withAllLocales.withoutUnresolvableLinks', async () => {
+    test('client.withAllLocales.withoutUnresolvableLinks', async () => {
       const response = await client.withAllLocales.withoutUnresolvableLinks.getEntry(
         entryWithUnresolvableLink,
         {
@@ -82,8 +81,7 @@ describe('getEntry via chained clients', () => {
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
-      //TODO: why are we returning an empty object?
-      expect(response.fields.bestFriend).toBeUndefined()
+      expect(response.fields.bestFriend).toEqual({})
     })
   })
 

@@ -165,22 +165,32 @@ test('Gets entry with without link resolution but with includes', async () => {
   })
 })
 
-test.skip('Gets entries with link resolution and includes, removing unresolvable links', async () => {
-  //TODO: passing removeUnresolved to the default client, should throw an error
+test('Gets entries with link resolution and includes, does not consider global `removeUnresolved` option', async () => {
   const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
   const response = await removeUnresolvedClient.getEntries({
     'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
     include: 2,
   })
   expect(response.items[0].fields).toBeDefined()
-  expect(response.items[0].fields.bestFriend).toBeUndefined()
+  expect(response.items[0].fields.bestFriend).toMatchObject({
+    sys: {
+      type: 'Link',
+      linkType: 'Entry',
+      id: '6SiPbntBPYYjnVHmipxJBF',
+    },
+  })
 })
-test.skip('Gets entry with link resolution and includes, removing unresolvable links', async () => {
-  //TODO: passing removeUnresolved to the default client, should throw an error
+test('Gets entry with link resolution and includes, does not consider global `removeUnresolved` option', async () => {
   const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
   const response = await removeUnresolvedClient.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
   expect(response.fields).toBeDefined()
-  expect(response.fields.bestFriend).toBeUndefined()
+  expect(response.fields.bestFriend).toMatchObject({
+    sys: {
+      type: 'Link',
+      linkType: 'Entry',
+      id: '6SiPbntBPYYjnVHmipxJBF',
+    },
+  })
 })
 
 // TODO move tests with client.withoutUnresolvableLinks to getEntries/getEntry integration test files
@@ -192,16 +202,7 @@ test('Gets entry with link resolution and includes, removing unresolvable links 
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toBeUndefined()
 })
-//TODO: Double check this behavior when we remove the support of the global config removeUnresolved
-test('Gets entries with link resolution and includes, removing unresolvable links, overriding client config with client chain', async () => {
-  const keepUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: false })
-  const response = await keepUnresolvedClient.withoutUnresolvableLinks.getEntries({
-    'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
-    include: 2,
-  })
-  expect(response.items[0].fields).toBeDefined()
-  expect(response.items[0].fields.bestFriend).toBeUndefined()
-})
+
 test('Gets entry with link resolution and includes, removing unresolvable links, overriding client config with client chain', async () => {
   const keepUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: false })
   const response = await keepUnresolvedClient.withoutUnresolvableLinks.getEntry(
@@ -511,19 +512,6 @@ describe('Sync API', () => {
 
 test('Gets entries with linked includes with all locales using the withAllLocales client chain modifier', async () => {
   const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
-  assertLocalizedEntriesResponse(response)
-})
-
-test('Gets entries with linked includes with all locales using withAllLocales client modifier', async () => {
-  const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
-  assertLocalizedEntriesResponse(response)
-})
-
-test('Gets entries with linked includes with all locales using the withAllLocales client chain modifier', async () => {
-  const response = await previewClient.withAllLocales.getEntries({
-    include: 5,
-    'sys.id': 'nyancat',
-  })
   assertLocalizedEntriesResponse(response)
 })
 

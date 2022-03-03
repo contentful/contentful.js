@@ -55,10 +55,6 @@ export const makeClient = ({
   http,
   getGlobalOptions,
 }: CreateContentfulApiParams): ContentfulClientApi => {
-  // TODO: how to deal with default based on global config.
-  // maybe we should get default from global options as such:
-  // const { removeUnresolved, resolveLinks } = getGlobalOptions()
-
   function makeInnerClient(options: DefaultChainOption): DefaultClient & {
     withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
     withoutLinkResolution: ClientWithoutLinkResolution
