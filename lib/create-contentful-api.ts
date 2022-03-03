@@ -660,7 +660,7 @@ export default function createContentfulApi<OptionType>(
   ) {
     const { withAllLocales } = options
 
-    validateLocaleParam(query, !!withAllLocales)
+    validateLocaleParam(query, withAllLocales as boolean)
     validateResolveLinksParam(query)
 
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
@@ -722,7 +722,7 @@ export default function createContentfulApi<OptionType>(
   ) {
     const { withAllLocales } = options
 
-    validateLocaleParam(query, !!withAllLocales)
+    validateLocaleParam(query, withAllLocales as boolean)
     validateResolveLinksParam(query)
 
     if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
