@@ -8,15 +8,7 @@ import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 import { makeClient } from './make-client'
-
-export interface AxiosProxyConfig {
-  host: string
-  port: number
-  auth?: {
-    username: string
-    password: string
-  }
-}
+import type { AxiosRequestConfig } from 'axios'
 
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string
 
@@ -27,9 +19,9 @@ export interface CreateClientParams {
   insecure?: boolean
   host?: string
   basePath?: string
-  httpAgent?: any
-  httpsAgent?: any
-  proxy?: AxiosProxyConfig
+  httpAgent?: AxiosRequestConfig['httpAgent']
+  httpsAgent?: AxiosRequestConfig['httpsAgent']
+  proxy?: AxiosRequestConfig['proxy']
   headers?: any
   adapter?: any
   application?: string
