@@ -142,7 +142,7 @@ export interface BaseClient {
    * console.log(asset)
    * ```
    */
-  getAsset(id: string): Promise<Asset>
+  getAsset(id: string, query?: { locale?: string }): Promise<Asset>
 
   /**
    * Gets a collection of Assets
@@ -501,7 +501,7 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntry<Fields>(id: string, query: EntriesQueries<Fields> = {}) {
+  async function getEntry<Fields>(id: string, query: EntryQueries = {}) {
     return makeGetEntry<Fields>(id, query, options) as unknown
   }
 

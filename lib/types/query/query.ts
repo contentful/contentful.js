@@ -16,7 +16,7 @@ type FixedPagedOptions = {
 
 type FixedQueryOptions = {
   include?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-  // locale?: string
+  locale?: string
   query?: string
 }
 
@@ -47,9 +47,7 @@ export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
     }
 >
 
-export type EntryQueries = Partial<FixedQueryOptions & Record<string, any>> & {
-  resolveLinks?: never
-}
+export type EntryQueries = Omit<FixedQueryOptions, 'query'>
 
 export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> =
   | (ExistenceFilter<Fields, 'fields'> &
