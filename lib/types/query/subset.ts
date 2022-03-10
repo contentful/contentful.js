@@ -2,10 +2,9 @@ import { BasicEntryField, EntryFields } from '..'
 import { ConditionalQueries, NonEmpty } from './util'
 
 type SubsetFilterTypes = 'in' | 'nin'
-type SupportedTypes = Exclude<
-  BasicEntryField,
-  EntryFields.Location | EntryFields.RichText | EntryFields.Object
->
+type SupportedTypes =
+  | Exclude<BasicEntryField, EntryFields.Location | EntryFields.RichText | EntryFields.Object>
+  | undefined
 
 /**
  * @desc inclusion & exclusion

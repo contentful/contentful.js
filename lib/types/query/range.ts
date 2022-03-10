@@ -3,7 +3,7 @@ import { ConditionalQueries, NonEmpty } from './util'
 
 type RangeFilterTypes = 'lt' | 'lte' | 'gt' | 'gte'
 
-type SupportedTypes = EntryFields.Date | EntryFields.Number | EntryFields.Integer
+type SupportedTypes = EntryFields.Date | EntryFields.Number | EntryFields.Integer | undefined
 
 /**
  * @desc Range operators are available that you can apply to date and number fields
