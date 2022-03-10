@@ -4,9 +4,9 @@ import { NonEmpty } from './util'
 
 type Types = EntryFields.Location
 
-export type ProximitySearchFilterInput = [number, number]
-export type BoundingBoxSearchFilterInput = [number, number, number, number]
-export type BoundingCircleSearchFilterInput = [number, number, number]
+export type ProximitySearchFilterInput = [number, number] | undefined
+export type BoundingBoxSearchFilterInput = [number, number, number, number] | undefined
+export type BoundingCircleSearchFilterInput = [number, number, number] | undefined
 
 type BaseLocationFilter<
   Fields,

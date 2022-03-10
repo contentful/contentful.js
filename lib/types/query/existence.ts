@@ -8,7 +8,7 @@ import { ConditionalFixedQueries } from './util'
  */
 export type ExistenceFilter<Fields, Prefix extends string> = ConditionalFixedQueries<
   Fields,
-  BasicEntryField,
+  BasicEntryField | undefined,
   boolean,
   Prefix,
   '[exists]'
