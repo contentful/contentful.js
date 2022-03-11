@@ -48,6 +48,11 @@ test('Gets content types', async () => {
   expect(response.items).toBeDefined()
 })
 
+test('Gets content types with search query', async () => {
+  const response = await client.getContentTypes({ query: 'cat' })
+  expect(response.items).toHaveLength(1)
+})
+
 test('Gets entry', async () => {
   const response = await client.getEntry('nyancat')
   expect(response.sys).toBeDefined()

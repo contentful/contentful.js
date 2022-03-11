@@ -59,39 +59,47 @@ export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseCl
     id: string,
     query?: EntryQueries
   ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+
   // TODO: think about using collection generic as response type:
   // ): Promise<Collection<EntryWithLinkResolution<Fields>>>
 }
+
 export interface ClientWithoutLinkResolution extends BaseClient {
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
   ): Promise<EntryWithoutLinkResolution<Fields>>
+
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
 }
+
 export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>>
+
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
     query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<
     EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
   >
 }
+
 export interface ClientWithAllLocalesAndWithoutLinkResolution
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
   ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
     query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
@@ -103,10 +111,12 @@ export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
     id: string,
     query?: EntryQueries
   ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
   ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
 }
+
 export interface ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
@@ -196,8 +206,8 @@ export interface BaseClient {
    * console.log(response.items)
    * ```
    */
-  // TODO: Reconfirm that getContentTypes doesn't take query param
-  getContentTypes(): Promise<ContentTypeCollection>
+
+  getContentTypes(query?: { query?: string }): Promise<ContentTypeCollection>
 
   /**
    * Gets a collection of Entries
@@ -493,11 +503,11 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getContentTypes(): Promise<ContentTypeCollection> {
+  async function getContentTypes(query: { query?: string } = {}): Promise<ContentTypeCollection> {
     return get<ContentTypeCollection>({
       context: 'environment',
       path: 'content_types',
-      config: createRequestConfig({ query: {} }),
+      config: createRequestConfig({ query }),
     })
   }
 
@@ -561,7 +571,14 @@ export default function createContentfulApi<OptionType>(
   > {
     return internalGetEntry<
       EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
-    >(id, { ...query, locale: '*' }, { withoutLinkResolution: false })
+    >(
+      id,
+      {
+        ...query,
+        locale: '*',
+      },
+      { withoutLinkResolution: false }
+    )
   }
 
   async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
@@ -574,7 +591,13 @@ export default function createContentfulApi<OptionType>(
   > {
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    >({ ...query, locale: '*' }, { withoutLinkResolution: false })
+    >(
+      {
+        ...query,
+        locale: '*',
+      },
+      { withoutLinkResolution: false }
+    )
   }
 
   async function getEntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
@@ -605,7 +628,13 @@ export default function createContentfulApi<OptionType>(
   > {
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    >({ ...query, locale: '*' }, { withoutLinkResolution: false, withoutUnresolvableLinks: true })
+    >(
+      {
+        ...query,
+        locale: '*',
+      },
+      { withoutLinkResolution: false, withoutUnresolvableLinks: true }
+    )
   }
 
   async function getEntryWithoutLinkResolution<Fields>(
@@ -647,7 +676,13 @@ export default function createContentfulApi<OptionType>(
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
     return internalGetEntries<
       EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
-    >({ ...query, locale: '*' }, { withoutLinkResolution: true })
+    >(
+      {
+        ...query,
+        locale: '*',
+      },
+      { withoutLinkResolution: true }
+    )
   }
 
   async function makeGetEntry<Fields>(
@@ -817,6 +852,7 @@ export default function createContentfulApi<OptionType>(
       data: { expiresAt },
     })
   }
+
   async function getLocales(query = {}): Promise<LocaleCollection> {
     return get<LocaleCollection>({
       context: 'environment',
