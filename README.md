@@ -47,16 +47,12 @@
   </a>
 
 JavaScript library for the
-Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/)
-and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to
-easily access your content stored in Contentful with your JavaScript applications.
+Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your content stored in Contentful with your JavaScript applications.
 
 **What is Contentful?**
 
-[Contentful](https://www.contentful.com/) provides content infrastructure for digital teams to power websites, apps, and
-devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for
-structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content
-creators to ship their products faster.
+[Contentful](https://www.contentful.com/) provides content infrastructure for digital teams to power websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for
+structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship their products faster.
 
 <details>
 <summary>Table of contents</summary>
@@ -97,15 +93,12 @@ creators to ship their products faster.
 
 ## Core Features
 
-- Content retrieval
-  through [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/)
-  and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
+- Content retrieval through [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
 - [Synchronization](https://www.contentful.com/developers/docs/concepts/sync/)
 - [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
 - [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
 - Built in rate limiting with recovery procedures
-- Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/) (**since v6.0.0 -
-  06. April 2018**)
+- Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/) (since `v6.0.0`)
 
 ### Supported browsers and Node.js versions:
 
@@ -126,8 +119,7 @@ const contentful = require("contentful/contentful.node")
 
 ## Getting started
 
-In order to get started with the Contentful JS library you'll need not only to install it, but also to get credentials
-which will allow you to have access to your content in Contentful.
+In order to get started with the Contentful JS library you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.
 
 - [Installation](#installation)
 - [Your first request](#your-first-request)
@@ -145,8 +137,7 @@ npm install contentful
 
 For browsers, we recommend to download the library via npm or yarn to ensure 100% availability.
 
-If you'd like to use a standalone built file you can use the following script tag or download it
-from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
+If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
 
 ```html
 
@@ -187,8 +178,7 @@ Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of 
 
 ### Using this library with the Preview API
 
-This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token,
-available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
+This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
 const contentful = require("contentful");
@@ -206,14 +196,11 @@ our [reference documentation](https://contentful.github.io/contentful.js)
 
 To get your own content from Contentful, an app should authenticate with an OAuth bearer token.
 
-You can create API keys using the [Contentful web interface](https://app.contentful.com). Go to the app, open the space
-that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section
-and create your first token. Done.
+You can create API keys using the [Contentful web interface](https://app.contentful.com). Go to the app, open the space that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section and create your first token. Done.
 
 Don't forget to also get your Space ID.
 
-For more information, check
-the [Contentful REST API reference on Authentication](https://www.contentful.com/developers/docs/references/authentication/)
+For more information, check the [Contentful REST API reference on Authentication](https://www.contentful.com/developers/docs/references/authentication/)
 .
 
 ## Documentation & References
@@ -225,8 +212,7 @@ the [Contentful REST API reference on Authentication](https://www.contentful.com
 - [Advanced Concepts](#advanced-concepts)
 - [Migration](#migration)
 
-To help you get the most out of this library, we've prepared all available client configuration options, a reference
-documentation, tutorials and other examples that will help you learn and understand how to use this library.
+To help you get the most out of this library, we've prepared all available client configuration options, a reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
 
 ### Configuration
 
@@ -234,17 +220,16 @@ The `createClient` method supports several options you may set to achieve the ex
 
 ```js
 contentful.createClient({
-  ...your
-  config here ...
+  ...your config here ...
 })
 ```
+The configuration options belong to two categories: request config and response config.
+##### Request configuration options
 
 | Name                                 | Default                     | Description                                                                                                                                                                                                                                                                                                      |
 |--------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessToken`                        |                             | **
-Required**. Your CDA access token.                                                                                                                                                                                                                                                                             |
-| `space`                              |                             | **
-Required**. Your Space ID.                                                                                                                                                                                                                                                                                     |
+| `accessToken`                        |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                             |
+| `space`                              |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                     |
 | `environment`                        | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                              |
 | `host`                               | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                    |
 | `basePath`                           | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                            |
@@ -264,103 +249,55 @@ Required**. Your Space ID.                                                      
 | `requestLogger`                      | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                       |
 | `responseLogger`                     | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                     |
 
+##### Response configuration options
+> :warning: **Response config options** are in the process of being **deprecated** (`v10.0.0`).
+They still work for the `sync` and `parseEntries` methods. 
+The `getEntries` and `getEntry` methods already use the new [Chained Clients](#chained-clients) approach.
+
+| Name                                 | Default                     | Description                                                                                                                                                                                                                                                                                                      |
+|--------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <code>resolveLinks</code>    | true                            | Turn off to disable link resolving.                                                                                                                                                                                                                                                      |
+| <code>removeUnresolved</code> | false                       | Remove fields from response for unresolvable links.|  
+
 ### Chained Clients
 
-> Introduced in `v10.0.0`
+> Introduced in `v10.0.0`.
 
-The contentful.js library returns calls to `getEntries` (and `getEntry`) in six different shapes, depending on the three
-configurations listed below.
+The contentful.js library returns calls to `getEntries` and `getEntry` in six different shapes, depending on the three configurations listed below.
 
-In order to provide type support for each configuration, we provide the possibility to chain modifiers to the Contentful
-client, providing the correct return types corresponding to the used modifiers.
+In order to provide type support for each configuration, we provide the possibility to chain modifiers to the Contentful client, providing the correct return types corresponding to the used modifiers.
 
 This way, we make developing with `contentful.js` much more predictable and safer.
 
-When initialising a client, you will receive an instance of the [`DefaultClient`](lib/create-contentful-api.ts#L91)
-shape.
+When initialising a client, you will receive an instance of the [`DefaultClient`](lib/create-contentful-api.ts#L91) shape.
 
 | Chain                      | Modifier                                                                                                                                                |
 |----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| default                    | Linked entries will be inlined while not resolvable links will be kept as link objects, single locale. [read more on link resolution](#link-resolution) |
-| `withAllLocales`           | entries for all locales                                                                                                                                 |
-| `withoutLinkResolution`    | All linked entries will be rendered as link objects. [read more on link resolution](#link-resolution)                                                   |
-| `withoutUnresolvableLinks` | remove unresolvable links from response (if not, they are left as Link objects)                                                                         |
+| _none (default)_                    | Returns entries in a single locale. Resolvable linked entries will be inlined while unresolvable links will be kept as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
+| `withAllLocales`           | Returns entries in all locales.                                                                                                                                 |
+| `withoutLinkResolution`    | All linked entries will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution)                                                 |
+| `withoutUnresolvableLinks` | If linked entries are not resolvalbe, the corresponding link objects are removed from the response.                                                                        |
 
 #### Example
 
 ```js
+// returns entries in one locale, resolves linked entries, removing unresolvable links
 const entries = await client.withoutUnresolvableLinks.getEntries()
 ```
 
 You can also combine client chains:
 
 ```js
+// returns entries in all locales, resolves linked entries, removing unresolvable links
 const entries = await client.withoutLinkResolution.withAllLocales.getEntries()
 ```
 
 The default behaviour doesn't change, you can still do:
 
 ```js
+// returns entries in one locale, resolves linked entries, keeping unresolvable links as link object
 const entries = await client.getEntries()
 ```
-
-#### Link Resolution
-
-In Contentful, you can define content types that reference other content types. We call them "linked" or "referenced"
-entries. In contrast to a simple REST call, this library can render the content of a linked entry in place, using
-the [contentful-resolve-response](https://github.com/contentful/contentful-resolve-response) package. This enables what
-we call link resolution.
-
-**Example without Link resolution:**
-
-```
-{
-  "sys": {
-    ...
-  },
-  "metadata": {
-    ...
-  },
-  "fields": {
-    "referencedEntry": {
-      "type": "Link",
-      "linkType": "Entry",
-      "id": "<referenced-entry-id>"
-    }
-  }
-}
-```
-
-**Example with Link resolution:**
-
-```
-{
-  "sys": {
-    ...
-  },
-  "metadata": {
-    ...
-  },
-  "fields": {
-    "referencedEntry": {
-      "sys": {
-        ...
-      },
-      "metadata": {
-        ...
-      },
-      fields {
-        ...
-      }
-  }
-}
-```
-
-This makes parsing the response easier, and you don't need to manually extract every linked entry from the response object.
-We resolve links by default in our client. If this behaviour is not what you want, 
-you can use the chain modifier `WithoutLinkResolution` to keep the link objects instead of the inlined entries in your response object.  
-
-
 ### Reference documentation
 
 The [JS library reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by
@@ -370,36 +307,31 @@ Most methods also have examples which show you how to use them.
 
 ### Tutorials & other resources
 
-* This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search
-  parameters and pagination are better explained on
-  the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can
-  also get a better understanding of how the requests look under the hood.
-* Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo
-  Apps, and more information on other ways of using JavaScript with Contentful
+* This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can also get a better understanding of how the requests look under the hood.
+* Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful.
 
 ### Troubleshooting
 
-- **I get the error: Unable to resolve module `http`** - Our library is supplied as node and browser version. Most
-  non-node environments, like React Native, act like a browser. To force using of the browser version, you can require
-  it via: `const { createClient } = require('contentful/dist/contentful.browser.min.js')`
-- **Can I use it with typescript?** - Yes, there is also a type definition file
-- **Is the library doing any caching?** - No, check this [issue](https://github.com/contentful/contentful.js/issues/83)
-  for more infos
+- **I get the error: Unable to resolve module `http`.**
+Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via:
+```js
+const { createClient } = require('contentful/dist/contentful.browser.min.js')
+```
+
+- **Is the library doing any caching?** 
+No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos.
 
 ### TypeScript
 
-This library is 100% written in TypeScript. Type definitions are bundled. Find out more about the advantages of using
-this library in conjunction with TypeScript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
+This library is 100% written in TypeScript. Type definitions are bundled. Find out more about the advantages of using this library in conjunction with TypeScript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
 
 ### Advanced Concepts
 
-More information about how to use the library in advanced or special ways can be found in the [ADVANCED.md](ADVANCED.md)
-document.
+More information about how to use the library in advanced or special ways can be found in the [ADVANCED.md](ADVANCED.md) document.
 
 ### Migration
 
-We gathered all information related to migrating from older versions of the library in our [MIGRATION.md](MIGRATION.md)
-document.
+We gathered all information related to migrating from older versions of the library in our [MIGRATION.md](MIGRATION.md) document.
 
 ## Reach out to us
 
@@ -412,9 +344,8 @@ document.
 
 ### You found a bug or want to propose a feature?
 
-* File an issue here on
-  GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new)
-  . Make sure to remove any credential from your code before sharing it.
+* File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new). 
+Make sure to remove any credential from your code before sharing it.
 
 ### You need to share confidential information or have other questions?
 
@@ -423,8 +354,7 @@ document.
 
 ## Get involved
 
-We appreciate any help on our repositories. For more details about how to contribute see
-our [CONTRIBUTING.md](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
+We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
 
 ## License
 
@@ -432,8 +362,6 @@ This repository is published under the [MIT](LICENSE) license.
 
 ## Code of Conduct
 
-We want to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants,
-regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status,
-body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
+We want to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status, body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
 
-[Read our full Code of Conduct](https://github.com/contentful-developer-relations/community-code-of-conduct).
+[Read our full Code of Conduct](https://www.contentful.com/developers/code-of-conduct/).

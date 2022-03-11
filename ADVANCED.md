@@ -32,6 +32,7 @@
 - [Using ES6 import](#using-es6-import)
 - [Framework specifics](#framework-specifics)
 - [Link resolution](#link-resolution)
+  - [Note: link resolution for versions older than 10.0.0](#note:-link-resolution-for-versions-older-than-10.0.0)
   - [Note: link resolution for versions older than 7.0.0](#note:-link-resolution-for-versions-older-than-7.0.0)
 - [Sync](#sync)
   - [Sync without pagination](#sync-without-pagination)
@@ -55,9 +56,9 @@ const client = contentful.createClient({...});
 
 ## Framework specifics
 
-### React Native & Server Side Rendering:
+### React Native & Server Side Rendering
 
-This library is able to handle Server Side Rendering and React Native. Depending on your implementation, you may need to explicitly require the `browser` or `node` variant of the library. (Webpack usually is able to handle this on its own)
+This library is able to handle Server Side Rendering and React Native. Depending on your implementation, you may need to explicitly require the `browser` or `node` variant of the library. (webpack usually is able to handle this on its own)
 
 ```js
 const contentful = require("contentful");
@@ -65,14 +66,64 @@ const contentful = require("contentful");
 const contentful = require("contentful/dist/contentful.browser.min.js");
 ```
 
-### Angular universal:
+### Angular Universal
 
-This library is able to handle Server Side Rendering with angular universal. To use it you will have to provide a custom [axios adapter](https://github.com/axios/axios/tree/master/lib/adapters), one example for angular would be the [ngx-axios-adapter](https://github.com/patrickhousley/ngx-axios-adapter)
+This library is able to handle Server Side Rendering with Angular Universal. To use it, you will have to provide a custom [Axios adapter](https://github.com/axios/axios/tree/master/lib/adapters), one example for Angular would be the [ngx-axios-adapter](https://github.com/patrickhousley/ngx-axios-adapter).
 
 ## Link resolution
 
-contentful.js does resolve links by default unless specified otherwise.
-To disable it just set `resolveLinks` to `false` when creating the Contentful client. Like so
+In Contentful, you can create content that references other content. We call them "linked" or "referenced" entries. In contrast to a simple REST call, this library can render the content of a linked entry in place, using
+the [contentful-resolve-response](https://github.com/contentful/contentful-resolve-response) package. This enables what we call link resolution.
+
+**Example entry response without link resolution:**
+
+```
+{
+  "sys": { ... },
+  "metadata": { ... },
+  "fields": {
+    "referencedEntry": {
+      "type": "Link",
+      "linkType": "Entry",
+      "id": "<referenced-entry-id>"
+    }
+  }
+}
+```
+
+**Example entry response with link resolution:**
+
+```
+{
+  "sys": { ... },
+  "metadata": { ... },
+  "fields": {
+    "referencedEntry": {
+      "sys": { ... },
+      "metadata": { ... },
+      fields {
+        ...
+      }
+    }
+  }
+}
+```
+
+This makes parsing the response easier, and you don't need to manually extract every linked entry from the response object.
+
+The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries( {include: <value> })`. The `include` parameter can be set to a number up to 10, which would represent a ten layers deep link resolution.
+
+**We resolve links by default**. If this behaviour is not what you want, you can use the chain modifier `withoutLinkResolution` on the Contentful client to keep the link objects instead of the inlined entries in your response object. See [Chained Clients](README.md#chained-clients)
+
+
+**Links which could not get resolved will be kept by default**. If you want to completely remove fields which could not be resolved, you can use the chain modifier `withoutUnresolvableLinks.`
+
+Please see the notes below for link resolution prior to v.10.0.0 and v.7.0.0.
+
+#### Note: link resolution for versions older than 10.0.0
+
+Please note that for versions older than 10.0.0, disabling link resolution needs to be done via [configuration options](README.md#response-configuration-options) during client creation.
+To disable it, set `resolveLinks` to `false` when creating the Contentful client. Like so:
 
 ```js
 const contentful = require("contentful");
@@ -83,13 +134,10 @@ const client = contentful.createClient({
 });
 ```
 
-Link resolution occurs on the `getEntry` and `getEntries` endpoints as of version 7.0.0. For previous versions, only the collections endpoint resolved links. See [note](#note:-link-resolution-for-versions-older-than-7.0.0) below for more details.
+If you want to completely remove fields which could not be resolved, set `removeUnresolved` to `true` in the configuration options.
 
-The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10.
 
-By default, the SDK will keep links, which could not get resolved, in your response. If you want to completely remove fields which could not be resolved, set `removeUnresolved: true` in the configuration options.
-
-### Note: link resolution for versions older than 7.0.0
+#### Note: link resolution for versions older than 7.0.0
 
 Please note that for versions older than 7.0.0, link resolution is only possible when requesting records from the collection endpoint using `client.getEntries()` or by performing an initial sync `client.sync({initial: true})`. In case you want to request one entry and benefit from the link resolution you can use the collection end point with the following query parameter `'sys.id': '<your-entry-id>'`.
 
@@ -171,8 +219,7 @@ customPaginatedSync({ initial: true }).then(() => console.log("Sync done"));
 
 ## Querying & Search parameters
 
-You can pass your query parameters as `key: value` pairs in the query object whenever request a resource.
-**e.g.**
+You can pass your query parameters as `key: value` pairs in the query object whenever request a resource. For example:
 
 ```js
 const contentful = require("contentful");
@@ -194,4 +241,4 @@ client
 client.getEntry("<entry-id>", { key: value });
 ```
 
-for more information about the search parameters check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)
+For more information about the search parameters, check the [documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters).
