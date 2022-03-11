@@ -146,10 +146,9 @@
   "release": {
     "branches": [
       "master",
-      "next",
+      "next-typescript",
       {
-        "name": "next-typescript",
-        "channel": "next-typescript",
+        "channel": "beta-v10",
         "prerelease": true
       }
     ],
