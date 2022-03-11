@@ -76,6 +76,8 @@ We completely dropped support for old IE browsers (no `legacy` bundle)
 
 ### Response modifiers
 
+_Response modifiers were introduced to provide better type support when using contentful.js in TypeScript projects (or using TypeScript-based [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) in a JavaScript project), supporting each of the six response shapes that entries can have. See [Response Types](TYPESCRIPT.md#response-types) to learn more about response type support._
+
 #### Query params `resolveLinks` and `removeUnresolved`
 
 Calls to `getEntries` and `getEntry` no longer support the `resolveLinks` and `removeUnresolved` parameters. Instead, you should use one of the [chained clients](README.md#chained-clients) to achieve the same result.

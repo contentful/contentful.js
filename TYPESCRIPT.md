@@ -113,7 +113,7 @@ There is currently no way to calculate keys for nested (recursive) content types
 
 ## Response types
 With version `10.0.0` we introduce [chained clients](./README.md#chained-clients) to make better assumptions on response types. 
-
+Entries can be returned in six different response shapes. Thanks to the three client chains below, the expected return shape can be identified, making it safer to work with the returned data.
 
 ### `withAllLocales`
 If the current chain includes `withAllLocales`, `getEntry` and `getEntries` expect an optional second generic parameter for all existing locales in your space.
@@ -203,7 +203,7 @@ The return type of `getEntry` is matching the `fields` shape
 ```
 
 #### Limitation
-The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `getEntries` and `getEntry`. The response types of other methods returning entries might not always be correct.
+The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `getEntries` and `getEntry`. Other methods returning entries (e.g. `parseEntries` and `sync`) or methods that can have localized responses (e.g. `getAssets` and `getAsset`) still rely on the previous implementation, and might not always have correct response types.
 
 ## Generating type definitions for content types
 It is recommended to define field types for all your content types. This helps the type system to infer all possible query keys/value types for you.

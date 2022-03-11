@@ -111,7 +111,7 @@ the [contentful-resolve-response](https://github.com/contentful/contentful-resol
 
 This makes parsing the response easier, and you don't need to manually extract every linked entry from the response object.
 
-The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries( {include: <value> })`. The `include` parameter can be set to a number up to 10.
+The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries( {include: <value> })`. The `include` parameter can be set to a number up to 10, which would represent a ten layers deep link resolution.
 
 **We resolve links by default**. If this behaviour is not what you want, you can use the chain modifier `withoutLinkResolution` on the Contentful client to keep the link objects instead of the inlined entries in your response object. See [Chained Clients](README.md#chained-clients)
 
