@@ -26,7 +26,6 @@ expectAssignable<EntryFieldsQueries<{ numberField: EntryFields.Number }>>({
   'fields.numberField[ne]': numberValue,
   'fields.numberField[in]': numberValue,
   'fields.numberField[nin]': numberValue,
-  'fields.numberField[match]': stringValue,
 })
 
 /*
