@@ -148,7 +148,7 @@
       "master",
       "next",
       {
-        "name": "next-typescript-semantic-release",
+        "name": "next-typescript",
         "channel": "beta-v10",
         "prerelease": true
       }
