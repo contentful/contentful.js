@@ -150,7 +150,7 @@
       "master",
       "next",
       {
-        "name": "next-typescript",
+        "name": "beta-v10",
         "channel": "beta-v10",
         "prerelease": true
       }
