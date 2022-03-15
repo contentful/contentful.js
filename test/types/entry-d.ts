@@ -3,17 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import {
-  Entry,
-  EntryFields,
-  EntryLink,
-  EntrySys,
-  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryWithAllLocalesAndWithoutLinkResolution,
-  EntryWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryWithLinkResolutionAndWithUnresolvableLinks,
-} from '../../lib'
+import { Entry, EntryFields, EntryLink, EntrySys, EntryR } from '../../lib'
 
 export const stringValue = ''
 export const numberValue = 123
@@ -91,11 +81,11 @@ expectAssignable<
 
 /**
  * @namespace: Typescript - type test
- * @description: EntryWithLinkResolutionAndWithUnresolvableLinks referenced entries can be either resolved or unresolved.
+ * @description: EntryR.WithLinkResolution.WithUnresolvableLinks: referenced entries can be either resolved or unresolved.
  * unresolved entries are referenced as entry links. Fields with multiple references can have resolved and unresolved mixed.
  */
 expectAssignable<
-  EntryWithLinkResolutionAndWithUnresolvableLinks<{
+  EntryR.WithLinkResolution.WithUnresolvableLinks<{
     stringField: EntryFields.Text
     resolvableReferenceField: EntryFields.Link<ExampleEntryFields>
     unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
@@ -137,11 +127,11 @@ expectAssignable<
 
 /**
  * @namespace: Typescript - type test
- * @description: EntryWithAllLocalesAndWithoutLinkResolution All fields are mapped to the given set of locales.
+ * @description: EntryR.WithAllLocales.WithoutLinkResolution: All fields are mapped to the given set of locales.
  * linked entries are all rendered as entry links.
  */
 expectAssignable<
-  EntryWithAllLocalesAndWithoutLinkResolution<
+  EntryR.WithAllLocales.WithoutLinkResolution<
     {
       stringField: EntryFields.Text
       referenceField: EntryFields.Link<ExampleEntryFields>
@@ -169,7 +159,7 @@ expectAssignable<
 
 /* resolved links are NOT assignable */
 expectNotAssignable<
-  EntryWithAllLocalesAndWithoutLinkResolution<
+  EntryR.WithAllLocales.WithoutLinkResolution<
     {
       referenceField: EntryFields.Link<ExampleEntryFields>
     },
@@ -187,11 +177,11 @@ expectNotAssignable<
 
 /**
  * @namespace: Typescript - type test
- * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
+ * @description: EntryR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks: All fields are mapped to the given set of locales.
  * linked entries are all rendered as inlined references, or if not resolvable, as entry links. multi reference fields can have mixed content.
  */
 expectAssignable<
-  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+  EntryR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<
     {
       stringField: EntryFields.Text
       referenceField: EntryFields.Link<ExampleEntryFields>
@@ -235,11 +225,11 @@ expectAssignable<
 
 /**
  * @namespace: Typescript - type test
- * @description: EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entries are present.
+ * @description: EntryR.WithLinkResolution.WithoutUnresolvableLinks only resolvable entries are present.
  * unresolvable entries are completely removed.
  */
 expectAssignable<
-  EntryWithLinkResolutionAndWithoutUnresolvableLinks<{
+  EntryR.WithLinkResolution.WithoutUnresolvableLinks<{
     stringField: EntryFields.Text
     resolvableReferenceField: EntryFields.Link<ExampleEntryFields>
     unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
@@ -271,10 +261,10 @@ expectAssignable<
 
 /**
  * @namespace: Typescript - type test
- * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
+ * @description: EntryR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks: All unresolvable fields are removed
  */
 expectAssignable<
-  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+  EntryR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<
     {
       stringField: EntryFields.Text
       referenceField: EntryFields.Link<ExampleEntryFields>

@@ -17,20 +17,10 @@ import {
   ContentTypeCollection,
   EntriesQueries,
   EntryCollection,
-  EntryWithoutLinkResolution,
-  EntryCollectionWithoutLinkResolution,
+  EntryR,
+  EntryCollectionR,
   LocaleCollection,
   LocaleCode,
-  EntryWithAllLocalesAndWithoutLinkResolution,
-  EntryCollectionWithAllLocalesAndWithoutLinkResolution,
-  EntryWithLinkResolutionAndWithUnresolvableLinks,
-  EntryCollectionWithLinkResolutionAndWithUnresolvableLinks,
-  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
   Space,
   SyncCollection,
   Tag,
@@ -58,25 +48,22 @@ export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseCl
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
-  ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+  ): Promise<EntryR.WithLinkResolution.WithUnresolvableLinks<Fields>>
 
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
-
-  // TODO: think about using collection generic as response type:
-  // ): Promise<Collection<EntryWithLinkResolution<Fields>>>
+  ): Promise<EntryCollectionR.WithLinkResolution.WithUnresolvableLinks<Fields>>
 }
 
 export interface ClientWithoutLinkResolution extends BaseClient {
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
-  ): Promise<EntryWithoutLinkResolution<Fields>>
+  ): Promise<EntryR.WithoutLinkResolution<Fields>>
 
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
+  ): Promise<EntryCollectionR.WithoutLinkResolution<Fields>>
 }
 
 export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
@@ -84,12 +71,12 @@ export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLin
   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
-  ): Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>>
+  ): Promise<EntryR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<Fields, Locales>>
 
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
     query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<
-    EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+    EntryCollectionR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<Fields, Locales>
   >
 }
 
@@ -98,11 +85,11 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
-  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+  ): Promise<EntryR.WithAllLocales.WithoutLinkResolution<Fields, Locales>>
 
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
     query?: EntriesQueries<Fields> & { locale?: never }
-  ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+  ): Promise<EntryCollectionR.WithAllLocales.WithoutLinkResolution<Fields, Locales>>
 }
 
 export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
@@ -110,11 +97,11 @@ export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
-  ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+  ): Promise<EntryR.WithLinkResolution.WithoutUnresolvableLinks<Fields>>
 
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+  ): Promise<EntryCollectionR.WithLinkResolution.WithoutUnresolvableLinks<Fields>>
 }
 
 export interface ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
@@ -122,12 +109,12 @@ export interface ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvable
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
-  ): Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>>
+  ): Promise<EntryR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<Fields, Locales>>
 
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
     query?: EntriesQueries<Fields> & { locale?: never }
   ): Promise<
-    EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+    EntryCollectionR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<Fields, Locales>
   >
 }
 
@@ -227,7 +214,7 @@ export interface BaseClient {
    */
   getEntries<Fields extends FieldsType>(
     query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+  ): Promise<EntryCollectionR.WithLinkResolution.WithUnresolvableLinks<Fields>>
 
   /**
    * Gets an Entry
@@ -248,7 +235,7 @@ export interface BaseClient {
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
-  ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+  ): Promise<EntryR.WithLinkResolution.WithUnresolvableLinks<Fields>>
 
   /**
    * Gets the Space which the client is currently configured to use
@@ -526,16 +513,16 @@ export default function createContentfulApi<OptionType>(
   async function getEntryWithLinkResolutionAndWithUnresolvableLinks<Fields>(
     id: string,
     query: EntryQueries = {}
-  ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    return internalGetEntry<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>(id, query, {
+  ): Promise<EntryR.WithLinkResolution.WithUnresolvableLinks<Fields>> {
+    return internalGetEntry<EntryR.WithLinkResolution.WithUnresolvableLinks<Fields>>(id, query, {
       withoutLinkResolution: false,
     })
   }
 
   async function getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields>(
     query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    return internalGetEntries<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
+  ): Promise<EntryCollectionR.WithLinkResolution.WithUnresolvableLinks<Fields>> {
+    return internalGetEntries<EntryCollectionR.WithLinkResolution.WithUnresolvableLinks<Fields>>(
       query,
       { withoutLinkResolution: false }
     )
@@ -544,8 +531,8 @@ export default function createContentfulApi<OptionType>(
   async function getEntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
     id: string,
     query: EntryQueries = {}
-  ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
-    return internalGetEntry<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(id, query, {
+  ): Promise<EntryR.WithLinkResolution.WithoutUnresolvableLinks<Fields>> {
+    return internalGetEntry<EntryR.WithLinkResolution.WithoutUnresolvableLinks<Fields>>(id, query, {
       withoutLinkResolution: false,
       withoutUnresolvableLinks: true,
     })
@@ -553,8 +540,8 @@ export default function createContentfulApi<OptionType>(
 
   async function getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
     query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
-    return internalGetEntries<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
+  ): Promise<EntryCollectionR.WithLinkResolution.WithoutUnresolvableLinks<Fields>> {
+    return internalGetEntries<EntryCollectionR.WithLinkResolution.WithoutUnresolvableLinks<Fields>>(
       query,
       { withoutLinkResolution: false, withoutUnresolvableLinks: true }
     )
@@ -566,11 +553,9 @@ export default function createContentfulApi<OptionType>(
   >(
     id: string,
     query: EntryQueries = {}
-  ): Promise<
-    EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
-  > {
+  ): Promise<EntryR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<Fields, SpaceLocales>> {
     return internalGetEntry<
-      EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
+      EntryR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<Fields, SpaceLocales>
     >(
       id,
       {
@@ -587,10 +572,10 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<
-    EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+    EntryCollectionR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<Fields, Locales>
   > {
     return internalGetEntries<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+      EntryCollectionR.WithAllLocales.WithLinkResolution.WithUnresolvableLinks<Fields, Locales>
     >(
       {
         ...query,
@@ -607,10 +592,10 @@ export default function createContentfulApi<OptionType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<
-    EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
+    EntryR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<Fields, SpaceLocales>
   > {
     return internalGetEntry<
-      EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
+      EntryR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<Fields, SpaceLocales>
     >(
       id,
       { ...query, locale: '*' },
@@ -624,10 +609,10 @@ export default function createContentfulApi<OptionType>(
   >(
     query: EntriesQueries<Fields> = {}
   ): Promise<
-    EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+    EntryCollectionR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<Fields, Locales>
   > {
     return internalGetEntries<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+      EntryCollectionR.WithAllLocales.WithLinkResolution.WithoutUnresolvableLinks<Fields, Locales>
     >(
       {
         ...query,
@@ -640,16 +625,16 @@ export default function createContentfulApi<OptionType>(
   async function getEntryWithoutLinkResolution<Fields>(
     id: string,
     query: EntryQueries = {}
-  ): Promise<EntryWithoutLinkResolution<Fields>> {
-    return internalGetEntry<EntryWithoutLinkResolution<Fields>>(id, query, {
+  ): Promise<EntryR.WithoutLinkResolution<Fields>> {
+    return internalGetEntry<EntryR.WithoutLinkResolution<Fields>>(id, query, {
       withoutLinkResolution: true,
     })
   }
 
   async function getEntriesWithoutLinkResolution<Fields>(
     query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
-    return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, {
+  ): Promise<EntryCollectionR.WithoutLinkResolution<Fields>> {
+    return internalGetEntries<EntryCollectionR.WithoutLinkResolution<Fields>>(query, {
       withoutLinkResolution: true,
     })
   }
@@ -660,8 +645,8 @@ export default function createContentfulApi<OptionType>(
   >(
     id: string,
     query: EntryQueries = {}
-  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
-    return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
+  ): Promise<EntryR.WithAllLocales.WithoutLinkResolution<Fields, Locales>> {
+    return internalGetEntry<EntryR.WithAllLocales.WithoutLinkResolution<Fields, Locales>>(
       id,
       { ...query, locale: '*' },
       { withoutLinkResolution: true }
@@ -673,9 +658,9 @@ export default function createContentfulApi<OptionType>(
     Locales extends LocaleCode = any
   >(
     query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
+  ): Promise<EntryCollectionR.WithAllLocales.WithoutLinkResolution<Fields, Locales>> {
     return internalGetEntries<
-      EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
+      EntryCollectionR.WithAllLocales.WithoutLinkResolution<Fields, Locales>
     >(
       {
         ...query,

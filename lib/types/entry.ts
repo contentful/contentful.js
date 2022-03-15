@@ -50,7 +50,7 @@ export interface Entry<T> {
   fields: T
 }
 
-export interface EntryWithAllLocalesAndWithoutLinkResolution<
+interface EntryWithAllLocalesAndWithoutLinkResolution<
   Fields extends FieldsType,
   Locales extends LocaleCode
 > {
@@ -67,7 +67,7 @@ export interface EntryWithAllLocalesAndWithoutLinkResolution<
   }
 }
 
-export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> = {
+type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> = {
   sys: EntrySys
   metadata: Metadata
   fields: {
@@ -79,7 +79,7 @@ export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends Field
   }
 }
 
-export type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
 > = {
@@ -106,7 +106,7 @@ export type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   }
 }
 
-export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> = {
+type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> = {
   sys: EntrySys
   metadata: Metadata
   fields: {
@@ -118,7 +118,7 @@ export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends Fi
   }
 }
 
-export type EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+type EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
 > = {
@@ -155,32 +155,96 @@ export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TE
 
 export type EntryCollection<T> = AbstractEntryCollection<Entry<T>>
 
-export type EntryWithoutLinkResolution<T> = Entry<T>
+type EntryWithoutLinkResolution<T> = Entry<T>
 
-export type EntryCollectionWithoutLinkResolution<T> = EntryCollection<T>
+type EntryCollectionWithoutLinkResolution<T> = EntryCollection<T>
 
-export type EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<T> = AbstractEntryCollection<
+type EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<T> = AbstractEntryCollection<
   EntryWithLinkResolutionAndWithUnresolvableLinks<T>
 >
 
-export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
+type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
   Fields,
   Locales extends LocaleCode
 > = AbstractEntryCollection<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 
-export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields,
   Locales extends LocaleCode
 > = AbstractEntryCollection<
   EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
 >
 
-export type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields> =
-  AbstractEntryCollection<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields> = AbstractEntryCollection<
+  EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
+>
 
-export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields,
   Locales extends LocaleCode
 > = AbstractEntryCollection<
   EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
 >
+
+/**
+ * @desc EntryR - Entry Response Type, according to client chain.
+ */
+export namespace EntryR {
+  export namespace WithAllLocales {
+    export namespace WithLinkResolution {
+      export type WithUnresolvableLinks<
+        Fields,
+        Locale extends string
+      > = EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locale>
+      export type WithoutUnresolvableLinks<
+        Fields,
+        Locale extends string
+      > = EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locale>
+    }
+    export type WithoutLinkResolution<
+      Fields,
+      Locale extends string
+    > = EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locale>
+  }
+  export namespace WithLinkResolution {
+    export type WithUnresolvableLinks<Fields> =
+      EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
+    export type WithoutUnresolvableLinks<Fields> =
+      EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
+  }
+
+  export type WithoutLinkResolution<T> = EntryWithoutLinkResolution<T>
+}
+
+/**
+ * @desc EntryCollectionR - Entry Collection Response Type, according to client chain.
+ */
+export namespace EntryCollectionR {
+  export namespace WithAllLocales {
+    export namespace WithLinkResolution {
+      export type WithUnresolvableLinks<
+        Fields,
+        Locale extends string
+      > = EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locale>
+      export type WithoutUnresolvableLinks<
+        Fields,
+        Locale extends string
+      > = EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+        Fields,
+        Locale
+      >
+    }
+    export type WithoutLinkResolution<
+      Fields,
+      Locale extends string
+    > = EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locale>
+  }
+  export namespace WithLinkResolution {
+    export type WithUnresolvableLinks<Fields> =
+      EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>
+    export type WithoutUnresolvableLinks<Fields> =
+      EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
+  }
+
+  export type WithoutLinkResolution<T> = EntryCollectionWithoutLinkResolution<T>
+}
