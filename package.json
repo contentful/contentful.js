@@ -44,7 +44,7 @@
     "browser-coverage": "npm run test:cover && opener coverage/lcov-report/index.html",
     "prepublishOnly": "npm run build",
     "postpublish": "npm run docs:publish && npm run clean",
-    "semantic-release": "semantic-release",
+    "semantic-release": "semantic-release --dry-run",
     "devdep:build": "pushd ../contentful-sdk-core && npm run build && popd",
     "devdep:clean": "pushd ../contentful-sdk-core && npm run clean && popd",
     "devdep:install": "npm run devdep:build && rm -rf node_modules/contentful-sdk-core && npm install ../contentful-sdk-core && npm run devdep:clean",
@@ -148,7 +148,12 @@
   "release": {
     "branches": [
       "master",
-      "next"
+      "next",
+      {
+        "name": "next-typescript",
+        "channel": "beta-v10",
+        "prerelease": true
+      }
     ],
     "plugins": [
       [
