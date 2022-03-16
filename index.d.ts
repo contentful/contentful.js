@@ -1,6 +1,8 @@
 // Type definitions for contentful
 // Definitions by: Miika Hänninen <https://github.com/googol>
 
+import { AxiosRequestConfig, AxiosResponse } from "axios";
+
 export interface AxiosProxyConfig {
     host: string;
     port?: number;
@@ -32,6 +34,8 @@ export interface CreateClientParams {
     logHandler?: (level: ClientLogLevel, data?: any) => void;
     timeout?: number;
     retryLimit?: number;
+    requestLogger?: (config: AxiosRequestConfig) => void;
+    responseLogger?: (response: AxiosResponse) => void;
 }
 
 export interface ContentfulClientApi {
