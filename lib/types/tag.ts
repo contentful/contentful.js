@@ -1,6 +1,6 @@
 import { EntitySys } from './sys'
 import { ContentfulCollection } from './collection'
-import { UserLink } from './link'
+import type { UserLink } from './link'
 
 export interface TagSys extends Omit<EntitySys, 'locale' | 'revision'> {
   type: 'Tag'

@@ -1,5 +1,5 @@
-import { EntryFields } from '../entry'
-import { ConditionalQueries, NonEmpty } from './util'
+import type { EntryFields } from '../entry'
+import type { ConditionalQueries, NonEmpty } from './util'
 
 type RangeFilterTypes = 'lt' | 'lte' | 'gt' | 'gte'
 

@@ -1,5 +1,5 @@
-import { BasicEntryField, EntryFields } from '../entry'
-import { ConditionalFixedQueries } from './util'
+import type { BasicEntryField, EntryFields } from '../entry'
+import type { ConditionalFixedQueries } from './util'
 
 // TODO: should Boolean field type be excluded
 type SupportedTypes = Exclude<BasicEntryField, EntryFields.Integer> | undefined

@@ -1,13 +1,13 @@
-import { AssetMimeType, AssetSys } from '../asset'
-import { EntrySys } from '../entry'
-import { EqualityFilter, InequalityFilter } from './equality'
-import { ExistenceFilter } from './existence'
-import { LocationSearchFilters } from './location'
-import { RangeFilters } from './range'
-import { FullTextSearchFilters } from './search'
-import { SelectFilter } from './select'
-import { SubsetFilters } from './subset'
-import { FieldsType } from './util'
+import type { AssetMimeType, AssetSys } from '../asset'
+import type { EntryFields, EntrySys } from '../entry'
+import type { EqualityFilter, InequalityFilter } from './equality'
+import type { ExistenceFilter } from './existence'
+import type { LocationSearchFilters } from './location'
+import type { RangeFilters } from './range'
+import type { FullTextSearchFilters } from './search'
+import type { SelectFilter } from './select'
+import type { SubsetFilters } from './subset'
+import type { FieldsType } from './util'
 
 type FixedPagedOptions = {
   skip?: number
@@ -40,7 +40,7 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
 // TODO: create-contentful-api complained about non-optional fields when initialized with {}
 export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
   EntryFieldsQueries<Fields> &
-    SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+   // SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
     FixedQueryOptions &
     FixedPagedOptions & { content_type?: string } & Record<string, any> & {
       resolveLinks?: never
@@ -64,3 +64,8 @@ export type AssetQueries<Fields extends FieldsType = FieldsType> = Partial<
     FixedQueryOptions &
     FixedPagedOptions & { mimetype_group?: AssetMimeType } & Record<string, any>
 >
+
+const test = <T>(query:EntriesQueries<T>) => query
+
+const q = test<{aField: EntryFields.Text, }>({})
+console.log(q)

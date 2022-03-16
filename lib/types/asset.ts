@@ -1,6 +1,6 @@
-import { ContentfulCollection } from './collection'
-import { Metadata } from './metadata'
-import { EntitySys } from './sys'
+import type { ContentfulCollection } from './collection'
+import type { Metadata } from './metadata'
+import type { EntitySys } from './sys'
 
 export interface AssetDetails {
   size: number

@@ -1,5 +1,5 @@
-import { EntryFields } from './entry'
-import { SpaceLink, EnvironmentLink } from './link'
+import type { EntryFields } from './entry'
+import type { SpaceLink, EnvironmentLink } from './link'
 
 export interface BaseSys {
   type: string

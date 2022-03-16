@@ -1,11 +1,11 @@
-import { Document as RichTextDocument } from '@contentful/rich-text-types'
-import { Asset } from './asset'
-import { ContentfulCollection } from './collection'
-import { ContentTypeLink, EntryLink } from './link'
-import { LocaleCode } from './locale'
-import { Metadata } from './metadata'
-import { FieldsType } from './query/util'
-import { EntitySys } from './sys'
+import type { Document as RichTextDocument } from '@contentful/rich-text-types'
+import type { Asset } from './asset'
+import type { ContentfulCollection } from './collection'
+import type { ContentTypeLink, EntryLink } from './link'
+import type { LocaleCode } from './locale'
+import type { Metadata } from './metadata'
+import type { FieldsType } from './query/util'
+import type { EntitySys } from './sys'
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }

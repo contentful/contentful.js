@@ -1,7 +1,7 @@
-import { ContentfulCollection } from './collection'
-import { EntryFields } from './entry'
-import { SpaceLink, EnvironmentLink } from './link'
-import { BaseSys } from './sys'
+import type { ContentfulCollection } from './collection'
+import type { EntryFields } from './entry'
+import type { SpaceLink, EnvironmentLink } from './link'
+import type { BaseSys } from './sys'
 
 export interface ContentTypeSys extends BaseSys {
   createdAt: EntryFields.Date

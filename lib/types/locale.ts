@@ -1,5 +1,5 @@
-import { ContentfulCollection } from './collection'
-import { BaseSys } from './sys'
+import type { ContentfulCollection } from './collection'
+import type { BaseSys } from './sys'
 
 export type LocaleCode = string
 

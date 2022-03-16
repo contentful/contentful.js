@@ -1,4 +1,4 @@
-import { ConditionalPick } from 'type-fest'
+import type { ConditionalPick } from 'type-fest'
 
 export type FieldsType = Record<string, any>
 

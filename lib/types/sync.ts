@@ -1,5 +1,5 @@
-import { Asset } from './asset'
-import { Entry } from './entry'
+import type { Asset } from './asset'
+import type { Entry } from './entry'
 
 export interface SyncCollection {
   entries: Array<Entry<any>>

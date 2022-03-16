@@ -1,5 +1,5 @@
-import { BasicEntryField, EntryFields } from '../entry'
-import { ConditionalQueries } from './util'
+import type { BasicEntryField, EntryFields } from '../entry'
+import type { ConditionalQueries } from './util'
 
 // TODO: Note: Equality and inequality operators are not supported for text fields
 // What types do we hav to exclude here?

@@ -1,6 +1,6 @@
-import { ConditionalPick } from 'type-fest'
-import { EntryFields } from '../entry'
-import { NonEmpty } from './util'
+import type { ConditionalPick } from 'type-fest'
+import type { EntryFields } from '../entry'
+import type { NonEmpty } from './util'
 
 type Types = EntryFields.Location
 

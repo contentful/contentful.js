@@ -1,5 +1,5 @@
-import { BasicEntryField, EntryFields } from '..'
-import { ConditionalQueries, NonEmpty } from './util'
+import type { BasicEntryField, EntryFields } from '..'
+import type { ConditionalQueries, NonEmpty } from './util'
 
 type SubsetFilterTypes = 'in' | 'nin'
 type SupportedTypes =

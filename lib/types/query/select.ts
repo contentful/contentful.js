@@ -1,4 +1,4 @@
-import { FieldsType } from './util'
+import type { FieldsType } from './util'
 
 /**
  * @desc select

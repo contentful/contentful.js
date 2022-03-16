@@ -1,5 +1,5 @@
-import { BasicEntryField } from '../entry'
-import { ConditionalFixedQueries } from './util'
+import type { BasicEntryField } from '../entry'
+import type { ConditionalFixedQueries } from './util'
 
 /**
  * @name exists

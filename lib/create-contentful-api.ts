@@ -511,11 +511,11 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntry<Fields>(id: string, query: EntryQueries = {}) {
+  async function getEntry<Fields extends FieldsType = FieldsType>(id: string, query: EntryQueries = {}) {
     return makeGetEntry<Fields>(id, query, options) as unknown
   }
 
-  async function getEntries<Fields>(query: EntriesQueries<Fields> = {}) {
+  async function getEntries<Fields extends FieldsType = FieldsType>(query: EntriesQueries<Fields> = {}) {
     return makeGetEntries<Fields>(query, options) as unknown
   }
 
@@ -685,7 +685,7 @@ export default function createContentfulApi<OptionType>(
     )
   }
 
-  async function makeGetEntry<Fields>(
+  async function makeGetEntry<Fields extends FieldsType>(
     id: string,
     query,
     options: ChainOptions = {
@@ -748,7 +748,7 @@ export default function createContentfulApi<OptionType>(
     }
   }
 
-  async function makeGetEntries<Fields>(
+  async function makeGetEntries<Fields extends FieldsType>(
     query,
     options: ChainOptions = {
       withoutLinkResolution: false,
