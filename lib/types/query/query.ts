@@ -40,7 +40,7 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
 // TODO: create-contentful-api complained about non-optional fields when initialized with {}
 export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
   EntryFieldsQueries<Fields> &
-   // SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+    SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
     FixedQueryOptions &
     FixedPagedOptions & { content_type?: string } & Record<string, any> & {
       resolveLinks?: never
