@@ -13,8 +13,8 @@
 > ___
 > :rotating_light: :rotating_light: :rotating_light: We have just released **contentful.js v10 in Beta** with enhanced :sparkles: **TypeScript** :sparkles: support! :rotating_light: :rotating_light: :rotating_light:
 >
-> You can check it out on [npm](https://www.npmjs.com/package/contentful) under the `beta-10` tag (go to the "Versions" tab to find it). 
-> The [migration guide](https://github.com/contentful/contentful.js/blob/beta-v10/MIGRATION.md#migration-to-contentfuljs-10x) and updated v10 [README](https://github.com/contentful/contentful.js/blob/beta-v10/README.md) and  can be found on the [beta-10 branch](https://github.com/contentful/contentful.js/tree/beta-v10).
+> You can check it out on [npm](https://www.npmjs.com/package/contentful) under the `beta-v10` tag (go to the "Versions" tab to find it). 
+> The [migration guide](https://github.com/contentful/contentful.js/blob/beta-v10/MIGRATION.md#migration-to-contentfuljs-10x) and updated v10 [README](https://github.com/contentful/contentful.js/blob/beta-v10/README.md) and  can be found on the [beta-v10 branch](https://github.com/contentful/contentful.js/tree/beta-v10).
 > ___
 
 # <span style="line-height: 1.1">contentful.js - Contentful JavaScript Content Delivery Library</span>
@@ -186,7 +186,7 @@ const client = contentful.createClient({
 });
 ```
 
-You can find all available methods of our client in our [reference documentation](https://contentful.github.io/contentful.js/contentful/9.1.16/)
+You can find all available methods of our client in our [reference documentation](https://contentful.github.io/contentful.js/contentful/9.1.17/)
 
 ### Authentication
 
@@ -377,7 +377,7 @@ contentful.createClient({
 
 ### Reference documentation
 
-The [JS library reference](https://contentful.github.io/contentful.js/contentful/9.1.16/) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
+The [JS library reference](https://contentful.github.io/contentful.js/contentful/9.1.17/) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
 
 Most methods also have examples which show you how to use them.
 
