@@ -186,7 +186,7 @@ const client = contentful.createClient({
 });
 ```
 
-You can find all available methods of our client in our [reference documentation](https://contentful.github.io/contentful.js/contentful/9.1.17/)
+You can find all available methods of our client in our [reference documentation](https://contentful.github.io/contentful.js/contentful/9.1.18/)
 
 ### Authentication
 
@@ -377,7 +377,7 @@ contentful.createClient({
 
 ### Reference documentation
 
-The [JS library reference](https://contentful.github.io/contentful.js/contentful/9.1.17/) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
+The [JS library reference](https://contentful.github.io/contentful.js/contentful/9.1.18/) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
 
 Most methods also have examples which show you how to use them.
 
