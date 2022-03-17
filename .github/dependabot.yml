@@ -16,7 +16,7 @@ updates:
       prefix: build
       include: scope
   - package-ecosystem: npm
-    target-branch: "next-typescript"
+    target-branch: "beta-v10"
     directory: '/'
     schedule:
       interval: daily
@@ -24,5 +24,5 @@ updates:
       timezone: UTC
     open-pull-requests-limit: 10
     commit-message:
-      prefix: build-next
+      prefix: build-beta
       include: scope
