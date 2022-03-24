@@ -4,6 +4,9 @@ import sinon from 'sinon'
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validate-timestamp'
 
+// Token values are deliberately exposed to enable integration test
+// usage which is dependent on a contentful test space.
+
 const params = {
   accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
   space: 'ezs1swce23xe'
