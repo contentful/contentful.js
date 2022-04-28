@@ -20,7 +20,7 @@ export interface AssetFile {
 export interface AssetFields {
   title?: string
   description?: string
-  file: AssetFile
+  file?: AssetFile
 }
 
 /**

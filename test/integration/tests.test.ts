@@ -434,7 +434,7 @@ test('Gets assets with only images', async () => {
   const response = await client.getAssets({
     mimetype_group: 'image',
   })
-  expect(response.items[0].fields.file.contentType).toMatch(/image/)
+  expect(response.items[0].fields.file?.contentType).toMatch(/image/)
 })
 
 test('Gets asset', async () => {

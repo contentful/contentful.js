@@ -107,7 +107,7 @@ const entryMock: Entry<EntryFields> = {
     field1: 'str',
   },
   metadata: {
-    tags: [copy(tagLinkMock)],
+    tags: [{ sys: copy(tagLinkMock) }],
   },
 }
 
