@@ -234,8 +234,8 @@ export namespace EntryFields {
     export type Date = string;
     export type Boolean = boolean;
     export interface Location {
-        lat: string;
-        lon: string;
+        lat: number;
+        lon: number;
     }
     export type Link<T> = Asset | Entry<T>;
     export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
