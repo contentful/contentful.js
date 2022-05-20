@@ -20,8 +20,8 @@ export declare namespace EntryFields {
   type Boolean = boolean
 
   type Location = {
-    lat: string
-    lon: string
+    lat: number
+    lon: number
   }
 
   type Link<T> = Asset | Entry<T>

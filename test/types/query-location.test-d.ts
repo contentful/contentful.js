@@ -15,17 +15,18 @@ import { SubsetFilters } from '../../lib/types/query/subset'
 
 const stringValue = ''
 const booleanValue = true
+const numberValue = 12.11
 export const nearLocationValue: ProximitySearchFilterInput = [1, 0]
 export const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0, 2]
 export const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
 
 //TODO:  Does this work?
 expectAssignable<EqualityFilter<{ testField: EntryFields.Location }, 'fields'>>({
-  'fields.testField': { lat: stringValue, lon: stringValue },
+  'fields.testField': { lat: numberValue, lon: numberValue },
 })
 //TODO:  Does this work?
 expectAssignable<InequalityFilter<{ testField: EntryFields.Location }, 'fields'>>({
-  'fields.testField[ne]': { lat: stringValue, lon: stringValue },
+  'fields.testField[ne]': { lat: numberValue, lon: numberValue },
 })
 expectAssignable<ExistenceFilter<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField[exists]': booleanValue,
