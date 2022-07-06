@@ -87,7 +87,7 @@
     "contentful-sdk-jsdoc": "^2.2.0",
     "core-js": "^3.2.1",
     "cz-conventional-changelog": "^3.3.0",
-    "es-check": "^5.1.0",
+    "es-check": "^6.2.1",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^16.0.0",
