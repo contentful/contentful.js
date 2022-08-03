@@ -46,7 +46,7 @@ export interface ContentfulClientApi {
     getTag(id: string): Promise<Tag>;
     getTags(query?: any): Promise<TagCollection>;
     parseEntries<T>(raw: any): Promise<EntryCollection<T>>;
-    sync(query: any): Promise<SyncCollection>;
+    sync(query: any, options?: { paginate?: boolean}): Promise<SyncCollection>;
 }
 
 export interface Asset {
