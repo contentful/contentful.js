@@ -26,7 +26,7 @@ export declare namespace EntryFields {
 
   type Link<T> = Asset | Entry<T>
   type Array<T = any> = symbol[] | Entry<T>[] | Asset[]
-  type Object<T extends Record<string, any> = Record<string, unknown>> = T
+  type Json = string | number | boolean | null | { [property: string]: Json } | Json[]
   type RichText = RichTextDocument
 }
 
@@ -39,7 +39,7 @@ export type BasicEntryField =
   | EntryFields.Boolean
   | EntryFields.Location
   | EntryFields.RichText
-  | EntryFields.Object
+  | EntryFields.Json
 
 /**
  * @category Entities
