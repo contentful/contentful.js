@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
-          template-preset: 'semantic-release'
+          template-preset: 'semantic-release-ecosystem'
       - run: npm install
       - run: npm run build
       - run: npm run semantic-release
