@@ -28,9 +28,9 @@ jobs:
     docker:
       - image: cimg/node:16.11
     steps:
+      - checkout
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release'
-      - checkout
       - run: npm install
       - run: npm run build
       - run: npm run semantic-release
