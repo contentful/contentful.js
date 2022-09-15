@@ -650,3 +650,52 @@ test('Given json should be parsed correctly as a collection of entries with meta
   t.looseEquals(parsedData.items[0].fields.metadata.sys, data.includes.Metadata[0].sys, 'metadata field is included')
   t.end()
 })
+
+test('resource links should be parsed correctly', (t) => {
+  const api = createContentfulApi({
+    http: {},
+    getGlobalOptions: sinon.stub().returns({ resolveLinks: true })
+  })
+  const data = {
+    items: [
+      {
+        sys: {
+          type: 'Entry',
+          locale: 'en-US'
+        },
+        fields: {
+          xspace: [
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk947mdX'
+              }
+            }
+          ],
+          xspace2: [
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:test:::content:spaces/8kouir73nbuz/entries/BfmNpEsQSFuh2lybiVkoq'
+              }
+            },
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:test:::content:spaces/kdtd0watvk6m/entries/irF9JXBHqNhwMwelu9HYt'
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+  const parsedData = api.parseEntries(data)
+
+  t.ok(parsedData)
+  t.looseEquals(parsedData.items[0].fields.xspace[0].sys, data.items[0].fields.xspace[0].sys)
+  t.end()
+})

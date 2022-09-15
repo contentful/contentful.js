@@ -1,7 +1,7 @@
 import test from 'blue-tape'
 import copy from 'fast-copy'
 
-import { entryMock, assetMock } from '../mocks'
+import { entryMock, assetMock, entryWithResourceLinksMock } from '../mocks'
 import { wrapEntry, wrapEntryCollection } from '../../../lib/entities/entry'
 
 test('Entry is wrapped', (t) => {
@@ -111,5 +111,26 @@ test('Entry collection links are resolved', (t) => {
   t.equals(wrappedEntry.items[1].fields.linked1.sys.type, 'Entry', 'third linked entity is resolved')
   t.ok(wrappedEntry.items[1].fields.linked1.fields, 'third linked entity has fields')
   t.ok(wrappedCollection.stringifySafe(), 'stringifies safely')
+  t.end()
+})
+
+test('Entry with resource links is wrapped', (t) => {
+  const wrappedEntry = wrapEntry(entryWithResourceLinksMock)
+  t.looseEqual(wrappedEntry.toPlainObject(), entryWithResourceLinksMock)
+  t.end()
+})
+
+test('Entry collection with resource links is wrapped', (t) => {
+  const entryCollection = {
+    total: 1,
+    skip: 0,
+    limit: 100,
+    items: [
+      entryWithResourceLinksMock,
+      entryWithResourceLinksMock
+    ]
+  }
+  const wrappedEntry = wrapEntryCollection(entryCollection, true)
+  t.looseEqual(wrappedEntry.toPlainObject(), entryCollection)
   t.end()
 })
