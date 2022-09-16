@@ -65,6 +65,21 @@ test('Gets content types', async (t) => {
   t.ok(response.items, 'items')
 })
 
+test('Gets a content type that has resource links', async (t) => {
+  t.plan(9)
+  const response = await client.getContentType('catalog')
+  t.ok(response.sys, 'sys')
+  t.ok(response.name, 'name')
+  t.ok(response.fields, 'fields')
+
+  t.equal(response.fields[0].id, 'items')
+  t.equal(response.fields[0].type, 'Array')
+  t.equal(response.fields[0].items.type, 'ResourceLink')
+  t.equal(response.fields[0].allowedResources[0].type, 'Contentful:Entry')
+  t.equal(response.fields[0].allowedResources[0].source, 'crn:contentful:::content:spaces/ocrd5ofpzqgz')
+  t.deepEqual(response.fields[0].allowedResources[0].contentTypes, ['manufacturer', 'product'])
+})
+
 test('Gets entry', async (t) => {
   t.plan(2)
   const response = await client.getEntry('nyancat')
@@ -377,6 +392,22 @@ test('Gets entries by creation order and id order', async (t) => {
     response.items[0].sys.id < response.items[1].sys.id,
     'id of entry with index 1 is higher than the one of index 0 since they share content type'
   )
+})
+
+test.only('Gets an entry that has resource links', async (t) => {
+  t.plan(8)
+  const response = await client.getEntry('6yfSzwXo99q8BKzkE5AIKo')
+
+  t.ok(response.sys, 'sys')
+  t.ok(response.fields, 'fields')
+
+  t.equal(response.fields.items[0].sys.type, 'ResourceLink')
+  t.equal(response.fields.items[0].sys.linkType, 'Contentful:Entry')
+  t.equal(response.fields.items[0].sys.urn, 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL')
+
+  t.equal(response.fields.items[1].sys.type, 'ResourceLink')
+  t.equal(response.fields.items[1].sys.linkType, 'Contentful:Entry')
+  t.equal(response.fields.items[1].sys.urn, 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ')
 })
 
 test('Gets assets with only images', async (t) => {
