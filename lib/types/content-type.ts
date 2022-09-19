@@ -22,6 +22,13 @@ export interface ContentTypeField {
   type: ContentTypeFieldType
   validations: ContentTypeFieldValidation[]
   items?: FieldItem
+  allowedResources?: ContentTypeAllowedResources[]
+}
+
+interface ContentTypeAllowedResources {
+  type: string
+  source: string
+  contentTypes: string[]
 }
 
 export type ContentTypeFieldType =

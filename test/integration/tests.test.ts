@@ -48,6 +48,21 @@ test('Gets content types', async () => {
   expect(response.items).toBeDefined()
 })
 
+test('Gets a content type that has resource links', async () => {
+  const response = await client.getContentType('catalog')
+
+  expect(response.sys).toBeDefined()
+  expect(response.name).toBeDefined()
+  expect(response.fields).toBeDefined()
+
+  expect(response.fields[0].id).toBe('items')
+  expect(response.fields[0].type).toBe('Array')
+  expect(response.fields[0].items?.type).toBe('ResourceLink')
+  expect(response.fields[0].allowedResources?.[0].type).toBe('Contentful:Entry')
+  expect(response.fields[0].allowedResources?.[0].source).toBe('crn:contentful:::content:spaces/ocrd5ofpzqgz')
+  expect(response.fields[0].allowedResources?.[0].contentTypes).toEqual(['manufacturer', 'product'])
+})
+
 test('Gets content types with search query', async () => {
   const response = await client.getContentTypes({ query: 'cat' })
   expect(response.items).toHaveLength(1)
@@ -428,6 +443,21 @@ test('Gets entries by creation order and id order', async () => {
     'testEntryReferences',
   ])
   expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
+})
+
+test.only('Gets an entry that has resource links', async () => {
+  const response = await client.getEntry('6yfSzwXo99q8BKzkE5AIKo')
+
+  expect(response.sys).toBeDefined()
+  expect(response.fields).toBeDefined()
+
+  expect(response.fields.items[0].sys.type).toBe('ResourceLink')
+  expect(response.fields.items[0].sys.linkType).toBe('Contentful:Entry')
+  expect(response.fields.items[0].sys.urn).toBe('crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL')
+
+  expect(response.fields.items[1].sys.type).toBe('ResourceLink')
+  expect(response.fields.items[1].sys.linkType).toBe('Contentful:Entry')
+  expect(response.fields.items[1].sys.urn).toBe('crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ')
 })
 
 test('Gets assets with only images', async () => {
