@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import createGlobalOptions from '../../lib/create-global-options'
 
 import createContentfulApi, { __RewireAPI__ as createContentfulApiRewireApi } from '../../lib/create-contentful-api'
-import { contentTypeMock, assetMock, assetKeyMock, entryMock, localeMock } from './mocks'
+import { contentTypeMock, assetMock, assetKeyMock, entryMock, localeMock, entryWithResourceLinksMock } from './mocks'
 
 const now = () => Math.floor(Date.now() / 1000)
 
@@ -237,6 +237,23 @@ test('API call getEntry fails', async (t) => {
   }
 })
 
+test.only('API call getEntry that has resource links', async (t) => {
+  t.plan(2)
+  const { api } = setupWithData({
+    promise: Promise.resolve({ data: entryWithResourceLinksMock })
+  })
+  api.getEntries = sinon.stub().resolves({ items: [entryWithResourceLinksMock] })
+  entitiesMock.entry.wrapEntry.returns(entryWithResourceLinksMock)
+
+  try {
+    const r = await api.getEntry('id')
+    t.looseEqual(r, entryWithResourceLinksMock)
+    t.true(api.getEntries.calledOnce)
+  } finally {
+    teardown()
+  }
+})
+
 test('API call getEntries', async (t) => {
   t.plan(2)
 
@@ -318,6 +335,27 @@ test('API call getEntries fails', async (t) => {
     await api.getEntries()
   } catch (r) {
     t.looseEqual(r.data, data)
+  } finally {
+    teardown()
+  }
+})
+
+test('API call getEntries that has resource links', async (t) => {
+  t.plan(1)
+  const data = {
+    total: 100,
+    skip: 0,
+    limit: 10,
+    items: [entryWithResourceLinksMock]
+  }
+  const { api } = setupWithData({
+    promise: Promise.resolve({ data: data })
+  })
+  entitiesMock.entry.wrapEntryCollection.returns(data)
+
+  try {
+    const r = await api.getEntries()
+    t.looseEqual(r, data, 'returns expected data')
   } finally {
     teardown()
   }
