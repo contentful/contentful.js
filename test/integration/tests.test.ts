@@ -59,7 +59,9 @@ test('Gets a content type that has resource links', async () => {
   expect(response.fields[0].type).toBe('Array')
   expect(response.fields[0].items?.type).toBe('ResourceLink')
   expect(response.fields[0].allowedResources?.[0].type).toBe('Contentful:Entry')
-  expect(response.fields[0].allowedResources?.[0].source).toBe('crn:contentful:::content:spaces/ocrd5ofpzqgz')
+  expect(response.fields[0].allowedResources?.[0].source).toBe(
+    'crn:contentful:::content:spaces/ocrd5ofpzqgz'
+  )
   expect(response.fields[0].allowedResources?.[0].contentTypes).toEqual(['manufacturer', 'product'])
 })
 
@@ -75,7 +77,9 @@ test('Gets entry', async () => {
 })
 
 test('Gets an entry with a specific locale', async () => {
-  const entry = await client.getEntry<{ test: EntryFields.Symbol }>('nyancat', { locale: 'tlh' })
+  const entry = await client.getEntry<{ test: EntryFields.Symbol }>('nyancat', {
+    locale: 'tlh',
+  })
   expect(entry.sys.locale).toBe('tlh')
 })
 
@@ -186,7 +190,10 @@ test('Gets entry with without link resolution but with includes', async () => {
 })
 
 test('Gets entries with link resolution and includes, does not consider global `removeUnresolved` option', async () => {
-  const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
+  const removeUnresolvedClient = contentful.createClient({
+    ...params,
+    removeUnresolved: true,
+  })
   const response = await removeUnresolvedClient.getEntries({
     'sys.id': '4SEhTg8sYJ1H3wDAinzhTp',
     include: 2,
@@ -201,7 +208,10 @@ test('Gets entries with link resolution and includes, does not consider global `
   })
 })
 test('Gets entry with link resolution and includes, does not consider global `removeUnresolved` option', async () => {
-  const removeUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: true })
+  const removeUnresolvedClient = contentful.createClient({
+    ...params,
+    removeUnresolved: true,
+  })
   const response = await removeUnresolvedClient.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toMatchObject({
@@ -224,7 +234,10 @@ test('Gets entry with link resolution and includes, removing unresolvable links 
 })
 
 test('Gets entry with link resolution and includes, removing unresolvable links, overriding client config with client chain', async () => {
-  const keepUnresolvedClient = contentful.createClient({ ...params, removeUnresolved: false })
+  const keepUnresolvedClient = contentful.createClient({
+    ...params,
+    removeUnresolved: false,
+  })
   const response = await keepUnresolvedClient.withoutUnresolvableLinks.getEntry(
     '4SEhTg8sYJ1H3wDAinzhTp',
     { include: 2 }
@@ -234,7 +247,9 @@ test('Gets entry with link resolution and includes, removing unresolvable links,
 })
 
 test('Gets entry with link resolution, and includes, keeping unresolvable links', async () => {
-  const response = await client.getEntry('4SEhTg8sYJ1H3wDAinzhTp', { include: 2 })
+  const response = await client.getEntry('4SEhTg8sYJ1H3wDAinzhTp', {
+    include: 2,
+  })
   expect(response.fields).toBeDefined()
   expect(response.fields.bestFriend).toMatchObject({
     sys: {
@@ -453,11 +468,15 @@ test.only('Gets an entry that has resource links', async () => {
 
   expect(response.fields.items[0].sys.type).toBe('ResourceLink')
   expect(response.fields.items[0].sys.linkType).toBe('Contentful:Entry')
-  expect(response.fields.items[0].sys.urn).toBe('crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL')
+  expect(response.fields.items[0].sys.urn).toBe(
+    'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL'
+  )
 
   expect(response.fields.items[1].sys.type).toBe('ResourceLink')
   expect(response.fields.items[1].sys.linkType).toBe('Contentful:Entry')
-  expect(response.fields.items[1].sys.urn).toBe('crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ')
+  expect(response.fields.items[1].sys.urn).toBe(
+    'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ'
+  )
 })
 
 test('Gets assets with only images', async () => {
@@ -538,7 +557,11 @@ describe('Sync API', () => {
   })
 
   test('Sync space entries by content type', async () => {
-    const response = await client.sync({ initial: true, type: 'Entry', content_type: 'dog' })
+    const response = await client.sync({
+      initial: true,
+      type: 'Entry',
+      content_type: 'dog',
+    })
     expect(response.entries).toBeDefined()
     expect(response.deletedEntries).toBeDefined()
     expect(response.nextSyncToken).toBeDefined()
@@ -546,7 +569,10 @@ describe('Sync API', () => {
 })
 
 test('Gets entries with linked includes with all locales using the withAllLocales client chain modifier', async () => {
-  const response = await client.withAllLocales.getEntries({ include: 5, 'sys.id': 'nyancat' })
+  const response = await client.withAllLocales.getEntries({
+    include: 5,
+    'sys.id': 'nyancat',
+  })
   assertLocalizedEntriesResponse(response)
 })
 
