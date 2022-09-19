@@ -66,7 +66,7 @@ export interface ContentTypeFieldValidation {
 }
 
 export interface FieldItem {
-  type: 'Link' | 'Symbol'
+  type: 'Link' | 'Symbol' | 'ResourceLink'
   validations: ContentTypeFieldValidation[]
   linkType?: 'Entry' | 'Asset'
 }

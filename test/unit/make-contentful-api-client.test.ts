@@ -171,6 +171,19 @@ describe('make Contentful API client', () => {
     await expect(api.getEntries()).resolves.toEqual(data)
   })
 
+  test('API call getEntries that has resource links', async () => {
+    const data = {
+      total: 100,
+      skip: 0,
+      limit: 10,
+      items: [mocks.entryWithResourceLinksMock],
+    }
+    const { api } = setupWithData({
+      promise: Promise.resolve({ data: data }),
+    })
+    await expect(api.getEntries()).resolves.toEqual(data)
+  })
+
   test('API call getEntries with global resolveLinks overridden by chained modifier', async () => {
     const data = { sys: { id: 'id' } }
     const { api } = setupWithData({
