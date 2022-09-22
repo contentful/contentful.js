@@ -31,6 +31,39 @@ const contentTypeMock = {
       required: false
     },
     {
+      id: 'resourceLink',
+      name: 'resource link',
+      type: 'ResourceLink',
+      localized: true,
+      required: false,
+      validations: [],
+      disabled: false,
+      omitted: false,
+      allowedResources: [
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:test:::content:spaces/bixqmof5ek4r',
+          contentTypes: [
+            'aBuggyCt',
+            'assetLink',
+            'container',
+            'keepMeSimple'
+          ]
+        },
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:test:::content:spaces/bkg4k0bz2fhq',
+          contentTypes: [
+            'articlePage',
+            'topicPage',
+            'textBlock',
+            'game',
+            'gameDesignerPage'
+          ]
+        }
+      ]
+    },
+    {
       id: 'resourceLinkArray',
       name: 'resource link array',
       type: 'Array',
@@ -153,6 +186,22 @@ const entryWithResourceLinksMock = {
     locale: 'locale'
   }),
   fields: {
+    onereference: {
+      "en-US": {
+        sys: {
+          type: "ResourceLink",
+          linkType: "Contentful:Entry",
+          urn: "crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk949999"
+        }
+      },
+      "de-DE": {
+        sys: {
+          type: "ResourceLink",
+          linkType: "Contentful:Entry",
+          urn: "crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk948888"
+        }
+      }
+    },
     xspace: [
       {
         sys: {
