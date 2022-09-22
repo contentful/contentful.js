@@ -66,19 +66,32 @@ test('Gets content types', async (t) => {
 })
 
 test('Gets a content type that has resource links', async (t) => {
-  t.plan(9)
-  const response = await client.getContentType('catalog')
-  t.ok(response.sys, 'sys')
-  t.ok(response.name, 'name')
-  t.ok(response.fields, 'fields')
+  t.plan(4);
+  const response = await client.getContentType("catalog");
 
-  t.equal(response.fields[0].id, 'items')
-  t.equal(response.fields[0].type, 'Array')
-  t.equal(response.fields[0].items.type, 'ResourceLink')
-  t.equal(response.fields[0].allowedResources[0].type, 'Contentful:Entry')
-  t.equal(response.fields[0].allowedResources[0].source, 'crn:contentful:::content:spaces/ocrd5ofpzqgz')
-  t.deepEqual(response.fields[0].allowedResources[0].contentTypes, ['manufacturer', 'product'])
-})
+  t.ok(response.sys, 'sys');
+  t.ok(response.name, 'name');
+  t.ok(response.fields, 'fields');
+  t.deepEqual(response.fields[
+      {
+        id: 'items',
+        name: 'items',
+        type: 'Array',
+        localized: false,
+        required: false,
+        disabled: false,
+        omitted: false,
+        allowedResources: [
+          {
+            type: 'Contentful:Entry',
+            source: 'crn:contentful:::content:spaces/ocrd5ofpzqgz',
+            contentTypes: [ 'manufacturer', 'product' ]
+          }
+        ],
+        items: { type: 'ResourceLink', validations: [] }
+      }
+      ]);
+});
 
 test('Gets entry', async (t) => {
   t.plan(2)
@@ -394,7 +407,7 @@ test('Gets entries by creation order and id order', async (t) => {
   )
 })
 
-test.only('Gets an entry that has resource links', async (t) => {
+test('Gets an entry that has resource links', async (t) => {
   t.plan(8)
   const response = await client.getEntry('6yfSzwXo99q8BKzkE5AIKo')
 

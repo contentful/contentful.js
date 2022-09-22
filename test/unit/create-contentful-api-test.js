@@ -237,7 +237,7 @@ test('API call getEntry fails', async (t) => {
   }
 })
 
-test.only('API call getEntry that has resource links', async (t) => {
+test('API call getEntry that has resource links', async (t) => {
   t.plan(2)
   const { api } = setupWithData({
     promise: Promise.resolve({ data: entryWithResourceLinksMock })
