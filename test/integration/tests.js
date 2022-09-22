@@ -400,7 +400,7 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human', 'kangaroo', 'testEntryReferences'], 'orders')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'catalog', 'contentTypeWithMetadataField', 'dog', 'human', 'kangaroo', 'testEntryReferences'], 'orders')
   t.ok(
     response.items[0].sys.id < response.items[1].sys.id,
     'id of entry with index 1 is higher than the one of index 0 since they share content type'
