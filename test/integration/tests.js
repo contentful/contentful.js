@@ -72,7 +72,7 @@ test('Gets a content type that has resource links', async (t) => {
   t.ok(response.sys, 'sys');
   t.ok(response.name, 'name');
   t.ok(response.fields, 'fields');
-  t.deepEqual(response.fields[
+  t.deepEqual(response.fields, [
       {
         id: 'items',
         name: 'items',
@@ -407,20 +407,29 @@ test('Gets entries by creation order and id order', async (t) => {
   )
 })
 
-test('Gets an entry that has resource links', async (t) => {
-  t.plan(8)
-  const response = await client.getEntry('6yfSzwXo99q8BKzkE5AIKo')
+test.only('Gets an entry that has resource links', async (t) => {
+  t.plan(3)
+  const response = await client.getEntry('xspaceEntry')
 
   t.ok(response.sys, 'sys')
   t.ok(response.fields, 'fields')
-
-  t.equal(response.fields.items[0].sys.type, 'ResourceLink')
-  t.equal(response.fields.items[0].sys.linkType, 'Contentful:Entry')
-  t.equal(response.fields.items[0].sys.urn, 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL')
-
-  t.equal(response.fields.items[1].sys.type, 'ResourceLink')
-  t.equal(response.fields.items[1].sys.linkType, 'Contentful:Entry')
-  t.equal(response.fields.items[1].sys.urn, 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ')
+  t.deepEqual(response.fields, {items: [
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL'
+        }
+      },
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ'
+        }
+      }
+    ]
+  })
 })
 
 test('Gets assets with only images', async (t) => {
