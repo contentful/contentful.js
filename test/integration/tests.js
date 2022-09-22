@@ -407,7 +407,7 @@ test('Gets entries by creation order and id order', async (t) => {
   )
 })
 
-test.only('Gets an entry that has resource links', async (t) => {
+test('Gets an entry that has resource links', async (t) => {
   t.plan(3)
   const response = await client.getEntry('xspaceEntry')
 
