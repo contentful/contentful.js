@@ -89,8 +89,23 @@ test('Gets a content type that has resource links', async (t) => {
           }
         ],
         items: { type: 'ResourceLink', validations: [] }
+      },
+      {
+        id: 'productOfTheMonth',
+        name: 'product of the month',
+        type: 'ResourceLink',
+        localized: false,
+        required: false,
+        disabled: false,
+        omitted: false,
+        allowedResources: [{
+          type: 'Contentful:Entry',
+          source: 'crn:contentful:::content:spaces/ocrd5ofpzqgz',
+          contentTypes: [ 'product' ]
+        }]
       }
-      ]);
+    ]
+  );
 });
 
 test('Gets entry', async (t) => {
@@ -413,7 +428,7 @@ test('Gets an entry that has resource links', async (t) => {
 
   t.ok(response.sys, 'sys')
   t.ok(response.fields, 'fields')
-  t.deepEqual(response.fields, {items: [
+  t.deepEqual(response.fields, { items: [
       {
         sys: {
           type: 'ResourceLink',

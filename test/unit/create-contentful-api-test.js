@@ -698,8 +698,7 @@ test('resource links should be parsed correctly', (t) => {
     items: [
       {
         sys: {
-          type: 'Entry',
-          locale: 'en-US'
+          type: 'Entry'
         },
         fields: {
           xspace: [
