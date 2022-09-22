@@ -54,20 +54,46 @@ test('Gets a content type that has resource links', async () => {
   expect(response.sys).toBeDefined()
   expect(response.name).toBeDefined()
   expect(response.fields).toBeDefined()
-
-  expect(response.fields[0].id).toBe('items')
-  expect(response.fields[0].type).toBe('Array')
-  expect(response.fields[0].items?.type).toBe('ResourceLink')
-  expect(response.fields[0].allowedResources?.[0].type).toBe('Contentful:Entry')
-  expect(response.fields[0].allowedResources?.[0].source).toBe(
-    'crn:contentful:::content:spaces/ocrd5ofpzqgz'
-  )
-  expect(response.fields[0].allowedResources?.[0].contentTypes).toEqual(['manufacturer', 'product'])
+  expect(response.fields).toEqual([
+    {
+      id: 'items',
+      name: 'items',
+      type: 'Array',
+      localized: false,
+      required: false,
+      disabled: false,
+      omitted: false,
+      allowedResources: [
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:contentful:::content:spaces/ocrd5ofpzqgz',
+          contentTypes: ['manufacturer', 'product'],
+        },
+      ],
+      items: { type: 'ResourceLink', validations: [] },
+    },
+    {
+      id: 'productOfTheMonth',
+      name: 'product of the month',
+      type: 'ResourceLink',
+      localized: false,
+      required: false,
+      disabled: false,
+      omitted: false,
+      allowedResources: [
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:contentful:::content:spaces/ocrd5ofpzqgz',
+          contentTypes: ['product'],
+        },
+      ],
+    },
+  ])
 })
 
 test('Gets content types with search query', async () => {
   const response = await client.getContentTypes({ query: 'cat' })
-  expect(response.items).toHaveLength(1)
+  expect(response.items).toHaveLength(2)
 })
 
 test('Gets entry', async () => {
@@ -451,6 +477,7 @@ test('Gets entries by creation order and id order', async () => {
   expect(contentTypeOrder).toEqual([
     '1t9IbcfdCk6m04uISSsaIK',
     'cat',
+    'catalog',
     'contentTypeWithMetadataField',
     'dog',
     'human',
@@ -460,23 +487,29 @@ test('Gets entries by creation order and id order', async () => {
   expect(response.items[0].sys.id < response.items[1].sys.id).toBeTruthy()
 })
 
-test.only('Gets an entry that has resource links', async () => {
-  const response = await client.getEntry('6yfSzwXo99q8BKzkE5AIKo')
+test('Gets an entry that has resource links', async () => {
+  const response = await client.getEntry('xspaceEntry')
 
   expect(response.sys).toBeDefined()
   expect(response.fields).toBeDefined()
-
-  expect(response.fields.items[0].sys.type).toBe('ResourceLink')
-  expect(response.fields.items[0].sys.linkType).toBe('Contentful:Entry')
-  expect(response.fields.items[0].sys.urn).toBe(
-    'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL'
-  )
-
-  expect(response.fields.items[1].sys.type).toBe('ResourceLink')
-  expect(response.fields.items[1].sys.linkType).toBe('Contentful:Entry')
-  expect(response.fields.items[1].sys.urn).toBe(
-    'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ'
-  )
+  expect(response.fields).toEqual({
+    items: [
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL',
+        },
+      },
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ',
+        },
+      },
+    ],
+  })
 })
 
 test('Gets assets with only images', async () => {

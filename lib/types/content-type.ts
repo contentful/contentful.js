@@ -43,6 +43,7 @@ export type ContentTypeFieldType =
   | 'Array'
   | 'Object'
   | 'RichText'
+  | 'ResourceLink'
 
 export interface ContentTypeFieldValidation {
   unique?: boolean

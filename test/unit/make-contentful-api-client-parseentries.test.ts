@@ -143,7 +143,6 @@ test('Given json should be parsed correctly as a collection of entries with reso
       {
         sys: {
           type: 'Entry',
-          locale: 'en-US',
         },
         fields: {
           xspace: [
