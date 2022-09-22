@@ -74,7 +74,7 @@
     "contentful-resolve-response": "^1.3.6",
     "contentful-sdk-core": "^7.0.2",
     "json-stringify-safe": "^5.0.1",
-    "type-fest": "^2.12.0"
+    "type-fest": "^3.0.0"
   },
   "devDependencies": {
     "@contentful/browserslist-config": "^3.0.0",
