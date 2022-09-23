@@ -29,6 +29,71 @@ const contentTypeMock = {
       type: 'Text',
       localized: true,
       required: false
+    },
+    {
+      id: 'resourceLink',
+      name: 'resource link',
+      type: 'ResourceLink',
+      localized: true,
+      required: false,
+      validations: [],
+      disabled: false,
+      omitted: false,
+      allowedResources: [
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:test:::content:spaces/bixqmof5ek4r',
+          contentTypes: [
+            'aBuggyCt',
+            'assetLink',
+            'container',
+            'keepMeSimple'
+          ]
+        },
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:test:::content:spaces/bkg4k0bz2fhq',
+          contentTypes: [
+            'articlePage',
+            'topicPage',
+            'textBlock',
+            'game',
+            'gameDesignerPage'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'resourceLinkArray',
+      name: 'resource link array',
+      type: 'Array',
+      localized: false,
+      required: false,
+      validations: [],
+      disabled: false,
+      omitted: false,
+      items: {
+        type: 'ResourceLink',
+        validations: []
+      },
+      allowedResources: [
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:test:::content:spaces/ywdl9lsbthy5',
+          contentTypes: [
+            'termsAndConditions',
+            'sla'
+          ]
+        },
+        {
+          type: 'Contentful:Entry',
+          source: 'crn:test:::content:spaces/u57131yuvvgb',
+          contentTypes: [
+            'oneTime',
+            'plan'
+          ]
+        }
+      ]
     }
   ]
 }
@@ -114,6 +179,60 @@ const tagMock = {
   name: 'mock tag'
 }
 
+const entryWithResourceLinksMock = {
+  sys: Object.assign(copy(sysMock), {
+    type: 'Entry',
+    contentType: Object.assign(copy(linkMock), { linkType: 'ContentType' }),
+    locale: 'locale'
+  }),
+  fields: {
+    onereference: {
+      "en-US": {
+        sys: {
+          type: "ResourceLink",
+          linkType: "Contentful:Entry",
+          urn: "crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk949999"
+        }
+      },
+      "de-DE": {
+        sys: {
+          type: "ResourceLink",
+          linkType: "Contentful:Entry",
+          urn: "crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk948888"
+        }
+      }
+    },
+    xspace: [
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk947mdX'
+        }
+      }
+    ],
+    xspace2: [
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:test:::content:spaces/8kouir73nbuz/entries/BfmNpEsQSFuh2lybiVkoq'
+        }
+      },
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:test:::content:spaces/kdtd0watvk6m/entries/irF9JXBHqNhwMwelu9HYt'
+        }
+      }
+    ]
+  },
+  metadata: {
+    tags: []
+  }
+}
+
 export {
   linkMock,
   sysMock,
@@ -122,5 +241,6 @@ export {
   assetMock,
   assetKeyMock,
   localeMock,
-  tagMock
+  tagMock,
+  entryWithResourceLinksMock
 }

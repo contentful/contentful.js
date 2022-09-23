@@ -65,6 +65,49 @@ test('Gets content types', async (t) => {
   t.ok(response.items, 'items')
 })
 
+test('Gets a content type that has resource links', async (t) => {
+  t.plan(4);
+  const response = await client.getContentType("catalog");
+
+  t.ok(response.sys, 'sys');
+  t.ok(response.name, 'name');
+  t.ok(response.fields, 'fields');
+  t.deepEqual(response.fields, [
+      {
+        id: 'items',
+        name: 'items',
+        type: 'Array',
+        localized: false,
+        required: false,
+        disabled: false,
+        omitted: false,
+        allowedResources: [
+          {
+            type: 'Contentful:Entry',
+            source: 'crn:contentful:::content:spaces/ocrd5ofpzqgz',
+            contentTypes: [ 'manufacturer', 'product' ]
+          }
+        ],
+        items: { type: 'ResourceLink', validations: [] }
+      },
+      {
+        id: 'productOfTheMonth',
+        name: 'product of the month',
+        type: 'ResourceLink',
+        localized: false,
+        required: false,
+        disabled: false,
+        omitted: false,
+        allowedResources: [{
+          type: 'Contentful:Entry',
+          source: 'crn:contentful:::content:spaces/ocrd5ofpzqgz',
+          contentTypes: [ 'product' ]
+        }]
+      }
+    ]
+  );
+});
+
 test('Gets entry', async (t) => {
   t.plan(2)
   const response = await client.getEntry('nyancat')
@@ -372,11 +415,36 @@ test('Gets entries by creation order and id order', async (t) => {
     .map((item) => item.sys.contentType.sys.id)
     .filter((value, index, self) => self.indexOf(value) === index)
 
-  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'contentTypeWithMetadataField', 'dog', 'human', 'kangaroo', 'testEntryReferences'], 'orders')
+  t.deepEqual(contentTypeOrder, ['1t9IbcfdCk6m04uISSsaIK', 'cat', 'catalog', 'contentTypeWithMetadataField', 'dog', 'human', 'kangaroo', 'testEntryReferences'], 'orders')
   t.ok(
     response.items[0].sys.id < response.items[1].sys.id,
     'id of entry with index 1 is higher than the one of index 0 since they share content type'
   )
+})
+
+test('Gets an entry that has resource links', async (t) => {
+  t.plan(3)
+  const response = await client.getEntry('xspaceEntry')
+
+  t.ok(response.sys, 'sys')
+  t.ok(response.fields, 'fields')
+  t.deepEqual(response.fields, { items: [
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/1hTi7NUq74QfA8DI8rF8gL'
+        }
+      },
+      {
+        sys: {
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:contentful:::content:spaces/ocrd5ofpzqgz/entries/3V5lyzzmJ2vH5f8kTmLtuZ'
+        }
+      }
+    ]
+  })
 })
 
 test('Gets assets with only images', async (t) => {
