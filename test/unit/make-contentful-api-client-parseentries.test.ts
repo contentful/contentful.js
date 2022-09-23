@@ -129,3 +129,55 @@ test('Given json should be parsed correctly as a collection of entries where an 
   expect(parsedData).toBeDefined()
   expect(parsedData.items[0].fields.metadata.sys).toEqual(data.includes.Metadata[0].sys)
 })
+
+test('Given json should be parsed correctly as a collection of entries with resource links', () => {
+  const api = makeClient({
+    // @ts-ignore
+    http: {},
+    // @ts-ignore
+    getGlobalOptions: createGlobalOptions({ resolveLinks: false }),
+  })
+
+  const data = {
+    items: [
+      {
+        sys: {
+          type: 'Entry',
+        },
+        fields: {
+          xspace: [
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk947mdX',
+              },
+            },
+          ],
+          xspace2: [
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:test:::content:spaces/8kouir73nbuz/entries/BfmNpEsQSFuh2lybiVkoq',
+              },
+            },
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:test:::content:spaces/kdtd0watvk6m/entries/irF9JXBHqNhwMwelu9HYt',
+              },
+            },
+          ],
+        },
+      },
+    ],
+  }
+
+  const parsedData = api.parseEntries<any>(data)
+  expect(parsedData).toBeDefined()
+  expect(parsedData.items[0].fields.xspace[0].sys).toEqual(data.items[0].fields.xspace[0].sys)
+  expect(parsedData.items[0].fields.xspace2[0].sys).toEqual(data.items[0].fields.xspace2[0].sys)
+  expect(parsedData.items[0].fields.xspace2[1].sys).toEqual(data.items[0].fields.xspace2[1].sys)
+})

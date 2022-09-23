@@ -22,6 +22,13 @@ export interface ContentTypeField {
   type: ContentTypeFieldType
   validations: ContentTypeFieldValidation[]
   items?: FieldItem
+  allowedResources?: ContentTypeAllowedResources[]
+}
+
+interface ContentTypeAllowedResources {
+  type: string
+  source: string
+  contentTypes: string[]
 }
 
 export type ContentTypeFieldType =
@@ -36,6 +43,7 @@ export type ContentTypeFieldType =
   | 'Array'
   | 'Object'
   | 'RichText'
+  | 'ResourceLink'
 
 export interface ContentTypeFieldValidation {
   unique?: boolean
@@ -59,7 +67,7 @@ export interface ContentTypeFieldValidation {
 }
 
 export interface FieldItem {
-  type: 'Link' | 'Symbol'
+  type: 'Link' | 'Symbol' | 'ResourceLink'
   validations: ContentTypeFieldValidation[]
   linkType?: 'Entry' | 'Asset'
 }
