@@ -436,7 +436,7 @@ class NotFoundError extends Error {
   }
 }
 
-export default function createContentfulApi<OptionType>(
+export default function createContentfulApi<OptionType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options?: OptionType
 ): DefaultClient {
@@ -511,11 +511,11 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntry<Fields>(id: string, query: EntryQueries = {}) {
+  async function getEntry<Fields extends FieldsType>(id: string, query: EntryQueries = {}) {
     return makeGetEntry<Fields>(id, query, options) as unknown
   }
 
-  async function getEntries<Fields>(query: EntriesQueries<Fields> = {}) {
+  async function getEntries<Fields extends FieldsType>(query: EntriesQueries<Fields> = {}) {
     return makeGetEntries<Fields>(query, options) as unknown
   }
 
@@ -523,7 +523,7 @@ export default function createContentfulApi<OptionType>(
 
   const getEntriesDefault = getEntriesWithLinkResolutionAndWithUnresolvableLinks
 
-  async function getEntryWithLinkResolutionAndWithUnresolvableLinks<Fields>(
+  async function getEntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
@@ -532,7 +532,7 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields>(
+  async function getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
@@ -541,7 +541,7 @@ export default function createContentfulApi<OptionType>(
     )
   }
 
-  async function getEntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
+  async function getEntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType>(
     id: string,
     query: EntryQueries = {}
   ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
@@ -551,7 +551,7 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
+  async function getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
     return internalGetEntries<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
@@ -561,7 +561,7 @@ export default function createContentfulApi<OptionType>(
   }
 
   async function getEntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-    Fields,
+    Fields extends FieldsType,
     SpaceLocales extends LocaleCode = any
   >(
     id: string,
@@ -582,7 +582,7 @@ export default function createContentfulApi<OptionType>(
   }
 
   async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-    Fields,
+    Fields extends FieldsType,
     Locales extends LocaleCode = any
   >(
     query: EntriesQueries<Fields> = {}
@@ -601,7 +601,7 @@ export default function createContentfulApi<OptionType>(
   }
 
   async function getEntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-    Fields,
+    Fields extends FieldsType,
     SpaceLocales extends LocaleCode = any
   >(
     id: string,
@@ -619,7 +619,7 @@ export default function createContentfulApi<OptionType>(
   }
 
   async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-    Fields,
+    Fields extends FieldsType,
     Locales extends LocaleCode = any
   >(
     query: EntriesQueries<Fields> = {}
@@ -646,7 +646,7 @@ export default function createContentfulApi<OptionType>(
     })
   }
 
-  async function getEntriesWithoutLinkResolution<Fields>(
+  async function getEntriesWithoutLinkResolution<Fields extends FieldsType>(
     query: EntriesQueries<Fields> = {}
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
     return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, {
@@ -655,7 +655,7 @@ export default function createContentfulApi<OptionType>(
   }
 
   async function getEntryWithAllLocalesAndWithoutLinkResolution<
-    Fields,
+    Fields extends FieldsType,
     Locales extends LocaleCode = any
   >(
     id: string,
@@ -669,7 +669,7 @@ export default function createContentfulApi<OptionType>(
   }
 
   async function getEntriesWithAllLocalesAndWithoutLinkResolution<
-    Fields,
+    Fields extends FieldsType,
     Locales extends LocaleCode = any
   >(
     query: EntriesQueries<Fields> = {}
@@ -685,7 +685,7 @@ export default function createContentfulApi<OptionType>(
     )
   }
 
-  async function makeGetEntry<Fields>(
+  async function makeGetEntry<Fields extends FieldsType>(
     id: string,
     query,
     options: ChainOptions = {
@@ -748,7 +748,7 @@ export default function createContentfulApi<OptionType>(
     }
   }
 
-  async function makeGetEntries<Fields>(
+  async function makeGetEntries<Fields extends FieldsType>(
     query,
     options: ChainOptions = {
       withoutLinkResolution: false,

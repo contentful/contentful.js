@@ -20,7 +20,7 @@ type FixedQueryOptions = {
   query?: string
 }
 
-export type SysQueries<Sys> = ExistenceFilter<Sys, 'sys'> &
+export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   EqualityFilter<Sys, 'sys'> &
   InequalityFilter<Sys, 'sys'> &
   SubsetFilters<Sys, 'sys'> &

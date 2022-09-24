@@ -24,7 +24,7 @@ export declare namespace EntryFields {
     lon: number
   }
 
-  type Link<T> = Asset | Entry<T>
+  type Link<T extends FieldsType> = Asset | Entry<T>
   type Array<T = any> = symbol[] | Entry<T>[] | Asset[]
   type Object<T extends Record<string, any> = Record<string, unknown>> = T
   type RichText = RichTextDocument
@@ -159,27 +159,27 @@ export type EntryWithoutLinkResolution<T> = Entry<T>
 
 export type EntryCollectionWithoutLinkResolution<T> = EntryCollection<T>
 
-export type EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<T> = AbstractEntryCollection<
-  EntryWithLinkResolutionAndWithUnresolvableLinks<T>
->
+export type EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<T extends FieldsType> =
+  AbstractEntryCollection<EntryWithLinkResolutionAndWithUnresolvableLinks<T>>
 
 export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
-  Fields,
+  Fields extends FieldsType,
   Locales extends LocaleCode
 > = AbstractEntryCollection<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 
 export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-  Fields,
+  Fields extends FieldsType,
   Locales extends LocaleCode
 > = AbstractEntryCollection<
   EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
 >
 
-export type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields> =
-  AbstractEntryCollection<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+export type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<
+  Fields extends FieldsType
+> = AbstractEntryCollection<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
 
 export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-  Fields,
+  Fields extends FieldsType,
   Locales extends LocaleCode
 > = AbstractEntryCollection<
   EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
