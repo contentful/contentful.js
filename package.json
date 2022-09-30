@@ -27,6 +27,7 @@
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
     "lint": "eslint lib test",
+    "nvmrc": "echo $(node -p -e 'require(\"./package\").engines.node.split(\">=\").join(\"\")') > .nvmrc",
     "pretest": "rimraf coverage && npm run lint",
     "test": "npm run test:cover && npm run test:integration && npm run test:browser-local && npm run test:size",
     "test:ci": "npm run build && ./node_modules/contentful-sdk-core/bin/test-ci.sh",
@@ -122,7 +123,7 @@
     "webpack-cli": "^4.1.0"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "config": {
     "commitizen": {
