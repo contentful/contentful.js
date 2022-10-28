@@ -11,7 +11,10 @@ updates:
     ignore:
     - dependency-name: husky
       versions:
-        - ">=5.0.0"
+      - ">=5.0.0"
+    - dependency-name: "fast-copy"
+      versions:
+      - ">=3.0.0"
     commit-message:
       prefix: build
       include: scope
@@ -26,3 +29,7 @@ updates:
     commit-message:
       prefix: build-beta
       include: scope
+    ignore:
+      - dependency-name: "fast-copy"
+        versions:
+          - ">=3.0.0"
