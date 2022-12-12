@@ -211,6 +211,8 @@ export interface FieldValidation {
         'entry-hyperlink'?: FieldValidation[];
         'embedded-entry-block'?: FieldValidation[];
         'embedded-entry-inline'?: FieldValidation[];
+        'embedded-asset-block'?: FieldValidation[];
+        'embedded-asset-inline'?: FieldValidation[];
     };
     enabledNodeTypes?: string[];
 }
@@ -263,7 +265,7 @@ interface RichTextData {
 type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
     | 'heading-6' | 'paragraph' | 'hyperlink' | 'entry-hyperlink' | 'asset-hyperlink'
     | 'unordered-list' | 'ordered-list' | 'list-item' | 'blockquote' | 'hr' | 'embedded-entry-block'
-    | 'embedded-entry-inline';
+    | 'embedded-entry-inline' | 'embedded-asset-inline' | 'embedded-asset-inline';
 
 interface RichTextContent {
     data: RichTextData;
