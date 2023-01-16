@@ -62,7 +62,7 @@
   ],
   "dependencies": {
     "axios": "^0.27.0",
-    "contentful-resolve-response": "^1.3.12",
+    "contentful-resolve-response": "^1.6.2",
     "contentful-sdk-core": "^7.0.4",
     "fast-copy": "^2.1.7",
     "json-stringify-safe": "^5.0.1"
