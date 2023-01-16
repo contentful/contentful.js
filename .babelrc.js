@@ -44,6 +44,7 @@ module.exports = function(api) {
       },
       modules: {
         presets: [['@babel/preset-env', {
+          modules: false,
           targets: {
             browsers: mainSupportedBrowsers,
             node: '12'
