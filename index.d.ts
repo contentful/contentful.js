@@ -1,5 +1,6 @@
 // Type definitions for contentful
 // Definitions by: Miika Hänninen <https://github.com/googol>
+import type { BLOCKS, INLINES } from '@contentful/rich-text-types';
 
 export interface AxiosProxyConfig {
     host: string;
@@ -79,7 +80,7 @@ export interface ContentfulCollection<T> {
     toPlainObject(): object;
 }
 
-export type AssetCollection = ContentfulCollection<Asset>
+export type AssetCollection = ContentfulCollection<Asset>;
 
 export interface Entry<T> {
     sys: Sys;
@@ -114,27 +115,27 @@ export interface Space {
 }
 
 export interface Locale {
-  code: string
-  name: string
-  default: boolean
-  fallbackCode: string | null
-  sys: {
-    id: string
-    type: 'Locale'
-    version: number
-  }
+    code: string;
+    name: string;
+    default: boolean;
+    fallbackCode: string | null;
+    sys: {
+        id: string;
+        type: 'Locale';
+        version: number;
+    };
 }
 
 export type LocaleCollection = ContentfulCollection<Locale>;
 
 export interface Tag {
-    name: string
+    name: string;
     sys: {
-      id: string
-      type: 'Tag'
-      version: number
-      visibility: 'public'
-    }
+        id: string;
+        type: 'Tag';
+        version: number;
+        visibility: 'public';
+    };
 }
 
 export type TagCollection = ContentfulCollection<Tag>;
@@ -167,17 +168,17 @@ export interface Sys {
     };
 }
 
-export type LinkType = 'Space' | 'ContentType' | 'Environment'
+export type LinkType = 'Space' | 'ContentType' | 'Environment';
 
 export interface Link<T extends LinkType> {
-  type: 'Link'
-  linkType: T
-  id: string
+    type: 'Link';
+    linkType: T;
+    id: string;
 }
 
-export type SpaceLink = Link<'Space'>
-export type EnvironmentLink = Link<'Environment'>
-export type ContentTypeLink = Link<'ContentType'>
+export type SpaceLink = Link<'Space'>;
+export type EnvironmentLink = Link<'Environment'>;
+export type ContentTypeLink = Link<'ContentType'>;
 
 export interface Field {
     disabled: boolean;
@@ -192,7 +193,18 @@ export interface Field {
     items?: FieldItem;
 }
 
-export type FieldType = 'Symbol' | 'Text' | 'Integer' | 'Number' | 'Date' | 'Boolean' | 'Location' | 'Link' | 'Array' | 'Object' | 'RichText';
+export type FieldType =
+    | 'Symbol'
+    | 'Text'
+    | 'Integer'
+    | 'Number'
+    | 'Date'
+    | 'Boolean'
+    | 'Location'
+    | 'Link'
+    | 'Array'
+    | 'Object'
+    | 'RichText';
 
 export interface FieldValidation {
     unique?: boolean;
@@ -241,7 +253,7 @@ export namespace EntryFields {
     export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
     export type Object<T = any> = T;
     export interface RichText {
-        data:{};
+        data: {};
         content: RichTextContent[];
         nodeType: 'document';
     }
@@ -250,8 +262,8 @@ export namespace EntryFields {
 interface RichTextDataTarget {
     sys: {
         id: string;
-        type: "Link";
-        "linkType": 'Entry' | 'Asset';
+        type: 'Link';
+        linkType: 'Entry' | 'Asset';
     };
 }
 
@@ -260,27 +272,25 @@ interface RichTextData {
     target?: RichTextDataTarget;
 }
 
-type RichTextNodeType = 'text' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
-    | 'heading-6' | 'paragraph' | 'hyperlink' | 'entry-hyperlink' | 'asset-hyperlink'
-    | 'unordered-list' | 'ordered-list' | 'list-item' | 'blockquote' | 'hr' | 'embedded-entry-block'
-    | 'embedded-entry-inline';
+// Requires TypeScript v4.1+
+type RichTextNodeType = `${BLOCKS}` | `${INLINES}` | 'text';
 
 interface RichTextContent {
     data: RichTextData;
-    content?: RichTextContent[]
-    marks: {type: ('bold' | 'underline' | 'code' | 'italic')}[];
+    content?: RichTextContent[];
+    marks: { type: 'bold' | 'underline' | 'code' | 'italic' }[];
     value?: string;
     nodeType: RichTextNodeType;
 }
 
 interface TagLink {
-  sys: {
-    type: 'Link';
-    linkType: 'Tag';
-    id: string;
-  }
+    sys: {
+        type: 'Link';
+        linkType: 'Tag';
+        id: string;
+    };
 }
 
 interface Metadata {
-  tags: TagLink[];
+    tags: TagLink[];
 }
