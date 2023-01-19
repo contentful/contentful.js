@@ -7,6 +7,7 @@ jobs:
   lint:
     docker:
       - image: cimg/node:16.13.2-browsers
+
     steps:
       - checkout
       - restore_cache:

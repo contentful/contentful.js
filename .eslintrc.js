@@ -13,7 +13,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],
-  ignorePatterns: ['**/test/output-integration/**'],
+  ignorePatterns: ['**/test/output-integration/**', '**/webpack.config.js'],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
