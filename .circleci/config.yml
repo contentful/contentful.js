@@ -21,7 +21,7 @@ jobs:
 
   unit:
     docker:
-      - image: cimg/node:16.11
+      - image: cimg/node:16.13.2
     steps:
       - checkout
       - restore_cache:
@@ -31,7 +31,7 @@ jobs:
 
   integration:
     docker:
-      - image: cimg/node:16.11
+      - image: cimg/node:16.13.2
     steps:
       - checkout
       - restore_cache:
@@ -41,17 +41,13 @@ jobs:
 
   release:
     docker:
-      - image: cimg/node:16.11
+      - image: cimg/node:16.13.2-browsers
     steps:
       - checkout
       - vault/get-secrets:
           template-preset: 'semantic-release-ecosystem'
       - run: npm ci
-      - run:
-          name: Build
-          environment:
-            BUNDLESIZE_GITHUB_TOKEN: "{{ GH_TOKEN }}"
-          command: npm run build
+      - run: npm run build
       - run: npm run semantic-release
 
 workflows:
