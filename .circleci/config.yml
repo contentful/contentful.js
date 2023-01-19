@@ -46,8 +46,11 @@ jobs:
       - checkout
       - vault/get-secrets:
           template-preset: 'semantic-release-ecosystem'
+      - environment:
+          BUNDLESIZE_GITHUB_TOKEN: { { GH_TOKEN } }
       - run: npm ci
       - run: npm run build
+          
       - run: npm run semantic-release
 
 workflows:
