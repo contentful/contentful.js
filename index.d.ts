@@ -191,6 +191,13 @@ export interface Field {
     type: FieldType;
     validations: FieldValidation[];
     items?: FieldItem;
+    allowedFields?: ContentTypeAllowedResources
+}
+
+interface ContentTypeAllowedResources {
+    type: string
+    source: string
+    contentTypes: string[]
 }
 
 export type FieldType =
@@ -204,7 +211,8 @@ export type FieldType =
     | 'Link'
     | 'Array'
     | 'Object'
-    | 'RichText';
+    | 'RichText'
+    | 'ResourceLink';
 
 export interface FieldValidation {
     unique?: boolean;
