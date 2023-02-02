@@ -156,6 +156,11 @@
         "name": "beta-v10",
         "channel": "beta-v10",
         "prerelease": true
+      },
+      {
+        "name": "beta-resource-links",
+        "channel": "beta-resource-links",
+        "prerelease": true
       }
     ],
     "plugins": [
