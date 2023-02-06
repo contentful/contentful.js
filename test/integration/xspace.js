@@ -12,7 +12,8 @@ const client = contentful.createClient({
 })
 
 const LOCAL_FIELD_NAME = 'xspaceBlogContent'
-const LOCAL_FIELD_RESOLVED_FIELD_NAMES = ['title', 'xspaceBlogContent']
+const LOCAL_FIELD_RESOLVED_FIELD_NAMES = ['title', LOCAL_FIELD_NAME, 'xspaceContentTags']
+const LOCAL_FIELD_RESOLVED_EXTERNAL_FIELD_NAMES = ['name']
 const EXTERNAL_FIELD_NAME = 'xspaceBlogPostAuthor'
 const EXTERNAL_FIELD_RESOLVED_FIELD_NAMES = ['title', 'xspaceAuthorName']
 const EXTERNAL_FIELD_RESOLVED_LOCAL_FIELD_NAMES = ['title', 'xspaceAvatarImage']
@@ -47,16 +48,22 @@ export const xspaceTests = () => {
     const entry = await client.getEntry('2jyJVSX0aJro9hvg2tQLXQ')
     // console.dir(entry, { depth: 10 })
 
-    t.ok(
-      entry.fields[EXTERNAL_FIELD_NAME].fields[
-        EXTERNAL_FIELD_RESOLVED_FIELD_NAMES[1]
-      ]
-    )
+    t.ok(entry.fields[EXTERNAL_FIELD_NAME].fields[EXTERNAL_FIELD_RESOLVED_FIELD_NAMES[1]])
     t.deepEqual(
-      Object.keys(
-        entry.fields[EXTERNAL_FIELD_NAME].fields[EXTERNAL_FIELD_RESOLVED_FIELD_NAMES[1]].fields
-      ),
+      Object.keys(entry.fields[EXTERNAL_FIELD_NAME].fields[EXTERNAL_FIELD_RESOLVED_FIELD_NAMES[1]].fields),
       EXTERNAL_FIELD_RESOLVED_LOCAL_FIELD_NAMES
+    )
+  })
+
+  test('Resolves external link from a local entry', async (t) => {
+    t.plan(2)
+    const entry = await client.getEntry('2jyJVSX0aJro9hvg2tQLXQ')
+    // console.dir(entry, { depth: 10 })
+
+    t.ok(entry.fields[LOCAL_FIELD_NAME].fields[LOCAL_FIELD_RESOLVED_FIELD_NAMES[2]])
+    t.deepEqual(
+      Object.keys(entry.fields[LOCAL_FIELD_NAME].fields[LOCAL_FIELD_RESOLVED_FIELD_NAMES[2]].fields),
+      LOCAL_FIELD_RESOLVED_EXTERNAL_FIELD_NAMES
     )
   })
 }
