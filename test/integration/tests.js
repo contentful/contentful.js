@@ -3,6 +3,7 @@ import sinon from 'sinon'
 
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validate-timestamp'
+import { xspaceTests } from './xspace'
 
 // Token values are deliberately exposed to enable integration test
 // usage which is dependent on a contentful test space.
@@ -650,3 +651,5 @@ test('Does not create asset key if expiresAt is too far in the future (> 48 hour
   const longExpiresAt = now() + 72 * 60 * 60
   await t.shouldReject(localeClient.createAssetKey(longExpiresAt), ValidationError)
 })
+
+xspaceTests()
