@@ -1,68 +1,131 @@
 import test from 'blue-tape'
 
 import * as contentful from '../../lib/contentful'
+import {
+  XSPACE_TESTS_ACCESS_TOKEN,
+  XSPACE_TESTS_ADDITIONAL_TOKENS
+} from './auth'
 
 const client = contentful.createClient({
-  space: '6fqijljzyr0e',
-  accessToken: 'G-0LUfT0RqNaX5h2BVeUYeuZvmtQWj_bdGBOpz718ac',
-  additionalTokens: {
-    kdtd0watvk6m: '6Jt8W1k1aNKM-Xw4P8AESXcO3iiA2buzfGzl9bfHDyI'
-  }
+  accessToken: XSPACE_TESTS_ACCESS_TOKEN,
+  space: 'z788fz497ijs',
+  additionalTokens: XSPACE_TESTS_ADDITIONAL_TOKENS
 })
 
-const LOCAL_FIELD_NAME = 'xspaceBlogContent'
-const LOCAL_FIELD_RESOLVED_FIELD_NAMES = ['title', LOCAL_FIELD_NAME, 'xspaceContentTags']
-const LOCAL_FIELD_RESOLVED_EXTERNAL_FIELD_NAMES = ['name']
-const EXTERNAL_FIELD_NAME = 'xspaceBlogPostAuthor'
-const EXTERNAL_FIELD_RESOLVED_FIELD_NAMES = ['title', 'xspaceAuthorName']
-const EXTERNAL_FIELD_RESOLVED_LOCAL_FIELD_NAMES = ['title', 'xspaceAvatarImage']
+const ENTRY_ID = '46q558fOqAy8ibgYJ1zq5k'
+
+const SPACE_3_FIELD_1_KEY = 'avatar'
+const SPACE_3_FIELD_2_KEY = 'metadata'
+const SPACE_3_FIELD_1 = {
+  [SPACE_3_FIELD_1_KEY]: {
+    image: {},
+    caption: {}
+  }
+}
+const SPACE_3_FIELD_2 = {
+  [SPACE_3_FIELD_2_KEY]: {
+    tags: {},
+    date: {}
+  }
+}
+const SPACE_3 = {
+  ...SPACE_3_FIELD_1,
+  ...SPACE_3_FIELD_2
+}
+
+const SPACE_2_FIELD_2_KEY = 'book'
+const SPACE_2_FIELD_2 = {
+  [SPACE_2_FIELD_2_KEY]: {
+    title: {}
+  }
+}
+
+const SPACE_2_FIELD_1_KEY = 'author'
+const SPACE_2_FIELD_1 = {
+  [SPACE_2_FIELD_1_KEY]: {
+    name: {},
+    picture: SPACE_3[SPACE_3_FIELD_1],
+    book: SPACE_2_FIELD_2
+  }
+}
+
+const SPACE_2 = {
+  ...SPACE_2_FIELD_1,
+  ...SPACE_2_FIELD_2
+}
+
+const SPACE_1_FIELD_1_KEY = 'content'
+const SPACE_1_FIELD_1 = {
+  [SPACE_1_FIELD_1_KEY]: {
+    text: {},
+    metadata: SPACE_3[SPACE_3_FIELD_1]
+  }
+}
+const SPACE_1_FIELD_2_KEY = 'author'
+const SPACE_1_FIELD_2 = {
+  [SPACE_1_FIELD_2_KEY]: {
+    title: {},
+    content: SPACE_1_FIELD_1,
+    author: SPACE_2[SPACE_2_FIELD_1]
+  }
+}
+const SPACE_1 = {
+  ...SPACE_1_FIELD_1,
+  ...SPACE_1_FIELD_2
+}
 
 export const xspaceTests = () => {
-  test('Resolves link to local entry', async (t) => {
+  test('Resolves link to entry in the same space', async (t) => {
     t.plan(2)
-    const entry = await client.getEntry('2jyJVSX0aJro9hvg2tQLXQ')
+    const entry = await client.getEntry(ENTRY_ID, { include: 10 })
     // console.dir(entry, { depth: 10 })
 
-    t.ok(entry.fields[LOCAL_FIELD_NAME])
+    t.ok(entry.fields[SPACE_1_FIELD_1_KEY])
     t.deepEqual(
-      Object.keys(entry.fields[LOCAL_FIELD_NAME].fields),
-      LOCAL_FIELD_RESOLVED_FIELD_NAMES
+      Object.keys(entry.fields[SPACE_1_FIELD_1_KEY].fields),
+      Object.keys(SPACE_1[SPACE_1_FIELD_1_KEY])
     )
   })
 
-  test('Resolves link to external entry', async (t) => {
+  test('Resolves xlink to entry in another space', async (t) => {
     t.plan(2)
-    const entry = await client.getEntry('2jyJVSX0aJro9hvg2tQLXQ')
-    // console.dir(entry, { depth: 10 })
+    const entry = await client.getEntry(ENTRY_ID, { include: 10 })
+    console.dir(entry, { depth: 10 })
 
-    t.ok(entry.fields[EXTERNAL_FIELD_NAME])
+    t.ok(entry.fields[SPACE_1_FIELD_2_KEY])
     t.deepEqual(
-      Object.keys(entry.fields[EXTERNAL_FIELD_NAME].fields),
-      EXTERNAL_FIELD_RESOLVED_FIELD_NAMES
+      Object.keys(entry.fields[SPACE_1_FIELD_2_KEY].fields),
+      Object.keys(SPACE_2[SPACE_2_FIELD_1_KEY])
     )
   })
 
-  test('Resolves local link from an external entry', async (t) => {
-    t.plan(2)
-    const entry = await client.getEntry('2jyJVSX0aJro9hvg2tQLXQ')
+  test('Resolves link which contains xlink to another space', async (t) => {
+    t.plan(3)
+    const entry = await client.getEntry(ENTRY_ID, { include: 10 })
     // console.dir(entry, { depth: 10 })
 
-    t.ok(entry.fields[EXTERNAL_FIELD_NAME].fields[EXTERNAL_FIELD_RESOLVED_FIELD_NAMES[1]])
+    t.ok(entry.fields[SPACE_1_FIELD_1_KEY])
+    t.ok(entry.fields[SPACE_1_FIELD_1_KEY].fields[SPACE_3_FIELD_2_KEY])
     t.deepEqual(
-      Object.keys(entry.fields[EXTERNAL_FIELD_NAME].fields[EXTERNAL_FIELD_RESOLVED_FIELD_NAMES[1]].fields),
-      EXTERNAL_FIELD_RESOLVED_LOCAL_FIELD_NAMES
+      Object.keys(
+        entry.fields[SPACE_1_FIELD_1_KEY].fields[SPACE_3_FIELD_2_KEY].fields
+      ),
+      Object.keys(SPACE_3[SPACE_3_FIELD_2_KEY])
     )
   })
 
-  test('Resolves external link from a local entry', async (t) => {
-    t.plan(2)
-    const entry = await client.getEntry('2jyJVSX0aJro9hvg2tQLXQ')
+  test('Resolves xlink which contains local link', async (t) => {
+    t.plan(3)
+    const entry = await client.getEntry(ENTRY_ID, { include: 10 })
     // console.dir(entry, { depth: 10 })
 
-    t.ok(entry.fields[LOCAL_FIELD_NAME].fields[LOCAL_FIELD_RESOLVED_FIELD_NAMES[2]])
+    t.ok(entry.fields[SPACE_1_FIELD_2_KEY])
+    t.ok(entry.fields[SPACE_1_FIELD_2_KEY].fields[SPACE_2_FIELD_2_KEY])
     t.deepEqual(
-      Object.keys(entry.fields[LOCAL_FIELD_NAME].fields[LOCAL_FIELD_RESOLVED_FIELD_NAMES[2]].fields),
-      LOCAL_FIELD_RESOLVED_EXTERNAL_FIELD_NAMES
+      Object.keys(
+        entry.fields[SPACE_1_FIELD_2_KEY].fields[SPACE_2_FIELD_2_KEY].fields
+      ),
+      Object.keys(SPACE_2[SPACE_2_FIELD_2_KEY])
     )
   })
 }
