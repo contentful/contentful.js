@@ -64,4 +64,25 @@ export const xspaceTests = () => {
     t.ok(article.fields.author.fields)
     t.ok(article.fields.author.fields.book.fields)
   })
+
+  test('Does not resolve links at depth 2 for include = 1', async (t) => {
+    t.plan(3)
+    const article = await client.getEntry(ENTRY_ID, { include: 1 })
+    console.dir(article, { depth: 10 })
+
+    // Article.Content.Metadata should not resolve, it is deeper than 1
+    t.ok(article.fields.content.fields)
+    t.notOk(article.fields.content.fields.metadata.fields)
+    t.equal(article.fields.content.fields.metadata.sys.type, 'ResourceLink')
+  })
+
+  test('Resolves links at depth 1 for include = 1', async (t) => {
+    t.plan(2)
+    const article = await client.getEntry(ENTRY_ID, { include: 1 })
+    console.dir(article, { depth: 10 })
+
+    // Article.Author should resolve, it is not deeper than 1
+    t.ok(article.fields.author.fields)
+    t.equal(article.fields.author.sys.type, 'Entry')
+  })
 }
