@@ -31,20 +31,20 @@ const client = contentful.createClient({
 const ENTRY_ID = '46q558fOqAy8ibgYJ1zq5k'
 
 export const xspaceTests = () => {
-  test('Resolves local link', async (t) => {
-    t.plan(1)
-    const article = await client.getEntry(ENTRY_ID)
-    // console.dir(article, { depth: 10 })
-
-    t.ok(article.fields.content.fields)
-  })
-
   test('Resolves xspace link', async (t) => {
     t.plan(1)
     const article = await client.getEntry(ENTRY_ID)
     // console.dir(article, { depth: 10 })
 
     t.ok(article.fields.author.fields)
+  })
+
+  test('Does not resolve xspace link for include = 0', async (t) => {
+    t.plan(1)
+    const article = await client.getEntry(ENTRY_ID, { include: 0 })
+    // console.dir(article, { depth: 10 })
+
+    t.notOk(article.fields.author.fields)
   })
 
   test('Resolves local link and nested xspace link', async (t) => {
@@ -83,15 +83,5 @@ export const xspaceTests = () => {
     // Article.Author.Book should not resolve, it is deeper than 1
     t.ok(article.fields.author.fields)
     t.notOk(article.fields.author.fields.book.fields)
-  })
-
-  test('Resolves links at depth 1 for include = 1', async (t) => {
-    t.plan(2)
-    const article = await client.getEntry(ENTRY_ID, { include: 1 })
-    console.dir(article, { depth: 10 })
-
-    // Article.Author should resolve, it is not deeper than 1
-    t.ok(article.fields.author.fields)
-    t.equal(article.fields.author.sys.type, 'Entry')
   })
 }
