@@ -9,7 +9,9 @@ const linkMock = {
 const sysMock = {
   type: 'Type',
   id: 'id',
-  space: copy(linkMock),
+  space: {
+    sys: copy(linkMock)
+  },
   createdAt: 'createdatdate',
   updatedAt: 'updatedatdate',
   revision: 1
