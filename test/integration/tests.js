@@ -11,7 +11,7 @@ import { xspaceTests } from './xspace'
 const params = {
   accessToken: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U',
   space: 'ezs1swce23xe',
-  accessTokenBySpaceId: {
+  additionalTokens: {
     ezs1swce23xe: 'QGT8WxED1nwrbCUpY6VEK6eFvZwvlC5ujlX-rzUq97U'
   }
 }
@@ -19,7 +19,7 @@ const params = {
 const localeSpaceParams = {
   accessToken: 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04',
   space: '7dh3w86is8ls',
-  accessTokenBySpaceId: {
+  additionalTokens: {
     '7dh3w86is8ls': 'p1qWlqQjma9OL_Cb-BN8YvpZ0KnRfXPjvqIWChlfL04'
   }
 }
@@ -28,7 +28,7 @@ const previewParams = {
   host: 'preview.contentful.com',
   accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
   space: 'ezs1swce23xe',
-  accessTokenBySpaceId: {
+  additionalTokens: {
     ezs1swce23xe: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns'
   }
 }

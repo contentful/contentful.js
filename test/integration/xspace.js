@@ -4,11 +4,10 @@ import * as contentful from '../../lib/contentful'
 
 const client = contentful.createClient({
   space: '6fqijljzyr0e',
-  accessTokenBySpaceId: {
-    '6fqijljzyr0e': 'G-0LUfT0RqNaX5h2BVeUYeuZvmtQWj_bdGBOpz718ac',
+  accessToken: 'G-0LUfT0RqNaX5h2BVeUYeuZvmtQWj_bdGBOpz718ac',
+  additionalTokens: {
     kdtd0watvk6m: '6Jt8W1k1aNKM-Xw4P8AESXcO3iiA2buzfGzl9bfHDyI'
-  },
-  resolveResourceLinks: true
+  }
 })
 
 const LOCAL_FIELD_NAME = 'xspaceBlogContent'
