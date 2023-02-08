@@ -7,8 +7,8 @@ import * as contentful from '../../lib/contentful'
  *   -- title
  *   -- content -- local link --> Space 1: Content
  *     -- text
- *     -- metadata -- xspace link --> Space 3: Metadata
- *       -- tags
+ *     -- additionalInfo -- xspace link --> Space 3: Additional Info
+ *       -- categories
  *       -- date
  *   -- author -- xspace link --> Space 2: Author
  *     -- name
@@ -55,7 +55,7 @@ export const xspaceTests = () => {
     // console.dir(article, { depth: 10 })
 
     t.ok(article.fields.content.fields)
-    t.ok(article.fields.content.fields.metadata.fields)
+    t.ok(article.fields.content.fields.additionalInfo.fields)
   })
 
   test('Resolves xspace link and nested local link', async (t) => {
@@ -72,9 +72,9 @@ export const xspaceTests = () => {
     const article = await client.getEntry(ENTRY_ID, { include: 1 })
     // console.dir(article, { depth: 10 })
 
-    // Article.Content.Metadata should not resolve, it is deeper than 1
+    // Article.Content.AdditionalInfo should not resolve, it is deeper than 1
     t.ok(article.fields.content.fields)
-    t.notOk(article.fields.content.fields.metadata.fields)
+    t.notOk(article.fields.content.fields.additionalInfo.fields)
   })
 
   test('Resolves xspace link but not nested local link for include = 1', async (t) => {
