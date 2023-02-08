@@ -17,6 +17,8 @@ import * as contentful from '../../lib/contentful'
  *       -- caption
  *     -- book -- local link --> Space 2: Book
  *       -- title
+ *   -- views -- xspace link --> Space 3: Views
+ *     -- count
  */
 
 const client = contentful.createClient({
@@ -83,5 +85,15 @@ export const xspaceTests = () => {
     // Article.Author.Book should not resolve, it is deeper than 1
     t.ok(article.fields.author.fields)
     t.notOk(article.fields.author.fields.book.fields)
+  })
+
+  test('Resolves xspace link when other nested links exist for include = 1', async (t) => {
+    t.plan(2)
+    const article = await client.getEntry(ENTRY_ID, { include: 1 })
+    // console.dir(article, { depth: 10 })
+
+    // Article.Views should resolve, not deeper than 1
+    t.ok(article.fields.views.fields)
+    t.ok(article.fields.views.fields.views.fields)
   })
 }
