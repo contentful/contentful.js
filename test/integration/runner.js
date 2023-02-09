@@ -3,3 +3,4 @@ require('@babel/register')({
 })
 
 require('./tests.js')
+require('./resource-links-test.js')
