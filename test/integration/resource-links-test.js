@@ -69,6 +69,14 @@ test('Resolves xspace link and nested local link', async (t) => {
   t.ok(article.fields.author.fields.book.fields)
 })
 
+test('Resolves xspace link and nested xspace link', async (t) => {
+  t.plan(2)
+  const article = await client.getEntry(ENTRY_ID, { include: 2 })
+
+  t.ok(article.fields.author.fields)
+  t.ok(article.fields.author.fields.picture.fields)
+})
+
 // known issue
 test.skip('Resolves local link but not nested xspace link for include = 1', async (t) => {
   t.plan(2)
@@ -86,4 +94,13 @@ test('Resolves xspace link but not nested local link for include = 1', async (t)
   // Article.Author.Book should not resolve, it is deeper than 1
   t.ok(article.fields.author.fields)
   t.notOk(article.fields.author.fields.book.fields)
+})
+
+test('Resolves xspace link but not nested xspace link for include = 1', async (t) => {
+  t.plan(2)
+  const article = await client.getEntry(ENTRY_ID, { include: 1 })
+
+  // Article.Author.Picture should not resolve, it is deeper than 1
+  t.ok(article.fields.author.fields)
+  t.notOk(article.fields.author.fields.picture.fields)
 })
