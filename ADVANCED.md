@@ -64,16 +64,16 @@ By default, the SDK will keep links, which could not get resolved, in your respo
 
 ### Links to other spaces (beta)
 
-`getEntry` and `getEntries` endponts can now resolve links to entries from other spaces as they do for regular links. The `resolveLinks`, `removeUnresolved` and `include` parameters affect both types of links.
+`getEntry` and `getEntries` endpoints can now resolve links to entries from other spaces as they do for regular links. The `resolveLinks`, `removeUnresolved` and `include` parameters affect both types of links.
 
 To use this functionality provide `additionalTokens` when creating the Contentful client
 ```js
 const contentful = require("contentful");
 const client = contentful.createClient({
-  accessToken: "<your-access-token>",
-  space: "<your-space-id>",
+  accessToken: "<current-space-access-token>",
+  space: "<current-space-id>",
   additionalTokens: {
-    "<other-space-id>": "<other-access-token>",
+    "<other-space-id>": "<other-space-access-token>",
     ...
   }
 });

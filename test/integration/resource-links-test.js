@@ -37,11 +37,11 @@ const client = contentful.createClient({
   }
 })
 
-const ENTRY_ID = '46q558fOqAy8ibgYJ1zq5k'
+const ARTICLE_ID = '46q558fOqAy8ibgYJ1zq5k'
 
 test('Resolves xspace link for default locale', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID)
+  const article = await client.getEntry(ARTICLE_ID)
 
   t.ok(article.fields.author.fields)
   t.equal(article.fields.author.fields.name, 'Greg (en)')
@@ -49,7 +49,7 @@ test('Resolves xspace link for default locale', async (t) => {
 
 test('Resolves xspace link for specified locale', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { locale: 'de' })
+  const article = await client.getEntry(ARTICLE_ID, { locale: 'de' })
 
   t.ok(article.fields.author.fields)
   t.equal(article.fields.author.fields.name, 'Greg (de)')
@@ -58,7 +58,7 @@ test('Resolves xspace link for specified locale', async (t) => {
 // missing feature
 test.skip('Resolves xspace link for specified locale, falling back to default locale', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { locale: 'fr' })
+  const article = await client.getEntry(ARTICLE_ID, { locale: 'fr' })
 
   t.ok(article.fields.author.fields)
   t.equal(article.fields.author.fields.name, 'Greg (en)')
@@ -66,7 +66,7 @@ test.skip('Resolves xspace link for specified locale, falling back to default lo
 
 test('Resolves xspace link for all locales', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { locale: '*' })
+  const article = await client.getEntry(ARTICLE_ID, { locale: '*' })
 
   t.ok(article.fields.author['en-US'].fields.name['en-US'])
   t.ok(article.fields.author['en-US'].fields.name.de)
@@ -74,14 +74,14 @@ test('Resolves xspace link for all locales', async (t) => {
 
 test('Does not resolve xspace link for include = 0', async (t) => {
   t.plan(1)
-  const article = await client.getEntry(ENTRY_ID, { include: 0 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 0 })
 
   t.notOk(article.fields.author.fields)
 })
 
 test('Resolves xspace links to two different spaces', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID)
+  const article = await client.getEntry(ARTICLE_ID)
 
   t.ok(article.fields.author.fields)
   t.ok(article.fields.view.fields)
@@ -89,14 +89,14 @@ test('Resolves xspace links to two different spaces', async (t) => {
 
 test('Resolves an array of xspace links', async (t) => {
   t.plan(1)
-  const article = await client.getEntry(ENTRY_ID)
+  const article = await client.getEntry(ARTICLE_ID)
 
   t.ok(article.fields.views[0].fields)
 })
 
 test('Resolves local link and nested xspace link', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 2 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 2 })
 
   t.ok(article.fields.content.fields)
   t.ok(article.fields.content.fields.additionalInfo.fields)
@@ -104,7 +104,7 @@ test('Resolves local link and nested xspace link', async (t) => {
 
 test('Resolves xspace link and nested local link', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 2 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 2 })
 
   t.ok(article.fields.author.fields)
   t.ok(article.fields.author.fields.book.fields)
@@ -112,7 +112,7 @@ test('Resolves xspace link and nested local link', async (t) => {
 
 test('Resolves xspace link and nested xspace link', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 2 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 2 })
 
   t.ok(article.fields.author.fields)
   t.ok(article.fields.author.fields.picture.fields)
@@ -120,7 +120,7 @@ test('Resolves xspace link and nested xspace link', async (t) => {
 
 test('Resolves xspace link and nested circular xspace link', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 2 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 2 })
 
   t.ok(article.fields.author.fields)
   t.ok(article.fields.author.fields.article.fields)
@@ -128,7 +128,7 @@ test('Resolves xspace link and nested circular xspace link', async (t) => {
 
 test('Resolves xspace link and nested xspace link and nested asset', async (t) => {
   t.plan(3)
-  const article = await client.getEntry(ENTRY_ID, { include: 3 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 3 })
 
   t.ok(article.fields.author.fields)
   t.ok(article.fields.author.fields.picture.fields)
@@ -138,7 +138,7 @@ test('Resolves xspace link and nested xspace link and nested asset', async (t) =
 // known issue
 test.skip('Resolves local link but not nested xspace link for include = 1', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 1 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 1 })
 
   // Article.Content.AdditionalInfo should not resolve, it is deeper than 1
   t.ok(article.fields.content.fields)
@@ -147,7 +147,7 @@ test.skip('Resolves local link but not nested xspace link for include = 1', asyn
 
 test('Resolves xspace link but not nested local link for include = 1', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 1 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 1 })
 
   // Article.Author.Book should not resolve, it is deeper than 1
   t.ok(article.fields.author.fields)
@@ -156,7 +156,7 @@ test('Resolves xspace link but not nested local link for include = 1', async (t)
 
 test('Resolves xspace link but not nested xspace link for include = 1', async (t) => {
   t.plan(2)
-  const article = await client.getEntry(ENTRY_ID, { include: 1 })
+  const article = await client.getEntry(ARTICLE_ID, { include: 1 })
 
   // Article.Author.Picture should not resolve, it is deeper than 1
   t.ok(article.fields.author.fields)

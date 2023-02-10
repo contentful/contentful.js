@@ -16,6 +16,7 @@ export type ClientLogLevel = 'error' | 'warning' | 'info';
 export interface CreateClientParams {
     space: string;
     accessToken: string;
+    additionalTokens?: Record<string, string>;
     environment?: string;
     insecure?: boolean;
     host?: string;
@@ -191,7 +192,7 @@ export interface Field {
     type: FieldType;
     validations: FieldValidation[];
     items?: FieldItem;
-    allowedFields?: ContentTypeAllowedResources
+    allowedResources?: ContentTypeAllowedResources
 }
 
 interface ContentTypeAllowedResources {
@@ -236,7 +237,7 @@ export interface FieldValidation {
 }
 
 export interface FieldItem {
-    type: 'Link' | 'Symbol';
+    type: 'Link' | 'ResourceLink' | 'Symbol';
     validations: FieldValidation[];
     linkType?: 'Entry' | 'Asset';
 }
@@ -258,6 +259,7 @@ export namespace EntryFields {
         lon: number;
     }
     export type Link<T> = Asset | Entry<T>;
+    export type ResourceLink<T> = Entry<T>
     export type Array<T = any> = Symbol[] | Entry<T>[] | Asset[];
     export type Object<T = any> = T;
     export interface RichText {
