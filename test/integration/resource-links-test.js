@@ -21,7 +21,9 @@ import * as contentful from '../../lib/contentful'
  *       -- caption
  *     -- book -- local link --> Space 2: Book
  *       -- title
- *   -- views -- xspace link --> Space 3: Views
+ *   -- view -- xspace link --> Space 3: Views
+ *     -- count
+ *   -- views (array) -- xspace link --> Space 3: Views
  *     -- count
  */
 
@@ -81,7 +83,14 @@ test('Resolves xspace links to two different spaces', async (t) => {
   const article = await client.getEntry(ENTRY_ID)
 
   t.ok(article.fields.author.fields)
-  t.ok(article.fields.views.fields)
+  t.ok(article.fields.view.fields)
+})
+
+test('Resolves an array of xspace links', async (t) => {
+  t.plan(1)
+  const article = await client.getEntry(ENTRY_ID)
+
+  t.ok(article.fields.views[0].fields)
 })
 
 test('Resolves local link and nested xspace link', async (t) => {
