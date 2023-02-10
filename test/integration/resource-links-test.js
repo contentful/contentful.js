@@ -2,6 +2,11 @@ import test from 'blue-tape'
 import * as contentful from '../../lib/contentful'
 
 /* Test data structure:
+ *
+ * Space 1: en-US, de, fr
+ * Space 2: en-US, de
+ * Space 3: en-US
+ *
  * -- Space 1: Article
  *   -- title
  *   -- content -- local link --> Space 1: Content
@@ -45,6 +50,15 @@ test('Resolves xspace link for specified locale', async (t) => {
 
   t.ok(article.fields.author.fields)
   t.equal(article.fields.author.fields.name, 'Greg (de)')
+})
+
+// missing feature
+test.skip('Resolves xspace link for specified locale, falling back to default locale', async (t) => {
+  t.plan(2)
+  const article = await client.getEntry(ENTRY_ID, { locale: 'fr' })
+
+  t.ok(article.fields.author.fields)
+  t.equal(article.fields.author.fields.name, 'Greg (en)')
 })
 
 test('Resolves xspace link for all locales', async (t) => {
