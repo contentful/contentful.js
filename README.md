@@ -250,6 +250,13 @@ contentful.createClient({
       </td>
     </tr>
     <tr>
+      <td><code>additionalTokens</code></td>
+      <td><code>{}</code></td>
+      <td>
+        Additional access tokens, used for resolving links to other spaces. The expected format is <code>{ spaceId: accessToken, ... }</code>
+      </td>
+    </tr>
+    <tr>
       <td><code>host</code></td>
       <td><code>'cdn.contentful.com'</code></td>
       <td>
