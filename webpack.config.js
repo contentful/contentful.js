@@ -62,6 +62,15 @@ browserBundle.module.rules = [
   })
 ]
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
+// We remove global here to prevent a check which uses the Function constructor and runs into CSP
+// issues, see https://github.com/webpack/webpack/issues/5627#issuecomment-394309966
+browserBundle.node.global = false
+browserBundle.plugins.push(
+  new webpack.DefinePlugin({
+    global: 'window', // Placeholder for global used in any node_modules
+  })
+)
+browserBundle.target = 'web'
 
 // Node - bundled umd file
 const nodeBundle = copy(baseBundleConfig)
