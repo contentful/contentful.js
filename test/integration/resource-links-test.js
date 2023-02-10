@@ -47,6 +47,14 @@ test('Resolves xspace link for specified locale', async (t) => {
   t.equal(article.fields.author.fields.name, 'Greg (de)')
 })
 
+test('Resolves xspace link for all locales', async (t) => {
+  t.plan(2)
+  const article = await client.getEntry(ENTRY_ID, { locale: '*' })
+
+  t.ok(article.fields.author['en-US'].fields.name['en-US'])
+  t.ok(article.fields.author['en-US'].fields.name.de)
+})
+
 test('Does not resolve xspace link for include = 0', async (t) => {
   t.plan(1)
   const article = await client.getEntry(ENTRY_ID, { include: 0 })
