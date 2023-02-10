@@ -21,6 +21,7 @@ import * as contentful from '../../lib/contentful'
  *       -- caption
  *     -- book -- local link --> Space 2: Book
  *       -- title
+ *     -- article -- xspace link --> Space 1: Article (circular)
  *   -- view -- xspace link --> Space 3: Views
  *     -- count
  *   -- views (array) -- xspace link --> Space 3: Views
@@ -115,6 +116,14 @@ test('Resolves xspace link and nested xspace link', async (t) => {
 
   t.ok(article.fields.author.fields)
   t.ok(article.fields.author.fields.picture.fields)
+})
+
+test('Resolves xspace link and nested circular xspace link', async (t) => {
+  t.plan(2)
+  const article = await client.getEntry(ENTRY_ID, { include: 2 })
+
+  t.ok(article.fields.author.fields)
+  t.ok(article.fields.author.fields.article.fields)
 })
 
 // known issue
