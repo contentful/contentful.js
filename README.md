@@ -253,7 +253,7 @@ contentful.createClient({
       <td><code>additionalTokens</code></td>
       <td><code>{}</code></td>
       <td>
-        Additional access tokens, used for resolving links to other spaces. The expected format is <code>{ spaceId: accessToken, ... }</code>
+        Additional access tokens, used for resolving links to other spaces. Each additional space id should have its respective access token: <code>{ spaceId: accessToken, ... }</code>. 
       </td>
     </tr>
     <tr>
