@@ -10,7 +10,7 @@ import * as contentful from '../../lib/contentful'
  *       -- categories
  *       -- date
  *   -- author -- xspace link --> Space 2: Author
- *     -- name
+ *     -- name (localized)
  *     -- picture -- xspace link --> Space 3: Avatar
  *       -- image
  *       -- caption
@@ -31,11 +31,20 @@ const client = contentful.createClient({
 
 const ENTRY_ID = '46q558fOqAy8ibgYJ1zq5k'
 
-test('Resolves xspace link', async (t) => {
-  t.plan(1)
+test('Resolves xspace link for default locale', async (t) => {
+  t.plan(2)
   const article = await client.getEntry(ENTRY_ID)
 
   t.ok(article.fields.author.fields)
+  t.equal(article.fields.author.fields.name, 'Greg (en)')
+})
+
+test('Resolves xspace link for specified locale', async (t) => {
+  t.plan(2)
+  const article = await client.getEntry(ENTRY_ID, { locale: 'de' })
+
+  t.ok(article.fields.author.fields)
+  t.equal(article.fields.author.fields.name, 'Greg (de)')
 })
 
 test('Does not resolve xspace link for include = 0', async (t) => {
