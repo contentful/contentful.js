@@ -50,7 +50,7 @@ To disable it just set `resolveLinks` to `false` when creating the Contentful cl
 ```js
 const contentful = require("contentful");
 const client = contentful.createClient({
-  accessToken: "<you-access-token>",
+  accessToken: "<your-access-token>",
   space: "<your-space-id>",
   resolveLinks: false
 });
@@ -61,6 +61,29 @@ Link resolution occurs on the `getEntry` and `getEntries` endpoints as of versio
 The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries({include: <value>})`. The `include` parameter can be set to a number up to 10.
 
 By default, the SDK will keep links, which could not get resolved, in your response. If you want to completely remove fields which could not be resolved, set `removeUnresolved: true` in the configuration options.
+
+### Links to other spaces (beta)
+
+`getEntry` and `getEntries` endpoints can now resolve links to entries from other spaces as they do for regular links. The `resolveLinks`, `removeUnresolved` and `include` parameters affect both types of links.
+
+To use this functionality provide `additionalTokens` when creating the Contentful client
+```js
+const contentful = require("contentful");
+const client = contentful.createClient({
+  accessToken: "<current-space-access-token>",
+  space: "<current-space-id>",
+  additionalTokens: {
+    "<other-space-id>": "<other-space-access-token>",
+    ...
+  }
+});
+```
+
+If any of the `additionalTokens` is missing or invalid, the links to the respective space will remain unresolved.
+
+By default, entries from other spaces will be resolved using the default locale of each space. If you specify the `locale` parameter (`client.getEntries({locale: <value>})`), this locale will be used for all spaces. If any of the spaces doesn't have this locale, the links to that space will remain unresolved.
+
+Known issues: when resolving links to entries from other spaces, the SDK may return more levels of content than specified by the `include` parameter 
 
 ### Note: link resolution for versions older than 7.0.0
 

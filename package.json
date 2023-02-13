@@ -21,7 +21,7 @@
     "postbuild": "npm run check:browser && npm run check:modules && npm run check:node",
     "check:browser": "es-check es2017 ./dist/contentful.browser.js ./dist/contentful.browser.min.js",
     "check:node": "es-check es2017 ./dist/contentful.node.js ./dist/contentful.node.min.js",
-    "check:modules": "es-check es6 --module ./dist/es-modules/**/*.js",
+    "check:modules": "es-check es2017 --module ./dist/es-modules/**/*.js ./dist/es-modules/*.js",
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "npm run build && npm run docs:build",
     "docs:watch": "nodemon --exec npm run docs:dev -w lib",
@@ -63,7 +63,7 @@
   ],
   "dependencies": {
     "axios": "^0.27.0",
-    "contentful-resolve-response": "^1.3.12",
+    "contentful-resolve-response": "^1.6.3",
     "contentful-sdk-core": "^7.0.5",
     "fast-copy": "^2.1.7",
     "json-stringify-safe": "^5.0.1",
