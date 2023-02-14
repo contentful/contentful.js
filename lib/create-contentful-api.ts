@@ -511,11 +511,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function getEntry<Fields extends FieldsType>(id: string, query: EntryQueries = {}) {
-    return (await makeGetEntry<Fields>(id, query, options)) as unknown
+    return await makeGetEntry<Fields>(id, query, options)
   }
 
   async function getEntries<Fields extends FieldsType>(query: EntriesQueries<Fields> = {}) {
-    return (await makeGetEntries<Fields>(query, options)) as unknown
+    return await makeGetEntries<Fields>(query, options)
   }
 
   async function makeGetEntry<Fields extends FieldsType>(
