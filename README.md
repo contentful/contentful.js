@@ -76,7 +76,7 @@ _JavaScript library for the Contentful [Content Delivery API](https://www.conten
       - [Legacy contentful.js documentation](#legacy-contentfuljs-documentation)
     - [Tutorials & other resources](#tutorials--other-resources)
     - [Troubleshooting](#troubleshooting)
-    - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
+    - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/beta-resource-links/ADVANCED.md)
     - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
   - [Reach out to us](#reach-out-to-us)
     - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
@@ -406,7 +406,7 @@ For versions prior to 3.0.0, you can access documentation at [https://github.com
 
 ### Advanced Concepts
 
-More information about how to use the library in advanced or special ways can be found in the [ADVANCED.md](ADVANCED.md) document.
+More information about how to use the library in advanced or special ways can be found in the [ADVANCED.md](https://github.com/contentful/contentful.js/blob/beta-resource-links/ADVANCED.md) document.
 
 ### Migration
 
