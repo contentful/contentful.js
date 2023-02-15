@@ -151,7 +151,11 @@
   "release": {
     "branches": [
       "master",
-      "next",
+      {
+        "name": "next",
+        "channel": "beta-v10",
+        "prerelease": true
+      },
       {
         "name": "beta-v10",
         "channel": "beta-v10",
