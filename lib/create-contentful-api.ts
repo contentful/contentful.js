@@ -35,6 +35,8 @@ import {
   SyncCollection,
   Tag,
   TagCollection,
+  AbstractEntryCollection,
+  Entry,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
@@ -43,18 +45,22 @@ import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
 import {
   ChainOptions,
-  isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  isClientWithAllLocalesAndWithoutLinkResolution,
-  isClientWithLinkResolutionAndWithoutUnresolvableLinks,
-  isClientWithLinkResolutionAndWithUnresolvableLinks,
-  isClientWithoutLinkResolution,
+  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
+  ChainOptionWithAllLocalesAndWithoutLinkResolution,
+  ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
+  ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
+  ChainOptionWithoutLinkResolution,
 } from './utils/client-helpers'
 import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseClient {
+  withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+  withoutLinkResolution: ClientWithoutLinkResolution
+  withoutUnresolvableLinks: ClientWithLinkResolutionAndWithoutUnresolvableLinks
+
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
@@ -69,6 +75,7 @@ export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseCl
 }
 
 export interface ClientWithoutLinkResolution extends BaseClient {
+  withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
@@ -81,6 +88,8 @@ export interface ClientWithoutLinkResolution extends BaseClient {
 
 export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+  withoutLinkResolution: ClientWithAllLocalesAndWithoutLinkResolution
+  withoutUnresolvableLinks: ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
@@ -107,6 +116,7 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
 
 export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
   extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+  withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
   getEntry<Fields extends FieldsType>(
     id: string,
     query?: EntryQueries
@@ -404,18 +414,7 @@ export interface CreateContentfulApiParams {
   getGlobalOptions: GetGlobalOptions
 }
 
-export type ContentfulClientApi = {
-  withAllLocales: {
-    withoutLinkResolution: ClientWithAllLocalesAndWithoutLinkResolution
-    withoutUnresolvableLinks: ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  } & ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  withoutLinkResolution: {
-    withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
-  } & ClientWithoutLinkResolution
-  withoutUnresolvableLinks: {
-    withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  } & ClientWithLinkResolutionAndWithoutUnresolvableLinks
-} & DefaultClient
+export type ContentfulClientApi = DefaultClient
 
 class NotFoundError extends Error {
   public readonly sys: { id: string; type: string }
@@ -512,185 +511,20 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function getEntry<Fields extends FieldsType>(id: string, query: EntryQueries = {}) {
-    return makeGetEntry<Fields>(id, query, options) as unknown
+    return makeGetEntry<Fields>(id, query, options)
   }
 
   async function getEntries<Fields extends FieldsType>(query: EntriesQueries<Fields> = {}) {
-    return makeGetEntries<Fields>(query, options) as unknown
-  }
-
-  const getEntryDefault = getEntryWithLinkResolutionAndWithUnresolvableLinks
-
-  const getEntriesDefault = getEntriesWithLinkResolutionAndWithUnresolvableLinks
-
-  async function getEntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType>(
-    id: string,
-    query: EntryQueries = {}
-  ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    return internalGetEntry<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>(id, query, {
-      withoutLinkResolution: false,
-    })
-  }
-
-  async function getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType>(
-    query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>> {
-    return internalGetEntries<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
-      query,
-      { withoutLinkResolution: false }
-    )
-  }
-
-  async function getEntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType>(
-    id: string,
-    query: EntryQueries = {}
-  ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
-    return internalGetEntry<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(id, query, {
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: true,
-    })
-  }
-
-  async function getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType>(
-    query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>> {
-    return internalGetEntries<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
-      query,
-      { withoutLinkResolution: false, withoutUnresolvableLinks: true }
-    )
-  }
-
-  async function getEntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-    Fields extends FieldsType,
-    SpaceLocales extends LocaleCode = any
-  >(
-    id: string,
-    query: EntryQueries = {}
-  ): Promise<
-    EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
-  > {
-    return internalGetEntry<
-      EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, SpaceLocales>
-    >(
-      id,
-      {
-        ...query,
-        locale: '*',
-      },
-      { withoutLinkResolution: false }
-    )
-  }
-
-  async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-    Fields extends FieldsType,
-    Locales extends LocaleCode = any
-  >(
-    query: EntriesQueries<Fields> = {}
-  ): Promise<
-    EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-  > {
-    return internalGetEntries<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    >(
-      {
-        ...query,
-        locale: '*',
-      },
-      { withoutLinkResolution: false }
-    )
-  }
-
-  async function getEntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-    Fields extends FieldsType,
-    SpaceLocales extends LocaleCode = any
-  >(
-    id: string,
-    query: EntryQueries = {}
-  ): Promise<
-    EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
-  > {
-    return internalGetEntry<
-      EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, SpaceLocales>
-    >(
-      id,
-      { ...query, locale: '*' },
-      { withoutLinkResolution: false, withoutUnresolvableLinks: true }
-    )
-  }
-
-  async function getEntriesWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-    Fields extends FieldsType,
-    Locales extends LocaleCode = any
-  >(
-    query: EntriesQueries<Fields> = {}
-  ): Promise<
-    EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-  > {
-    return internalGetEntries<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    >(
-      {
-        ...query,
-        locale: '*',
-      },
-      { withoutLinkResolution: false, withoutUnresolvableLinks: true }
-    )
-  }
-
-  async function getEntryWithoutLinkResolution<Fields>(
-    id: string,
-    query: EntryQueries = {}
-  ): Promise<EntryWithoutLinkResolution<Fields>> {
-    return internalGetEntry<EntryWithoutLinkResolution<Fields>>(id, query, {
-      withoutLinkResolution: true,
-    })
-  }
-
-  async function getEntriesWithoutLinkResolution<Fields extends FieldsType>(
-    query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithoutLinkResolution<Fields>> {
-    return internalGetEntries<EntryCollectionWithoutLinkResolution<Fields>>(query, {
-      withoutLinkResolution: true,
-    })
-  }
-
-  async function getEntryWithAllLocalesAndWithoutLinkResolution<
-    Fields extends FieldsType,
-    Locales extends LocaleCode = any
-  >(
-    id: string,
-    query: EntryQueries = {}
-  ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
-    return internalGetEntry<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>(
-      id,
-      { ...query, locale: '*' },
-      { withoutLinkResolution: true }
-    )
-  }
-
-  async function getEntriesWithAllLocalesAndWithoutLinkResolution<
-    Fields extends FieldsType,
-    Locales extends LocaleCode = any
-  >(
-    query: EntriesQueries<Fields> = {}
-  ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>> {
-    return internalGetEntries<
-      EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
-    >(
-      {
-        ...query,
-        locale: '*',
-      },
-      { withoutLinkResolution: true }
-    )
+    return makeGetEntries<Fields>(query, options)
   }
 
   async function makeGetEntry<Fields extends FieldsType>(
     id: string,
     query,
     options: ChainOptions = {
-      withoutLinkResolution: false,
       withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
     }
   ) {
     const { withAllLocales } = options
@@ -698,48 +532,28 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateLocaleParam(query, withAllLocales as boolean)
     validateResolveLinksParam(query)
 
-    if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
-      return getEntryWithAllLocalesAndWithoutLinkResolution<Fields>(id, query)
-    }
-    if (isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks(options)) {
-      return getEntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields>(id, query)
-    }
-    if (isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
-      return getEntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(
-        id,
-        query
-      )
-    }
-    if (isClientWithoutLinkResolution(options)) {
-      return getEntryWithoutLinkResolution<Fields>(id, query)
-    }
-    if (isClientWithLinkResolutionAndWithUnresolvableLinks(options)) {
-      return getEntryWithLinkResolutionAndWithUnresolvableLinks<Fields>(id, query)
-    }
-    if (isClientWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
-      return getEntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(id, query)
-    }
-    return getEntryDefault<Fields>(id, query)
+    return internalGetEntry<Fields, any, Extract<ChainOptions, typeof options>>(
+      id,
+      withAllLocales ? { ...query, locale: '*' } : query,
+      options
+    )
   }
 
-  async function internalGetEntry<RValue>(
-    id: string,
-    query,
-    options: {
-      withoutLinkResolution: boolean
-      withoutUnresolvableLinks?: boolean
-    }
-  ): Promise<RValue> {
+  async function internalGetEntry<
+    Fields extends FieldsType,
+    Locales extends LocaleCode,
+    Options extends ChainOptions
+  >(id: string, query, options: Options) {
     if (!id) {
       throw notFoundError(id)
     }
     try {
-      const response = await internalGetEntries<{ items: RValue[] }>(
+      const response = await internalGetEntries<Fields, Locales, Options>(
         { 'sys.id': id, ...query },
         options
       )
       if (response.items.length > 0) {
-        return response.items[0] as RValue
+        return response.items[0]
       } else {
         throw notFoundError(id)
       }
@@ -751,43 +565,59 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makeGetEntries<Fields extends FieldsType>(
     query,
     options: ChainOptions = {
-      withoutLinkResolution: false,
       withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
     }
   ) {
     const { withAllLocales } = options
 
-    validateLocaleParam(query, withAllLocales as boolean)
+    validateLocaleParam(query, withAllLocales)
     validateResolveLinksParam(query)
 
-    if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
-      return getEntriesWithAllLocalesAndWithoutLinkResolution<Fields>(query)
-    }
-    if (isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks(options)) {
-      return getEntriesWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields>(query)
-    }
-    if (isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
-      return getEntriesWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(query)
-    }
-    if (isClientWithoutLinkResolution(options)) {
-      return getEntriesWithoutLinkResolution<Fields>(query)
-    }
-    if (isClientWithLinkResolutionAndWithUnresolvableLinks(options)) {
-      return getEntriesWithLinkResolutionAndWithUnresolvableLinks<Fields>(query)
-    }
-    if (isClientWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
-      return getEntriesWithLinkResolutionAndWithoutUnresolvableLinks<Fields>(query)
-    }
-    return getEntriesDefault<Fields>(query)
+    return internalGetEntries<Fields, any, Extract<ChainOptions, typeof options>>(
+      withAllLocales
+        ? {
+            ...query,
+            locale: '*',
+          }
+        : query,
+      options
+    )
   }
 
-  async function internalGetEntries<RType>(
+  type ConfiguredEntry<
+    Fields extends FieldsType,
+    Locales extends LocaleCode,
+    Options extends ChainOptions
+  > = Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+    ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+    : Options extends ChainOptionWithAllLocalesAndWithoutLinkResolution
+    ? EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
+    : Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+    ? EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+    : Options extends ChainOptionWithoutLinkResolution
+    ? EntryWithoutLinkResolution<Fields>
+    : Options extends ChainOptionWithLinkResolutionAndWithUnresolvableLinks
+    ? EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
+    : Options extends ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks
+    ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
+    : Entry<Fields>
+
+  type ConfiguredEntryCollection<
+    Fields extends FieldsType,
+    Locales extends LocaleCode,
+    Options extends ChainOptions
+  > = AbstractEntryCollection<ConfiguredEntry<Fields, Locales, Options>>
+
+  async function internalGetEntries<
+    Fields extends FieldsType,
+    Locales extends LocaleCode,
+    Options extends ChainOptions
+  >(
     query: Record<string, any>,
-    options: {
-      withoutLinkResolution: boolean
-      withoutUnresolvableLinks?: boolean
-    }
-  ): Promise<RType> {
+    options: Options
+  ): Promise<ConfiguredEntryCollection<Fields, Locales, Options>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     try {
@@ -800,7 +630,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return resolveCircular(entries, {
         resolveLinks: !withoutLinkResolution ?? true,
         removeUnresolved: withoutUnresolvableLinks ?? false,
-      }) as RType
+      })
     } catch (error) {
       errorHandler(error as AxiosError)
     }

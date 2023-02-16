@@ -18,18 +18,12 @@ import {
   ChainOptionWithoutLinkResolution,
   ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
   DefaultChainOption,
-  isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  isClientWithAllLocalesAndWithoutLinkResolution,
-  isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  isClientWithLinkResolutionAndWithUnresolvableLinks,
-  isClientWithoutLinkResolution,
-  isClientWithLinkResolutionAndWithoutUnresolvableLinks,
 } from './utils/client-helpers'
 
-function create<OptionsType extends ChainOptions, ClientType>(
+function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options: OptionsType,
-  makeInnerClient: (options: OptionsType) => ClientType
+  makeInnerClient: (options: OptionsType) => ConfiguredClient<OptionsType>
 ) {
   const client = createContentfulApi<OptionsType>(
     {
@@ -48,102 +42,32 @@ function create<OptionsType extends ChainOptions, ClientType>(
   Object.defineProperty(response, 'withoutUnresolvableLinks', {
     get: () => makeInnerClient({ ...options, withoutUnresolvableLinks: true }),
   })
-  return Object.create(response) as ClientType
+  return Object.create(response) as ConfiguredClient<OptionsType>
 }
+
+type ConfiguredClient<Options extends ChainOptions> =
+  Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+    ? ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+    : Options extends ChainOptionWithAllLocalesAndWithoutLinkResolution
+    ? ClientWithAllLocalesAndWithoutLinkResolution
+    : Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+    ? ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+    : Options extends ChainOptionWithoutLinkResolution
+    ? ClientWithoutLinkResolution
+    : Options extends ChainOptionWithLinkResolutionAndWithUnresolvableLinks
+    ? ClientWithLinkResolutionAndWithUnresolvableLinks
+    : Options extends ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks
+    ? ClientWithLinkResolutionAndWithoutUnresolvableLinks
+    : DefaultClient
 
 export const makeClient = ({
   http,
   getGlobalOptions,
 }: CreateContentfulApiParams): ContentfulClientApi => {
-  function makeInnerClient(options: DefaultChainOption): DefaultClient & {
-    withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-    withoutLinkResolution: ClientWithoutLinkResolution
-    withoutUnresolvableLinks: ClientWithLinkResolutionAndWithoutUnresolvableLinks
-  }
-  function makeInnerClient(
-    options: ChainOptionWithoutLinkResolution
-  ): ClientWithoutLinkResolution & {
-    withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
-  }
-  function makeInnerClient(
-    options: ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  ): ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks & {
-    withoutLinkResolution: ClientWithAllLocalesAndWithoutLinkResolution
-    withoutUnresolvableLinks: ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  }
-  function makeInnerClient(
-    options: ChainOptionWithAllLocalesAndWithoutLinkResolution
-  ): ClientWithAllLocalesAndWithoutLinkResolution
-  function makeInnerClient(
-    options: ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  ): ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-
-  function makeInnerClient(
-    options: ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks
-  ): ClientWithLinkResolutionAndWithoutUnresolvableLinks & {
-    withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  }
-  function makeInnerClient(
-    options: ChainOptions
-  ):
-    | ClientWithLinkResolutionAndWithUnresolvableLinks
-    | ClientWithoutLinkResolution
-    | ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-    | ClientWithAllLocalesAndWithoutLinkResolution
-    | ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-    | ClientWithLinkResolutionAndWithoutUnresolvableLinks {
-    if (isClientWithAllLocalesAndWithoutLinkResolution(options)) {
-      return create<
-        ChainOptionWithAllLocalesAndWithoutLinkResolution,
-        ClientWithAllLocalesAndWithoutLinkResolution
-      >({ http, getGlobalOptions }, options, makeInnerClient)
-    }
-
-    if (isClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks(options)) {
-      return create<
-        ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-        ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-      >({ http, getGlobalOptions }, options, makeInnerClient)
-    }
-
-    if (isClientWithLinkResolutionAndWithUnresolvableLinks(options)) {
-      return create<
-        ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
-        ClientWithLinkResolutionAndWithUnresolvableLinks
-      >({ http, getGlobalOptions }, options, makeInnerClient)
-    }
-
-    if (isClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
-      return create<
-        ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-        ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-      >({ http, getGlobalOptions }, options, makeInnerClient)
-    }
-
-    if (isClientWithLinkResolutionAndWithoutUnresolvableLinks(options)) {
-      return create<
-        ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
-        ClientWithLinkResolutionAndWithoutUnresolvableLinks
-      >({ http, getGlobalOptions }, options, makeInnerClient)
-    }
-
-    if (isClientWithoutLinkResolution(options)) {
-      return create<ChainOptionWithoutLinkResolution, ClientWithoutLinkResolution>(
-        { http, getGlobalOptions },
-        options,
-        makeInnerClient
-      )
-    }
-
-    return create<DefaultChainOption, DefaultClient>(
-      { http, getGlobalOptions },
-      {
-        withoutLinkResolution: false,
-        withAllLocales: false,
-        withoutUnresolvableLinks: false,
-      },
-      makeInnerClient
-    )
+  function makeInnerClient<Options extends ChainOptions>(
+    options: Options
+  ): ConfiguredClient<Options> {
+    return create<Options>({ http, getGlobalOptions }, options, makeInnerClient)
   }
 
   const client = createContentfulApi<DefaultChainOption>(
@@ -165,7 +89,11 @@ export const makeClient = ({
       })
     },
     get withoutLinkResolution() {
-      return makeInnerClient({ withAllLocales: false, withoutLinkResolution: true })
+      return makeInnerClient({
+        withAllLocales: false,
+        withoutLinkResolution: true,
+        withoutUnresolvableLinks: false,
+      })
     },
     get withoutUnresolvableLinks() {
       return makeInnerClient({
