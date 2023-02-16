@@ -16,7 +16,6 @@ import {
   ConfiguredAssetCollection,
 } from '../../lib'
 import {
-  ChainOptions,
   ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   ChainOptionWithAllLocalesAndWithoutLinkResolution,
   ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
