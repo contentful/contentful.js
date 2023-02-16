@@ -5,7 +5,7 @@ import {
   createClient,
   AssetCollectionWithAllLocales,
   AssetWithAllLocales,
-  LocaleCode
+  LocaleCode,
 } from '../../../lib'
 
 const client = createClient({
@@ -13,13 +13,9 @@ const client = createClient({
   space: 'spaceId',
 })
 
-expectType<AssetCollection>(
-  await client.getAssets()
-)
+expectType<AssetCollection>(await client.getAssets())
 
-expectType<Asset>(
-  await client.getAsset('test')
-)
+expectType<Asset>(await client.getAsset('test'))
 
 expectType<AssetCollectionWithAllLocales<LocaleCode>>(
   await client.withAllLocales.getAssets<LocaleCode>()

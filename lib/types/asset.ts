@@ -1,4 +1,4 @@
-import { ChainOptions, ChainOptionWithAllLocalesAndWithoutLinkResolution } from '../utils/client-helpers'
+import { ChainOptions } from '../utils/client-helpers'
 import { ContentfulCollection } from './collection'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
@@ -42,6 +42,8 @@ export interface AssetWithAllLocales<Locales extends LocaleCode> {
   metadata: Metadata
 }
 
+export type GenericAsset<Locale extends LocaleCode> = Asset | AssetCollectionWithAllLocales<Locale>
+
 export type AssetMimeType =
   | 'attachment'
   | 'plaintext'
@@ -57,19 +59,22 @@ export type AssetMimeType =
   | 'markup'
 
 export type AssetCollection = ContentfulCollection<Asset>
-export type AssetCollectionWithAllLocales<Locales extends LocaleCode> = ContentfulCollection<AssetWithAllLocales<Locales>>
+export type AssetCollectionWithAllLocales<Locales extends LocaleCode> = ContentfulCollection<
+  AssetWithAllLocales<Locales>
+>
+export type GenericAssetCollection<Locales extends LocaleCode> =
+  | AssetCollection
+  | AssetCollectionWithAllLocales<Locales>
 export type AssetSys = EntitySys
 
 export type ConfiguredAsset<
   Locales extends LocaleCode,
   Options extends ChainOptions
-> = Options extends ChainOptionWithAllLocalesAndWithoutLinkResolution
-  ? AssetWithAllLocales<Locales>
-  : Asset
+> = Options extends { withAllLocales: true } ? AssetWithAllLocales<Locales> : Asset
 
 export type ConfiguredAssetCollection<
   Locales extends LocaleCode,
   Options extends ChainOptions
-> = Options extends ChainOptionWithAllLocalesAndWithoutLinkResolution
+> = Options extends { withAllLocales: true }
   ? AssetCollectionWithAllLocales<Locales>
   : AssetCollection
