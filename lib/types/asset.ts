@@ -42,7 +42,7 @@ export interface AssetWithAllLocales<Locales extends LocaleCode> {
   metadata: Metadata
 }
 
-export type GenericAsset<Locale extends LocaleCode> = Asset | AssetCollectionWithAllLocales<Locale>
+export type GenericAsset<Locale extends LocaleCode> = Asset | AssetWithAllLocales<Locale>
 
 export type AssetMimeType =
   | 'attachment'
