@@ -7,18 +7,8 @@ import createContentfulApi, {
   ClientWithoutLinkResolution,
   ContentfulClientApi,
   CreateContentfulApiParams,
-  DefaultClient,
 } from './create-contentful-api'
-import {
-  ChainOptions,
-  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  ChainOptionWithAllLocalesAndWithoutLinkResolution,
-  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
-  ChainOptionWithoutLinkResolution,
-  ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
-  DefaultChainOption,
-} from './utils/client-helpers'
+import { ChainOptions, DefaultChainOption, ChainOption } from './utils/client-helpers'
 
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
@@ -45,20 +35,19 @@ function create<OptionsType extends ChainOptions>(
   return Object.create(response) as ConfiguredClient<OptionsType>
 }
 
-type ConfiguredClient<Options extends ChainOptions> =
-  Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-    ? ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-    : Options extends ChainOptionWithAllLocalesAndWithoutLinkResolution
-    ? ClientWithAllLocalesAndWithoutLinkResolution
-    : Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-    ? ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-    : Options extends ChainOptionWithoutLinkResolution
-    ? ClientWithoutLinkResolution
-    : Options extends ChainOptionWithLinkResolutionAndWithUnresolvableLinks
-    ? ClientWithLinkResolutionAndWithUnresolvableLinks
-    : Options extends ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks
-    ? ClientWithLinkResolutionAndWithoutUnresolvableLinks
-    : DefaultClient
+type ConfiguredClient<Options extends ChainOptions> = Options extends ChainOption<'allLocales'>
+  ? ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+  : Options extends ChainOption<'allLocales' | 'noLinkResolution'>
+  ? ClientWithAllLocalesAndWithoutLinkResolution
+  : Options extends ChainOption<'allLocales' | 'noUnresolvableLinks'>
+  ? ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+  : Options extends ChainOption<'noLinkResolution'>
+  ? ClientWithoutLinkResolution
+  : Options extends ChainOption
+  ? ClientWithLinkResolutionAndWithUnresolvableLinks
+  : Options extends ChainOption<'noUnresolvableLinks'>
+  ? ClientWithLinkResolutionAndWithoutUnresolvableLinks
+  : never
 
 export const makeClient = ({
   http,
