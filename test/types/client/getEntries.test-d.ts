@@ -29,6 +29,7 @@ type LinkedFields = {
 type Fields = {
   title: string
   link: Entry<LinkedFields>
+  moreLinks: Entry<LinkedFields>[]
 }
 
 expectType<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
@@ -53,9 +54,9 @@ expectType<EntryCollectionWithoutLinkResolution<Fields>>(
   await client.withoutLinkResolution.getEntries<Fields>()
 )
 
-expectType<
-  Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, LocaleCode>>
->(client.withAllLocales.getEntry<Fields, LocaleCode>('entry-id'))
+expectType<EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, LocaleCode>>(
+  await client.withAllLocales.getEntry<Fields, LocaleCode>('entry-id')
+)
 expectType<
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, LocaleCode>
 >(await client.withAllLocales.getEntries<Fields, LocaleCode>())
