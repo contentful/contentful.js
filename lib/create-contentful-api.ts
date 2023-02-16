@@ -37,6 +37,10 @@ import {
   TagCollection,
   AbstractEntryCollection,
   Entry,
+  AssetCollectionWithAllLocales,
+  AssetWithAllLocales,
+  ConfiguredAssetCollection,
+  ConfiguredAsset,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
@@ -56,7 +60,7 @@ import { validateLocaleParam, validateResolveLinksParam } from './utils/validate
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
-export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseClient {
+export type ClientWithLinkResolutionAndWithUnresolvableLinks = BaseClient & {
   withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
   withoutLinkResolution: ClientWithoutLinkResolution
   withoutUnresolvableLinks: ClientWithLinkResolutionAndWithoutUnresolvableLinks
@@ -74,7 +78,7 @@ export interface ClientWithLinkResolutionAndWithUnresolvableLinks extends BaseCl
   // ): Promise<Collection<EntryWithLinkResolution<Fields>>>
 }
 
-export interface ClientWithoutLinkResolution extends BaseClient {
+export type ClientWithoutLinkResolution = BaseClient & {
   withAllLocales: ClientWithAllLocalesAndWithoutLinkResolution
   getEntry<Fields extends FieldsType>(
     id: string,
@@ -86,8 +90,7 @@ export interface ClientWithoutLinkResolution extends BaseClient {
   ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
 }
 
-export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+export type ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks = BaseClient & {
   withoutLinkResolution: ClientWithAllLocalesAndWithoutLinkResolution
   withoutUnresolvableLinks: ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
   getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = any>(
@@ -102,8 +105,7 @@ export interface ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLin
   >
 }
 
-export interface ClientWithAllLocalesAndWithoutLinkResolution
-  extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient & {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
@@ -114,8 +116,7 @@ export interface ClientWithAllLocalesAndWithoutLinkResolution
   ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 }
 
-export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
-  extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient & {
   withAllLocales: ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
   getEntry<Fields extends FieldsType>(
     id: string,
@@ -127,8 +128,7 @@ export interface ClientWithLinkResolutionAndWithoutUnresolvableLinks
   ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
 }
 
-export interface ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  extends Omit<BaseClient, 'getEntries' | 'getEntry'> {
+export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient & {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
     id: string,
     query?: EntryQueries & { locale?: never }
@@ -143,44 +143,8 @@ export interface ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvable
 
 export type DefaultClient = ClientWithLinkResolutionAndWithUnresolvableLinks
 
-export interface BaseClient {
+interface Base {
   version: string
-
-  /**
-   * Gets an Asset
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const asset = await client.getAsset('<asset_id>')
-   * console.log(asset)
-   * ```
-   */
-  getAsset(id: string, query?: { locale?: string }): Promise<Asset>
-
-  /**
-   * Gets a collection of Assets
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getAssets()
-   * console.log(response.items)
-   * ```
-   */
-  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection>
 
   /**
    * Gets a Content Type
@@ -216,49 +180,7 @@ export interface BaseClient {
    * console.log(response.items)
    * ```
    */
-
   getContentTypes(query?: { query?: string }): Promise<ContentTypeCollection>
-
-  /**
-   * Gets a collection of Entries
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getEntries()
-   * console.log(response.items)
-   * ```
-   */
-  getEntries<Fields extends FieldsType>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
-
-  /**
-   * Gets an Entry
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const entry = await client.getEntry('<entry_id>')
-   * console.log(entry)
-   * ```
-   */
-  getEntry<Fields extends FieldsType>(
-    id: string,
-    query?: EntryQueries
-  ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
 
   /**
    * Gets the Space which the client is currently configured to use
@@ -408,6 +330,89 @@ export interface BaseClient {
    */
   createAssetKey(expiresAt: number): Promise<AssetKey>
 }
+
+interface BaseClientWithEntries extends Base {
+  /**
+   * Gets a collection of Entries
+   * @category API
+   * @example
+   * ```javascript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getEntries()
+   * console.log(response.items)
+   * ```
+   */
+  getEntries<Fields extends FieldsType>(
+    query?: EntriesQueries<Fields>
+  ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+
+  /**
+   * Gets an Entry
+   * @category API
+   * @example
+   * ```javascript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const entry = await client.getEntry('<entry_id>')
+   * console.log(entry)
+   * ```
+   */
+  getEntry<Fields extends FieldsType>(
+    id: string,
+    query?: EntryQueries
+  ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+}
+
+interface BaseClientsWithAssets extends Base {
+  /**
+   * Gets an Asset
+   * @category API
+   * @example
+   * ```javascript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const asset = await client.getAsset('<asset_id>')
+   * console.log(asset)
+   * ```
+   */
+  getAsset(id: string, query?: { locale?: string }): Promise<Asset>
+
+  /**
+   * Gets a collection of Assets
+   * @category API
+   * @example
+   * ```javascript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getAssets()
+   * console.log(response.items)
+   * ```
+   */
+  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection>
+}
+
+export type BaseClient = BaseClientWithEntries & BaseClientsWithAssets
 
 export interface CreateContentfulApiParams {
   http: AxiosInstance
@@ -636,20 +641,78 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
-  async function getAsset(id: string, query = {}): Promise<Asset> {
-    return get<Asset>({
-      context: 'environment',
-      path: `assets/${id}`,
-      config: createRequestConfig({ query: normalizeSelect(query) }),
-    })
+  async function getAsset(id: string, query: Record<string, any> = {}): Promise<Asset | AssetWithAllLocales<any>> {
+    return makeGetAsset(id, query, options)
   }
 
-  async function getAssets(query = {}): Promise<AssetCollection> {
-    return get<AssetCollection>({
-      context: 'environment',
-      path: 'assets',
-      config: createRequestConfig({ query: normalizeSelect(query) }),
-    })
+  async function getAssets(
+    query: Record<string, any> = {}
+  ): Promise<AssetCollection | AssetCollectionWithAllLocales<any>> {
+    return makeGetAssets(query, options)
+  }
+
+  async function makeGetAssets(
+    query: Record<string, any>,
+    options: ChainOptions = {
+      withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
+    }
+  ) {
+    const { withAllLocales } = options
+
+    validateLocaleParam(query, withAllLocales)
+
+    const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
+
+    return internalGetAssets<any, Extract<ChainOptions, typeof options>>(localeSpecificQuery)
+  }
+
+  async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
+    id: string,
+    query: Record<string, any>
+  ): Promise<ConfiguredAsset<Locales, Options>> {
+    try {
+      return get({
+        context: 'environment',
+        path: `assets/${id}`,
+        config: createRequestConfig({ query: normalizeSelect(query) }),
+      })
+    } catch (error) {
+      errorHandler(error as AxiosError)
+    }
+  }
+
+  async function makeGetAsset(
+    id: string,
+    query: Record<string, any>,
+    options: ChainOptions = {
+      withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
+    }
+  ) {
+    const { withAllLocales } = options
+
+    validateLocaleParam(query, withAllLocales)
+
+    const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
+
+    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(id, localeSpecificQuery)
+  }
+
+  async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(
+    query: Record<string, any>
+  ): Promise<ConfiguredAssetCollection<Locales, Options>> {
+    try {
+      return get({
+        context: 'environment',
+        path: 'assets',
+        config: createRequestConfig({ query: normalizeSelect(query) }),
+      })
+    } catch (error) {
+      errorHandler(error as AxiosError)
+    }
   }
 
   async function getTag(id: string): Promise<Tag> {
