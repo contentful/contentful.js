@@ -19,6 +19,9 @@ import {
   ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   ChainOptionWithAllLocalesAndWithoutLinkResolution,
   ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
+  ChainOptionWithoutLinkResolution,
+  ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
+  ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
 } from '../../lib/utils/client-helpers'
 
 const stringValue = ''
@@ -168,4 +171,44 @@ expectAssignable<
     AssetLocales,
     ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
   >
+>(assetCollectionWithAllLocales)
+
+expectAssignable<ConfiguredAsset<AssetLocales, ChainOptionWithoutLinkResolution>>(asset)
+expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOptionWithoutLinkResolution>>(
+  assetWithAllLocales
+)
+
+expectAssignable<
+  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+>(asset)
+expectNotAssignable<
+  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+>(assetWithAllLocales)
+
+expectAssignable<
+  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
+>(asset)
+expectNotAssignable<
+  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
+>(assetWithAllLocales)
+
+expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOptionWithoutLinkResolution>>(
+  assetCollection
+)
+expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOptionWithoutLinkResolution>>(
+  assetCollectionWithAllLocales
+)
+
+expectAssignable<
+  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+>(assetCollection)
+expectNotAssignable<
+  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+>(assetCollectionWithAllLocales)
+
+expectAssignable<
+  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
+>(assetCollection)
+expectNotAssignable<
+  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
 >(assetCollectionWithAllLocales)
