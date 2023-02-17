@@ -1,3 +1,6 @@
+// As tsd does not pick up the global.d.ts located in /lib we
+// explicitly reference it here once.
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
 
