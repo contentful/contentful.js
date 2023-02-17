@@ -1,4 +1,4 @@
-<!-- shared header  START --> 
+<!-- shared header  START -->
 
 <p align="center">
   <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
@@ -24,21 +24,22 @@
   </a>
 </p>
 
-<!-- shared header  END --> 
-
+<!-- shared header  END -->
 
 ## Table of contents
+
 - [Introduction](#introduction)
 - [Query types](#query-types)
-    - [Static query types](#static-query-keys)
-    - [Dynamic query types](#dynamic-field-query-keys)
+  - [Static query types](#static-query-keys)
+  - [Dynamic query types](#dynamic-field-query-keys)
 - [Response types](#response-types)
-    - [withAllLocales](#withalllocales)
-    - [withoutLinkResolution](#withoutlinkresolution)
-    - [withoutUnresolvableLinks](#withoutunresolvablelinks)
+  - [withAllLocales](#withalllocales)
+  - [withoutLinkResolution](#withoutlinkresolution)
+  - [withoutUnresolvableLinks](#withoutunresolvablelinks)
 - [Generating type definitions](#generating-type-definitions-for-content-types)
 
 ## Introduction
+
 <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
   </a><a href="https://travis-ci.org/contentful/contentful.js">
@@ -59,11 +60,11 @@
 
 With version `10.0.0`, we have completely rewritten the client to give the user more support on types.
 
-
-
 ## Query types
+
 When querying for entries and assets, you get full type support for keys and values.
 This applies to:
+
 - `getEntry`
 - `getEntries`
 - `getAsset`
@@ -72,6 +73,7 @@ This applies to:
 We have 2 levels of support:
 
 ### Static query keys
+
 Static query keys are not influenced by the shape of the entries or assets you're querying for.
 
 ![](images/static-query-keys.png)
@@ -85,54 +87,60 @@ getEntries({
 ```
 
 ### Dynamic (field) query keys
+
 Dynamic query keys are based on the given shape of the expected entries' content type.
 
 ![](images/dynamic-query-keys.png)
 
-
 To calculate dynamic keys, we have to define the shape of the fields of the entries' content type:
+
 ```typescript
 type ExampleEntryFields = {
-  productName: Contentful.EntryFields.Text,
-  image: Contentful.Asset,
-  price: Contentful.EntryFields.Number,
-  categories: Contentful.Entry<CategoryEntryFields>[],
+  productName: Contentful.EntryFields.Text
+  image: Contentful.Asset
+  price: Contentful.EntryFields.Number
+  categories: Contentful.Entry<CategoryEntryFields>[]
 }
 ```
 
 We can then pass this shape to our `getEntries` call. This gives us the relevant information needed to calculate the dynamic keys and their possible value types.
+
 ```typescript
 getEntries<ExampleEntryFields>({
-    'fields.price[gt]': 100
+  'fields.price[gt]': 100,
 })
 ```
 
 #### Limitation
+
 Due to the limitation with recursive types, we can only calculate keys on the root level of your content type.
 There is currently no way to calculate keys for nested (recursive) content types.
 
 ## Response types
-With version `10.0.0` we introduce [chained clients](./README.md#chained-clients) to make better assumptions on response types. 
+
+With version `10.0.0` we introduce [chained clients](./README.md#chained-clients) to make better assumptions on response types.
 Entries can be returned in six different response shapes. Thanks to the three client chains below, the expected return shape can be identified, making it safer to work with the returned data.
 
 ### `withAllLocales`
-If the current chain includes `withAllLocales`, `getEntry` and `getEntries` expect an optional second generic parameter for all existing locales in your space.
+
+If the current chain includes `withAllLocales`, `getAsset` and `getAssets` expect an optional generic parameter for all existing locales in your space. `getEntry` and `getEntries` expect an optional second generic parameter.
 If the `Locale` type is provided, your response type will define all locale keys for your field values:
 
 ```typescript
-import * as contentful from "contentful";
+import * as contentful from 'contentful'
 
 const client = contentful.createClient({
-  space: "<space-id>",
-  accessToken: "<content-delivery-token>",
-});
+  space: '<space-id>',
+  accessToken: '<content-delivery-token>',
+})
 
 const Fields = { productName: Contentful.EntryFields.Text }
-const Locales = 'en-US' | 'de-DE';
-const entry = client.withAllLocales.getEntry<Fields, Locales>('some-entry-id') 
+const Locales = 'en-US' | 'de-DE'
+const entry = client.withAllLocales.getEntry<Fields, Locales>('some-entry-id')
 ```
 
 The return type of the `getEntry` is matching the `fields` shape
+
 ```json
 {
   "fields": {
@@ -144,21 +152,47 @@ The return type of the `getEntry` is matching the `fields` shape
 }
 ```
 
+Similar for assets:
+
+```typescript
+import * as contentful from 'contentful'
+
+const client = contentful.createClient({
+  space: '<space-id>',
+  accessToken: '<content-delivery-token>',
+})
+
+const Locales = 'en-US' | 'de-DE'
+const asset = client.withAllLocales.getAsset<Locales>('some-asset-id')
+```
+
+```json
+{
+  "fields": {
+    "file": {
+      "de-DE": "<field-value>",
+      "en-US": "<field-value>"
+    }
+  }
+}
+```
+
 ### `withoutLinkResolution`
+
 If the current chain includes `withoutLinkResolution`, the returned type doesn't resolve linked entities, but keeps them as link objects instead.
 
 ```typescript
-import * as contentful from "contentful";
+import * as contentful from 'contentful'
 
 const client = contentful.createClient({
-  space: "<space-id>",
-  accessToken: "<content-delivery-token>",
-});
+  space: '<space-id>',
+  accessToken: '<content-delivery-token>',
+})
 
-const Fields = { 
-  relatedProduct: Contentful.EntryFields.Entry 
+const Fields = {
+  relatedProduct: Contentful.EntryFields.Entry,
 }
-const Locales = 'en-US' | 'de-DE';
+const Locales = 'en-US' | 'de-DE'
 const entry = client.withoutLinkResolution.getEntry<Fields, Locales>('some-entry-id')
 ```
 
@@ -170,28 +204,31 @@ The return type of `getEntry` is matching the `fields` shape
     "productName": {
       "type": "Link",
       "linkType": "Entry",
-      "id": "linkedProductId" 
+      "id": "linkedProductId"
     }
   }
 }
 ```
+
 [Read more on link resolution](ADVANCED.md#link-resolution)
+
 ### `withoutUnresolvableLinks`
+
 If the current chain includes `withoutUnresolvableLinks`, the returned type doesn't include linked entries that are not resolvable, for example if the linked entity does not exist anymore or is not yet published.
 
 ```typescript
-import * as contentful from "contentful";
+import * as contentful from 'contentful'
 
 const client = contentful.createClient({
-  space: "<space-id>",
-  accessToken: "<content-delivery-token>",
-});
+  space: '<space-id>',
+  accessToken: '<content-delivery-token>',
+})
 
-const Fields = { 
-  relatedProduct: Contentful.EntryFields.Entry 
+const Fields = {
+  relatedProduct: Contentful.EntryFields.Entry,
 }
-const Locales = 'en-US' | 'de-DE';
-const entry = client.withoutUnresolvableLinks.getEntry<Fields, Locales>('some-entry-id') 
+const Locales = 'en-US' | 'de-DE'
+const entry = client.withoutUnresolvableLinks.getEntry<Fields, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -203,11 +240,13 @@ The return type of `getEntry` is matching the `fields` shape
 ```
 
 #### Limitation
-The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `getEntries` and `getEntry`. Other methods returning entries (e.g. `parseEntries` and `sync`) or methods that can have localized responses (e.g. `getAssets` and `getAsset`) still rely on the previous implementation, and might not always have correct response types.
+
+The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `getEntries`, `getEntry`, `getAssets` and `getAsset`. Other methods returning entries (e.g. `parseEntries` and `sync`) or methods that can have localized responses still rely on the previous implementation, and might not always have correct response types.
 
 ## Generating type definitions for content types
+
 It is recommended to define field types for all your content types. This helps the type system to infer all possible query keys/value types for you.
-Doing this manually is cumbersome, but do not worry! 
+Doing this manually is cumbersome, but do not worry!
 There are several OSS projects out there to generate type definitions for Contentful content types:
 
 - [cf-content-types-generator](https://github.com/contentful-userland/cf-content-types-generator)
@@ -216,4 +255,5 @@ There are several OSS projects out there to generate type definitions for Conten
 - [contentful-ts-generator](https://github.com/watermarkchurch/contentful-ts-generator)
 
 If you prefer a GUI, you can also use an app in your Contentful space to automatically generate TypeScript definitions for your content types:
+
 - [TS Content Types Generator App](https://github.com/marcolink/cf-content-types-generator-app)

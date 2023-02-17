@@ -1,4 +1,4 @@
-<!-- shared header  START --> 
+<!-- shared header  START -->
 
 <p align="center">
   <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
@@ -24,7 +24,7 @@
   </a>
 </p>
 
-<!-- shared header  END --> 
+<!-- shared header  END -->
 
 ## Introduction
 
@@ -60,32 +60,32 @@ structured content, powerful management and delivery APIs, and a customizable we
 <!-- TOC -->
 
 - [contentful.js - Contentful JavaScript Delivery library](#contentfuljs---contentful-javascript-delivery-library)
-    - [Core Features](#core-features)
-        - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
-    - [Getting started](#getting-started)
-        - [Installation](#installation)
-            - [Using it directly in the browser:](#using-it-directly-in-the-browser)
-            - [Legacy browsers:](#legacy-browsers)
-            - [React Native & Server Side Rendering:](#react-native--server-side-rendering)
-        - [Your first request](#your-first-request)
-        - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
-        - [Authentication](#authentication)
-    - [Documentation & References](#documentation--references)
-        - [Configuration](#configuration)
-        - [Chained clients](#chained-clients)
-        - [Reference documentation](#reference-documentation)
-        - [Tutorials & other resources](#tutorials--other-resources)
-        - [Troubleshooting](#troubleshooting)
-        - [Typscript](#typescript)
-        - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
-        - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
-    - [Reach out to us](#reach-out-to-us)
-        - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
-        - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
-        - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
-    - [Get involved](#get-involved)
-    - [License](#license)
-    - [Code of Conduct](#code-of-conduct)
+  - [Core Features](#core-features)
+    - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
+  - [Getting started](#getting-started)
+    - [Installation](#installation)
+      - [Using it directly in the browser:](#using-it-directly-in-the-browser)
+      - [Legacy browsers:](#legacy-browsers)
+      - [React Native & Server Side Rendering:](#react-native--server-side-rendering)
+    - [Your first request](#your-first-request)
+    - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
+    - [Authentication](#authentication)
+  - [Documentation & References](#documentation--references)
+    - [Configuration](#configuration)
+    - [Chained clients](#chained-clients)
+    - [Reference documentation](#reference-documentation)
+    - [Tutorials & other resources](#tutorials--other-resources)
+    - [Troubleshooting](#troubleshooting)
+    - [Typscript](#typescript)
+    - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
+    - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
+  - [Reach out to us](#reach-out-to-us)
+    - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
+    - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
+    - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
+  - [Get involved](#get-involved)
+  - [License](#license)
+  - [Code of Conduct](#code-of-conduct)
 
 <!-- /TOC -->
 
@@ -109,12 +109,12 @@ structured content, powerful management and delivery APIs, and a customizable we
 - node.js (LTS)
 
 > See list of min supported browser version here [@contentful/browserslist-config
-](https://github.com/contentful/browserslist-config/blob/master/index.js)
+> ](https://github.com/contentful/browserslist-config/blob/master/index.js)
 
 The default export is an `es9` compliant module. in order to import the `commonJS` bundle, please use:
 
 ```js
-const contentful = require("contentful/contentful.node")
+const contentful = require('contentful/contentful.node')
 ```
 
 ## Getting started
@@ -140,15 +140,13 @@ For browsers, we recommend to download the library via npm or yarn to ensure 100
 If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
 
 ```html
-
-<script src='https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js"></script>
 ```
 
 Using `contentful@latest` will always get you the latest version, but you can also specify a specific version number.
 
 ```html
-
-<script src='https://cdn.jsdelivr.net/npm/contentful@9.0.1/dist/contentful.browser.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/contentful@9.0.1/dist/contentful.browser.min.js"></script>
 ```
 
 The Contentful Delivery library will be accessible via the `contentful` global variable.
@@ -160,18 +158,18 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 The following code snippet is the most basic one you can use to get some content from Contentful with this library:
 
 ```js
-const contentful = require("contentful");
+const contentful = require('contentful')
 const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
-  space: "developer_bookshelf",
+  space: 'developer_bookshelf',
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-  accessToken: "0b7f6x59a0"
-});
+  accessToken: '0b7f6x59a0',
+})
 // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
 client
-  .getEntry("5PeGS2SoZGSa4GuiQsigQu")
-  .then(entry => console.log(entry))
-  .catch(err => console.log(err));
+  .getEntry('5PeGS2SoZGSa4GuiQsigQu')
+  .then((entry) => console.log(entry))
+  .catch((err) => console.log(err))
 ```
 
 Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of our Product Catalogue demo app.
@@ -181,12 +179,12 @@ Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of 
 This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
-const contentful = require("contentful");
+const contentful = require('contentful')
 const client = contentful.createClient({
-  space: "developer_bookshelf",
-  accessToken: "preview_0b7f6x59a0",
-  host: "preview.contentful.com"
-});
+  space: 'developer_bookshelf',
+  accessToken: 'preview_0b7f6x59a0',
+  host: 'preview.contentful.com',
+})
 ```
 
 You can find all available methods of our client in
@@ -223,45 +221,48 @@ contentful.createClient({
   ...your config here ...
 })
 ```
+
 The configuration options belong to two categories: request config and response config.
+
 ##### Request configuration options
 
-| Name                                 | Default                     | Description                                                                                                                                                                                                                                                                                                      |
-|--------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessToken`                        |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                             |
-| `space`                              |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                     |
-| `environment`                        | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                              |
-| `host`                               | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                    |
-| `basePath`                           | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                            |
-| `httpAgent`                          | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                 |
-| `httpsAgent`                         | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                |
-| `adapter`                            | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                          |
-| `headers`                            | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.management.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
-| `proxy`                              | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.                                                                                      |
-| `retryOnError`                       | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                    |
-| `application`                        | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                  |
-| `integration`                        | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                  |
-| `timeout`                            | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                            |
-| `retryLimit`                         | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                       |
-| `logHandler`                         | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                      |
-| `requestLogger`                      | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                       |
-| `responseLogger`                     | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                     |
+| Name             | Default                     | Description                                                                                                                                                                                                                                                                                                      |
+| ---------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `accessToken`    |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                             |
+| `space`          |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                     |
+| `environment`    | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                              |
+| `host`           | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                    |
+| `basePath`       | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                            |
+| `httpAgent`      | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                 |
+| `httpsAgent`     | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                |
+| `adapter`        | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                          |
+| `headers`        | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.management.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
+| `proxy`          | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.                                                                                                                                  |
+| `retryOnError`   | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                    |
+| `application`    | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                  |
+| `integration`    | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                  |
+| `timeout`        | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                            |
+| `retryLimit`     | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                       |
+| `logHandler`     | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                      |
+| `requestLogger`  | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                       |
+| `responseLogger` | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                     |
 
 ##### Response configuration options
-> :warning: **Response config options** are in the process of being **deprecated** (`v10.0.0`).
-They still work for the `sync` and `parseEntries` methods. 
-The `getEntries` and `getEntry` methods already use the new [Chained Clients](#chained-clients) approach.
 
-| Name                                 | Default                     | Description                                                                                                                                                                                                                                                                                                      |
-|--------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <code>resolveLinks</code>    | true                            | Turn off to disable link resolving.                                                                                                                                                                                                                                                      |
-| <code>removeUnresolved</code> | false                       | Remove fields from response for unresolvable links.|  
+> :warning: **Response config options** are in the process of being **deprecated** (`v10.0.0`).
+> They still work for the `sync` and `parseEntries` methods.
+> The `getEntries`, `getEntry`, `getAssets` and `getAsset` methods already use the new [Chained Clients](#chained-clients) approach.
+
+| Name                          | Default | Description                                         |
+| ----------------------------- | ------- | --------------------------------------------------- |
+| <code>resolveLinks</code>     | true    | Turn off to disable link resolving.                 |
+| <code>removeUnresolved</code> | false   | Remove fields from response for unresolvable links. |
 
 ### Chained Clients
 
 > Introduced in `v10.0.0`.
 
-The contentful.js library returns calls to `getEntries` and `getEntry` in six different shapes, depending on the three configurations listed below.
+The contentful.js library returns calls to `getEntries`, `getEntry`, `getAssets` and `getAsset` in different shapes, depending on the configurations listed in the respective sections below.
 
 In order to provide type support for each configuration, we provide the possibility to chain modifiers to the Contentful client, providing the correct return types corresponding to the used modifiers.
 
@@ -269,14 +270,16 @@ This way, we make developing with `contentful.js` much more predictable and safe
 
 When initialising a client, you will receive an instance of the [`DefaultClient`](lib/create-contentful-api.ts#L91) shape.
 
-| Chain                      | Modifier                                                                                                                                                |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| _none (default)_                    | Returns entries in a single locale. Resolvable linked entries will be inlined while unresolvable links will be kept as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
-| `withAllLocales`           | Returns entries in all locales.                                                                                                                                 |
-| `withoutLinkResolution`    | All linked entries will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution)                                                 |
-| `withoutUnresolvableLinks` | If linked entries are not resolvalbe, the corresponding link objects are removed from the response.                                                                        |
+#### Entries
 
-#### Example
+| Chain                      | Modifier                                                                                                                                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _none (default)_           | Returns entries in a single locale. Resolvable linked entries will be inlined while unresolvable links will be kept as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
+| `withAllLocales`           | Returns entries in all locales.                                                                                                                                                                  |
+| `withoutLinkResolution`    | All linked entries will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution)                                                                                 |
+| `withoutUnresolvableLinks` | If linked entries are not resolvalbe, the corresponding link objects are removed from the response.                                                                                              |
+
+##### Example
 
 ```js
 // returns entries in one locale, resolves linked entries, removing unresolvable links
@@ -296,28 +299,50 @@ The default behaviour doesn't change, you can still do:
 // returns entries in one locale, resolves linked entries, keeping unresolvable links as link object
 const entries = await client.getEntries()
 ```
+
+#### Assets
+
+| Chain            | Modifier                           |
+| ---------------- | ---------------------------------- |
+| _none (default)_ | Returns assets in a single locale. |
+| `withAllLocales` | Returns assets in all locales.     |
+
+##### Example
+
+```js
+// returns assets in all locales
+const assets = await client.withAllLocales.getAssets()
+```
+
+The default behaviour doesn't change, you can still do:
+
+```js
+// returns assets in one locale
+const assets = await client.getAssets()
+```
+
 ### Reference documentation
 
-The [JS library reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by
-this library, what arguments they expect and what kind of data is returned.
+The [JS library reference](https://contentful.github.io/contentful.js) documents what objects and methods are exposed by this library, what arguments they expect and what kind of data is returned.
 
 Most methods also have examples which show you how to use them.
 
 ### Tutorials & other resources
 
-* This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can also get a better understanding of how the requests look under the hood.
-* Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful.
+- This library is a wrapper around our Contentful Delivery REST API. Some more specific details such as search parameters and pagination are better explained on the [REST API reference](https://www.contentful.com/developers/docs/references/content-delivery-api/), and you can also get a better understanding of how the requests look under the hood.
+- Check the [Contentful for JavaScript](https://www.contentful.com/developers/docs/javascript/) page for Tutorials, Demo Apps, and more information on other ways of using JavaScript with Contentful.
 
 ### Troubleshooting
 
 - **I get the error: Unable to resolve module `http`.**
-Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via:
+  Our library is supplied as node and browser version. Most non-node environments, like React Native, act like a browser. To force using of the browser version, you can require it via:
+
 ```js
 const { createClient } = require('contentful/dist/contentful.browser.min.js')
 ```
 
-- **Is the library doing any caching?** 
-No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos.
+- **Is the library doing any caching?**
+  No, check this [issue](https://github.com/contentful/contentful.js/issues/83) for more infos.
 
 ### TypeScript
 
@@ -335,19 +360,19 @@ We gathered all information related to migrating from older versions of the libr
 
 ### You have questions about how to use this library?
 
-* Reach out to our community
+- Reach out to our community
   forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
-* Jump into our community slack
+- Jump into our community slack
   channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
 
 ### You found a bug or want to propose a feature?
 
-* File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new). 
-Make sure to remove any credential from your code before sharing it.
+- File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new).
+  Make sure to remove any credential from your code before sharing it.
 
 ### You need to share confidential information or have other questions?
 
-* File a support ticket at our Contentful Customer
+- File a support ticket at our Contentful Customer
   Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
 
 ## Get involved
