@@ -147,7 +147,7 @@
     "branches": [
       "master",
       {
-        "name": "beta-v10",
+        "name": "next",
         "channel": "next",
         "prerelease": true
       },
