@@ -42,21 +42,22 @@ export type BasicEntryField =
   | EntryFields.RichText
   | EntryFields.Object
 
+type BaseEntry = {
+  sys: EntrySys
+  metadata: Metadata
+}
+
 /**
  * @category Entities
  */
-export interface Entry<T> {
-  sys: EntrySys
-  metadata: Metadata
+export type Entry<T> = BaseEntry & {
   fields: T
 }
 
-export interface EntryWithAllLocalesAndWithoutLinkResolution<
+export type EntryWithAllLocalesAndWithoutLinkResolution<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> {
-  sys: EntrySys
-  metadata: Metadata
+> = BaseEntry & {
   fields: {
     [FieldName in keyof Fields]: {
       [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<any>
@@ -68,24 +69,23 @@ export interface EntryWithAllLocalesAndWithoutLinkResolution<
   }
 }
 
-export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> = {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
-      ? EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink
-      : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
-      ? (EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink)[]
-      : Fields[FieldName]
+export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> =
+  BaseEntry & {
+    fields: {
+      [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<
+        infer LinkedEntryFields
+      >
+        ? EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink
+        : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
+        ? (EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink)[]
+        : Fields[FieldName]
+    }
   }
-}
 
 export type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = {
-  sys: EntrySys
-  metadata: Metadata
+> = BaseEntry & {
   fields: {
     [FieldName in keyof Fields]: {
       [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
@@ -94,37 +94,37 @@ export type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
                 LinkedEntryFields,
                 Locales
               >
-            | undefined
+            | EntryLink
         : Fields[FieldName] extends Array<EntryFields.Link<infer LinkedEntryFields>>
-        ?
+        ? (
             | EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
                 LinkedEntryFields,
                 Locales
-              >[]
-            | undefined
+              >
+            | EntryLink
+          )[]
         : Fields[FieldName]
     }
   }
 }
 
-export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> = {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
-      ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields> | undefined
-      : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
-      ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields>[] | undefined
-      : Fields[FieldName]
+export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> =
+  BaseEntry & {
+    fields: {
+      [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<
+        infer LinkedEntryFields
+      >
+        ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields> | undefined
+        : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
+        ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields>[] | undefined
+        : Fields[FieldName]
+    }
   }
-}
 
 export type EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = {
-  sys: EntrySys
-  metadata: Metadata
+> = BaseEntry & {
   fields: {
     [FieldName in keyof Fields]: {
       [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
@@ -156,7 +156,15 @@ export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TE
 
 export type EntryCollection<T> = AbstractEntryCollection<Entry<T>>
 
-export type EntryWithoutLinkResolution<T> = Entry<T>
+export type EntryWithoutLinkResolution<Fields extends FieldsType> = BaseEntry & {
+  fields: {
+    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<any>
+      ? EntryLink
+      : Fields[FieldName] extends EntryFields.Link<any>[]
+      ? EntryLink[]
+      : Fields[FieldName]
+  }
+}
 
 export type EntryCollectionWithoutLinkResolution<T> = EntryCollection<T>
 
