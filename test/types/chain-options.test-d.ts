@@ -1,5 +1,7 @@
-import { expectAssignable, expectNotType, expectType } from 'tsd'
-import { ChainOption, ChainOptions } from '../../lib/utils/client-helpers'
+import { expectAssignable, expectNotAssignable, expectNotType, expectType } from 'tsd'
+import { ChainModifiers, ChainOption, ChainOptions } from '../../lib/utils/client-helpers'
+
+expectNotAssignable<ChainModifiers>('ANY_STRING')
 
 expectAssignable<ChainOptions>({
   withoutLinkResolution: true as boolean,
@@ -13,37 +15,37 @@ expectType<ChainOption>({
   withoutUnresolvableLinks: false,
 })
 
-expectType<ChainOption<'noUnresolvableLinks'>>({
+expectType<ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>({
   withoutLinkResolution: false,
   withAllLocales: false,
   withoutUnresolvableLinks: true,
 })
 
-expectType<ChainOption<'noLinkResolution'>>({
+expectType<ChainOption<'WITHOUT_LINK_RESOLUTION'>>({
   withoutLinkResolution: true,
   withAllLocales: false,
   withoutUnresolvableLinks: false,
 })
 
-expectType<ChainOption<'allLocales'>>({
+expectType<ChainOption<'WITH_ALL_LOCALES'>>({
   withoutLinkResolution: false,
   withAllLocales: true,
   withoutUnresolvableLinks: false,
 })
 
-expectAssignable<ChainOption<'allLocales' | 'noUnresolvableLinks'>>({
+expectType<ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>({
   withoutLinkResolution: false,
   withAllLocales: true,
   withoutUnresolvableLinks: true,
 })
 
-expectNotType<ChainOption<'allLocales' | 'noUnresolvableLinks'>>({
+expectNotType<ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>({
   withoutLinkResolution: false,
   withAllLocales: true,
   withoutUnresolvableLinks: false,
 })
 
-expectType<ChainOption<'allLocales' | 'noLinkResolution'>>({
+expectType<ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>({
   withoutLinkResolution: true,
   withAllLocales: true,
   withoutUnresolvableLinks: false,

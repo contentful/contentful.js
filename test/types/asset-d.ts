@@ -18,14 +18,7 @@ import {
   ConfiguredAsset,
   ConfiguredAssetCollection,
 } from '../../lib'
-import {
-  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  ChainOptionWithAllLocalesAndWithoutLinkResolution,
-  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  ChainOptionWithoutLinkResolution,
-  ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
-  ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
-} from '../../lib/utils/client-helpers'
+import { ChainOption } from '../../lib/utils/client-helpers'
 
 const stringValue = ''
 const numberValue = 123
@@ -110,108 +103,86 @@ expectAssignable<AssetCollectionWithAllLocales<AssetLocales>>(assetCollectionWit
 expectAssignable<GenericAssetCollection<AssetLocales>>(assetCollection)
 expectAssignable<GenericAssetCollection<AssetLocales>>(assetCollectionWithAllLocales)
 
-expectNotAssignable<
-  ConfiguredAsset<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  >
->(asset)
-expectAssignable<
-  ConfiguredAsset<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  >
->(assetWithAllLocales)
-
-expectNotAssignable<
-  ConfiguredAsset<AssetLocales, ChainOptionWithAllLocalesAndWithoutLinkResolution>
->(asset)
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOptionWithAllLocalesAndWithoutLinkResolution>>(
+expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(asset)
+expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(
   assetWithAllLocales
 )
 
 expectNotAssignable<
-  ConfiguredAsset<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  >
+  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>
 >(asset)
 expectAssignable<
-  ConfiguredAsset<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  >
+  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>
 >(assetWithAllLocales)
 
 expectNotAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  >
->(assetCollection)
-expectAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  >
->(assetCollectionWithAllLocales)
-
-expectNotAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOptionWithAllLocalesAndWithoutLinkResolution>
->(assetCollection)
-expectAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOptionWithAllLocalesAndWithoutLinkResolution>
->(assetCollectionWithAllLocales)
-
-expectNotAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  >
->(assetCollection)
-expectAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  >
->(assetCollectionWithAllLocales)
-
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOptionWithoutLinkResolution>>(asset)
-expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOptionWithoutLinkResolution>>(
-  assetWithAllLocales
-)
-
-expectAssignable<
-  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>
 >(asset)
-expectNotAssignable<
-  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+expectAssignable<
+  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>
 >(assetWithAllLocales)
 
-expectAssignable<
-  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
->(asset)
-expectNotAssignable<
-  ConfiguredAsset<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
->(assetWithAllLocales)
-
-expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOptionWithoutLinkResolution>>(
+expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(
   assetCollection
 )
-expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOptionWithoutLinkResolution>>(
+expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(
+  assetCollectionWithAllLocales
+)
+
+expectNotAssignable<
+  ConfiguredAssetCollection<
+    AssetLocales,
+    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+  >
+>(assetCollection)
+expectAssignable<
+  ConfiguredAssetCollection<
+    AssetLocales,
+    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+  >
+>(assetCollectionWithAllLocales)
+
+expectNotAssignable<
+  ConfiguredAssetCollection<
+    AssetLocales,
+    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >
+>(assetCollection)
+expectAssignable<
+  ConfiguredAssetCollection<
+    AssetLocales,
+    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >
+>(assetCollectionWithAllLocales)
+
+expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>>(asset)
+expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>>(
+  assetWithAllLocales
+)
+
+expectAssignable<ConfiguredAsset<AssetLocales, ChainOption>>(asset)
+expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption>>(assetWithAllLocales)
+
+expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>>(asset)
+expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>>(
+  assetWithAllLocales
+)
+
+expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>>(
+  assetCollection
+)
+expectNotAssignable<
+  ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>
+>(assetCollectionWithAllLocales)
+
+expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption>>(assetCollection)
+expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption>>(
   assetCollectionWithAllLocales
 )
 
 expectAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
+  ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>
 >(assetCollection)
 expectNotAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithUnresolvableLinks>
->(assetCollectionWithAllLocales)
-
-expectAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
->(assetCollection)
-expectNotAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks>
+  ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>
 >(assetCollectionWithAllLocales)

@@ -1,47 +1,27 @@
 export type ChainModifiers =
-  | 'allLocales'
-  | 'noLinkResolution'
-  | 'noUnresolvableLinks'
-  | unknown
+  | 'WITH_ALL_LOCALES'
+  | 'WITHOUT_LINK_RESOLUTION'
+  | 'WITHOUT_UNRESOLVABLE_LINKS'
   | undefined
 
 export type ChainOption<Modifiers extends ChainModifiers = undefined> = {
-  withoutLinkResolution: unknown extends Modifiers
+  withoutLinkResolution: ChainModifiers extends Modifiers
     ? boolean
-    : 'noLinkResolution' extends Modifiers
+    : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? true
     : false
-  withAllLocales: unknown extends Modifiers
+  withAllLocales: ChainModifiers extends Modifiers
     ? boolean
-    : 'allLocales' extends Modifiers
+    : 'WITH_ALL_LOCALES' extends Modifiers
     ? true
     : false
-  withoutUnresolvableLinks: unknown extends Modifiers
+  withoutUnresolvableLinks: ChainModifiers extends Modifiers
     ? boolean
-    : 'noUnresolvableLinks' extends Modifiers
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
     ? true
     : false
 }
 
-export type BaseChainOptions = {
-  withoutLinkResolution: boolean
-  withAllLocales: boolean
-  withoutUnresolvableLinks: boolean
-}
+export type DefaultChainOption = ChainOption
 
-export type ChainOptionWithoutLinkResolution = ChainOption<'noLinkResolution'>
-export type ChainOptionWithLinkResolutionAndWithUnresolvableLinks = ChainOption
-export type ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks =
-  ChainOption<'noUnresolvableLinks'>
-export type ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks =
-  ChainOption<'allLocales'>
-export type ChainOptionWithAllLocalesAndWithoutLinkResolution = ChainOption<
-  'allLocales' | 'noLinkResolution'
->
-export type ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks = ChainOption<
-  'allLocales' | 'noUnresolvableLinks'
->
-
-export type DefaultChainOption = ChainOptionWithLinkResolutionAndWithUnresolvableLinks
-
-export type ChainOptions = ChainOption<unknown>
+export type ChainOptions = ChainOption<ChainModifiers>
