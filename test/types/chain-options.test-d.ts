@@ -1,5 +1,7 @@
-import { expectAssignable, expectNotType, expectType } from 'tsd'
-import { ChainOption, ChainOptions } from '../../lib/utils/client-helpers'
+import { expectAssignable, expectNotAssignable, expectNotType, expectType } from 'tsd'
+import { ChainModifiers, ChainOption, ChainOptions } from '../../lib/utils/client-helpers'
+
+expectNotAssignable<ChainModifiers>('ANY_STRING')
 
 expectAssignable<ChainOptions>({
   withoutLinkResolution: true as boolean,

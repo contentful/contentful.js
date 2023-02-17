@@ -2,21 +2,20 @@ export type ChainModifiers =
   | 'WITH_ALL_LOCALES'
   | 'WITHOUT_LINK_RESOLUTION'
   | 'WITHOUT_UNRESOLVABLE_LINKS'
-  | unknown
   | undefined
 
 export type ChainOption<Modifiers extends ChainModifiers = undefined> = {
-  withoutLinkResolution: unknown extends Modifiers
+  withoutLinkResolution: ChainModifiers extends Modifiers
     ? boolean
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? true
     : false
-  withAllLocales: unknown extends Modifiers
+  withAllLocales: ChainModifiers extends Modifiers
     ? boolean
     : 'WITH_ALL_LOCALES' extends Modifiers
     ? true
     : false
-  withoutUnresolvableLinks: unknown extends Modifiers
+  withoutUnresolvableLinks: ChainModifiers extends Modifiers
     ? boolean
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
     ? true
@@ -25,4 +24,4 @@ export type ChainOption<Modifiers extends ChainModifiers = undefined> = {
 
 export type DefaultChainOption = ChainOption
 
-export type ChainOptions = ChainOption<unknown>
+export type ChainOptions = ChainOption<ChainModifiers>
