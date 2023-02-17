@@ -43,15 +43,7 @@ import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
-import {
-  ChainOptions,
-  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  ChainOptionWithAllLocalesAndWithoutLinkResolution,
-  ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks,
-  ChainOptionWithLinkResolutionAndWithUnresolvableLinks,
-  ChainOptionWithoutLinkResolution,
-} from './utils/client-helpers'
+import { ChainOption, ChainOptions } from './utils/client-helpers'
 import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
@@ -590,17 +582,17 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     Fields extends FieldsType,
     Locales extends LocaleCode,
     Options extends ChainOptions
-  > = Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+  > = Options extends ChainOption<'allLocales'>
     ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    : Options extends ChainOptionWithAllLocalesAndWithoutLinkResolution
+    : Options extends ChainOption<'allLocales' | 'noLinkResolution'>
     ? EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
-    : Options extends ChainOptionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+    : Options extends ChainOption<'allLocales' | 'noUnresolvableLinks'>
     ? EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    : Options extends ChainOptionWithoutLinkResolution
+    : Options extends ChainOption<'noLinkResolution'>
     ? EntryWithoutLinkResolution<Fields>
-    : Options extends ChainOptionWithLinkResolutionAndWithUnresolvableLinks
+    : Options extends ChainOption
     ? EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
-    : Options extends ChainOptionWithLinkResolutionAndWithoutUnresolvableLinks
+    : Options extends ChainOption<'noUnresolvableLinks'>
     ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
     : Entry<Fields>
 
