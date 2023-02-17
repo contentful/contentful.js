@@ -6,6 +6,7 @@ import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
 import { EntitySys } from './sys'
+import { ChainOption, ChainOptions } from '../utils/client-helpers'
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
@@ -184,3 +185,27 @@ export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolv
 > = AbstractEntryCollection<
   EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
 >
+
+export type ConfiguredEntry<
+  Fields extends FieldsType,
+  Locales extends LocaleCode,
+  Options extends ChainOptions
+> = Options extends ChainOption
+  ? EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
+  : Options extends ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>
+  ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
+  : Options extends ChainOption<'WITHOUT_LINK_RESOLUTION'>
+  ? EntryWithoutLinkResolution<Fields>
+  : Options extends ChainOption<'WITH_ALL_LOCALES'>
+  ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+  : Options extends ChainOption<'WITHOUT_LINK_RESOLUTION'>
+  ? EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
+  : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+  ? EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+  : never
+
+export type ConfiguredEntryCollection<
+  Fields extends FieldsType,
+  Locales extends LocaleCode,
+  Options extends ChainOptions
+> = AbstractEntryCollection<ConfiguredEntry<Fields, Locales, Options>>

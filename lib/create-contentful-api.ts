@@ -37,19 +37,19 @@ import {
   SyncCollection,
   Tag,
   TagCollection,
-  AbstractEntryCollection,
   Entry,
   ConfiguredAssetCollection,
   ConfiguredAsset,
   GenericAssetCollection,
   GenericAsset,
+  ConfiguredEntryCollection,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
-import { ChainOption, ChainOptions } from './utils/client-helpers'
+import { ChainOptions } from './utils/client-helpers'
 import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
@@ -589,30 +589,6 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     )
   }
 
-  type ConfiguredEntry<
-    Fields extends FieldsType,
-    Locales extends LocaleCode,
-    Options extends ChainOptions
-  > = Options extends ChainOption<'allLocales'>
-    ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    : Options extends ChainOption<'allLocales' | 'noLinkResolution'>
-    ? EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
-    : Options extends ChainOption<'allLocales' | 'noUnresolvableLinks'>
-    ? EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    : Options extends ChainOption<'noLinkResolution'>
-    ? EntryWithoutLinkResolution<Fields>
-    : Options extends ChainOption
-    ? EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
-    : Options extends ChainOption<'noUnresolvableLinks'>
-    ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
-    : Entry<Fields>
-
-  type ConfiguredEntryCollection<
-    Fields extends FieldsType,
-    Locales extends LocaleCode,
-    Options extends ChainOptions
-  > = AbstractEntryCollection<ConfiguredEntry<Fields, Locales, Options>>
-
   async function internalGetEntries<
     Fields extends FieldsType,
     Locales extends LocaleCode,
@@ -768,7 +744,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     http.defaults.baseURL = getGlobalOptions().environmentBaseUrl
   }
 
-  return <DefaultClient>{
+  return {
     version: __VERSION__,
 
     getSpace,
@@ -790,5 +766,5 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     getEntries,
 
     createAssetKey,
-  }
+  } as unknown as DefaultClient
 }

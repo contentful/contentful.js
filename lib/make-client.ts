@@ -35,19 +35,20 @@ function create<OptionsType extends ChainOptions>(
   return Object.create(response) as ConfiguredClient<OptionsType>
 }
 
-type ConfiguredClient<Options extends ChainOptions> = Options extends ChainOption<'allLocales'>
-  ? ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
-  : Options extends ChainOption<'allLocales' | 'noLinkResolution'>
-  ? ClientWithAllLocalesAndWithoutLinkResolution
-  : Options extends ChainOption<'allLocales' | 'noUnresolvableLinks'>
-  ? ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
-  : Options extends ChainOption<'noLinkResolution'>
-  ? ClientWithoutLinkResolution
-  : Options extends ChainOption
-  ? ClientWithLinkResolutionAndWithUnresolvableLinks
-  : Options extends ChainOption<'noUnresolvableLinks'>
-  ? ClientWithLinkResolutionAndWithoutUnresolvableLinks
-  : never
+type ConfiguredClient<Options extends ChainOptions> =
+  Options extends ChainOption<'WITH_ALL_LOCALES'>
+    ? ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks
+    : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+    ? ClientWithAllLocalesAndWithoutLinkResolution
+    : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+    ? ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
+    : Options extends ChainOption<'WITHOUT_LINK_RESOLUTION'>
+    ? ClientWithoutLinkResolution
+    : Options extends ChainOption
+    ? ClientWithLinkResolutionAndWithUnresolvableLinks
+    : Options extends ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>
+    ? ClientWithLinkResolutionAndWithoutUnresolvableLinks
+    : never
 
 export const makeClient = ({
   http,
