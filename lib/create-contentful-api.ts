@@ -732,9 +732,42 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return pagedSync(http, query, { resolveLinks, removeUnresolved, ...options })
   }
 
-  function parseEntries(data) {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions({})
-    return resolveCircular(data, { resolveLinks, removeUnresolved })
+  function parseEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(data: FieldsType) {
+    return makeParseEntries<Fields, Locales>(data, options)
+  }
+
+  async function makeParseEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
+    data,
+    options: ChainOptions = {
+      withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
+    }
+  ) {
+    const { withoutLinkResolution, withoutUnresolvableLinks } = options
+
+   // validateResolveLinksParam(query) ???
+
+    return internalParseEntries<Fields, Locales, Extract<ChainOptions, typeof options>>(
+      data,
+      options
+    )
+  }
+
+  async function internalParseEntries<
+    Fields extends FieldsType,
+    Locales extends LocaleCode,
+    Options extends ChainOptions
+  >(
+    data: unknown,
+    options: Options
+  ): Promise<ConfiguredEntryCollection<Fields, Locales, Options>> {
+    const { withoutLinkResolution, withoutUnresolvableLinks } = options
+
+    return resolveCircular(data, {
+      resolveLinks: !withoutLinkResolution ?? true,
+      removeUnresolved: withoutUnresolvableLinks ?? false,
+    })
   }
 
   /*
