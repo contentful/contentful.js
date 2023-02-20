@@ -198,7 +198,7 @@ export type ConfiguredEntry<
   ? EntryWithoutLinkResolution<Fields>
   : Options extends ChainOption<'WITH_ALL_LOCALES'>
   ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-  : Options extends ChainOption<'WITHOUT_LINK_RESOLUTION'>
+  : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
   ? EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
   : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
   ? EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>

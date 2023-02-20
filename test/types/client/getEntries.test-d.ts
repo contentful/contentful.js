@@ -39,7 +39,6 @@ expectType<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
   await client.getEntries<Fields>()
 )
 
-// @ts-ignore
 expectType<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
   await client.withoutUnresolvableLinks.getEntry<Fields>('entry-id')
 )
