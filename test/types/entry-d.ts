@@ -440,7 +440,7 @@ expectAssignable<
         },
       },
     ],
-    unresolvableMultiReferenceField: undefined,
+    unresolvableMultiReferenceField: [undefined],
   },
 })
 
