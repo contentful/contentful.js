@@ -8,7 +8,7 @@ function createEntry(id, deleted = false) {
   const entry = copy(entryMock)
   entry.sys.id = id
   if (deleted) {
-    entry.sys.type = 'Deleted' + entry.sys.type
+    entry.sys.type = ('Deleted' + entry.sys.type) as any
   }
   return entry
 }
@@ -17,7 +17,7 @@ function createAsset(id, deleted = false): any {
   const asset = copy(assetMock)
   asset.sys.id = id
   if (deleted) {
-    asset.sys.type = 'Deleted' + asset.sys.type
+    asset.sys.type = ('Deleted' + asset.sys.type) as any
   }
   return asset
 }

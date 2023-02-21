@@ -251,7 +251,7 @@ interface BaseClient {
    * ```
    */
   // TODO: type properly
-  parseEntries<T extends FieldsType>(raw: any): EntryCollection<T>
+  parseEntries<T>(raw: any): EntryCollection<any>
 
   /**
    * Synchronizes either all the content or only new content since last sync
