@@ -13,6 +13,7 @@ import {
   EntryWithAllLocalesAndWithoutLinkResolution,
   EntryWithLinkResolutionAndWithoutUnresolvableLinks,
   EntryWithLinkResolutionAndWithUnresolvableLinks,
+  EntryWithoutLinkResolution,
 } from '../../lib'
 
 export const stringValue = ''
@@ -91,6 +92,67 @@ expectAssignable<
 
 /**
  * @namespace: Typescript - type test
+ * @description: EntryWithoutLinkResolution linked entries are all rendered as entry links
+ */
+expectAssignable<
+  EntryWithoutLinkResolution<{
+    stringField: EntryFields.Text
+    referenceField: EntryFields.Link<ExampleEntryFields>
+    multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    referenceField: entryLinkValue,
+    multiReferenceField: [entryLinkValue, entryLinkValue],
+  },
+})
+
+expectNotAssignable<
+  EntryWithoutLinkResolution<{
+    stringField: EntryFields.Text
+    referenceField: EntryFields.Link<ExampleEntryFields>
+    multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    referenceField: undefined,
+    multiReferenceField: [undefined, undefined],
+  },
+})
+
+expectNotAssignable<
+  EntryWithoutLinkResolution<{
+    stringField: EntryFields.Text
+    referenceField: EntryFields.Link<ExampleEntryFields>
+    multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    stringField: stringValue,
+    referenceField: {
+      ...entryBasics,
+      fields: {
+        numberField: numberValue,
+      },
+    },
+    multiReferenceField: [
+      {
+        ...entryBasics,
+        fields: {
+          numberField: numberValue,
+        },
+      },
+    ],
+  },
+})
+
+/**
+ * @namespace: Typescript - type test
  * @description: EntryWithLinkResolutionAndWithUnresolvableLinks referenced entries can be either resolved or unresolved.
  * unresolved entries are referenced as entry links. Fields with multiple references can have resolved and unresolved mixed.
  */
@@ -131,6 +193,40 @@ expectAssignable<
         },
       },
       entryLinkValue,
+    ],
+  },
+})
+
+/* unresolved links in reference fields cannot be undefined */
+expectNotAssignable<
+  EntryWithLinkResolutionAndWithUnresolvableLinks<{
+    unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    unresolvableReferenceField: undefined,
+  },
+})
+
+/* unresolved links in multi reference fields cannot be undefined */
+expectNotAssignable<
+  EntryWithLinkResolutionAndWithUnresolvableLinks<{
+    unresolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    mixedMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    unresolvableMultiReferenceField: [undefined],
+    mixedMultiReferenceField: [
+      {
+        ...entryBasics,
+        fields: {
+          numberField: numberValue,
+        },
+      },
+      undefined,
     ],
   },
 })
@@ -185,6 +281,42 @@ expectNotAssignable<
   },
 })
 
+/* links in reference fields can be undefined because we can’t distinguish between missing translation and missing link */
+expectAssignable<
+  EntryWithAllLocalesAndWithoutLinkResolution<
+    {
+      referenceField: EntryFields.Link<ExampleEntryFields>
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    referenceField: {
+      DE: undefined,
+      US: undefined,
+    },
+  },
+})
+
+/* links in multi reference fields cannot be undefined */
+expectNotAssignable<
+  EntryWithAllLocalesAndWithoutLinkResolution<
+    {
+      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    multiReferenceField: {
+      DE: [undefined],
+      US: [undefined],
+    },
+  },
+})
+
 /**
  * @namespace: Typescript - type test
  * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
@@ -194,8 +326,10 @@ expectAssignable<
   EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
     {
       stringField: EntryFields.Text
-      referenceField: EntryFields.Link<ExampleEntryFields>
-      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+      resolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+      unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+      resolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+      unresolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
     },
     'US' | 'DE'
   >
@@ -206,7 +340,7 @@ expectAssignable<
       US: stringValue,
       DE: stringValue,
     },
-    referenceField: {
+    resolvableReferenceField: {
       DE: {
         ...entryBasics,
         fields: { numberField: { US: numberValue, DE: numberValue } },
@@ -216,7 +350,8 @@ expectAssignable<
         fields: { numberField: { US: numberValue } },
       },
     },
-    multiReferenceField: {
+    unresolvableReferenceField: { US: entryLinkValue, DE: entryLinkValue },
+    resolvableMultiReferenceField: {
       DE: [
         {
           ...entryBasics,
@@ -229,6 +364,46 @@ expectAssignable<
           fields: { numberField: { US: numberValue, DE: numberValue } },
         },
       ],
+    },
+    unresolvableMultiReferenceField: {
+      DE: [entryLinkValue],
+      US: [entryLinkValue],
+    },
+  },
+})
+
+/* links in reference fields can be undefined because we can’t distinguish between missing translation and missing link */
+expectAssignable<
+  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+    {
+      referenceField: EntryFields.Link<ExampleEntryFields>
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    referenceField: {
+      DE: undefined,
+      US: undefined,
+    },
+  },
+})
+
+/* links in multi reference fields cannot be undefined */
+expectNotAssignable<
+  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
+    {
+      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    multiReferenceField: {
+      DE: [undefined],
+      US: [undefined],
     },
   },
 })
@@ -265,7 +440,31 @@ expectAssignable<
         },
       },
     ],
-    unresolvableMultiReferenceField: undefined,
+    unresolvableMultiReferenceField: [undefined],
+  },
+})
+
+/* links in reference fields cannot be resolved links */
+expectNotAssignable<
+  EntryWithLinkResolutionAndWithoutUnresolvableLinks<{
+    unresolvableReferenceField: EntryFields.Link<ExampleEntryFields>
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    unresolvableReferenceField: entryLinkValue,
+  },
+})
+
+/* links in reference fields cannot be resolved links */
+expectNotAssignable<
+  EntryWithLinkResolutionAndWithoutUnresolvableLinks<{
+    unresolvableMultiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+  }>
+>({
+  ...entryBasics,
+  fields: {
+    unresolvableMultiReferenceField: [entryLinkValue],
   },
 })
 
@@ -307,5 +506,35 @@ expectAssignable<
         },
       ],
     },
+  },
+})
+
+/* links in reference fields cannot be resolved links */
+expectNotAssignable<
+  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+    {
+      referenceField: EntryFields.Link<ExampleEntryFields>
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    referenceField: { DE: entryLinkValue, US: entryLinkValue },
+  },
+})
+
+/* links in reference fields cannot be resolved links */
+expectNotAssignable<
+  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+    {
+      multiReferenceField: EntryFields.Link<ExampleEntryFields>[]
+    },
+    'US' | 'DE'
+  >
+>({
+  ...entryBasics,
+  fields: {
+    multiReferenceField: { DE: [entryLinkValue], US: [entryLinkValue] },
   },
 })

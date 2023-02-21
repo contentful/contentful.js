@@ -73,9 +73,7 @@ export type ClientWithLinkResolutionAndWithUnresolvableLinks = BaseClient &
 
     parseEntries<Fields extends FieldsType>(
       data: EntryCollection<Fields>
-    ): Promise<
-      EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>
-    >
+    ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
   }
 
 export type ClientWithoutLinkResolution = BaseClient &
@@ -165,7 +163,9 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
 
     parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: EntryCollection<Fields>
-    ): Promise<EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>>
+    ): Promise<
+      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+    >
   }
 
 export type DefaultClient = ClientWithLinkResolutionAndWithUnresolvableLinks
@@ -599,7 +599,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         config: createRequestConfig({ query: normalizeSelect(query) }),
       })
 
-      console.dir(entries, {depth: 10})
+      // console.dir(entries, { depth: 10 })
 
       return resolveCircular(entries, {
         resolveLinks: !withoutLinkResolution ?? true,
@@ -742,20 +742,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     console.log(options)
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
-    return internalParseEntries<Fields, any, Extract<ChainOptions, typeof options>>(
-      data,
-      options
-    )
+    return internalParseEntries<Fields, any, Extract<ChainOptions, typeof options>>(data, options)
   }
 
   async function internalParseEntries<
     Fields extends FieldsType,
     Locales extends LocaleCode,
     Options extends ChainOptions
-  >(
-    data: unknown,
-    options: Options
-  ): Promise<ConfiguredEntryCollection<Fields, Locales, Options>> {
+  >(data: unknown, options: Options): Promise<ConfiguredEntryCollection<Fields, Locales, Options>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     return resolveCircular(data, {

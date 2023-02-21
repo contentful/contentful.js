@@ -6,7 +6,7 @@ import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
 import { EntitySys } from './sys'
-import { ChainOption, ChainOptions } from '../utils/client-helpers'
+import { ChainModifiers, ChainOption, ChainOptions } from '../utils/client-helpers'
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
@@ -25,8 +25,8 @@ export declare namespace EntryFields {
     lon: number
   }
 
-  type Link<T extends FieldsType> = Asset | Entry<T>
-  type Array<T = any> = symbol[] | Entry<T>[] | Asset[]
+  type Link<T extends FieldsType> = Asset | GenericEntry<T>
+  type Array<T extends FieldsType = any> = symbol[] | GenericEntry<T>[] | Asset[]
   type Object<T extends Record<string, any> = Record<string, unknown>> = T
   type RichText = RichTextDocument
 }
@@ -42,109 +42,88 @@ export type BasicEntryField =
   | EntryFields.RichText
   | EntryFields.Object
 
+type BaseEntry = {
+  sys: EntrySys
+  metadata: Metadata
+}
+
 /**
  * @category Entities
  */
-export interface Entry<T> {
-  sys: EntrySys
-  metadata: Metadata
-  fields: T
+export type GenericEntry<Fields extends FieldsType> = BaseEntry & {
+  fields: Fields
 }
 
-export interface EntryWithAllLocalesAndWithoutLinkResolution<
+/**
+ * @category Entities
+ * @deprecated
+ */
+export type Entry<Fields extends FieldsType> = GenericEntry<Fields>
+
+export type ResolvedField<
+  Field,
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> = Field extends EntryFields.Link<infer LinkedFields>
+  ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+    ? EntryLink
+    :
+        | NewEntry<LinkedFields, Modifiers, Locales>
+        | ('WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers ? undefined : EntryLink)
+  : Field extends EntryFields.Link<infer LinkedFields>[]
+  ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+    ? EntryLink[]
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+    ? (NewEntry<LinkedFields, Modifiers, Locales> | undefined)[]
+    : (NewEntry<LinkedFields, Modifiers, Locales> | EntryLink)[]
+  : Field
+
+// TODO: rename after renaming generic Entry type
+export type NewEntry<
+  Fields extends FieldsType,
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> = BaseEntry & {
+  fields: 'WITH_ALL_LOCALES' extends Modifiers
+    ? {
+        [FieldName in keyof Fields]: {
+          [LocaleName in Locales]?: ResolvedField<Fields[FieldName], Modifiers, Locales>
+        }
+      }
+    : {
+        [FieldName in keyof Fields]: ResolvedField<Fields[FieldName], Modifiers, Locales>
+      }
+}
+
+export type EntryWithoutLinkResolution<Fields extends FieldsType> = NewEntry<
+  Fields,
+  'WITHOUT_LINK_RESOLUTION',
+  LocaleCode
+>
+
+export type EntryWithAllLocalesAndWithoutLinkResolution<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: {
-      [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<any>
-        ? EntryLink
-        : Fields[FieldName] extends EntryFields.Link<any>[]
-        ? EntryLink[]
-        : Fields[FieldName]
-    }
-  }
-}
+> = NewEntry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
 
-export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> = {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
-      ? EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink
-      : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
-      ? (EntryWithLinkResolutionAndWithUnresolvableLinks<LinkedEntryFields> | EntryLink)[]
-      : Fields[FieldName]
-  }
-}
+export type EntryWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> = NewEntry<
+  Fields,
+  undefined,
+  LocaleCode
+>
 
 export type EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: {
-      [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
-        ?
-            | EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-                LinkedEntryFields,
-                Locales
-              >
-            | undefined
-        : Fields[FieldName] extends Array<EntryFields.Link<infer LinkedEntryFields>>
-        ?
-            | EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-                LinkedEntryFields,
-                Locales
-              >[]
-            | undefined
-        : Fields[FieldName]
-    }
-  }
-}
+> = NewEntry<Fields, 'WITH_ALL_LOCALES', Locales>
 
-export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> = {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
-      ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields> | undefined
-      : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
-      ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<LinkedEntryFields>[] | undefined
-      : Fields[FieldName]
-  }
-}
+export type EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields extends FieldsType> =
+  NewEntry<Fields, 'WITHOUT_UNRESOLVABLE_LINKS', LocaleCode>
 
 export type EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = {
-  sys: EntrySys
-  metadata: Metadata
-  fields: {
-    [FieldName in keyof Fields]: {
-      [LocaleName in Locales]?: Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>
-        ?
-            | EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-                LinkedEntryFields,
-                Locales
-              >
-            | undefined
-        : Fields[FieldName] extends EntryFields.Link<infer LinkedEntryFields>[]
-        ?
-            | EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-                LinkedEntryFields,
-                Locales
-              >[]
-            | undefined
-        : Fields[FieldName]
-    }
-  }
-}
+> = NewEntry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
 
 export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TEntry> {
   errors?: Array<any>
@@ -154,55 +133,49 @@ export interface AbstractEntryCollection<TEntry> extends ContentfulCollection<TE
   }
 }
 
-export type EntryCollection<T> = AbstractEntryCollection<Entry<T>>
+export type GenericEntryCollection<Fields extends FieldsType> = AbstractEntryCollection<
+  GenericEntry<Fields>
+>
 
-export type EntryWithoutLinkResolution<T> = Entry<T>
+/**
+ * @deprecated
+ */
+export type EntryCollection<Fields extends FieldsType> = GenericEntryCollection<Fields>
 
-export type EntryCollectionWithoutLinkResolution<T> = EntryCollection<T>
+export type EntryCollectionWithoutLinkResolution<Fields extends FieldsType> =
+  AbstractEntryCollection<NewEntry<Fields, 'WITHOUT_LINK_RESOLUTION'>>
 
-export type EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<T extends FieldsType> =
-  AbstractEntryCollection<EntryWithLinkResolutionAndWithUnresolvableLinks<T>>
+export type EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields extends FieldsType> =
+  AbstractEntryCollection<NewEntry<Fields, undefined>>
 
 export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = AbstractEntryCollection<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+> = AbstractEntryCollection<
+  NewEntry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
+>
 
 export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = AbstractEntryCollection<
-  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
->
+> = AbstractEntryCollection<NewEntry<Fields, 'WITH_ALL_LOCALES', Locales>>
 
 export type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType
-> = AbstractEntryCollection<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+> = AbstractEntryCollection<NewEntry<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>
 
 export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
 > = AbstractEntryCollection<
-  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+  NewEntry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
 >
 
 export type ConfiguredEntry<
   Fields extends FieldsType,
   Locales extends LocaleCode,
   Options extends ChainOptions
-> = Options extends ChainOption
-  ? EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>
-  : Options extends ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>
-  ? EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
-  : Options extends ChainOption<'WITHOUT_LINK_RESOLUTION'>
-  ? EntryWithoutLinkResolution<Fields>
-  : Options extends ChainOption<'WITH_ALL_LOCALES'>
-  ? EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-  : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
-  ? EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
-  : Options extends ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
-  ? EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-  : never
+> = Options extends ChainOption<infer Modifiers> ? NewEntry<Fields, Modifiers, Locales> : never
 
 export type ConfiguredEntryCollection<
   Fields extends FieldsType,
