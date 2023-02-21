@@ -73,7 +73,7 @@ export type ClientWithLinkResolutionAndWithUnresolvableLinks = BaseClient &
 
     parseEntries<Fields extends FieldsType>(
       data: EntryCollection<Fields>
-    ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+    ): EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>
   }
 
 export type ClientWithoutLinkResolution = BaseClient &
@@ -90,7 +90,7 @@ export type ClientWithoutLinkResolution = BaseClient &
 
     parseEntries<Fields extends FieldsType>(
       data: EntryCollection<Fields>
-    ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
+    ): EntryCollectionWithoutLinkResolution<Fields>
   }
 
 export type ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks = BaseClient &
@@ -110,9 +110,7 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks = 
 
     parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: EntryCollection<Fields>
-    ): Promise<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    >
+    ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
   }
 
 export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
@@ -128,7 +126,7 @@ export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
 
     parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: EntryCollection<Fields>
-    ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+    ): EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
   }
 
 export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
@@ -145,7 +143,7 @@ export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
 
     parseEntries<Fields extends FieldsType>(
       data: EntryCollection<Fields>
-    ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+    ): EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
   }
 
 export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
@@ -163,9 +161,7 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
 
     parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: EntryCollection<Fields>
-    ): Promise<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    >
+    ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
   }
 
 export type DefaultClient = ClientWithLinkResolutionAndWithUnresolvableLinks
@@ -731,7 +727,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return makeParseEntries<Fields>(data, options)
   }
 
-  async function makeParseEntries<Fields extends FieldsType>(
+  function makeParseEntries<Fields extends FieldsType>(
     data,
     options: ChainOptions = {
       withAllLocales: false,
@@ -745,11 +741,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return internalParseEntries<Fields, any, Extract<ChainOptions, typeof options>>(data, options)
   }
 
-  async function internalParseEntries<
+  function internalParseEntries<
     Fields extends FieldsType,
     Locales extends LocaleCode,
     Options extends ChainOptions
-  >(data: unknown, options: Options): Promise<ConfiguredEntryCollection<Fields, Locales, Options>> {
+  >(data: unknown, options: Options): ConfiguredEntryCollection<Fields, Locales, Options> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     return resolveCircular(data, {

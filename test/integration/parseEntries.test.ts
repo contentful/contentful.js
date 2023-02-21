@@ -442,8 +442,8 @@ describe('parseEntries via chained clients', () => {
   const entryWithResolvableLink = 'nyancat'
 
   describe('default client', () => {
-    test('client', async () => {
-      const response = await client.parseEntries(dataWithResolvableLink)
+    test('client', () => {
+      const response = client.parseEntries(dataWithResolvableLink)
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend?.sys.type).toBe('Entry')
@@ -453,8 +453,8 @@ describe('parseEntries via chained clients', () => {
   })
 
   describe('client has withoutUnresolvableLinks modifier', () => {
-    test('client.withoutUnresolvableLinks', async () => {
-      const response = await client.withoutUnresolvableLinks.parseEntries(dataWithUnresolvableLink)
+    test('client.withoutUnresolvableLinks', () => {
+      const response = client.withoutUnresolvableLinks.parseEntries(dataWithUnresolvableLink)
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend).toBeUndefined()
@@ -463,15 +463,15 @@ describe('parseEntries via chained clients', () => {
 
   // TODO: add extra locale to the fixtures, add assertions to the tests to chcek the other locale as well
   describe('client has withAllLocales modifier', () => {
-    test('client.withAllLocales', async () => {
-      const response = await client.withAllLocales.parseEntries(dataWithResolvableLinkAndAllLocales)
+    test('client.withAllLocales', () => {
+      const response = client.withAllLocales.parseEntries(dataWithResolvableLinkAndAllLocales)
 
       expect(response.items[0].fields.color).toHaveProperty('en-US')
       // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).not.toBe('Link') // ????
     })
 
-    test('client.withAllLocales.withoutLinkResolution', async () => {
-      const response = await client.withAllLocales.withoutLinkResolution.parseEntries(
+    test('client.withAllLocales.withoutLinkResolution', () => {
+      const response = client.withAllLocales.withoutLinkResolution.parseEntries(
         dataWithResolvableLinkAndAllLocales
       )
       expect(response.items[0].fields).toBeDefined()
@@ -479,8 +479,8 @@ describe('parseEntries via chained clients', () => {
       // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Link')
     })
 
-    test('client.withAllLocales.withoutUnresolvableLinks', async () => {
-      const response = await client.withAllLocales.withoutUnresolvableLinks.parseEntries(
+    test('client.withAllLocales.withoutUnresolvableLinks', () => {
+      const response = client.withAllLocales.withoutUnresolvableLinks.parseEntries(
         dataWithUnresolvableLinkAndAllLocales
       )
       console.dir(response, { depth: 10 })
@@ -492,8 +492,8 @@ describe('parseEntries via chained clients', () => {
   })
 
   describe('client has withoutLinkResolution modifier', () => {
-    test('client.withoutLinkResolution', async () => {
-      const response = await client.withoutLinkResolution.parseEntries(dataWithResolvableLink)
+    test('client.withoutLinkResolution', () => {
+      const response = client.withoutLinkResolution.parseEntries(dataWithResolvableLink)
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend?.sys.type).toBe('Link')
