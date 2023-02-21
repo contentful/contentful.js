@@ -1,9 +1,8 @@
 import * as contentful from '../../lib/contentful'
-import { localeSpaceParams, params, previewParams } from './utils'
+import { params } from './utils'
 import {
   EntryFields,
   EntryCollection,
-  EntryCollectionWithAllLocalesAndWithoutLinkResolution,
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
 } from '../../dist/types/types/entry'
 import { Link } from '../../dist/types/types/link'
@@ -25,8 +24,6 @@ if (process.env.API_INTEGRATION_TESTS) {
 }
 
 const client = contentful.createClient(params)
-const previewClient = contentful.createClient(previewParams)
-const localeClient = contentful.createClient(localeSpaceParams)
 
 let dataWithResolvableLink = {} as EntryCollection<TypeCatFields>
 let dataWithResolvableLinkAndAllLocales =
@@ -227,8 +224,6 @@ const resolvedNyanCatAssetAllLocales = {
   },
 }
 
-// withUnresolvableLinks is always true for the API object
-
 beforeEach(() => {
   dataWithResolvableLink = {
     // detph: 2
@@ -306,7 +301,7 @@ beforeEach(() => {
               sys: {
                 type: 'Link',
                 linkType: 'Entry',
-                id: '6SiPbntBPYYjnVHmipxJBF', //tod
+                id: 'happycat',
               },
             },
           },
@@ -414,7 +409,7 @@ beforeEach(() => {
                 type: 'Link',
                 linkType: 'Entry',
                 id: '6SiPbntBPYYjnVHmipxJBF',
-              },
+              }
             },
           },
           birthday: {
@@ -436,43 +431,12 @@ beforeEach(() => {
       },
     ],
     includes: {
-      Asset: [
-        {
-          metadata: { tags: [] },
-          sys: {
-            space: {
-              sys: { type: 'Link', linkType: 'Space', id: 'ezs1swce23xe' },
-            },
-            id: 'happycat',
-            type: 'Asset',
-            createdAt: '2018-02-26T15:25:58.703Z',
-            updatedAt: '2018-02-26T15:25:58.703Z',
-            environment: {
-              sys: { id: 'master', type: 'Link', linkType: 'Environment' },
-            },
-            revision: 1,
-            locale: 'en-US',
-          },
-          fields: {
-            title: {
-              'en-US': 'happycat',
-            },
-            file: {
-              'en-US': {
-                url: '//images.ctfassets.net/ezs1swce23xe/happycat/9fba4eee22e443f29307aa17f42b61fe/happycatw.jpg',
-                details: { size: 59939, image: { width: 273, height: 397 } },
-                fileName: 'happycatw.jpg',
-                contentType: 'image/jpeg',
-              },
-            },
-          },
-        },
-      ],
+      Asset: [resolvedHappyCatAssetAllLocales],
     },
   }
 })
-// TODO:
-// expand to cover also previewClient and localeClient
+
+// expand to cover also localeClient
 describe('parseEntries via chained clients', () => {
   const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
   const entryWithResolvableLink = 'nyancat'
@@ -495,19 +459,9 @@ describe('parseEntries via chained clients', () => {
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend).toBeUndefined()
     })
-
-    test('client.withoutUnresolvableLinks.withAllLocales', async () => {
-      const response = await client.withoutUnresolvableLinks.withAllLocales.parseEntries(
-        dataWithUnresolvableLinkAndAllLocales
-      )
-
-      expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.name).toHaveProperty('en-US')
-      expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend).toEqual({})
-    })
   })
 
+  // TODO: add extra locale to the fixtures, add assertions to the tests to chcek the other locale as well
   describe('client has withAllLocales modifier', () => {
     test('client.withAllLocales', async () => {
       const response = await client.withAllLocales.parseEntries(dataWithResolvableLinkAndAllLocales)
@@ -516,48 +470,33 @@ describe('parseEntries via chained clients', () => {
       // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).not.toBe('Link') // ????
     })
 
-    // test('client.withAllLocales.withoutLinkResolution', async () => {
-    //   const response = await client.withAllLocales.withoutLinkResolution.parseEntries({
-    //     'sys.id': entryWithResolvableLink,
-    //     include: 2,
-    //   })
-    //   expect(response.items[0].fields).toBeDefined()
-    //   expect(response.items[0].fields.color).toHaveProperty('en-US')
-    //   expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Link')
-    // })
+    test('client.withAllLocales.withoutLinkResolution', async () => {
+      const response = await client.withAllLocales.withoutLinkResolution.parseEntries(
+        dataWithResolvableLinkAndAllLocales
+      )
+      expect(response.items[0].fields).toBeDefined()
+      expect(response.items[0].fields.color).toHaveProperty('en-US')
+      // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Link')
+    })
 
-    //     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
-    //       const response = await client.withAllLocales.withoutUnresolvableLinks.parseEntries({
-    //         'sys.id': entryWithUnresolvableLink,
-    //         include: 2,
-    //       })
-
-    //       expect(response.items[0].fields).toBeDefined()
-    //       expect(response.items[0].fields.name).toHaveProperty('en-US')
-    //       expect(response.items[0].fields.color).toHaveProperty('en-US')
-    //       expect(response.items[0].fields.bestFriend).toEqual({})
-    //     })
+    test('client.withAllLocales.withoutUnresolvableLinks', async () => {
+      const response = await client.withAllLocales.withoutUnresolvableLinks.parseEntries(
+        dataWithUnresolvableLinkAndAllLocales
+      )
+      console.dir(response, { depth: 10 })
+      expect(response.items[0].fields).toBeDefined()
+      expect(response.items[0].fields.name).toHaveProperty('en-US')
+      expect(response.items[0].fields.color).toHaveProperty('en-US')
+      expect(response.items[0].fields.bestFriend).toEqual({})
+    })
   })
 
-  //   describe('client has withoutLinkResolution modifier', () => {
-  //     test('client.withoutLinkResolution', async () => {
-  //       const response = await client.withoutLinkResolution.parseEntries({
-  //         'sys.id': entryWithResolvableLink,
-  //       })
+  describe('client has withoutLinkResolution modifier', () => {
+    test('client.withoutLinkResolution', async () => {
+      const response = await client.withoutLinkResolution.parseEntries(dataWithResolvableLink)
 
-  //       expect(response.items[0].fields).toBeDefined()
-  //       expect(response.items[0].fields.bestFriend.sys.type).toBe('Link')
-  //     })
-
-  //     test('client.withoutLinkResolution.withAllLocales', async () => {
-  //       const response = await client.withoutLinkResolution.withAllLocales.parseEntries({
-  //         'sys.id': entryWithResolvableLink,
-  //       })
-
-  //       expect(response.items[0].fields).toBeDefined()
-  //       expect(response.items[0].fields.name).toHaveProperty('en-US')
-  //       expect(response.items[0].fields.color).toHaveProperty('en-US')
-  //       expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Link')
-  //     })
-  //   })
+      expect(response.items[0].fields).toBeDefined()
+      expect(response.items[0].fields.bestFriend?.sys.type).toBe('Link')
+    })
+  })
 })
