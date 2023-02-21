@@ -1,6 +1,6 @@
 import { ResourceLink } from './resource-link'
 
-export type LinkType = 'Space' | 'ContentType' | 'Environment' | 'Entry' | 'Tag' | 'User'
+export type LinkType = 'Space' | 'ContentType' | 'Environment' | 'Entry' | 'Tag' | 'User' | 'Asset'
 
 export interface Link<T extends LinkType> {
   type: 'Link'
