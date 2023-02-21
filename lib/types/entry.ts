@@ -61,28 +61,28 @@ export type GenericEntry<Fields extends FieldsType> = BaseEntry & {
 export type Entry<Fields extends FieldsType> = GenericEntry<Fields>
 
 export type ResolvedField<
-  Fields extends FieldsType,
+  Field,
   Modifiers extends ChainModifiers,
-  Locales extends LocaleCode = any
-> = Fields extends EntryFields.Link<infer LinkedFields>
+  Locales extends LocaleCode = LocaleCode
+> = Field extends EntryFields.Link<infer LinkedFields>
   ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? EntryLink
     :
         | NewEntry<LinkedFields, Modifiers, Locales>
         | ('WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers ? undefined : EntryLink)
-  : Fields extends EntryFields.Link<infer LinkedFields>[]
+  : Field extends EntryFields.Link<infer LinkedFields>[]
   ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? EntryLink[]
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
     ? (NewEntry<LinkedFields, Modifiers, Locales> | undefined)[]
     : (NewEntry<LinkedFields, Modifiers, Locales> | EntryLink)[]
-  : Fields
+  : Field
 
 // TODO: rename after renaming generic Entry type
 export type NewEntry<
   Fields extends FieldsType,
   Modifiers extends ChainModifiers,
-  Locales extends LocaleCode = any
+  Locales extends LocaleCode = LocaleCode
 > = BaseEntry & {
   fields: 'WITH_ALL_LOCALES' extends Modifiers
     ? {
