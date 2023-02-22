@@ -15,7 +15,7 @@ export interface TypeCatFields {
   birthday?: EntryFields.Date
   lifes?: EntryFields.Integer
   lives?: EntryFields.Integer
-  image?: { sys: Link<'Asset'> } // todo: is asset correct?
+  image?: { sys: Link<'Asset'> }
 }
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -29,13 +29,13 @@ let dataWithResolvableLink = {} as EntryCollection<TypeCatFields>
 let dataWithResolvableLinkAndAllLocales =
   {} as EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
     TypeCatFields,
-    'en-US'
+    'en-US' | 'tlh'
   >
 let dataWithUnresolvableLink = {} as EntryCollection<TypeCatFields>
 let dataWithUnresolvableLinkAndAllLocales =
   {} as EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
     TypeCatFields,
-    'en-US'
+    'en-US' | 'tlh'
   >
 
 const resolvedHappyCatEntry = {
@@ -226,7 +226,6 @@ const resolvedNyanCatAssetAllLocales = {
 
 beforeEach(() => {
   dataWithResolvableLink = {
-    // detph: 2
     total: 1,
     skip: 0,
     limit: 100,
@@ -289,6 +288,7 @@ beforeEach(() => {
         fields: {
           name: {
             'en-US': 'CatWithUnpublishedFriend',
+            tlh: 'CatWithUnpublishedFriend',
           },
           likes: {
             'en-US': ['dogs'],
@@ -396,6 +396,7 @@ beforeEach(() => {
         fields: {
           name: {
             'en-US': 'CatWithUnpublishedFriend',
+            tlh: 'CatWithUnpublishedFriend',
           },
           likes: {
             'en-US': ['dogs'],
@@ -409,7 +410,7 @@ beforeEach(() => {
                 type: 'Link',
                 linkType: 'Entry',
                 id: '6SiPbntBPYYjnVHmipxJBF',
-              }
+              },
             },
           },
           birthday: {
@@ -461,12 +462,13 @@ describe('parseEntries via chained clients', () => {
     })
   })
 
-  // TODO: add extra locale to the fixtures, add assertions to the tests to chcek the other locale as well
   describe('client has withAllLocales modifier', () => {
     test('client.withAllLocales', () => {
       const response = client.withAllLocales.parseEntries(dataWithResolvableLinkAndAllLocales)
 
-      expect(response.items[0].fields.color).toHaveProperty('en-US')
+      expect(response.items[0].fields).toBeDefined()
+      expect(response.items[0].fields.name).toHaveProperty('en-US')
+      expect(response.items[0].fields.name).toHaveProperty('tlh')
       // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).not.toBe('Link') // ????
     })
 
@@ -475,7 +477,8 @@ describe('parseEntries via chained clients', () => {
         dataWithResolvableLinkAndAllLocales
       )
       expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.color).toHaveProperty('en-US')
+      expect(response.items[0].fields.name).toHaveProperty('en-US')
+      expect(response.items[0].fields.name).toHaveProperty('tlh')
       // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Link')
     })
 
@@ -483,9 +486,10 @@ describe('parseEntries via chained clients', () => {
       const response = client.withAllLocales.withoutUnresolvableLinks.parseEntries(
         dataWithUnresolvableLinkAndAllLocales
       )
-      console.dir(response, { depth: 10 })
+
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
+      expect(response.items[0].fields.name).toHaveProperty('tlh')
       expect(response.items[0].fields.color).toHaveProperty('en-US')
       expect(response.items[0].fields.bestFriend).toEqual({})
     })

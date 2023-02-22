@@ -161,7 +161,10 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
 
     parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: EntryCollection<Fields>
-    ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
+    ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
+      Fields,
+      Locales
+    >
   }
 
 export type DefaultClient = ClientWithLinkResolutionAndWithUnresolvableLinks
@@ -735,9 +738,6 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withoutUnresolvableLinks: false,
     }
   ) {
-    console.log(options)
-    const { withoutLinkResolution, withoutUnresolvableLinks } = options
-
     return internalParseEntries<Fields, any, Extract<ChainOptions, typeof options>>(data, options)
   }
 
