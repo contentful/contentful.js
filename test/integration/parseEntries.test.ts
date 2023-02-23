@@ -466,10 +466,13 @@ describe('parseEntries via chained clients', () => {
     test('client.withAllLocales', () => {
       const response = client.withAllLocales.parseEntries(dataWithResolvableLinkAndAllLocales)
 
+      // console.dir(dataWithResolvableLinkAndAllLocales, { depth: 10 })
+      console.dir(response, { depth: 10 })
+
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.name).toHaveProperty('tlh')
-      // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).not.toBe('Link') // ????
+      expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).not.toBe('Link')
     })
 
     test('client.withAllLocales.withoutLinkResolution', () => {
@@ -479,7 +482,7 @@ describe('parseEntries via chained clients', () => {
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.name).toHaveProperty('tlh')
-      // expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Link')
+      expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Link')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', () => {
