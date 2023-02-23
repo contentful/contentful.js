@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields, NewEntry } from '../../lib'
+import { EntryFields, Entry } from '../../lib'
 // @ts-ignore
 import * as mocks from './mocks'
 
@@ -11,7 +11,7 @@ import * as mocks from './mocks'
  * @namespace: Typescript - type test
  * @description: A simple Entry with generic fields
  */
-expectAssignable<NewEntry<Record<string, any>>>({
+expectAssignable<Entry<Record<string, any>>>({
   ...mocks.entryBasics,
   fields: {
     stringField: mocks.stringValue,
@@ -23,7 +23,7 @@ expectAssignable<NewEntry<Record<string, any>>>({
  * @namespace: Typescript - type test
  * @description: A simple Entry generic
  */
-expectAssignable<NewEntry<{ stringField: EntryFields.Text }>>({
+expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
   ...mocks.entryBasics,
   fields: {
     stringField: mocks.stringValue,
@@ -35,7 +35,7 @@ expectAssignable<NewEntry<{ stringField: EntryFields.Text }>>({
  * @description: A simple Entry generic with a referenced fields wildcard
  */
 expectAssignable<
-  NewEntry<{
+  Entry<{
     stringField: EntryFields.Text
     referenceField: EntryFields.Link<Record<string, any>>
   }>
@@ -55,7 +55,7 @@ expectAssignable<
  * @description: EntryWithoutLinkResolution linked entities are all rendered as links
  */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       stringField: EntryFields.Text
       entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
@@ -76,45 +76,42 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
     'WITHOUT_LINK_RESOLUTION'
   >
 >(mocks.getEntry({ referenceField: undefined }))
 
 expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.Link<mocks.SimpleEntryFields> }, 'WITHOUT_LINK_RESOLUTION'>
+  Entry<{ referenceField: EntryFields.Link<mocks.SimpleEntryFields> }, 'WITHOUT_LINK_RESOLUTION'>
 >(mocks.getEntry({ referenceField: mocks.entry }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
     'WITHOUT_LINK_RESOLUTION'
   >
 >(mocks.getEntry({ referenceField: [undefined] }))
 
 expectNotAssignable<
-  NewEntry<
-    { referenceField: EntryFields.Link<mocks.SimpleEntryFields>[] },
-    'WITHOUT_LINK_RESOLUTION'
-  >
+  Entry<{ referenceField: EntryFields.Link<mocks.SimpleEntryFields>[] }, 'WITHOUT_LINK_RESOLUTION'>
 >(mocks.getEntry({ referenceField: [mocks.entry] }))
 
-expectNotAssignable<NewEntry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>(
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>(
   mocks.getEntry({ referenceField: undefined })
 )
 
-expectNotAssignable<NewEntry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>(
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>(
   mocks.getEntry({ referenceField: mocks.asset })
 )
 
-expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_LINK_RESOLUTION'>
->(mocks.getEntry({ referenceField: [undefined] }))
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.getEntry({ referenceField: [undefined] })
+)
 
-expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_LINK_RESOLUTION'>
->(mocks.getEntry({ referenceField: [mocks.asset] }))
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.getEntry({ referenceField: [mocks.asset] })
+)
 
 /**
  * @namespace: Typescript - type test
@@ -122,7 +119,7 @@ expectNotAssignable<
  * unresolved entities are referenced as links. Fields with multiple references can have resolved and unresolved mixed.
  */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       stringField: EntryFields.Text
       resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
@@ -155,18 +152,18 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> }, undefined>
+  Entry<{ referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> }, undefined>
 >(mocks.getEntry({ referenceField: undefined }))
 
 expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] }, undefined>
+  Entry<{ referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] }, undefined>
 >(mocks.getEntry({ referenceField: [undefined] }))
 
-expectNotAssignable<NewEntry<{ referenceField: EntryFields.AssetLink }, undefined>>(
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, undefined>>(
   mocks.getEntry({ referenceField: undefined })
 )
 
-expectNotAssignable<NewEntry<{ referenceField: EntryFields.AssetLink[] }, undefined>>(
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, undefined>>(
   mocks.getEntry({ referenceField: [undefined] })
 )
 
@@ -176,7 +173,7 @@ expectNotAssignable<NewEntry<{ referenceField: EntryFields.AssetLink[] }, undefi
  * linked entites are all rendered as links.
  */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       stringField: EntryFields.Text
       entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
@@ -199,7 +196,7 @@ expectAssignable<
 
 /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
       assetReferenceField: EntryFields.AssetLink
@@ -212,7 +209,7 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
@@ -220,7 +217,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: mocks.localizedEntry } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
@@ -228,7 +225,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
@@ -236,7 +233,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [mocks.localizedEntry] } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.AssetLink },
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
@@ -244,7 +241,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: mocks.asset } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.AssetLink[] },
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
@@ -252,7 +249,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.AssetLink[] },
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
@@ -265,7 +262,7 @@ expectNotAssignable<
  * linked entities are all rendered as inlined references, or if not resolvable, as links. multi reference fields can have mixed content.
  */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       stringField: EntryFields.Text
       resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
@@ -307,7 +304,7 @@ expectAssignable<
 
 /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
       assetReferenceField: EntryFields.AssetLink
@@ -320,7 +317,7 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
     'WITH_ALL_LOCALES',
     'US' | 'DE'
@@ -328,7 +325,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.AssetLink[] }, 'WITH_ALL_LOCALES', 'US' | 'DE'>
+  Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITH_ALL_LOCALES', 'US' | 'DE'>
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 /**
@@ -337,7 +334,7 @@ expectNotAssignable<
  * unresolvable links are completely removed.
  */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       stringField: EntryFields.Text
       resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
@@ -370,25 +367,25 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
     'WITHOUT_UNRESOLVABLE_LINKS'
   >
 >(mocks.getEntry({ referenceField: mocks.entryLink }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
     'WITHOUT_UNRESOLVABLE_LINKS'
   >
 >(mocks.getEntry({ referenceField: [mocks.entryLink] }))
 
-expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_UNRESOLVABLE_LINKS'>
->(mocks.getEntry({ referenceField: mocks.assetLink }))
+expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  mocks.getEntry({ referenceField: mocks.assetLink })
+)
 
 expectNotAssignable<
-  NewEntry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_UNRESOLVABLE_LINKS'>
 >(mocks.getEntry({ referenceField: [mocks.assetLink] }))
 
 /**
@@ -396,7 +393,7 @@ expectNotAssignable<
  * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
  */
 expectAssignable<
-  NewEntry<
+  Entry<
     {
       stringField: EntryFields.Text
       resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
@@ -433,7 +430,7 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
@@ -441,7 +438,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: mocks.entryLink } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
@@ -449,7 +446,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [mocks.entryLink] } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.AssetLink },
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
@@ -457,7 +454,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: mocks.assetLink } }))
 
 expectNotAssignable<
-  NewEntry<
+  Entry<
     { referenceField: EntryFields.AssetLink[] },
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'

@@ -12,7 +12,7 @@ import {
   EntryFields,
   Tag,
   TagSys,
-  NewEntry,
+  Entry,
 } from '../../lib'
 
 const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'
@@ -146,7 +146,7 @@ export type EntryFields = {
   field1: string
 }
 
-const entryMock: NewEntry<EntryFields> = {
+const entryMock: Entry<EntryFields> = {
   sys: {
     ...copy(sysMock),
     locale: 'locale',

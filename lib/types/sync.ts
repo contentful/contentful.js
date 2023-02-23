@@ -1,10 +1,10 @@
 import { Asset } from './asset'
-import { NewEntry } from './entry'
+import { Entry } from './entry'
 
 export interface SyncCollection {
-  entries: Array<NewEntry>
+  entries: Array<Entry>
   assets: Array<Asset>
-  deletedEntries: Array<NewEntry>
+  deletedEntries: Array<Entry>
   deletedAssets: Array<Asset>
   nextSyncToken: string
 }

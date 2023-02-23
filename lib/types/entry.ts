@@ -28,7 +28,7 @@ export declare namespace EntryFields {
     lon: number
   }
 
-  type EntryLink<Fields extends FieldsType> = NewEntry<Fields>
+  type EntryLink<Fields extends FieldsType> = Entry<Fields>
   type AssetLink = Asset
   type Link<Fields extends FieldsType> = AssetLink | EntryLink<Fields>
   type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<FieldsType>> = Item[]
@@ -66,12 +66,12 @@ type ResolvedLink<
   Locales extends LocaleCode = LocaleCode
 > = Field extends EntryFields.EntryLink<infer LinkedFields>
   ? ChainModifiers extends Modifiers
-    ? NewEntry<LinkedFields, Modifiers, Locales> | EntryLink | undefined
+    ? Entry<LinkedFields, Modifiers, Locales> | EntryLink | undefined
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? EntryLink
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? NewEntry<LinkedFields, Modifiers, Locales> | undefined
-    : NewEntry<LinkedFields, Modifiers, Locales> | EntryLink
+    ? Entry<LinkedFields, Modifiers, Locales> | undefined
+    : Entry<LinkedFields, Modifiers, Locales> | EntryLink
   : Field extends EntryFields.AssetLink
   ? ChainModifiers extends Modifiers
     ? Asset | AssetLink | undefined
@@ -90,7 +90,7 @@ export type ResolvedField<
   ? Array<ResolvedLink<Item, Modifiers, Locales>>
   : ResolvedLink<Field, Modifiers, Locales>
 
-export type NewEntry<
+export type Entry<
   Fields extends FieldsType = FieldsType,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
@@ -116,7 +116,7 @@ export type NewEntry<
       }
 }
 
-export type EntryCollection<TEntry extends NewEntry> = ContentfulCollection<TEntry> & {
+export type EntryCollection<TEntry extends Entry> = ContentfulCollection<TEntry> & {
   errors?: Array<any>
   includes?: {
     Entry?: any[]
