@@ -1,11 +1,11 @@
 import * as contentful from '../../lib/contentful'
-import { params } from './utils'
+import { Link } from '../../lib/types'
 import {
-  EntryFields,
   EntryCollection,
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-} from '../../dist/types/types/entry'
-import { Link } from '../../dist/types/types/link'
+  EntryFields,
+} from '../../lib/types/entry'
+import { params } from './utils'
 
 export interface TypeCatFields {
   name: EntryFields.Text

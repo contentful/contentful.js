@@ -15,68 +15,68 @@ export interface XspaceTypeFields {
 }
 
 test('Given json should be parsed correctly as a collection of entries', () => {
-    const api = makeClient({
-      // @ts-ignore
-      http: {},
-      // @ts-ignore
-      getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
-    })
-    const data : EntryCollection<AnimalTypeFields> = {
-      total: 1,
-      skip: 0,
-      limit: 1,
-      items: [
+  const api = makeClient({
+    // @ts-ignore
+    http: {},
+    // @ts-ignore
+    getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
+  })
+  const data: EntryCollection<AnimalTypeFields> = {
+    total: 1,
+    skip: 0,
+    limit: 1,
+    items: [
+      {
+        sys: {
+          type: 'Entry',
+          locale: 'en-US',
+        } as EntrySys,
+        metadata: {
+          tags: [],
+        },
+        fields: {
+          animal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: 'oink',
+            },
+          },
+          anotheranimal: {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: 'middle-parrot',
+            },
+          },
+        },
+      },
+    ],
+    includes: {
+      Entry: [
         {
           sys: {
             type: 'Entry',
+            id: 'oink',
             locale: 'en-US',
-          } as EntrySys,
-          metadata: {
-            tags: []
           },
           fields: {
-            animal: {
+            name: 'Pig',
+            friend: {
               sys: {
                 type: 'Link',
                 linkType: 'Entry',
-                id: 'oink',
-              },
-            },
-            anotheranimal: {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'middle-parrot',
+                id: 'groundhog',
               },
             },
           },
         },
       ],
-      includes: {
-        Entry: [
-          {
-            sys: {
-              type: 'Entry',
-              id: 'oink',
-              locale: 'en-US',
-            },
-            fields: {
-              name: 'Pig',
-              friend: {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: 'groundhog',
-                },
-              },
-            },
-          },
-        ],
-      },
-    }
-    const parsedData = api.parseEntries(data)
-    expect(parsedData).toBeDefined()
-    expect(parsedData.items[0].fields.animal?.sys).toEqual(data.includes!.Entry![0].sys)
+    },
+  }
+  const parsedData = api.parseEntries(data)
+  expect(parsedData).toBeDefined()
+  expect(parsedData.items[0].fields.animal?.sys).toEqual(data.includes!.Entry![0].sys)
 })
 
 // remove this test?
@@ -87,7 +87,7 @@ test('Given json should be parsed correctly as a collection of entries where an 
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data : EntryCollection<AnimalTypeFields> = {
+  const data: EntryCollection<AnimalTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -161,7 +161,7 @@ test('Given json should be parsed correctly as a collection of entries with reso
     getGlobalOptions: createGlobalOptions({ resolveLinks: false }),
   })
 
-  const data : EntryCollection<XspaceTypeFields> = {
+  const data: EntryCollection<XspaceTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -171,7 +171,7 @@ test('Given json should be parsed correctly as a collection of entries with reso
           type: 'Entry',
         } as EntrySys,
         metadata: {
-          tags: []
+          tags: [],
         },
         fields: {
           xspace: [

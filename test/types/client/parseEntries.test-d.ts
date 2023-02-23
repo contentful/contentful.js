@@ -1,5 +1,5 @@
 import { expectType } from 'tsd'
-import { EntryCollection } from '../../../dist/types/types/entry';
+import { EntryCollection } from '../../../dist/types/types/entry'
 import {
   createClient,
   Entry,
@@ -27,11 +27,11 @@ type Fields = {
   moreLinks: Entry<LinkedFields>[]
 }
 
-const data : EntryCollection<Fields> = {
+const data: EntryCollection<Fields> = {
   total: 10,
   skip: 0,
   limit: 5,
-  items: []
+  items: [],
 }
 
 expectType<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
