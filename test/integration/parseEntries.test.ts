@@ -1,7 +1,9 @@
 import * as contentful from '../../lib/contentful'
 import { Link } from '../../lib/types'
 import {
-  EntryFields, GenericEntryCollection, GenericEntryCollectionWithAllLocales
+  EntryFields,
+  GenericEntryCollection,
+  GenericEntryCollectionWithAllLocales,
 } from '../../lib/types/entry'
 import { params } from './utils'
 export interface TypeCatFields {

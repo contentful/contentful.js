@@ -87,7 +87,7 @@ test('Given json should be parsed correctly as a collection of entries where an 
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data : GenericEntryCollection<AnimalTypeFields> = {
+  const data: GenericEntryCollection<AnimalTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -161,7 +161,7 @@ test('Given json should be parsed correctly as a collection of entries with reso
     getGlobalOptions: createGlobalOptions({ resolveLinks: false }),
   })
 
-  const data : GenericEntryCollection<XspaceTypeFields> = {
+  const data: GenericEntryCollection<XspaceTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
