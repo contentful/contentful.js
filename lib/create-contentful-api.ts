@@ -125,7 +125,7 @@ export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
       query?: EntriesQueries<Fields> & { locale?: never }
     ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 
-    parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
+    parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: GenericEntryCollectionWithAllLocales<Fields, Locales>
     ): EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
   }
@@ -160,7 +160,7 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
       EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
     >
 
-    parseEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
+    parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
       data: GenericEntryCollectionWithAllLocales<Fields, Locales>
     ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
       Fields,

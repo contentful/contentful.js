@@ -123,7 +123,7 @@ Entries can be returned in six different response shapes. Thanks to the three cl
 
 ### `withAllLocales`
 
-If the current chain includes `withAllLocales`, `getAsset` and `getAssets` expect an optional generic parameter for all existing locales in your space. `parseEntry`, `getEntry` and `getEntries` expect an optional second generic parameter.
+If the current chain includes `withAllLocales`, `getAsset` and `getAssets` expect an optional generic parameter for all existing locales in your space. `parseEntries`, `getEntry` and `getEntries` expect an optional second generic parameter.
 If the `Locale` type is provided, your response type will define all locale keys for your field values:
 
 ```typescript
