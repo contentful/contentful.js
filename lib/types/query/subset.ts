@@ -1,9 +1,14 @@
-import { BasicEntryField, EntryFields } from '..'
+import { EntryFields } from '..'
 import { ConditionalQueries, NonEmpty } from './util'
 
 type SubsetFilterTypes = 'in' | 'nin'
 type SupportedTypes =
-  | Exclude<BasicEntryField, EntryFields.Location | EntryFields.RichText | EntryFields.Object>
+  | EntryFields.Symbol
+  | EntryFields.Text
+  | EntryFields.Integer
+  | EntryFields.Number
+  | EntryFields.Date
+  | EntryFields.Boolean
   | undefined
 
 /**

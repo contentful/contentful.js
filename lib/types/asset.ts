@@ -65,7 +65,9 @@ export type AssetCollectionWithAllLocales<Locales extends LocaleCode> = Contentf
 export type GenericAssetCollection<Locales extends LocaleCode> =
   | AssetCollection
   | AssetCollectionWithAllLocales<Locales>
-export type AssetSys = EntitySys
+export type AssetSys = EntitySys & {
+  type: 'Asset'
+}
 
 export type ConfiguredAsset<
   Locales extends LocaleCode,

@@ -3,62 +3,148 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { Entry, EntryLink, EntrySys, ResolvedField } from '../../lib'
-
-export const stringValue = ''
-export const numberValue = 123
-export const booleanValue = true
-export const dateValue = '2018-05-03T09:18:16.329Z'
-export const metadataValue = { tags: [] }
-export const entryLinkValue: EntryLink = {
-  type: 'Link',
-  linkType: 'Entry',
-  id: stringValue,
-}
-
-const entrySysValue: EntrySys = {
-  contentType: { sys: { id: stringValue, type: 'Link', linkType: 'ContentType' } },
-  environment: { sys: { id: stringValue, type: 'Link', linkType: 'Environment' } },
-  revision: numberValue,
-  space: { sys: { id: stringValue, type: 'Link', linkType: 'Space' } },
-  type: '', //?
-  updatedAt: dateValue,
-  id: stringValue,
-  createdAt: dateValue,
-}
-
-const entryBasics = {
-  sys: entrySysValue,
-  metadata: metadataValue,
-}
-
-const entryValue = {
-  ...entryBasics,
-  fields: {
-    title: 'title',
-  },
-}
+import { EntryFields, ResolvedField } from '../../lib'
+// @ts-ignore
+import * as mocks from './mocks'
 
 type SimpleEntryFields = { title: string }
 
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>, undefined>>(entryValue)
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>, undefined>>(entryLinkValue)
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>[], undefined>>([entryValue])
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>[], undefined>>([entryLinkValue])
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>[], undefined>>([entryValue, entryLinkValue])
-
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>, 'WITHOUT_UNRESOLVABLE_LINKS'>>(entryValue)
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>, 'WITHOUT_UNRESOLVABLE_LINKS'>>(undefined)
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>[], 'WITHOUT_UNRESOLVABLE_LINKS'>>([
-  entryValue,
+expectAssignable<ResolvedField<EntryFields.Symbol, undefined>>(mocks.stringValue)
+expectAssignable<ResolvedField<EntryFields.Text, undefined>>(mocks.stringValue)
+expectAssignable<ResolvedField<EntryFields.Integer, undefined>>(mocks.numberValue)
+expectAssignable<ResolvedField<EntryFields.Number, undefined>>(mocks.numberValue)
+expectAssignable<ResolvedField<EntryFields.Date, undefined>>(mocks.dateValue)
+expectAssignable<ResolvedField<EntryFields.Boolean, undefined>>(mocks.booleanValue)
+expectAssignable<ResolvedField<EntryFields.Location, undefined>>(mocks.locationValue)
+expectAssignable<ResolvedField<EntryFields.Array<EntryFields.Symbol>, undefined>>([
+  mocks.stringValue,
 ])
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>[], 'WITHOUT_UNRESOLVABLE_LINKS'>>([
+expectAssignable<ResolvedField<EntryFields.Object, undefined>>(mocks.jsonValue)
+
+// entries
+
+expectAssignable<ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, undefined>>(mocks.entry)
+expectAssignable<ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, undefined>>(
+  mocks.entryLink
+)
+expectNotAssignable<ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, undefined>>(undefined)
+expectNotAssignable<ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, undefined>>(mocks.asset)
+expectNotAssignable<ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, undefined>>(
+  mocks.assetLink
+)
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>, undefined>
+>([mocks.entry])
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>, undefined>
+>([mocks.entryLink])
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>, undefined>
+>([mocks.entry, mocks.entryLink])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>, undefined>
+>([mocks.entry, mocks.entryLink, undefined])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>, undefined>
+>([mocks.entry, mocks.entryLink, mocks.asset])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>, undefined>
+>([mocks.entry, mocks.entryLink, mocks.assetLink])
+
+expectAssignable<
+  ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(mocks.entry)
+expectAssignable<
+  ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(undefined)
+expectNotAssignable<
+  ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(mocks.entryLink)
+expectAssignable<
+  ResolvedField<
+    EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.entry])
+expectAssignable<
+  ResolvedField<
+    EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([undefined])
+expectAssignable<
+  ResolvedField<
+    EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.entry, undefined])
+expectNotAssignable<
+  ResolvedField<
+    EntryFields.Array<EntryFields.EntryLink<SimpleEntryFields>>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.entry, mocks.entryLink, undefined])
+
+expectAssignable<
+  ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, 'WITHOUT_LINK_RESOLUTION'>
+>(mocks.entryLink)
+expectNotAssignable<
+  ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, 'WITHOUT_LINK_RESOLUTION'>
+>(undefined)
+expectNotAssignable<
+  ResolvedField<EntryFields.EntryLink<SimpleEntryFields>, 'WITHOUT_LINK_RESOLUTION'>
+>(mocks.entry)
+
+// assets
+
+expectAssignable<ResolvedField<EntryFields.AssetLink, undefined>>(mocks.asset)
+expectAssignable<ResolvedField<EntryFields.AssetLink, undefined>>(mocks.assetLink)
+expectNotAssignable<ResolvedField<EntryFields.AssetLink, undefined>>(undefined)
+expectNotAssignable<ResolvedField<EntryFields.AssetLink, undefined>>(mocks.entry)
+expectNotAssignable<ResolvedField<EntryFields.AssetLink, undefined>>(mocks.entryLink)
+expectAssignable<ResolvedField<EntryFields.Array<EntryFields.AssetLink>, undefined>>([mocks.asset])
+expectAssignable<ResolvedField<EntryFields.Array<EntryFields.AssetLink>, undefined>>([
+  mocks.assetLink,
+])
+expectAssignable<ResolvedField<EntryFields.Array<EntryFields.AssetLink>, undefined>>([
+  mocks.asset,
+  mocks.assetLink,
+])
+expectNotAssignable<ResolvedField<EntryFields.Array<EntryFields.AssetLink>, undefined>>([
+  mocks.asset,
+  mocks.assetLink,
   undefined,
 ])
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>[], 'WITHOUT_UNRESOLVABLE_LINKS'>>([
-  entryValue,
-  undefined,
-])
 
-expectNotAssignable<ResolvedField<Entry<SimpleEntryFields>, 'WITHOUT_LINK_RESOLUTION'>>(entryValue)
-expectAssignable<ResolvedField<Entry<SimpleEntryFields>, 'WITHOUT_LINK_RESOLUTION'>>(entryLinkValue)
+expectAssignable<ResolvedField<EntryFields.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(mocks.asset)
+expectAssignable<ResolvedField<EntryFields.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(undefined)
+expectNotAssignable<ResolvedField<EntryFields.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  mocks.assetLink
+)
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>([mocks.asset])
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>([undefined])
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>([mocks.asset, undefined])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>([mocks.assetLink, mocks.asset, undefined])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>([mocks.assetLink, mocks.asset, mocks.entry])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>([mocks.assetLink, mocks.asset, mocks.entryLink])
+
+expectAssignable<ResolvedField<EntryFields.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(mocks.assetLink)
+expectNotAssignable<ResolvedField<EntryFields.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(mocks.asset)
+expectAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>
+>([mocks.assetLink])
+expectNotAssignable<
+  ResolvedField<EntryFields.Array<EntryFields.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>
+>([mocks.asset])
