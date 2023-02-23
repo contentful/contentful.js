@@ -303,23 +303,65 @@ const entries = await client.getEntries()
 The same chaining approach can be used with `parseEntries`. Assuming this is the raw data we want to parse:
 
 ```js
-const data = {
+const localizedData = {
+  total: 1,
+  skip: 0,
+  limit: 100,
   items: [
     {
-      sys: { type: 'Entry', locale: 'en-US' },
+      metadata: { tags: [] },
+      sys: {
+        space: {
+          sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' },
+        },
+        id: 'my-zoo',
+        type: 'Entry',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        environment: {
+          sys: { id: 'master', type: 'Link', linkType: 'Environment' },
+        },
+        revision: 1,
+        contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'zoo' } },
+        locale: 'en-US',
+      },
       fields: {
-        animal: { sys: { type: 'Link', linkType: 'Animal', id: 'oink' } },
-        anotheranimal: { sys: { type: 'Link', linkType: 'Animal', id: 'middle-parrot' } },
+        animal: {
+          'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'oink' } },
+        },
+        anotheranimal: {
+          'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'middle-parrot' } },
+        },
       },
     },
   ],
   includes: {
-    Animal: [
+    Entry: [
       {
-        sys: { type: 'Animal', id: 'oink', locale: 'en-US' },
+        metadata: { tags: [] },
+        sys: {
+          space: {
+            sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' },
+          },
+          id: 'oink',
+          type: 'Entry',
+          createdAt: '2020-01-01T00:00:00.000Z',
+          updatedAt: '2020-02-01T00:00:00.000Z',
+          environment: {
+            sys: { id: 'master', type: 'Link', linkType: 'Environment' },
+          },
+          revision: 2,
+          contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'animal' } },
+          locale: 'en-US',
+        },
         fields: {
-          name: 'Pig',
-          friend: { sys: { type: 'Link', linkType: 'Animal', id: 'groundhog' } },
+          name: {
+            'en-US': 'Pig',
+            de: 'Schwein',
+          },
+          friend: {
+            'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } },
+          },
         },
       },
     ],
@@ -327,9 +369,63 @@ const data = {
 }
 ```
 
+It can be used to receive parsed entries with all locales:
+
 ```js
 // returns parsed entries in all locales
-const entries = client.withAllLocales.parseEntries(data)
+const entries = client.withAllLocales.parseEntries(localizedData)
+```
+
+Similarly, raw data without locales information can be parsed as well:
+
+```js
+const data = {
+  total: 1,
+  skip: 0,
+  limit: 100,
+  items: [
+    {
+      metadata: { tags: [] },
+      sys: {
+        space: { sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' } },
+        id: 'my-zoo',
+        type: 'Entry',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
+        revision: 1,
+        contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'zoo' } },
+        locale: 'en-US',
+      },
+      fields: {
+        animal: { sys: { type: 'Link', linkType: 'Entry', id: 'oink' } },
+        anotheranimal: { sys: { type: 'Link', linkType: 'Entry', id: 'middle-parrot' } },
+      },
+    },
+  ],
+  includes: {
+    Entry: [
+      {
+        metadata: { tags: [] },
+        sys: {
+          space: { sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' } },
+          id: 'oink',
+          type: 'Entry',
+          createdAt: '2020-01-01T00:00:00.000Z',
+          updatedAt: '2020-02-01T00:00:00.000Z',
+          environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
+          revision: 2,
+          contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'animal' } },
+          locale: 'en-US',
+        },
+        fields: {
+          name: 'Pig,
+          friend: { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } },
+        },
+      },
+    ],
+  },
+}
 ```
 
 ```js
