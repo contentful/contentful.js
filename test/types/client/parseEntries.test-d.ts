@@ -1,14 +1,16 @@
 import { expectType } from 'tsd'
-import { EntryCollection } from '../../../dist/types/types/entry'
 import {
   createClient,
-  Entry,
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
   EntryCollectionWithAllLocalesAndWithoutLinkResolution,
   EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks,
   EntryCollectionWithLinkResolutionAndWithUnresolvableLinks,
   EntryCollectionWithoutLinkResolution,
+  EntrySys,
+  GenericEntryCollection,
+  GenericEntryCollectionWithAllLocales,
+  Link,
   LocaleCode,
 } from '../../../lib'
 
@@ -23,15 +25,85 @@ type LinkedFields = {
 
 type Fields = {
   title: string
-  link: Entry<LinkedFields>
-  moreLinks: Entry<LinkedFields>[]
+  link: { sys: Link<'Entry'> }
+  moreLinks: { sys: Link<'Entry'> }[]
 }
 
-const data: EntryCollection<Fields> = {
+const data: GenericEntryCollection<Fields> = {
   total: 10,
   skip: 0,
-  limit: 5,
-  items: [],
+  limit: 1,
+  items: [
+    {
+      sys: {
+        id: '0',
+      } as EntrySys,
+      metadata: {
+        tags: [],
+      },
+      fields: {
+        title: 'title',
+        link: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: '1',
+          },
+        },
+        moreLinks: [
+          {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: '2',
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+const dataWithAllLocales: GenericEntryCollectionWithAllLocales<Fields, 'en' | 'de'> = {
+  total: 10,
+  skip: 0,
+  limit: 1,
+  items: [
+    {
+      sys: {
+        id: '0',
+      } as EntrySys,
+      metadata: {
+        tags: [],
+      },
+      fields: {
+        title: {
+          en: 'title',
+          de: 'titel',
+        },
+        link: {
+          en: {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: '1',
+            },
+          },
+        },
+        moreLinks: {
+          en: [
+            {
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: '2',
+              },
+            },
+          ],
+        },
+      },
+    },
+  ],
 }
 
 expectType<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
@@ -48,12 +120,18 @@ expectType<EntryCollectionWithoutLinkResolution<Fields>>(
 
 expectType<
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, LocaleCode>
->(await client.withAllLocales.parseEntries<Fields, LocaleCode>(data))
+>(await client.withAllLocales.parseEntries<Fields, LocaleCode>(dataWithAllLocales))
 
 expectType<
   EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, LocaleCode>
->(await client.withAllLocales.withoutUnresolvableLinks.parseEntries<Fields, LocaleCode>(data))
+>(
+  await client.withAllLocales.withoutUnresolvableLinks.parseEntries<Fields, LocaleCode>(
+    dataWithAllLocales
+  )
+)
 
 expectType<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, LocaleCode>>(
-  await client.withAllLocales.withoutLinkResolution.parseEntries<Fields, LocaleCode>(data)
+  await client.withAllLocales.withoutLinkResolution.parseEntries<Fields, LocaleCode>(
+    dataWithAllLocales
+  )
 )

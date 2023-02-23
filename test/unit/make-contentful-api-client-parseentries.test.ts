@@ -1,6 +1,6 @@
 import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
-import { EntryCollection, EntrySys, Link } from '../../lib/types'
+import { GenericEntryCollection, EntrySys, Link } from '../../lib/types'
 import { ResourceLink } from '../../lib/types/resource-link'
 
 export interface AnimalTypeFields {
@@ -21,7 +21,7 @@ test('Given json should be parsed correctly as a collection of entries', () => {
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data: EntryCollection<AnimalTypeFields> = {
+  const data: GenericEntryCollection<AnimalTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -87,7 +87,7 @@ test('Given json should be parsed correctly as a collection of entries where an 
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data: EntryCollection<AnimalTypeFields> = {
+  const data : GenericEntryCollection<AnimalTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -161,7 +161,7 @@ test('Given json should be parsed correctly as a collection of entries with reso
     getGlobalOptions: createGlobalOptions({ resolveLinks: false }),
   })
 
-  const data: EntryCollection<XspaceTypeFields> = {
+  const data : GenericEntryCollection<XspaceTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,

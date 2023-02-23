@@ -1,12 +1,9 @@
 import * as contentful from '../../lib/contentful'
 import { Link } from '../../lib/types'
 import {
-  EntryCollection,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryFields,
+  EntryFields, GenericEntryCollection, GenericEntryCollectionWithAllLocales
 } from '../../lib/types/entry'
 import { params } from './utils'
-
 export interface TypeCatFields {
   name: EntryFields.Text
   likes?: EntryFields.Symbol[]
@@ -25,18 +22,16 @@ if (process.env.API_INTEGRATION_TESTS) {
 
 const client = contentful.createClient(params)
 
-let dataWithResolvableLink = {} as EntryCollection<TypeCatFields>
-let dataWithResolvableLinkAndAllLocales =
-  {} as EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-    TypeCatFields,
-    'en-US' | 'tlh'
-  >
-let dataWithUnresolvableLink = {} as EntryCollection<TypeCatFields>
-let dataWithUnresolvableLinkAndAllLocales =
-  {} as EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
-    TypeCatFields,
-    'en-US' | 'tlh'
-  >
+let dataWithResolvableLink = {} as GenericEntryCollection<TypeCatFields>
+let dataWithResolvableLinkAndAllLocales = {} as GenericEntryCollectionWithAllLocales<
+  TypeCatFields,
+  'en-US' | 'tlh'
+>
+let dataWithUnresolvableLink = {} as GenericEntryCollection<TypeCatFields>
+let dataWithUnresolvableLinkAndAllLocales = {} as GenericEntryCollectionWithAllLocales<
+  TypeCatFields,
+  'en-US' | 'tlh'
+>
 
 const resolvedHappyCatEntry = {
   metadata: { tags: [] },

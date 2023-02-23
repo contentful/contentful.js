@@ -137,6 +137,11 @@ export type GenericEntryCollection<Fields extends FieldsType> = AbstractEntryCol
   GenericEntry<Fields>
 >
 
+export type GenericEntryCollectionWithAllLocales<
+  Fields extends FieldsType,
+  Locales extends LocaleCode
+> = AbstractEntryCollection<NewEntry<Fields, 'WITH_ALL_LOCALES', Locales>>
+
 /**
  * @deprecated
  */
@@ -158,7 +163,7 @@ export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
 export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = AbstractEntryCollection<NewEntry<Fields, 'WITH_ALL_LOCALES', Locales>>
+> = GenericEntryCollectionWithAllLocales<Fields, Locales>
 
 export type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType
