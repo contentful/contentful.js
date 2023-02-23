@@ -4,7 +4,7 @@ export type ChainModifiers =
   | 'WITHOUT_UNRESOLVABLE_LINKS'
   | undefined
 
-export type ChainOption<Modifiers extends ChainModifiers = undefined> = {
+export type ChainOption<Modifiers extends ChainModifiers = ChainModifiers> = {
   withoutLinkResolution: ChainModifiers extends Modifiers
     ? boolean
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
@@ -22,6 +22,6 @@ export type ChainOption<Modifiers extends ChainModifiers = undefined> = {
     : false
 }
 
-export type DefaultChainOption = ChainOption
+export type DefaultChainOption = ChainOption<undefined>
 
-export type ChainOptions = ChainOption<ChainModifiers>
+export type ChainOptions = ChainOption

@@ -5,7 +5,6 @@ import {
   Asset,
   ContentType,
   ContentTypeLink,
-  Entry,
   EnvironmentLink,
   Locale,
   EntrySys,
@@ -13,6 +12,7 @@ import {
   EntryFields,
   Tag,
   TagSys,
+  NewEntry,
 } from '../../lib'
 
 const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'
@@ -146,7 +146,7 @@ export type EntryFields = {
   field1: string
 }
 
-const entryMock: Entry<EntryFields> = {
+const entryMock: NewEntry<EntryFields> = {
   sys: {
     ...copy(sysMock),
     locale: 'locale',
