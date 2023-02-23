@@ -571,7 +571,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateLocaleParam(query, withAllLocales)
     validateResolveLinksParam(query)
 
-    return internalGetEntries<Fields, any, Extract<ChainOptions, typeof options>>( /// add a to do to the doc
+    return internalGetEntries<Fields, any, Extract<ChainOptions, typeof options>>(
       withAllLocales
         ? {
             ...query,
