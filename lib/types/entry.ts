@@ -1,7 +1,7 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { ContentTypeLink, EntryLink } from './link'
+import { AssetLink, ContentTypeLink, EntryLink } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
@@ -10,7 +10,10 @@ import { ChainModifiers, ChainOption, ChainOptions } from '../utils/client-helpe
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
+  type: 'Entry'
 }
+
+type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 export declare namespace EntryFields {
   type Symbol = string
@@ -25,9 +28,11 @@ export declare namespace EntryFields {
     lon: number
   }
 
-  type Link<T extends FieldsType> = Asset | GenericEntry<T>
-  type Array<T extends FieldsType = any> = symbol[] | GenericEntry<T>[] | Asset[]
-  type Object<T extends Record<string, any> = Record<string, unknown>> = T
+  type EntryLink<Fields extends FieldsType> = GenericEntry<Fields>
+  type AssetLink = Asset
+  type Link<Fields extends FieldsType> = AssetLink | EntryLink<Fields>
+  type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<FieldsType>> = Item[]
+  type Object<Data extends Json = Json> = Data
   type RichText = RichTextDocument
 }
 
@@ -42,17 +47,43 @@ export type BasicEntryField =
   | EntryFields.RichText
   | EntryFields.Object
 
+export type EntryField<Fields extends FieldsType> =
+  | BasicEntryField
+  | EntryFields.EntryLink<Fields>
+  | EntryFields.AssetLink
+  | EntryFields.Array<EntryFields.Symbol>
+  | EntryFields.Array<EntryFields.AssetLink>
+  | EntryFields.Array<EntryFields.EntryLink<Fields>>
+
 type BaseEntry = {
   sys: EntrySys
   metadata: Metadata
 }
 
+type LocalizedFields<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode> = {
+  [key in keyof Fields]: { [locale in Locales]?: Fields[key] }
+}
+
 /**
  * @category Entities
  */
-export type GenericEntry<Fields extends FieldsType> = BaseEntry & {
+export type LocalizedGenericEntry<Fields extends FieldsType> = BaseEntry & {
+  fields: LocalizedFields<Fields>
+}
+
+/**
+ * @category Entities
+ */
+export type UnlocalizedGenericEntry<Fields extends FieldsType> = BaseEntry & {
   fields: Fields
 }
+
+/**
+ * @category Entities
+ */
+export type GenericEntry<Fields extends FieldsType> =
+  | LocalizedGenericEntry<Fields>
+  | UnlocalizedGenericEntry<Fields>
 
 /**
  * @category Entities
@@ -60,23 +91,31 @@ export type GenericEntry<Fields extends FieldsType> = BaseEntry & {
  */
 export type Entry<Fields extends FieldsType> = GenericEntry<Fields>
 
-export type ResolvedField<
-  Field,
+type ResolvedLink<
+  Field extends EntryField<FieldsType>,
   Modifiers extends ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
-> = Field extends EntryFields.Link<infer LinkedFields>
+  Locales extends LocaleCode
+> = Field extends EntryFields.EntryLink<infer LinkedFields>
   ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? EntryLink
-    :
-        | NewEntry<LinkedFields, Modifiers, Locales>
-        | ('WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers ? undefined : EntryLink)
-  : Field extends EntryFields.Link<infer LinkedFields>[]
-  ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? EntryLink[]
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? (NewEntry<LinkedFields, Modifiers, Locales> | undefined)[]
-    : (NewEntry<LinkedFields, Modifiers, Locales> | EntryLink)[]
+    ? NewEntry<LinkedFields, Modifiers, Locales> | undefined
+    : NewEntry<LinkedFields, Modifiers, Locales> | EntryLink
+  : Field extends EntryFields.AssetLink
+  ? 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+    ? AssetLink
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+    ? Asset | undefined
+    : Asset | AssetLink
   : Field
+
+export type ResolvedField<
+  Field extends EntryField<FieldsType>,
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> = Field extends EntryFields.Array<infer Item>
+  ? Array<ResolvedLink<Item, Modifiers, Locales>>
+  : ResolvedLink<Field, Modifiers, Locales>
 
 // TODO: rename after renaming generic Entry type
 export type NewEntry<
@@ -97,8 +136,7 @@ export type NewEntry<
 
 export type EntryWithoutLinkResolution<Fields extends FieldsType> = NewEntry<
   Fields,
-  'WITHOUT_LINK_RESOLUTION',
-  LocaleCode
+  'WITHOUT_LINK_RESOLUTION'
 >
 
 export type EntryWithAllLocalesAndWithoutLinkResolution<
@@ -140,6 +178,7 @@ export type GenericEntryCollection<Fields extends FieldsType> = AbstractEntryCol
 /**
  * @deprecated
  */
+
 export type EntryCollection<Fields extends FieldsType> = GenericEntryCollection<Fields>
 
 export type EntryCollectionWithoutLinkResolution<Fields extends FieldsType> =
