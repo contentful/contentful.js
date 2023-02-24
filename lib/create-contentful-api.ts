@@ -13,43 +13,24 @@ import {
   AssetFields,
   AssetKey,
   AssetQueries,
-  AssetCollectionWithAllLocales,
-  AssetWithAllLocales,
   ContentType,
   ContentTypeCollection,
   EntriesQueries,
-  EntryWithoutLinkResolution,
-  EntryCollectionWithoutLinkResolution,
   LocaleCollection,
   LocaleCode,
-  EntryWithAllLocalesAndWithoutLinkResolution,
-  EntryCollectionWithAllLocalesAndWithoutLinkResolution,
-  EntryWithLinkResolutionAndWithUnresolvableLinks,
-  EntryCollectionWithLinkResolutionAndWithUnresolvableLinks,
-  EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
   Space,
   SyncCollection,
   Tag,
   TagCollection,
-  ConfiguredAssetCollection,
-  ConfiguredAsset,
-  GenericAssetCollection,
-  GenericAsset,
-  ConfiguredEntryCollection,
-  LocalizedGenericEntryCollection,
-  UnlocalizedGenericEntryCollection,
+  Entry,
+  EntryCollection,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
-import { ChainOptions } from './utils/client-helpers'
+import { ChainOption, ChainOptions } from './utils/client-helpers'
 import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
@@ -63,18 +44,18 @@ export type ClientWithLinkResolutionAndWithUnresolvableLinks = BaseClient &
     getEntry<Fields extends FieldsType>(
       id: string,
       query?: EntryQueries
-    ): Promise<EntryWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+    ): Promise<Entry<Fields, undefined>>
 
     getEntries<Fields extends FieldsType>(
       query?: EntriesQueries<Fields>
-    ): Promise<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>
+    ): Promise<EntryCollection<Fields, undefined>>
 
     // TODO: think about using collection generic as response type:
     // ): Promise<Collection<EntryWithLinkResolution<Fields>>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: UnlocalizedGenericEntryCollection<Fields>
-    ): EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>
+    ): EntryCollection<Fields, undefined>
   }
 
 export type ClientWithoutLinkResolution = BaseClient &
@@ -83,15 +64,15 @@ export type ClientWithoutLinkResolution = BaseClient &
     getEntry<Fields extends FieldsType>(
       id: string,
       query?: EntryQueries
-    ): Promise<EntryWithoutLinkResolution<Fields>>
+    ): Promise<Entry<Fields, 'WITHOUT_LINK_RESOLUTION'>>
 
     getEntries<Fields extends FieldsType>(
       query?: EntriesQueries<Fields>
-    ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
+    ): Promise<EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: UnlocalizedGenericEntryCollection<Fields>
-    ): EntryCollectionWithoutLinkResolution<Fields>
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>
+    ): EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>
   }
 
 export type ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks = BaseClient &
@@ -101,17 +82,15 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks = 
     getEntry<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
       id: string,
       query?: EntryQueries & { locale?: never }
-    ): Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>>
+    ): Promise<Entry<Fields, 'WITH_ALL_LOCALES', Locales>>
 
     getEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       query?: EntriesQueries<Fields> & { locale?: never }
-    ): Promise<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
-    >
+    ): Promise<EntryCollection<Fields, 'WITH_ALL_LOCALES', Locales>>
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: LocalizedGenericEntryCollection<Fields, Locales>
-    ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES', Locales>
+    ): EntryCollection<Fields, 'WITH_ALL_LOCALES', Locales>
   }
 
 export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
@@ -119,15 +98,15 @@ export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
     getEntry<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       id: string,
       query?: EntryQueries & { locale?: never }
-    ): Promise<EntryWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+    ): Promise<Entry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>
 
     getEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
       query?: EntriesQueries<Fields> & { locale?: never }
-    ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
+    ): Promise<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: LocalizedGenericEntryCollection<Fields, Locales>
-    ): EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
+      data: EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
+    ): EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
   }
 
 export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
@@ -136,15 +115,14 @@ export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
     getEntry<Fields extends FieldsType>(
       id: string,
       query?: EntryQueries
-    ): Promise<EntryWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
-
+    ): Promise<Entry<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>
     getEntries<Fields extends FieldsType>(
       query?: EntriesQueries<Fields>
-    ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
+    ): Promise<EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: UnlocalizedGenericEntryCollection<Fields>
-    ): EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+    ): EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>
   }
 
 export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
@@ -152,20 +130,19 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
     getEntry<Fields extends FieldsType, Locales extends LocaleCode = any>(
       id: string,
       query?: EntryQueries & { locale?: never }
-    ): Promise<EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>>
+    ): Promise<Entry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>>
 
     getEntries<Fields extends FieldsType, Locales extends LocaleCode = any>(
       query?: EntriesQueries<Fields> & { locale?: never }
-    ): Promise<
-      EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, Locales>
-    >
+    ): Promise<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>>
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: LocalizedGenericEntryCollection<Fields, Locales>
-    ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
-      Fields,
-      Locales
-    >
+      data: EntryCollection<
+        Fields,
+        'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+        Locales
+      >
+    ): EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
   }
 
 export type DefaultClient = ClientWithLinkResolutionAndWithUnresolvableLinks
@@ -341,7 +318,7 @@ interface BaseClientWithAssets extends BaseClient {
    * console.log(asset)
    * ```
    */
-  getAsset(id: string, query?: { locale?: string }): Promise<Asset>
+  getAsset(id: string, query?: { locale?: string }): Promise<Asset<undefined>>
 
   /**
    * Gets a collection of Assets
@@ -359,7 +336,7 @@ interface BaseClientWithAssets extends BaseClient {
    * console.log(response.items)
    * ```
    */
-  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection>
+  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection<undefined>>
 }
 
 interface BaseClientWithAssetsWithAllLocales extends BaseClient {
@@ -382,7 +359,7 @@ interface BaseClientWithAssetsWithAllLocales extends BaseClient {
   getAsset<Locale extends LocaleCode>(
     id: string,
     query?: { locale?: string }
-  ): Promise<AssetWithAllLocales<Locale>>
+  ): Promise<Asset<'WITH_ALL_LOCALES', Locale>>
 
   /**
    * Gets a collection of Assets
@@ -400,9 +377,9 @@ interface BaseClientWithAssetsWithAllLocales extends BaseClient {
    * console.log(response.items)
    * ```
    */
-  getAssets<Locale extends LocaleCode>(
+  getAssets<Locales extends LocaleCode>(
     query?: AssetQueries<AssetFields>
-  ): Promise<AssetCollectionWithAllLocales<Locale>>
+  ): Promise<AssetCollection<'WITH_ALL_LOCALES', Locales>>
 }
 
 export interface CreateContentfulApiParams {
@@ -589,7 +566,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   >(
     query: Record<string, any>,
     options: Options
-  ): Promise<ConfiguredEntryCollection<Fields, Locales, Options>> {
+  ): Promise<
+    Options extends ChainOption<infer Modifiers>
+      ? EntryCollection<Fields, Modifiers, Locales>
+      : never
+  > {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     try {
@@ -608,11 +589,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
-  async function getAsset(id: string, query: Record<string, any> = {}): Promise<GenericAsset<any>> {
+  async function getAsset(id: string, query: Record<string, any> = {}): Promise<Asset> {
     return makeGetAsset(id, query, options)
   }
 
-  async function getAssets(query: Record<string, any> = {}): Promise<GenericAssetCollection<any>> {
+  async function getAssets(query: Record<string, any> = {}): Promise<AssetCollection> {
     return makeGetAssets(query, options)
   }
 
@@ -636,7 +617,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
     id: string,
     query: Record<string, any>
-  ): Promise<ConfiguredAsset<Locales, Options>> {
+  ): Promise<Options extends ChainOption<infer Modifiers> ? Asset<Modifiers, Locales> : never> {
     try {
       return get({
         context: 'environment',
@@ -668,7 +649,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(
     query: Record<string, any>
-  ): Promise<ConfiguredAssetCollection<Locales, Options>> {
+  ): Promise<
+    Options extends ChainOption<infer Modifiers> ? AssetCollection<Modifiers, Locales> : never
+  > {
     try {
       return get({
         context: 'environment',
@@ -744,7 +727,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     Fields extends FieldsType,
     Locales extends LocaleCode,
     Options extends ChainOptions
-  >(data: unknown, options: Options): ConfiguredEntryCollection<Fields, Locales, Options> {
+  >(
+    data: unknown,
+    options: Options
+  ): Options extends ChainOption<infer Modifiers>
+    ? EntryCollection<Fields, Modifiers, Locales>
+    : never {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     return resolveCircular(data, {

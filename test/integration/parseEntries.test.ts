@@ -1,10 +1,6 @@
 import * as contentful from '../../lib/contentful'
 import { Link } from '../../lib/types'
-import {
-  EntryFields,
-  LocalizedGenericEntryCollection,
-  UnlocalizedGenericEntryCollection,
-} from '../../lib/types/entry'
+import { EntryFields, EntryCollection } from '../../lib/types/entry'
 import { params } from './utils'
 export interface TypeCatFields {
   name: EntryFields.Text
@@ -24,14 +20,16 @@ if (process.env.API_INTEGRATION_TESTS) {
 
 const client = contentful.createClient(params)
 
-let dataWithResolvableLink = {} as UnlocalizedGenericEntryCollection<TypeCatFields>
-let dataWithResolvableLinkAndAllLocales = {} as LocalizedGenericEntryCollection<
+let dataWithResolvableLink = {} as EntryCollection<TypeCatFields, 'WITHOUT_LINK_RESOLUTION'>
+let dataWithResolvableLinkAndAllLocales = {} as EntryCollection<
   TypeCatFields,
+  'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
   'en-US' | 'tlh'
 >
-let dataWithUnresolvableLink = {} as UnlocalizedGenericEntryCollection<TypeCatFields>
-let dataWithUnresolvableLinkAndAllLocales = {} as LocalizedGenericEntryCollection<
+let dataWithUnresolvableLink = {} as EntryCollection<TypeCatFields, 'WITHOUT_LINK_RESOLUTION'>
+let dataWithUnresolvableLinkAndAllLocales = {} as EntryCollection<
   TypeCatFields,
+  'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
   'en-US' | 'tlh'
 >
 

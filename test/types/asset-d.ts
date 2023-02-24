@@ -4,26 +4,14 @@
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
 
-import {
-  Asset,
-  AssetCollection,
-  AssetCollectionWithAllLocales,
-  AssetDetails,
-  AssetFields,
-  AssetFile,
-  AssetWithAllLocales,
-  GenericAsset,
-  GenericAssetCollection,
-  ConfiguredAsset,
-  ConfiguredAssetCollection,
-} from '../../lib'
-import { ChainOption } from '../../lib/utils/client-helpers'
+import { Asset, AssetCollection, AssetDetails, AssetFields, AssetFile } from '../../lib'
 // @ts-ignore
 import * as mocks from './mocks'
+import { ChainModifiers } from '../../lib/utils/client-helpers'
 
 type AssetLocales = 'US' | 'DE'
 
-const assetWithAllLocales: AssetWithAllLocales<AssetLocales> = {
+const assetWithAllLocales: Asset<'WITH_ALL_LOCALES', AssetLocales> = {
   ...mocks.assetBasics,
   fields: {
     US: mocks.assetFields,
@@ -38,7 +26,7 @@ const assetCollection: AssetCollection = {
   items: [mocks.asset],
 }
 
-const assetCollectionWithAllLocales: AssetCollectionWithAllLocales<AssetLocales> = {
+const assetCollectionWithAllLocales: AssetCollection<'WITH_ALL_LOCALES', AssetLocales> = {
   total: mocks.numberValue,
   skip: mocks.numberValue,
   limit: mocks.numberValue,
@@ -49,100 +37,70 @@ expectAssignable<AssetDetails>(mocks.assetDetails)
 expectAssignable<AssetFile>(mocks.assetFile)
 expectAssignable<AssetFields>(mocks.assetFields)
 
-expectAssignable<Asset>(mocks.asset)
-expectAssignable<AssetWithAllLocales<AssetLocales>>(assetWithAllLocales)
+expectAssignable<Asset<undefined>>(mocks.asset)
+expectAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(assetWithAllLocales)
 
-expectAssignable<GenericAsset<AssetLocales>>(mocks.asset)
-expectAssignable<GenericAsset<AssetLocales>>(assetWithAllLocales)
+expectAssignable<Asset<ChainModifiers, AssetLocales>>(mocks.asset)
+expectAssignable<Asset<ChainModifiers, AssetLocales>>(assetWithAllLocales)
 
-expectAssignable<AssetCollection>(assetCollection)
-expectAssignable<AssetCollectionWithAllLocales<AssetLocales>>(assetCollectionWithAllLocales)
+expectAssignable<AssetCollection<undefined>>(assetCollection)
+expectAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
 
-expectAssignable<GenericAssetCollection<AssetLocales>>(assetCollection)
-expectAssignable<GenericAssetCollection<AssetLocales>>(assetCollectionWithAllLocales)
+expectAssignable<AssetCollection<ChainModifiers, AssetLocales>>(assetCollection)
+expectAssignable<AssetCollection<ChainModifiers, AssetLocales>>(assetCollectionWithAllLocales)
 
-expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(mocks.asset)
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(
-  assetWithAllLocales
-)
+expectNotAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.asset)
+expectAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(assetWithAllLocales)
 
-expectNotAssignable<
-  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>
->(mocks.asset)
-expectAssignable<
-  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>
->(assetWithAllLocales)
-
-expectNotAssignable<
-  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>
->(mocks.asset)
-expectAssignable<
-  ConfiguredAsset<AssetLocales, ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>
->(assetWithAllLocales)
-
-expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(
-  assetCollection
-)
-expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption<'WITH_ALL_LOCALES'>>>(
-  assetCollectionWithAllLocales
-)
-
-expectNotAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
-  >
->(assetCollection)
-expectAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
-  >
->(assetCollectionWithAllLocales)
-
-expectNotAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
-  >
->(assetCollection)
-expectAssignable<
-  ConfiguredAssetCollection<
-    AssetLocales,
-    ChainOption<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
-  >
->(assetCollectionWithAllLocales)
-
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>>(mocks.asset)
-expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>>(
-  assetWithAllLocales
-)
-
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOption>>(mocks.asset)
-expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption>>(assetWithAllLocales)
-
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>>(
+expectNotAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
   mocks.asset
 )
-expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>>(
+expectAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
   assetWithAllLocales
 )
 
-expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>>(
+expectNotAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
+  mocks.asset
+)
+expectAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
+  assetWithAllLocales
+)
+
+expectNotAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollection)
+expectAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
+
+expectNotAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
   assetCollection
 )
-expectNotAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>
->(assetCollectionWithAllLocales)
-
-expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption>>(assetCollection)
-expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption>>(
+expectAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
   assetCollectionWithAllLocales
 )
 
-expectAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>
->(assetCollection)
 expectNotAssignable<
-  ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>
->(assetCollectionWithAllLocales)
+  AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
+>(assetCollection)
+expectAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
+  assetCollectionWithAllLocales
+)
+
+expectAssignable<Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(mocks.asset)
+expectNotAssignable<Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(assetWithAllLocales)
+
+expectAssignable<Asset<undefined, AssetLocales>>(mocks.asset)
+expectNotAssignable<Asset<undefined, AssetLocales>>(assetWithAllLocales)
+
+expectAssignable<Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(mocks.asset)
+expectNotAssignable<Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(assetWithAllLocales)
+
+expectAssignable<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(assetCollection)
+expectNotAssignable<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
+  assetCollectionWithAllLocales
+)
+
+expectAssignable<AssetCollection<undefined, AssetLocales>>(assetCollection)
+expectNotAssignable<AssetCollection<undefined, AssetLocales>>(assetCollectionWithAllLocales)
+
+expectAssignable<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(assetCollection)
+expectNotAssignable<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
+  assetCollectionWithAllLocales
+)

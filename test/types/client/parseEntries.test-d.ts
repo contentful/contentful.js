@@ -1,18 +1,5 @@
 import { expectType } from 'tsd'
-import {
-  createClient,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks,
-  EntryCollectionWithAllLocalesAndWithoutLinkResolution,
-  EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks,
-  EntryCollectionWithLinkResolutionAndWithUnresolvableLinks,
-  EntryCollectionWithoutLinkResolution,
-  EntrySys,
-  Link,
-  LocaleCode,
-  LocalizedGenericEntryCollection,
-  UnlocalizedGenericEntryCollection,
-} from '../../../lib'
+import { createClient, EntryCollection, EntrySys, Link, LocaleCode } from '../../../lib'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -25,7 +12,7 @@ type Fields = {
   moreLinks: { sys: Link<'Entry'> }[]
 }
 
-const data: UnlocalizedGenericEntryCollection<Fields> = {
+const data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'> = {
   total: 10,
   skip: 0,
   limit: 1,
@@ -60,7 +47,11 @@ const data: UnlocalizedGenericEntryCollection<Fields> = {
   ],
 }
 
-const dataWithAllLocales: LocalizedGenericEntryCollection<Fields, 'en' | 'de'> = {
+const dataWithAllLocales: EntryCollection<
+  Fields,
+  'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES',
+  'en' | 'de'
+> = {
   total: 10,
   skip: 0,
   limit: 1,
@@ -102,31 +93,27 @@ const dataWithAllLocales: LocalizedGenericEntryCollection<Fields, 'en' | 'de'> =
   ],
 }
 
-expectType<EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>>(
-  await client.parseEntries<Fields>(data)
-)
+expectType<EntryCollection<Fields, undefined>>(await client.parseEntries<Fields>(data))
 
-expectType<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>(
+expectType<EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   await client.withoutUnresolvableLinks.parseEntries<Fields>(data)
 )
 
-expectType<EntryCollectionWithoutLinkResolution<Fields>>(
+expectType<EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>>(
   await client.withoutLinkResolution.parseEntries<Fields>(data)
 )
 
-expectType<
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, LocaleCode>
->(await client.withAllLocales.parseEntries<Fields, LocaleCode>(dataWithAllLocales))
+expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES', LocaleCode>>(
+  await client.withAllLocales.parseEntries<Fields, LocaleCode>(dataWithAllLocales)
+)
 
-expectType<
-  EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<Fields, LocaleCode>
->(
+expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', LocaleCode>>(
   await client.withAllLocales.withoutUnresolvableLinks.parseEntries<Fields, LocaleCode>(
     dataWithAllLocales
   )
 )
 
-expectType<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, LocaleCode>>(
+expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', LocaleCode>>(
   await client.withAllLocales.withoutLinkResolution.parseEntries<Fields, LocaleCode>(
     dataWithAllLocales
   )

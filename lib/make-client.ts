@@ -44,7 +44,7 @@ type ConfiguredClient<Options extends ChainOptions> =
     ? ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
     : Options extends ChainOption<'WITHOUT_LINK_RESOLUTION'>
     ? ClientWithoutLinkResolution
-    : Options extends ChainOption
+    : Options extends DefaultChainOption
     ? ClientWithLinkResolutionAndWithUnresolvableLinks
     : Options extends ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>
     ? ClientWithLinkResolutionAndWithoutUnresolvableLinks
