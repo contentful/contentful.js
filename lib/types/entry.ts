@@ -116,7 +116,11 @@ export type Entry<
       }
 }
 
-export type EntryCollection<TEntry extends Entry> = ContentfulCollection<TEntry> & {
+export type EntryCollection<
+  Fields extends FieldsType = FieldsType,
+  Modifiers extends ChainModifiers = ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> = ContentfulCollection<Entry<Fields, Modifiers, Locales>> & {
   errors?: Array<any>
   includes?: {
     Entry?: any[]
