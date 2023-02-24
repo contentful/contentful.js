@@ -5,11 +5,10 @@ import {
   AssetFile,
   AssetLink,
   AssetSys,
+  BaseEntry,
   EntryLink,
   EntrySys,
   FieldsType,
-  GenericEntry,
-  UnlocalizedGenericEntry,
 } from '../../lib'
 
 export const stringValue = ''
@@ -63,10 +62,9 @@ export const localizedEntry = {
   },
 }
 
-export const getEntry = <T extends FieldsType>(fields: T): UnlocalizedGenericEntry<T> => ({
-  ...entryBasics,
-  fields,
-})
+export const getEntry = <Fields extends FieldsType>(
+  fields: Fields
+): BaseEntry & { fields: Fields } => ({ ...entryBasics, fields })
 
 export const assetLink: AssetLink = {
   type: 'Link',

@@ -9,7 +9,7 @@ expectAssignable<ChainOptions>({
   withoutUnresolvableLinks: true as boolean,
 })
 
-expectType<ChainOption>({
+expectType<ChainOption<undefined>>({
   withoutLinkResolution: false,
   withAllLocales: false,
   withoutUnresolvableLinks: false,

@@ -5,7 +5,6 @@ import {
   Asset,
   ContentType,
   ContentTypeLink,
-  Entry,
   EnvironmentLink,
   Locale,
   EntrySys,
@@ -13,6 +12,7 @@ import {
   EntryFields,
   Tag,
   TagSys,
+  Entry,
 } from '../../lib'
 
 const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'
