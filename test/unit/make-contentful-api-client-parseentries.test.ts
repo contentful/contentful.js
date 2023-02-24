@@ -1,10 +1,6 @@
 import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
-import {
-  EntrySys,
-  Link,
-  UnlocalizedGenericEntryCollection,
-} from '../../lib/types'
+import { EntrySys, Link, UnlocalizedGenericEntryCollection } from '../../lib/types'
 import { ResourceLink } from '../../lib/types/resource-link'
 
 export interface AnimalTypeFields {
@@ -34,7 +30,7 @@ const pigEntry = {
       },
     },
   },
-};
+}
 
 test('Given json should be parsed correctly as a collection of entries', () => {
   const api = makeClient({
