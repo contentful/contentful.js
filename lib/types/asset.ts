@@ -1,4 +1,4 @@
-import { ChainOptions } from '../utils/client-helpers'
+import { ChainModifiers } from '../utils/client-helpers'
 import { ContentfulCollection } from './collection'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
@@ -28,21 +28,24 @@ export interface AssetFields {
 /**
  * @category Entities
  */
-export interface Asset {
+export interface Asset<
+  Modifiers extends ChainModifiers = ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> {
   sys: AssetSys
-  fields: AssetFields
+  fields: ChainModifiers extends Modifiers
+    ?
+        | {
+            [LocaleName in Locales]?: AssetFields
+          }
+        | AssetFields
+    : 'WITH_ALL_LOCALES' extends Modifiers
+    ? {
+        [LocaleName in Locales]?: AssetFields
+      }
+    : AssetFields
   metadata: Metadata
 }
-
-export interface AssetWithAllLocales<Locales extends LocaleCode> {
-  sys: AssetSys
-  fields: {
-    [LocaleName in Locales]?: AssetFields
-  }
-  metadata: Metadata
-}
-
-export type GenericAsset<Locale extends LocaleCode> = Asset | AssetWithAllLocales<Locale>
 
 export type AssetMimeType =
   | 'attachment'
@@ -58,25 +61,10 @@ export type AssetMimeType =
   | 'code'
   | 'markup'
 
-export type AssetCollection = ContentfulCollection<Asset>
-export type AssetCollectionWithAllLocales<Locales extends LocaleCode> = ContentfulCollection<
-  AssetWithAllLocales<Locales>
->
-export type GenericAssetCollection<Locales extends LocaleCode> =
-  | AssetCollection
-  | AssetCollectionWithAllLocales<Locales>
+export type AssetCollection<
+  Modifiers extends ChainModifiers = ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> = ContentfulCollection<Asset<Modifiers, Locales>>
 export type AssetSys = EntitySys & {
   type: 'Asset'
 }
-
-export type ConfiguredAsset<
-  Locales extends LocaleCode,
-  Options extends ChainOptions
-> = Options extends { withAllLocales: true } ? AssetWithAllLocales<Locales> : Asset
-
-export type ConfiguredAssetCollection<
-  Locales extends LocaleCode,
-  Options extends ChainOptions
-> = Options extends { withAllLocales: true }
-  ? AssetCollectionWithAllLocales<Locales>
-  : AssetCollection

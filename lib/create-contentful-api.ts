@@ -13,8 +13,6 @@ import {
   AssetFields,
   AssetKey,
   AssetQueries,
-  AssetCollectionWithAllLocales,
-  AssetWithAllLocales,
   ContentType,
   ContentTypeCollection,
   EntriesQueries,
@@ -24,10 +22,6 @@ import {
   SyncCollection,
   Tag,
   TagCollection,
-  ConfiguredAssetCollection,
-  ConfiguredAsset,
-  GenericAssetCollection,
-  GenericAsset,
   Entry,
   EntryCollection,
 } from './types'
@@ -330,7 +324,7 @@ interface BaseClientWithAssets extends BaseClient {
    * console.log(asset)
    * ```
    */
-  getAsset(id: string, query?: { locale?: string }): Promise<Asset>
+  getAsset(id: string, query?: { locale?: string }): Promise<Asset<undefined>>
 
   /**
    * Gets a collection of Assets
@@ -348,7 +342,7 @@ interface BaseClientWithAssets extends BaseClient {
    * console.log(response.items)
    * ```
    */
-  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection>
+  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection<undefined>>
 }
 
 interface BaseClientWithAssetsWithAllLocales extends BaseClient {
@@ -371,7 +365,7 @@ interface BaseClientWithAssetsWithAllLocales extends BaseClient {
   getAsset<Locale extends LocaleCode>(
     id: string,
     query?: { locale?: string }
-  ): Promise<AssetWithAllLocales<Locale>>
+  ): Promise<Asset<'WITH_ALL_LOCALES', Locale>>
 
   /**
    * Gets a collection of Assets
@@ -389,9 +383,9 @@ interface BaseClientWithAssetsWithAllLocales extends BaseClient {
    * console.log(response.items)
    * ```
    */
-  getAssets<Locale extends LocaleCode>(
+  getAssets<Locales extends LocaleCode>(
     query?: AssetQueries<AssetFields>
-  ): Promise<AssetCollectionWithAllLocales<Locale>>
+  ): Promise<AssetCollection<'WITH_ALL_LOCALES', Locales>>
 }
 
 export interface CreateContentfulApiParams {
@@ -601,11 +595,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
-  async function getAsset(id: string, query: Record<string, any> = {}): Promise<GenericAsset<any>> {
+  async function getAsset(id: string, query: Record<string, any> = {}): Promise<Asset> {
     return makeGetAsset(id, query, options)
   }
 
-  async function getAssets(query: Record<string, any> = {}): Promise<GenericAssetCollection<any>> {
+  async function getAssets(query: Record<string, any> = {}): Promise<AssetCollection> {
     return makeGetAssets(query, options)
   }
 
@@ -629,7 +623,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
     id: string,
     query: Record<string, any>
-  ): Promise<ConfiguredAsset<Locales, Options>> {
+  ): Promise<Options extends ChainOption<infer Modifiers> ? Asset<Modifiers, Locales> : never> {
     try {
       return get({
         context: 'environment',
@@ -661,7 +655,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(
     query: Record<string, any>
-  ): Promise<ConfiguredAssetCollection<Locales, Options>> {
+  ): Promise<
+    Options extends ChainOption<infer Modifiers> ? AssetCollection<Modifiers, Locales> : never
+  > {
     try {
       return get({
         context: 'environment',
