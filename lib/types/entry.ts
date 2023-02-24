@@ -67,8 +67,11 @@ type LocalizedFields<Fields extends FieldsType, Locales extends LocaleCode = Loc
 /**
  * @category Entities
  */
-export type LocalizedGenericEntry<Fields extends FieldsType> = BaseEntry & {
-  fields: LocalizedFields<Fields>
+export type LocalizedGenericEntry<
+  Fields extends FieldsType,
+  Locales extends LocaleCode = LocaleCode
+> = BaseEntry & {
+  fields: LocalizedFields<Fields, Locales>
 }
 
 /**
@@ -175,10 +178,14 @@ export type GenericEntryCollection<Fields extends FieldsType> = AbstractEntryCol
   GenericEntry<Fields>
 >
 
-export type GenericEntryCollectionWithAllLocales<
+export type LocalizedGenericEntryCollection<
   Fields extends FieldsType,
-  Locales extends LocaleCode
-> = AbstractEntryCollection<NewEntry<Fields, 'WITH_ALL_LOCALES', Locales>>
+  Locales extends LocaleCode = LocaleCode
+> = AbstractEntryCollection<LocalizedGenericEntry<Fields, Locales>>
+
+export type UnlocalizedGenericEntryCollection<Fields extends FieldsType> = AbstractEntryCollection<
+  UnlocalizedGenericEntry<Fields>
+>
 
 /**
  * @deprecated
@@ -202,7 +209,7 @@ export type EntryCollectionWithAllLocalesAndWithoutLinkResolution<
 export type EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<
   Fields extends FieldsType,
   Locales extends LocaleCode
-> = GenericEntryCollectionWithAllLocales<Fields, Locales>
+> = AbstractEntryCollection<NewEntry<Fields, 'WITH_ALL_LOCALES', Locales>>
 
 export type EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<
   Fields extends FieldsType

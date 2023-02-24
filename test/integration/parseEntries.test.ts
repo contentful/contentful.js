@@ -2,8 +2,8 @@ import * as contentful from '../../lib/contentful'
 import { Link } from '../../lib/types'
 import {
   EntryFields,
-  GenericEntryCollection,
-  GenericEntryCollectionWithAllLocales,
+  LocalizedGenericEntryCollection,
+  UnlocalizedGenericEntryCollection,
 } from '../../lib/types/entry'
 import { params } from './utils'
 export interface TypeCatFields {
@@ -24,13 +24,13 @@ if (process.env.API_INTEGRATION_TESTS) {
 
 const client = contentful.createClient(params)
 
-let dataWithResolvableLink = {} as GenericEntryCollection<TypeCatFields>
-let dataWithResolvableLinkAndAllLocales = {} as GenericEntryCollectionWithAllLocales<
+let dataWithResolvableLink = {} as UnlocalizedGenericEntryCollection<TypeCatFields>
+let dataWithResolvableLinkAndAllLocales = {} as LocalizedGenericEntryCollection<
   TypeCatFields,
   'en-US' | 'tlh'
 >
-let dataWithUnresolvableLink = {} as GenericEntryCollection<TypeCatFields>
-let dataWithUnresolvableLinkAndAllLocales = {} as GenericEntryCollectionWithAllLocales<
+let dataWithUnresolvableLink = {} as UnlocalizedGenericEntryCollection<TypeCatFields>
+let dataWithUnresolvableLinkAndAllLocales = {} as LocalizedGenericEntryCollection<
   TypeCatFields,
   'en-US' | 'tlh'
 >
@@ -436,9 +436,6 @@ beforeEach(() => {
 
 // expand to cover also localeClient
 describe('parseEntries via chained clients', () => {
-  const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
-  const entryWithResolvableLink = 'nyancat'
-
   describe('default client', () => {
     test('client', () => {
       const response = client.parseEntries(dataWithResolvableLink)

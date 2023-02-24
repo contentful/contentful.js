@@ -8,10 +8,10 @@ import {
   EntryCollectionWithLinkResolutionAndWithUnresolvableLinks,
   EntryCollectionWithoutLinkResolution,
   EntrySys,
-  GenericEntryCollection,
-  GenericEntryCollectionWithAllLocales,
   Link,
   LocaleCode,
+  LocalizedGenericEntryCollection,
+  UnlocalizedGenericEntryCollection,
 } from '../../../lib'
 
 const client = createClient({
@@ -19,17 +19,13 @@ const client = createClient({
   space: 'spaceId',
 })
 
-type LinkedFields = {
-  name: string
-}
-
 type Fields = {
   title: string
   link: { sys: Link<'Entry'> }
   moreLinks: { sys: Link<'Entry'> }[]
 }
 
-const data: GenericEntryCollection<Fields> = {
+const data: UnlocalizedGenericEntryCollection<Fields> = {
   total: 10,
   skip: 0,
   limit: 1,
@@ -64,7 +60,7 @@ const data: GenericEntryCollection<Fields> = {
   ],
 }
 
-const dataWithAllLocales: GenericEntryCollectionWithAllLocales<Fields, 'en' | 'de'> = {
+const dataWithAllLocales: LocalizedGenericEntryCollection<Fields, 'en' | 'de'> = {
   total: 10,
   skip: 0,
   limit: 1,

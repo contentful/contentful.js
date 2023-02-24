@@ -1,6 +1,10 @@
 import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
-import { GenericEntryCollection, EntrySys, Link } from '../../lib/types'
+import {
+  EntrySys,
+  Link,
+  UnlocalizedGenericEntryCollection,
+} from '../../lib/types'
 import { ResourceLink } from '../../lib/types/resource-link'
 
 export interface AnimalTypeFields {
@@ -14,6 +18,24 @@ export interface XspaceTypeFields {
   xspace2?: { sys: ResourceLink }[]
 }
 
+const pigEntry = {
+  sys: {
+    type: 'Entry',
+    id: 'oink',
+    locale: 'en-US',
+  },
+  fields: {
+    name: 'Pig',
+    friend: {
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id: 'groundhog',
+      },
+    },
+  },
+};
+
 test('Given json should be parsed correctly as a collection of entries', () => {
   const api = makeClient({
     // @ts-ignore
@@ -21,7 +43,8 @@ test('Given json should be parsed correctly as a collection of entries', () => {
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data: GenericEntryCollection<AnimalTypeFields> = {
+
+  const data: UnlocalizedGenericEntryCollection<AnimalTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -53,30 +76,12 @@ test('Given json should be parsed correctly as a collection of entries', () => {
       },
     ],
     includes: {
-      Entry: [
-        {
-          sys: {
-            type: 'Entry',
-            id: 'oink',
-            locale: 'en-US',
-          },
-          fields: {
-            name: 'Pig',
-            friend: {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'groundhog',
-              },
-            },
-          },
-        },
-      ],
+      Entry: [pigEntry],
     },
   }
   const parsedData = api.parseEntries(data)
   expect(parsedData).toBeDefined()
-  expect(parsedData.items[0].fields.animal?.sys).toEqual(data.includes!.Entry![0].sys)
+  expect(parsedData.items[0].fields.animal?.sys).toEqual(pigEntry.sys)
 })
 
 // remove this test?
@@ -87,7 +92,7 @@ test('Given json should be parsed correctly as a collection of entries where an 
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data: GenericEntryCollection<AnimalTypeFields> = {
+  const data: UnlocalizedGenericEntryCollection<AnimalTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -127,30 +132,12 @@ test('Given json should be parsed correctly as a collection of entries where an 
       },
     ],
     includes: {
-      Entry: [
-        {
-          sys: {
-            type: 'Entry',
-            id: 'oink',
-            locale: 'en-US',
-          },
-          fields: {
-            name: 'Pig',
-            friend: {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'groundhog',
-              },
-            },
-          },
-        },
-      ],
+      Entry: [pigEntry],
     },
   }
   const parsedData = api.parseEntries<any>(data)
   expect(parsedData).toBeDefined()
-  expect(parsedData.items[0].fields.metadata.sys).toEqual(data.includes?.Entry?.[0].sys)
+  expect(parsedData.items[0].fields.metadata.sys).toEqual(pigEntry.sys)
 })
 
 test('Given json should be parsed correctly as a collection of entries with resource links', () => {
@@ -161,7 +148,7 @@ test('Given json should be parsed correctly as a collection of entries with reso
     getGlobalOptions: createGlobalOptions({ resolveLinks: false }),
   })
 
-  const data: GenericEntryCollection<XspaceTypeFields> = {
+  const data: UnlocalizedGenericEntryCollection<XspaceTypeFields> = {
     total: 1,
     skip: 0,
     limit: 1,

@@ -41,8 +41,8 @@ import {
   GenericAssetCollection,
   GenericAsset,
   ConfiguredEntryCollection,
-  GenericEntryCollection,
-  GenericEntryCollectionWithAllLocales,
+  LocalizedGenericEntryCollection,
+  UnlocalizedGenericEntryCollection,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
@@ -73,7 +73,7 @@ export type ClientWithLinkResolutionAndWithUnresolvableLinks = BaseClient &
     // ): Promise<Collection<EntryWithLinkResolution<Fields>>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: GenericEntryCollection<Fields>
+      data: UnlocalizedGenericEntryCollection<Fields>
     ): EntryCollectionWithLinkResolutionAndWithUnresolvableLinks<Fields>
   }
 
@@ -90,7 +90,7 @@ export type ClientWithoutLinkResolution = BaseClient &
     ): Promise<EntryCollectionWithoutLinkResolution<Fields>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: GenericEntryCollection<Fields>
+      data: UnlocalizedGenericEntryCollection<Fields>
     ): EntryCollectionWithoutLinkResolution<Fields>
   }
 
@@ -110,7 +110,7 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks = 
     >
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: GenericEntryCollectionWithAllLocales<Fields, Locales>
+      data: LocalizedGenericEntryCollection<Fields, Locales>
     ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks<Fields, Locales>
   }
 
@@ -126,7 +126,7 @@ export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
     ): Promise<EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>>
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: GenericEntryCollectionWithAllLocales<Fields, Locales>
+      data: LocalizedGenericEntryCollection<Fields, Locales>
     ): EntryCollectionWithAllLocalesAndWithoutLinkResolution<Fields, Locales>
   }
 
@@ -143,7 +143,7 @@ export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
     ): Promise<EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: GenericEntryCollection<Fields>
+      data: UnlocalizedGenericEntryCollection<Fields>
     ): EntryCollectionWithLinkResolutionAndWithoutUnresolvableLinks<Fields>
   }
 
@@ -161,7 +161,7 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
     >
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: GenericEntryCollectionWithAllLocales<Fields, Locales>
+      data: LocalizedGenericEntryCollection<Fields, Locales>
     ): EntryCollectionWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks<
       Fields,
       Locales

@@ -8,7 +8,6 @@ import {
   EntryLink,
   EntrySys,
   FieldsType,
-  GenericEntry,
   UnlocalizedGenericEntry,
 } from '../../lib'
 
