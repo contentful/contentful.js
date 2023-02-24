@@ -17,7 +17,7 @@ import {
   ConfiguredAsset,
   ConfiguredAssetCollection,
 } from '../../lib'
-import { ChainOption } from '../../lib/utils/client-helpers'
+import { ChainOption, DefaultChainOption } from '../../lib/utils/client-helpers'
 // @ts-ignore
 import * as mocks from './mocks'
 
@@ -118,8 +118,8 @@ expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_LINK_RESO
   assetWithAllLocales
 )
 
-expectAssignable<ConfiguredAsset<AssetLocales, ChainOption>>(mocks.asset)
-expectNotAssignable<ConfiguredAsset<AssetLocales, ChainOption>>(assetWithAllLocales)
+expectAssignable<ConfiguredAsset<AssetLocales, DefaultChainOption>>(mocks.asset)
+expectNotAssignable<ConfiguredAsset<AssetLocales, DefaultChainOption>>(assetWithAllLocales)
 
 expectAssignable<ConfiguredAsset<AssetLocales, ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>>(
   mocks.asset
@@ -135,8 +135,8 @@ expectNotAssignable<
   ConfiguredAssetCollection<AssetLocales, ChainOption<'WITHOUT_LINK_RESOLUTION'>>
 >(assetCollectionWithAllLocales)
 
-expectAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption>>(assetCollection)
-expectNotAssignable<ConfiguredAssetCollection<AssetLocales, ChainOption>>(
+expectAssignable<ConfiguredAssetCollection<AssetLocales, DefaultChainOption>>(assetCollection)
+expectNotAssignable<ConfiguredAssetCollection<AssetLocales, DefaultChainOption>>(
   assetCollectionWithAllLocales
 )
 
