@@ -105,7 +105,7 @@ export type ClientWithAllLocalesAndWithoutLinkResolution = BaseClient &
     ): Promise<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES', Locales>
     ): EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
   }
 
@@ -121,7 +121,7 @@ export type ClientWithLinkResolutionAndWithoutUnresolvableLinks = BaseClient &
     ): Promise<EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>
 
     parseEntries<Fields extends FieldsType = FieldsType>(
-      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>
     ): EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>
   }
 
@@ -137,11 +137,7 @@ export type ClientWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks
     ): Promise<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>>
 
     parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-      data: EntryCollection<
-        Fields,
-        'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
-        Locales
-      >
+      data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES', Locales>
     ): EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
   }
 
