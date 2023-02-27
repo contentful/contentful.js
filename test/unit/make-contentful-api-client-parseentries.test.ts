@@ -80,8 +80,7 @@ test('Given json should be parsed correctly as a collection of entries', () => {
   expect(parsedData.items[0].fields.animal?.sys).toEqual(pigEntry.sys)
 })
 
-// remove this test?
-test('Given json should be parsed correctly as a collection of entries where an item is called metadata', () => {
+test('Given json should be parsed correctly as a collection of entries where a field is called metadata', () => {
   const api = makeClient({
     // @ts-ignore
     http: {},
