@@ -28,11 +28,9 @@ export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   SelectFilter<Sys, 'sys'>
 
 export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
-  | (ExistenceFilter<Fields, 'fields'> &
-      EqualityFilter<Fields, 'fields'> &
-      InequalityFilter<Fields, 'fields'> &
-      FullTextSearchFilters<Fields, 'fields'> &
-      SelectFilter<Fields, 'fields'>)
+  | (ExistenceFilter<Fields, 'fields'> & SelectFilter<Fields, 'fields'>)
+  | (EqualityFilter<Fields, 'fields'> & InequalityFilter<Fields, 'fields'>)
+  | FullTextSearchFilters<Fields, 'fields'>
   | SubsetFilters<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>

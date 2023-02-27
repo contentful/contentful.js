@@ -1,9 +1,9 @@
 import { BasicEntryField, EntryFields } from '../entry'
 import { ConditionalQueries } from './util'
 
-// TODO: Note: Equality and inequality operators are not supported for text fields
-// What types do we hav to exclude here?
-type SupportedTypes = Exclude<BasicEntryField, EntryFields.RichText> | undefined
+type SupportedTypes =
+  | Exclude<BasicEntryField, EntryFields.Object | EntryFields.RichText | EntryFields.Location>
+  | undefined
 /**
  * @desc equality - search for exact matches
  * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/equality-operator}

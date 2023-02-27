@@ -1,21 +1,21 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields } from '../../lib'
-import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
-import { ExistenceFilter } from '../../lib/types/query/existence'
-import { LocationSearchFilters } from '../../lib/types/query/location'
-import { RangeFilters } from '../../lib/types/query/range'
-import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectFilter } from '../../lib/types/query/select'
-import { SubsetFilters } from '../../lib/types/query/subset'
+import { EntryFields } from '../../../lib'
+import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
+import { ExistenceFilter } from '../../../lib/types/query/existence'
+import { LocationSearchFilters } from '../../../lib/types/query/location'
+import { RangeFilters } from '../../../lib/types/query/range'
+import { FullTextSearchFilters } from '../../../lib/types/query/search'
+import { SelectFilter } from '../../../lib/types/query/select'
+import { SubsetFilters } from '../../../lib/types/query/subset'
 
 const stringValue = ''
 const booleanValue = true
 const objectValue = { hello: 'world' }
 
-expectAssignable<EqualityFilter<{ testField: EntryFields.Object }, 'fields'>>({
+expectNotAssignable<EqualityFilter<{ testField: EntryFields.Object }, 'fields'>>({
   'fields.testField': objectValue,
 })
-expectAssignable<InequalityFilter<{ testField: EntryFields.Object }, 'fields'>>({
+expectNotAssignable<InequalityFilter<{ testField: EntryFields.Object }, 'fields'>>({
   'fields.testField[ne]': objectValue,
 })
 expectAssignable<ExistenceFilter<{ testField: EntryFields.Object }, 'fields'>>({
@@ -38,7 +38,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>({
   'fields.testField[gt]': objectValue,
   'fields.testField[gte]': objectValue,
 })
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Object }, 'fields'>>({
+expectNotAssignable<FullTextSearchFilters<{ testField: EntryFields.Object }, 'fields'>>({
   'fields.testField[match]': stringValue,
 })
 expectAssignable<SelectFilter<{ testField: EntryFields.Object }, 'fields'>>({

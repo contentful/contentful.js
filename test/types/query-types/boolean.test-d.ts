@@ -1,12 +1,14 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields } from '../../lib'
-import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
-import { ExistenceFilter } from '../../lib/types/query/existence'
-import { LocationSearchFilters } from '../../lib/types/query/location'
-import { RangeFilters } from '../../lib/types/query/range'
-import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectFilter } from '../../lib/types/query/select'
-import { SubsetFilters } from '../../lib/types/query/subset'
+import { expectAssignable, expectNotAssignable, expectType } from 'tsd'
+import { EntryFields } from '../../../lib'
+import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
+import { ExistenceFilter } from '../../../lib/types/query/existence'
+import { LocationSearchFilters } from '../../../lib/types/query/location'
+import { RangeFilters } from '../../../lib/types/query/range'
+import { FullTextSearchFilters } from '../../../lib/types/query/search'
+import { SelectFilter } from '../../../lib/types/query/select'
+import { SubsetFilters } from '../../../lib/types/query/subset'
+import { ConditionalPick } from 'type-fest'
+import { NonEmpty } from '../../../lib/types/query/util'
 
 const stringValue = ''
 const booleanValue = true
@@ -37,7 +39,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Boolean }, 'fields'>>(
   'fields.testField[gt]': booleanValue,
   'fields.testField[gte]': booleanValue,
 })
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
+expectNotAssignable<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
   'fields.testField[match]': stringValue,
 })
 expectAssignable<SelectFilter<{ testField: EntryFields.Boolean }, 'fields'>>({
@@ -47,3 +49,5 @@ expectAssignable<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
   'fields.testField[in]': booleanValue,
   'fields.testField[nin]': booleanValue,
 })
+
+// expectType<Required<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
