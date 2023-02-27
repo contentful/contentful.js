@@ -432,7 +432,6 @@ beforeEach(() => {
   }
 })
 
-// expand to cover also localeClient
 describe('parseEntries via chained clients', () => {
   describe('default client', () => {
     test('client', () => {
