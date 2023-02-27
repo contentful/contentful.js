@@ -123,7 +123,7 @@ Entries can be returned in six different response shapes. Thanks to the three cl
 
 ### `withAllLocales`
 
-If the current chain includes `withAllLocales`, `getAsset` and `getAssets` expect an optional generic parameter for all existing locales in your space. `getEntry` and `getEntries` expect an optional second generic parameter.
+If the current chain includes `withAllLocales`, `getAsset` and `getAssets` expect an optional generic parameter for all existing locales in your space. `parseEntries`, `getEntry` and `getEntries` expect an optional second generic parameter.
 If the `Locale` type is provided, your response type will define all locale keys for your field values:
 
 ```typescript
@@ -241,7 +241,7 @@ The return type of `getEntry` is matching the `fields` shape
 
 #### Limitation
 
-The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `getEntries`, `getEntry`, `getAssets` and `getAsset`. Other methods returning entries (e.g. `parseEntries` and `sync`) or methods that can have localized responses still rely on the previous implementation, and might not always have correct response types.
+The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset`. Other methods returning entries (e.g. `sync`) or methods that can have localized responses still rely on the previous implementation, and might not always have correct response types.
 
 ## Generating type definitions for content types
 

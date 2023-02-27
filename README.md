@@ -250,8 +250,8 @@ The configuration options belong to two categories: request config and response 
 ##### Response configuration options
 
 > :warning: **Response config options** are in the process of being **deprecated** (`v10.0.0`).
-> They still work for the `sync` and `parseEntries` methods.
-> The `getEntries`, `getEntry`, `getAssets` and `getAsset` methods already use the new [Chained Clients](#chained-clients) approach.
+> They still work for the `sync` method.
+> The `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` methods already use the new [Chained Clients](#chained-clients) approach.
 
 | Name                          | Default | Description                                         |
 | ----------------------------- | ------- | --------------------------------------------------- |
@@ -262,7 +262,7 @@ The configuration options belong to two categories: request config and response 
 
 > Introduced in `v10.0.0`.
 
-The contentful.js library returns calls to `getEntries`, `getEntry`, `getAssets` and `getAsset` in different shapes, depending on the configurations listed in the respective sections below.
+The contentful.js library returns calls to `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` in different shapes, depending on the configurations listed in the respective sections below.
 
 In order to provide type support for each configuration, we provide the possibility to chain modifiers to the Contentful client, providing the correct return types corresponding to the used modifiers.
 
@@ -298,6 +298,139 @@ The default behaviour doesn't change, you can still do:
 ```js
 // returns entries in one locale, resolves linked entries, keeping unresolvable links as link object
 const entries = await client.getEntries()
+```
+
+The same chaining approach can be used with `parseEntries`. Assuming this is the raw data we want to parse:
+
+```js
+const localizedData = {
+  total: 1,
+  skip: 0,
+  limit: 100,
+  items: [
+    {
+      metadata: { tags: [] },
+      sys: {
+        space: {
+          sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' },
+        },
+        id: 'my-zoo',
+        type: 'Entry',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        environment: {
+          sys: { id: 'master', type: 'Link', linkType: 'Environment' },
+        },
+        revision: 1,
+        contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'zoo' } },
+        locale: 'en-US',
+      },
+      fields: {
+        animal: {
+          'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'oink' } },
+        },
+        anotheranimal: {
+          'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'middle-parrot' } },
+        },
+      },
+    },
+  ],
+  includes: {
+    Entry: [
+      {
+        metadata: { tags: [] },
+        sys: {
+          space: {
+            sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' },
+          },
+          id: 'oink',
+          type: 'Entry',
+          createdAt: '2020-01-01T00:00:00.000Z',
+          updatedAt: '2020-02-01T00:00:00.000Z',
+          environment: {
+            sys: { id: 'master', type: 'Link', linkType: 'Environment' },
+          },
+          revision: 2,
+          contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'animal' } },
+          locale: 'en-US',
+        },
+        fields: {
+          name: {
+            'en-US': 'Pig',
+            de: 'Schwein',
+          },
+          friend: {
+            'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } },
+          },
+        },
+      },
+    ],
+  },
+}
+```
+
+It can be used to receive parsed entries with all locales:
+
+```js
+// returns parsed entries in all locales
+const entries = client.withAllLocales.parseEntries(localizedData)
+```
+
+Similarly, raw data without locales information can be parsed as well:
+
+```js
+const data = {
+  total: 1,
+  skip: 0,
+  limit: 100,
+  items: [
+    {
+      metadata: { tags: [] },
+      sys: {
+        space: { sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' } },
+        id: 'my-zoo',
+        type: 'Entry',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
+        revision: 1,
+        contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'zoo' } },
+        locale: 'en-US',
+      },
+      fields: {
+        animal: { sys: { type: 'Link', linkType: 'Entry', id: 'oink' } },
+        anotheranimal: { sys: { type: 'Link', linkType: 'Entry', id: 'middle-parrot' } },
+      },
+    },
+  ],
+  includes: {
+    Entry: [
+      {
+        metadata: { tags: [] },
+        sys: {
+          space: { sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' } },
+          id: 'oink',
+          type: 'Entry',
+          createdAt: '2020-01-01T00:00:00.000Z',
+          updatedAt: '2020-02-01T00:00:00.000Z',
+          environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
+          revision: 2,
+          contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'animal' } },
+          locale: 'en-US',
+        },
+        fields: {
+          name: 'Pig,
+          friend: { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } },
+        },
+      },
+    ],
+  },
+}
+```
+
+```js
+// returns parsed entries keeping unresolvable links as link object
+const entries = client.withoutLinkResolution.parseEntries(data)
 ```
 
 #### Assets
