@@ -7,13 +7,12 @@ import { Metadata } from './metadata'
 import { FieldsType } from './query/util'
 import { EntitySys } from './sys'
 import { ChainModifiers } from '../utils/client-helpers'
+import { JsonArray, JsonObject } from 'type-fest'
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
   type: 'Entry'
 }
-
-type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 export declare namespace EntryFields {
   type Symbol = string
@@ -32,7 +31,7 @@ export declare namespace EntryFields {
   type AssetLink = Asset
   type Link<Fields extends FieldsType> = AssetLink | EntryLink<Fields>
   type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<FieldsType>> = Item[]
-  type Object<Data extends Json = Json> = Data
+  type Object<Data extends JsonObject | JsonArray | null = JsonObject | JsonArray | null> = Data
   type RichText = RichTextDocument
 }
 
