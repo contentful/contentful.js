@@ -24,13 +24,14 @@ import {
   TagCollection,
   Entry,
   EntryCollection,
+  SyncQuery,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
-import { ChainOption, ChainOptions } from './utils/client-helpers'
+import { ChainModifiers, ChainOption, ChainOptions } from './utils/client-helpers'
 import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
@@ -245,7 +246,13 @@ interface BaseClient {
    * })
    * ```
    */
-  sync(query: any): Promise<SyncCollection>
+  sync<
+    Fields extends FieldsType = FieldsType,
+    Modifiers extends ChainModifiers = ChainModifiers,
+    Locales extends LocaleCode = LocaleCode
+  >(
+    query: SyncQuery
+  ): Promise<SyncCollection<Fields, Modifiers, Locales>>
 
   /**
    * Gets a Tag
