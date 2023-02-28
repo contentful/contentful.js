@@ -1,17 +1,17 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields } from '../../lib'
-import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
-import { ExistenceFilter } from '../../lib/types/query/existence'
+import { EntryFields } from '../../../lib'
+import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
+import { ExistenceFilter } from '../../../lib/types/query/existence'
 import {
   BoundingBoxSearchFilterInput,
   BoundingCircleSearchFilterInput,
   LocationSearchFilters,
   ProximitySearchFilterInput,
-} from '../../lib/types/query/location'
-import { RangeFilters } from '../../lib/types/query/range'
-import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectFilter } from '../../lib/types/query/select'
-import { SubsetFilters } from '../../lib/types/query/subset'
+} from '../../../lib/types/query/location'
+import { RangeFilters } from '../../../lib/types/query/range'
+import { FullTextSearchFilters } from '../../../lib/types/query/search'
+import { SelectFilter } from '../../../lib/types/query/select'
+import { SubsetFilters } from '../../../lib/types/query/subset'
 
 const stringValue = ''
 const booleanValue = true
@@ -20,12 +20,10 @@ export const nearLocationValue: ProximitySearchFilterInput = [1, 0]
 export const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0, 2]
 export const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
 
-//TODO:  Does this work?
-expectAssignable<EqualityFilter<{ testField: EntryFields.Location }, 'fields'>>({
+expectNotAssignable<EqualityFilter<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField': { lat: numberValue, lon: numberValue },
 })
-//TODO:  Does this work?
-expectAssignable<InequalityFilter<{ testField: EntryFields.Location }, 'fields'>>({
+expectNotAssignable<InequalityFilter<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField[ne]': { lat: numberValue, lon: numberValue },
 })
 expectAssignable<ExistenceFilter<{ testField: EntryFields.Location }, 'fields'>>({
@@ -98,7 +96,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Location }, 'fields'>>
   'fields.testField[gt]': nearLocationValue,
   'fields.testField[gte]': nearLocationValue,
 })
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Location }, 'fields'>>({
+expectNotAssignable<FullTextSearchFilters<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField[match]': stringValue,
 })
 expectAssignable<SelectFilter<{ testField: EntryFields.Location }, 'fields'>>({

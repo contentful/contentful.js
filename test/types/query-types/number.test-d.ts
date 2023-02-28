@@ -1,12 +1,12 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields } from '../../lib'
-import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
-import { ExistenceFilter } from '../../lib/types/query/existence'
-import { LocationSearchFilters } from '../../lib/types/query/location'
-import { RangeFilters } from '../../lib/types/query/range'
-import { FullTextSearchFilters } from '../../lib/types/query/search'
-import { SelectFilter } from '../../lib/types/query/select'
-import { SubsetFilters } from '../../lib/types/query/subset'
+import { EntryFields } from '../../../lib'
+import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
+import { ExistenceFilter } from '../../../lib/types/query/existence'
+import { LocationSearchFilters } from '../../../lib/types/query/location'
+import { RangeFilters } from '../../../lib/types/query/range'
+import { FullTextSearchFilters } from '../../../lib/types/query/search'
+import { SelectFilter } from '../../../lib/types/query/select'
+import { SubsetFilters } from '../../../lib/types/query/subset'
 
 const numberValue = 1
 const stringValue = ''
@@ -38,7 +38,7 @@ expectAssignable<RangeFilters<{ testField: EntryFields.Number }, 'fields'>>({
   'fields.testField[gt]': numberValue,
   'fields.testField[gte]': numberValue,
 })
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Number }, 'fields'>>({
+expectNotAssignable<FullTextSearchFilters<{ testField: EntryFields.Number }, 'fields'>>({
   'fields.testField[match]': stringValue,
 })
 expectAssignable<SelectFilter<{ testField: EntryFields.Number }, 'fields'>>({
