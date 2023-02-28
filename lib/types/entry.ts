@@ -35,7 +35,7 @@ export declare namespace EntryFields {
   type RichText = RichTextDocument
 }
 
-export type BasicEntryField =
+export type EntryField<Fields extends FieldsType> =
   | EntryFields.Symbol
   | EntryFields.Text
   | EntryFields.Integer
@@ -45,9 +45,6 @@ export type BasicEntryField =
   | EntryFields.Location
   | EntryFields.RichText
   | EntryFields.Object
-
-export type EntryField<Fields extends FieldsType> =
-  | BasicEntryField
   | EntryFields.EntryLink<Fields>
   | EntryFields.AssetLink
   | EntryFields.Array<EntryFields.Symbol>

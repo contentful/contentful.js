@@ -1,4 +1,4 @@
-import { expectAssignable, expectNotAssignable, expectType } from 'tsd'
+import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntryFields } from '../../../lib'
 import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
 import { ExistenceFilter } from '../../../lib/types/query/existence'
@@ -7,8 +7,6 @@ import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
 import { SelectFilter } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
-import { ConditionalPick } from 'type-fest'
-import { NonEmpty } from '../../../lib/types/query/util'
 
 const stringValue = ''
 const booleanValue = true
@@ -49,5 +47,3 @@ expectAssignable<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>({
   'fields.testField[in]': booleanValue,
   'fields.testField[nin]': booleanValue,
 })
-
-// expectType<Required<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
