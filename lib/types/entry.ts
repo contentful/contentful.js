@@ -112,6 +112,8 @@ export type Entry<
       }
 }
 
+export type EntryWithContentTypeId<EntryType extends Entry, id> = EntryType & { sys: { contentType: { sys: id } } }
+
 export type EntryCollection<
   Fields extends FieldsType = FieldsType,
   Modifiers extends ChainModifiers = ChainModifiers,
