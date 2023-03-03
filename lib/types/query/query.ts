@@ -40,7 +40,7 @@ export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
   EntryFieldsQueries<Fields> &
     SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
     FixedQueryOptions &
-    FixedPagedOptions & { content_type?: string } & Record<string, any> & {
+    FixedPagedOptions & { content_type?: string } & {
       resolveLinks?: never
     }
 >
@@ -60,5 +60,5 @@ export type AssetQueries<Fields extends FieldsType = FieldsType> = Partial<
   AssetFieldsQueries<Fields> &
     SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
     FixedQueryOptions &
-    FixedPagedOptions & { mimetype_group?: AssetMimeType } & Record<string, any>
+    FixedPagedOptions & { mimetype_group?: AssetMimeType }
 >
