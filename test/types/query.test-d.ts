@@ -1,5 +1,5 @@
-import { expectAssignable } from 'tsd'
-import { EntriesQueries, EntryFields } from '../../lib'
+import { expectAssignable, expectNotAssignable } from 'tsd'
+import { EntriesQueries, EntryFields, FieldsType } from '../../lib'
 import { EntryFieldsQueries } from '../../lib/types/query/query'
 import { BLOCKS } from '@contentful/rich-text-types'
 
