@@ -1,6 +1,6 @@
-import { expectAssignable } from 'tsd'
+import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntriesQueries, EntryFields } from '../../lib'
-import { EntryFieldsQueries } from '../../lib/types/query/query'
+import { EntryFieldsQueries, QueriesWithContentType } from '../../lib/types/query/query'
 import { BLOCKS } from '@contentful/rich-text-types'
 
 export const stringValue = ''
@@ -137,4 +137,25 @@ expectAssignable<
   'fields.numberField[gte]': numberValue,
   select: ['fields.stringField', 'fields.numberField'],
   limit: numberValue,
+})
+
+// this should fail
+expectAssignable<EntriesQueries<{ stringField: EntryFields.Text }>>({
+  select: ['fields.stringField'],
+})
+
+// this should not fail
+expectNotAssignable<EntriesQueries<{ stringField: EntryFields.Text }>>({
+  select: ['fields.stringField'],
+})
+
+// granular type works
+expectAssignable<QueriesWithContentType<{ stringField: EntryFields.Text }>>({
+  select: ['fields.stringField'],
+  content_type: 'value',
+})
+
+// granular type works
+expectNotAssignable<QueriesWithContentType<{ stringField: EntryFields.Text }>>({
+  select: ['fields.stringField'],
 })

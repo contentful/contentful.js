@@ -35,15 +35,41 @@ export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
 
-// TODO: create-contentful-api complained about non-optional fields when initialized with {}
-export type EntriesQueries<Fields extends FieldsType = FieldsType> = Partial<
-  EntryFieldsQueries<Fields> &
-    SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+export type QueriesWithContentType<Fields extends FieldsType = FieldsType> =
+  EntryFieldsQueries<Fields> & {
+    content_type: string
+  } & Record<string, any> // why is this necessary???
+
+type QueriesWithoutContentType = Partial<
+  SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
     FixedQueryOptions &
-    FixedPagedOptions & { content_type?: string } & Record<string, any> & {
-      resolveLinks?: never
-    }
+    FixedPagedOptions & { content_type?: string } & { resolveLinks?: never }
+  // & Record<string,any> // can this be removed?
 >
+
+// TODO: create-contentful-api complained about non-optional fields when initialized with {}
+export type EntriesQueries<Fields extends FieldsType = FieldsType> =
+  | QueriesWithContentType<Fields>
+  | QueriesWithoutContentType
+
+const example = {
+  getEntries<Fields extends FieldsType>(_: EntriesQueries<Fields>) {
+    return '{ entry }'
+  },
+}
+
+example.getEntries({ select: 's' }) // fails, ok
+example.getEntries({ select: 's', content_type: 'x' }) // ok
+
+example.getEntries({ 'sys.revision[gt]': 4 }) // ok
+example.getEntries({ 'sys.revision[gt]': 4, content_type: 'x' }) // ok
+
+example.getEntries({ content_type: 'x' }) // ok
+
+example.getEntries<{ x: 1 }>({ 'fields.x': 'x' }) // fails, ok
+example.getEntries<{ x: 1 }>({ 'fields.x': 'x', content_type: 'x' }) // content_type hint is optional??
+example.getEntries<{ x: 1 }>({ 'fields.x[exists]': 'x' }) // only exists and equality filters are present, there is no
+// subset, fulltext, location or range!!
 
 export type EntryQueries = Omit<FixedQueryOptions, 'query'>
 
