@@ -47,7 +47,7 @@ type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
   ): Promise<Entry<Fields, Modifiers, Locales>>
 
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
-    query?: Omit<EntriesQueries, 'locale'>
+    query?: EntriesQueries // TODO: omit locale if possible
   ): Promise<EntryCollection<Fields, Modifiers, Locales>>
 
   parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
