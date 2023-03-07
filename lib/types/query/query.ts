@@ -5,7 +5,7 @@ import { ExistenceFilter } from './existence'
 import { LocationSearchFilters } from './location'
 import { RangeFilters } from './range'
 import { FullTextSearchFilters } from './search'
-import { AssetSelectFilter, EntrySelectFilter } from './select'
+import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { SubsetFilters } from './subset'
 import { FieldsType } from './util'
 
@@ -26,26 +26,27 @@ export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   SubsetFilters<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'>
 
-export type EntryFieldsQueries<Fields extends FieldsType = FieldsType> =
-  | EntrySelectFilter<Fields>
+export type EntryFieldsQueries<Fields extends FieldsType> =
+  | EntrySelectFilterWithFields<Fields>
   | ExistenceFilter<Fields, 'fields'>
-  | (EqualityFilter<Fields, 'fields'> & InequalityFilter<Fields, 'fields'>)
+  | EqualityFilter<Fields, 'fields'>
+  | InequalityFilter<Fields, 'fields'>
   | FullTextSearchFilters<Fields, 'fields'>
   | SubsetFilters<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
 
 // TODO: create-contentful-api complained about non-optional fields when initialized with {}
-export type EntriesQueries<Fields extends FieldsType = FieldsType> = EntryFieldsQueries<Fields> &
-  SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
-  FixedQueryOptions &
-  FixedPagedOptions & { content_type?: string } & {
-    resolveLinks?: never
-  } & { order?: string }
+export type EntriesQueries<Fields extends FieldsType> =
+  | (EntryFieldsQueries<Fields> & { content_type: string })
+  | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+      EntrySelectFilter &
+      FixedQueryOptions &
+      FixedPagedOptions & { order?: string })
 
 export type EntryQueries = Omit<FixedQueryOptions, 'query'>
 
-export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> =
+export type AssetFieldsQueries<Fields extends FieldsType> =
   | (ExistenceFilter<Fields, 'fields'> &
       EqualityFilter<Fields, 'fields'> &
       InequalityFilter<Fields, 'fields'> &
@@ -54,7 +55,7 @@ export type AssetFieldsQueries<Fields extends FieldsType = FieldsType> =
   | RangeFilters<Fields, 'fields'>
   | SubsetFilters<Fields, 'fields'>
 
-export type AssetQueries<Fields extends FieldsType = FieldsType> = AssetFieldsQueries<Fields> &
+export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields> &
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
   FixedQueryOptions &
   FixedPagedOptions & { mimetype_group?: AssetMimeType } & { order?: string }

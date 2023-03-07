@@ -1,5 +1,5 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntriesQueries, EntryFields, FieldsType } from '../../lib'
+import { expectAssignable } from 'tsd'
+import { EntriesQueries, EntryFields } from '../../lib'
 import { EntryFieldsQueries } from '../../lib/types/query/query'
 import { BLOCKS } from '@contentful/rich-text-types'
 
@@ -132,6 +132,7 @@ expectAssignable<
     numberField: EntryFields.Number
   }>
 >({
+  content_type: 'id',
   'fields.stringField[exists]': booleanValue,
   'fields.stringField[match]': stringValue,
   'fields.numberField[gte]': numberValue,

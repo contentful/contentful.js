@@ -5,7 +5,7 @@ import { ExistenceFilter } from '../../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../../lib/types/query/location'
 import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
-import { EntrySelectFilter } from '../../../lib/types/query/select'
+import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
 
 const stringValue = ''
@@ -40,8 +40,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Text }, 'fields'>>({
 expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Text }, 'fields'>>({
   'fields.testField[match]': stringValue,
 })
-expectAssignable<EntrySelectFilter<{ testField: EntryFields.Text }>>({
-  content_type: 'id',
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Text }>>({
   select: ['fields.testField'],
 })
 expectAssignable<SubsetFilters<{ testField: EntryFields.Text }, 'fields'>>({
