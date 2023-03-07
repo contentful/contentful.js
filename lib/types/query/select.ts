@@ -11,19 +11,22 @@ export type SelectFilterPaths<
  * @desc select for entries
  * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
  */
-export type EntrySelectFilter<Fields extends FieldsType> =
-  | {
-      select?: ('sys' | 'fields' | SelectFilterPaths<EntrySys, 'sys'>)[]
-    }
-  | {
-      content_type: string
-      select?: (
-        | 'sys'
-        | 'fields'
-        | SelectFilterPaths<EntrySys, 'sys'>
-        | SelectFilterPaths<Fields, 'fields'>
-      )[]
-    }
+export type EntrySelectFilterWithFields<Fields extends FieldsType> = {
+  select?: (
+    | 'sys'
+    | 'fields'
+    | SelectFilterPaths<EntrySys, 'sys'>
+    | SelectFilterPaths<Fields, 'fields'>
+  )[]
+}
+
+/**
+ * @desc select for entries
+ * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
+ */
+export type EntrySelectFilter = {
+  select?: ('sys' | 'fields' | SelectFilterPaths<EntrySys, 'sys'>)[]
+}
 
 /**
  * @desc select for assets

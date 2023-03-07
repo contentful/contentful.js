@@ -5,7 +5,7 @@ import { ExistenceFilter } from '../../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../../lib/types/query/location'
 import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
-import { EntrySelectFilter } from '../../../lib/types/query/select'
+import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
 
 export const dateValue: EntryFields.Date = '2018-05-03T09:18:16.329Z'
@@ -44,8 +44,7 @@ expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'
 expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({
   'fields.testField[match]': dateValue,
 })
-expectAssignable<EntrySelectFilter<{ testField: EntryFields.Date }>>({
-  content_type: 'id',
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Date }>>({
   select: ['fields.testField'],
 })
 expectAssignable<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>({
