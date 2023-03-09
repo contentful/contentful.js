@@ -5,14 +5,17 @@ import { EntryFields, EntriesQueries } from '../../../lib'
 
 expectNotAssignable<EntriesQueries<{ someField: string }>>({
   'fields.numberField[exists]': true,
+  fields: { numberField: { '[exists]': true } },
 })
 expectAssignable<EntriesQueries<{ someField: string }>>({
   content_type: 'id',
   'fields.someField[exists]': true,
+  fields: { someField: { '[exists]': true } },
 })
 expectNotAssignable<EntriesQueries<{ someField: string }>>({
   content_type: 'id',
   'fields.unknownField[exists]': true,
+  fields: { unknownField: { '[exists]': true } },
 })
 
 // gt operator (range)
@@ -120,26 +123,36 @@ expectNotAssignable<EntriesQueries<{ someField: string }>>({
 
 expectNotAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   'fields.locationField[within]': [0, 1, 2],
+  fields: {
+    locationField: {
+      '[within]': [0, 1, 2],
+    },
+  },
 })
 expectAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   content_type: 'id',
   'fields.locationField[within]': [0, 1, 2],
+  fields: { locationField: { '[within]': [0, 1, 2] } },
 })
 expectNotAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   content_type: 'id',
   ['fields.unknownField[within]']: [0, 1, 2],
+  fields: { unknownField: { '[within]': [0, 1, 2] } },
 })
 
 // within operator (bounding rectangle)
 
 expectNotAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   'fields.locationField[within]': [0, 1, 2, 3],
+  fields: { locationField: { '[within]': [0, 1, 2, 3] } },
 })
 expectAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   content_type: 'id',
   'fields.locationField[within]': [0, 1, 2, 3],
+  fields: { locationField: { '[within]': [0, 1, 2, 3] } },
 })
 expectNotAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   content_type: 'id',
   'fields.unknownField[within]': [0, 1, 2, 3],
+  fields: { unknownField: { '[within]': [0, 1, 2, 3] } },
 })

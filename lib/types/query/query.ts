@@ -1,12 +1,12 @@
 import { AssetMimeType, AssetSys } from '../asset'
 import { EntrySys } from '../entry'
-import { EqualityFilter, InequalityFilter } from './equality'
-import { ExistenceFilter } from './existence'
-import { LocationSearchFilters } from './location'
+import { EqualityFilter, EqualityFilter2, InequalityFilter, InequalityFilter2 } from './equality'
+import { ExistenceFilter, ExistenceFilter2 } from './existence'
+import { LocationSearchFilters, LocationSearchFilters2 } from './location'
 import { RangeFilters } from './range'
 import { FullTextSearchFilters } from './search'
 import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
-import { SubsetFilters } from './subset'
+import { SubsetFilters, SubsetFilters2 } from './subset'
 import { FieldsType } from './util'
 
 type FixedPagedOptions = {
@@ -36,8 +36,19 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
 
+export type EntryFieldsQueries2<Fields extends FieldsType> = {
+  fields: {
+    [FieldName in keyof Fields]?: ExistenceFilter2 &
+      EqualityFilter2<Fields[FieldName]> &
+      InequalityFilter2<Fields[FieldName]> &
+      SubsetFilters2<Fields[FieldName]> &
+      LocationSearchFilters2<Fields[FieldName]>
+  }
+}
+
 // TODO: create-contentful-api complained about non-optional fields when initialized with {}
 export type EntriesQueries<Fields extends FieldsType> =
+  | EntryFieldsQueries2<Fields>
   | (EntryFieldsQueries<Fields> & { content_type: string })
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       EntrySelectFilter &

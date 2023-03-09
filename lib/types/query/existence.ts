@@ -10,3 +10,7 @@ export type ExistenceFilter<
   Fields extends FieldsType,
   Prefix extends string
 > = ConditionalFixedQueries<Fields, EntryField<Fields> | undefined, boolean, Prefix, '[exists]'>
+
+export type ExistenceFilter2 = {
+  '[exists]'?: boolean
+}

@@ -66,3 +66,17 @@ export type LocationSearchFilters<Fields, Prefix extends string> =
   | ProximitySearchFilter<Fields, Prefix>
   | BoundingBoxSearchFilter<Fields, Prefix>
   | BoundingCircleSearchFilter<Fields, Prefix>
+
+/**
+ * @desc location search
+ * @see [proximity]{@link ProximitySearchFilter}
+ * @see [bounding rectangle]{@link BoundingBoxSearchFilter}
+ * @see [bounding circle]{@link BoundingCircleSearchFilter}
+ */
+export type LocationSearchFilters2<Fields> = Fields extends Types
+  ? {
+      '[near]'?: ProximitySearchFilterInput
+      '[within]'?: BoundingBoxSearchFilterInput | BoundingCircleSearchFilterInput
+    }
+  : // eslint-disable-next-line @typescript-eslint/ban-types
+    {}
