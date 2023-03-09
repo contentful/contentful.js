@@ -134,8 +134,8 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Fields = { productName: Contentful.EntryFields.Text }
-const Locales = 'en-US' | 'de-DE'
+type Fields = { productName: contentful.EntryFields.Text }
+type Locales = 'en-US' | 'de-DE'
 const entry = client.withAllLocales.getEntry<Fields, Locales>('some-entry-id')
 ```
 
@@ -162,7 +162,7 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Locales = 'en-US' | 'de-DE'
+type Locales = 'en-US' | 'de-DE'
 const asset = client.withAllLocales.getAsset<Locales>('some-asset-id')
 ```
 
@@ -189,10 +189,10 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Fields = {
-  relatedProduct: Contentful.EntryFields.Entry,
+type Fields = {
+  relatedProduct: contentful.EntryFields.Entry,
 }
-const Locales = 'en-US' | 'de-DE'
+type Locales = 'en-US' | 'de-DE'
 const entry = client.withoutLinkResolution.getEntry<Fields, Locales>('some-entry-id')
 ```
 
@@ -224,10 +224,10 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Fields = {
-  relatedProduct: Contentful.EntryFields.Entry,
+type Fields = {
+  relatedProduct: contentful.EntryFields.Entry,
 }
-const Locales = 'en-US' | 'de-DE'
+type Locales = 'en-US' | 'de-DE'
 const entry = client.withoutUnresolvableLinks.getEntry<Fields, Locales>('some-entry-id')
 ```
 
