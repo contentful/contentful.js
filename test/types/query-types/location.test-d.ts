@@ -10,7 +10,7 @@ import {
 } from '../../../lib/types/query/location'
 import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
-import { SelectFilter } from '../../../lib/types/query/select'
+import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
 
 const stringValue = ''
@@ -99,7 +99,7 @@ expectNotAssignable<RangeFilters<{ testField: EntryFields.Location }, 'fields'>>
 expectNotAssignable<FullTextSearchFilters<{ testField: EntryFields.Location }, 'fields'>>({
   'fields.testField[match]': stringValue,
 })
-expectAssignable<SelectFilter<{ testField: EntryFields.Location }, 'fields'>>({
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Location }>>({
   select: ['fields.testField'],
 })
 expectNotAssignable<SubsetFilters<{ testField: EntryFields.Location }, 'fields'>>({

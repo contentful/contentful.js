@@ -132,6 +132,7 @@ expectAssignable<
     numberField: EntryFields.Number
   }>
 >({
+  content_type: 'id',
   'fields.stringField[exists]': booleanValue,
   'fields.stringField[match]': stringValue,
   'fields.numberField[gte]': numberValue,

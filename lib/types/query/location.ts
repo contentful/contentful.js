@@ -2,7 +2,7 @@ import { ConditionalPick } from 'type-fest'
 import { EntryFields } from '../entry'
 import { NonEmpty } from './util'
 
-type Types = EntryFields.Location
+type Types = EntryFields.Location | undefined
 
 export type ProximitySearchFilterInput = [number, number] | undefined
 export type BoundingBoxSearchFilterInput = [number, number, number, number] | undefined
