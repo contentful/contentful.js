@@ -1,7 +1,12 @@
 import { EntryFields } from '../entry'
 import { ConditionalFixedQueries, NonEmpty } from './util'
 
-type SupportedTypes = EntryFields.Text | EntryFields.RichText | EntryFields.Symbol | undefined
+type SupportedTypes =
+  | EntryFields.Text
+  | EntryFields.RichText
+  | EntryFields.Symbol
+  | EntryFields.Symbol[]
+  | undefined
 
 /**
  * @desc match - full text search

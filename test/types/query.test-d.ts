@@ -121,6 +121,9 @@ expectAssignable<Required<EntryFieldsQueries<{ richTextField: EntryFields.RichTe
 expectAssignable<Required<EntryFieldsQueries<{ arrayStringField: EntryFields.Array<string> }>>>({
   select: ['fields.arrayStringField'],
   'fields.arrayStringField[exists]': booleanValue,
+  'fields.arrayStringField': stringValue,
+  'fields.arrayStringField[ne]': stringValue,
+  'fields.arrayStringField[match]': stringValue,
 })
 
 /*
@@ -138,4 +141,7 @@ expectAssignable<
   'fields.numberField[gte]': numberValue,
   select: ['fields.stringField', 'fields.numberField'],
   limit: numberValue,
+  order: stringValue,
+  links_to_asset: stringValue,
+  links_to_entry: stringValue,
 })
