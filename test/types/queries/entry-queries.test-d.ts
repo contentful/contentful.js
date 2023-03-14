@@ -143,3 +143,17 @@ expectNotAssignable<EntriesQueries<{ locationField: EntryFields.Location }>>({
   content_type: 'id',
   'fields.unknownField[within]': [0, 1, 2, 3],
 })
+
+// search on references
+
+expectNotAssignable<EntriesQueries<{ referenceField: EntryFields.EntryLink<any> }>>({
+  'fields.referenceField.sys.contentType.sys.id': 'id',
+})
+expectAssignable<EntriesQueries<{ referenceField: EntryFields.EntryLink<any> }>>({
+  content_type: 'id',
+  'fields.referenceField.sys.contentType.sys.id': 'id',
+})
+expectNotAssignable<EntriesQueries<{ referenceField: EntryFields.EntryLink<any> }>>({
+  content_type: 'id',
+  'fields.unknownField.sys.contentType.sys.id': 'id',
+})

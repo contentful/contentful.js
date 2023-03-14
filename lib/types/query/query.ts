@@ -8,6 +8,7 @@ import { FullTextSearchFilters } from './search'
 import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { SubsetFilters } from './subset'
 import { FieldsType } from './util'
+import { ReferenceSearchFilters } from './reference'
 
 type FixedPagedOptions = {
   skip?: number
@@ -40,6 +41,7 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | SubsetFilters<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
+  | ReferenceSearchFilters<Fields, 'fields'>
 
 // TODO: create-contentful-api complained about non-optional fields when initialized with {}
 export type EntriesQueries<Fields extends FieldsType> =
