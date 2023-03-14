@@ -9,7 +9,7 @@ const linkMock = {
 const sysMock = {
   type: 'Type',
   id: 'id',
-  space: copy(linkMock),
+  space: { sys: copy(linkMock) },
   createdAt: 'createdatdate',
   updatedAt: 'updatedatdate',
   revision: 1
@@ -101,7 +101,7 @@ const contentTypeMock = {
 const entryMock = {
   sys: Object.assign(copy(sysMock), {
     type: 'Entry',
-    contentType: Object.assign(copy(linkMock), { linkType: 'ContentType' }),
+    contentType: { sys: Object.assign(copy(linkMock), { linkType: 'ContentType' }) },
     locale: 'locale'
   }),
   fields: {
@@ -187,18 +187,18 @@ const entryWithResourceLinksMock = {
   }),
   fields: {
     onereference: {
-      "en-US": {
+      'en-US': {
         sys: {
-          type: "ResourceLink",
-          linkType: "Contentful:Entry",
-          urn: "crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk949999"
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk949999'
         }
       },
-      "de-DE": {
+      'de-DE': {
         sys: {
-          type: "ResourceLink",
-          linkType: "Contentful:Entry",
-          urn: "crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk948888"
+          type: 'ResourceLink',
+          linkType: 'Contentful:Entry',
+          urn: 'crn:test:::content:spaces/0i1ksbf51zos/entries/U4X2TI5qzC0w6Rk948888'
         }
       }
     },
