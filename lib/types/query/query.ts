@@ -20,6 +20,11 @@ type FixedQueryOptions = {
   query?: string
 }
 
+type FixedLinkOptions = {
+  links_to_asset?: string
+  links_to_entry?: string
+}
+
 export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   EqualityFilter<Sys, 'sys'> &
   InequalityFilter<Sys, 'sys'> &
@@ -42,7 +47,8 @@ export type EntriesQueries<Fields extends FieldsType> =
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       EntrySelectFilter &
       FixedQueryOptions &
-      FixedPagedOptions & { order?: string })
+      FixedPagedOptions &
+      FixedLinkOptions & { order?: string })
 
 export type EntryQueries = Omit<FixedQueryOptions, 'query'>
 
