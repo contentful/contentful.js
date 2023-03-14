@@ -3,6 +3,7 @@ import { ConditionalQueries, NonEmpty } from './util'
 
 type SupportedTypes =
   | EntryFields.Symbol
+  | EntryFields.Symbol[]
   | EntryFields.Text
   | EntryFields.Integer
   | EntryFields.Number

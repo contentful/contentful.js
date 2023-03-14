@@ -121,6 +121,9 @@ expectAssignable<Required<EntryFieldsQueries<{ richTextField: EntryFields.RichTe
 expectAssignable<Required<EntryFieldsQueries<{ arrayStringField: EntryFields.Array<string> }>>>({
   select: ['fields.arrayStringField'],
   'fields.arrayStringField[exists]': booleanValue,
+  'fields.arrayStringField': stringValue,
+  'fields.arrayStringField[ne]': stringValue,
+  'fields.arrayStringField[match]': stringValue,
 })
 
 /*
