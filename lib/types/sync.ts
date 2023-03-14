@@ -5,18 +5,33 @@ import { FieldsType } from './query'
 import { LocaleCode } from './locale'
 import { ChainModifiers } from '../utils/client-helpers'
 
-export type SyncQuery =
-  | ({ initial: true; limit?: number } & (
-      | {
-          type?: 'Asset' | 'Entry' | 'Deletion' | 'DeletedAsset' | 'DeletedEntry'
-        }
-      | {
-          content_type: string
-          type?: 'Entry'
-        }
-    ))
-  | { nextSyncToken: string }
-  | { nextPageToken: string }
+export type SyncOptions = {
+  paginate: boolean
+}
+
+export type SyncQuery = {
+  initial?: true
+  limit?: number
+  nextSyncToken?: string
+  nextPageToken?: string
+} & (
+  | { type: 'Entry'; content_type: string }
+  | { type?: 'Asset' | 'Entry' | 'Deletion' | 'DeletedAsset' | 'DeletedEntry' }
+)
+
+export type SyncPageQuery = SyncQuery & { sync_token?: string }
+
+export type SyncResponse = {
+  nextPageUrl?: string
+  nextSyncUrl?: string
+  items: SyncEntities[]
+}
+
+export type SyncPageResponse = {
+  nextPageToken?: string
+  nextSyncToken?: string
+  items: SyncEntities[]
+}
 
 export type DeletedEntry = {
   sys: EntitySys & { type: 'DeletedEntry' }
@@ -25,6 +40,8 @@ export type DeletedEntry = {
 export type DeletedAsset = {
   sys: EntitySys & { type: 'DeletedAsset' }
 }
+
+export type SyncEntities = Entry | Asset | DeletedEntry | DeletedAsset
 
 export interface SyncCollection<
   Fields extends FieldsType = FieldsType,

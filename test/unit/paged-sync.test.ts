@@ -22,7 +22,7 @@ function createAsset(id, deleted = false): any {
   return asset
 }
 
-describe('paged-sync', () => {
+describe.only('paged-sync', () => {
   let http
 
   beforeEach(() => {
@@ -34,6 +34,7 @@ describe('paged-sync', () => {
   })
 
   test('Rejects with no parameters', async () => {
+    // @ts-ignore
     await expect(pagedSync(http, {}, { resolveLinks: true })).rejects.toEqual(
       new Error(
         'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
@@ -48,6 +49,7 @@ describe('paged-sync', () => {
         {
           initial: true,
           content_type: 'id',
+          // @ts-ignore
           type: 'ContentType',
         },
         { resolveLinks: true }
@@ -65,7 +67,7 @@ describe('paged-sync', () => {
         nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
       },
     })
-
+    // @ts-ignore
     const response = await pagedSync(http, { initial: true }, { resolveLinks: true })
     expect(response).toEqual({
       entries: [],
@@ -82,6 +84,7 @@ describe('paged-sync', () => {
   })
   test('Returns empty response if response is empty', async () => {
     http.get.mockResolvedValue({})
+    // @ts-ignore
     const response = await pagedSync(http, { initial: true }, { resolveLinks: true })
     expect(response).toEqual({
       entries: [],
@@ -118,6 +121,7 @@ describe('paged-sync', () => {
       },
     })
 
+    // @ts-ignore
     const response = await pagedSync(http, { initial: true }, { resolveLinks: true })
     expect(http.get.mock.calls[0][1].params.initial).toBeTruthy()
     expect(response.entries).toHaveLength(3)
@@ -139,6 +143,7 @@ describe('paged-sync', () => {
     const response = await pagedSync(
       http,
       { initial: true, content_type: 'cat' },
+      // @ts-ignore
       { resolveLinks: true }
     )
 
@@ -165,6 +170,7 @@ describe('paged-sync', () => {
       },
     })
 
+    // @ts-ignore
     const response = await pagedSync(http, { initial: true, limit: 10 }, { resolveLinks: true })
 
     expect(http.get).toBeCalledWith('sync', {
@@ -219,6 +225,7 @@ describe('paged-sync', () => {
 
     const response = await pagedSync(
       http,
+      // @ts-ignore
       { initial: true, type: 'Entries' },
       { resolveLinks: true }
     )
@@ -275,6 +282,7 @@ describe('paged-sync', () => {
 
     const response = await pagedSync(
       http,
+      // @ts-ignore
       { initial: true, limit: 10, type: 'Entries' },
       { resolveLinks: true }
     )
@@ -313,6 +321,7 @@ describe('paged-sync', () => {
     const response = await pagedSync(
       http,
       { nextSyncToken: 'nextsynctoken' },
+      // @ts-ignore
       { resolveLinks: true }
     )
     expect(http.get.mock.calls[0][1].params.sync_token).toEqual('nextsynctoken')
@@ -360,6 +369,7 @@ describe('paged-sync', () => {
         })
       )
 
+    // @ts-ignore
     const response = await pagedSync(http, { initial: true, type: 'Entries' }, { paginate: false })
     expect(http.get).toHaveBeenCalledTimes(1)
     expect(http.get.mock.calls[0][1].params.initial).toBeDefined()
@@ -368,28 +378,33 @@ describe('paged-sync', () => {
     expect(response.deletedEntries).toHaveLength(0)
     expect(response.assets).toHaveLength(0)
     expect(response.deletedAssets).toHaveLength(0)
+    // @ts-ignore
     expect(response.nextPageToken).toEqual('nextpage1')
     expect(response.nextSyncToken).toBeUndefined()
 
     // Manually sync next page
     const response2 = await pagedSync(
       http,
+      // @ts-ignore
       { nextPageToken: response.nextPageToken },
       { paginate: false }
     )
     expect(http.get).toHaveBeenCalledTimes(2)
     expect(http.get.mock.calls[1][1].params.initial).toBeUndefined()
+    // @ts-ignore
     expect(response2.nextPageToken).toEqual('nextpage2')
     expect(response2.nextSyncToken).toBeUndefined()
 
     // Manually sync next (last) page
     const response3 = await pagedSync(
       http,
+      // @ts-ignore
       { nextPageToken: response2.nextPageToken },
       { paginate: false }
     )
     expect(http.get).toHaveBeenCalledTimes(3)
     expect(http.get.mock.calls[2][1].params.initial).toBeUndefined()
+    // @ts-ignore
     expect(response3.nextPageToken).toBeUndefined()
     expect(response3.nextSyncToken).toEqual('nextsynctoken')
   })

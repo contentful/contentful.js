@@ -25,6 +25,7 @@ import {
   Entry,
   EntryCollection,
   SyncQuery,
+  SyncOptions,
 } from './types'
 import { EntryQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
@@ -575,10 +576,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function sync(query = {}, options = { paginate: true }) {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
+  async function sync(query: SyncQuery, options: SyncOptions = { paginate: true }) {
     switchToEnvironment(http)
-    return pagedSync(http, query, { resolveLinks, removeUnresolved, ...options })
+    return pagedSync(http, query, options)
   }
 
   function parseEntries<Fields extends FieldsType = FieldsType>(data) {
