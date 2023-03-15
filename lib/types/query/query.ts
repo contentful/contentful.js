@@ -57,14 +57,13 @@ export type EntriesQueries<Fields extends FieldsType> =
 
 export type EntryQueries = Omit<FixedQueryOptions, 'query'>
 
-export type AssetFieldsQueries<Fields extends FieldsType> =
-  | (ExistenceFilter<Fields, 'fields'> &
-      EqualityFilter<Fields, 'fields'> &
-      InequalityFilter<Fields, 'fields'> &
-      FullTextSearchFilters<Fields, 'fields'> &
-      AssetSelectFilter<Fields>)
-  | RangeFilters<Fields, 'fields'>
-  | SubsetFilters<Fields, 'fields'>
+export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fields, 'fields'> &
+  EqualityFilter<Fields, 'fields'> &
+  InequalityFilter<Fields, 'fields'> &
+  FullTextSearchFilters<Fields, 'fields'> &
+  AssetSelectFilter<Fields> &
+  RangeFilters<Fields, 'fields'> &
+  SubsetFilters<Fields, 'fields'>
 
 export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields> &
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &

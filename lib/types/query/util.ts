@@ -6,7 +6,6 @@ export type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
 
 export type NonEmpty<T> = T extends Record<string, never> ? never : T
 
-//TODO: should we also allow ValueType[] for array types
 export type ConditionalFixedQueries<
   Fields,
   SupportedTypes,
@@ -16,6 +15,16 @@ export type ConditionalFixedQueries<
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}${QueryFilter}`]?: ValueType
+}
+
+export type ConditionalListQueries<
+  Fields,
+  SupportedTypes,
+  Prefix extends string,
+  QueryFilter extends string = ''
+> = {
+  [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
+    FieldName}${QueryFilter}`]?: NonNullable<BaseOrArrayType<Fields[FieldName]>>[]
 }
 
 export type ConditionalQueries<

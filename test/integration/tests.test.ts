@@ -331,7 +331,7 @@ test('Gets entries with array inequality query', async () => {
 })
 
 test('Gets entries with inclusion query', async () => {
-  const response = await client.getEntries({ 'sys.id[in]': 'finn,jake' })
+  const response = await client.getEntries({ 'sys.id[in]': ['finn', 'jake'] })
 
   expect(response.total).toBe(2)
   expect(response.items.filter((item) => item.sys.id === 'finn')).toHaveLength(1)
@@ -410,7 +410,7 @@ test('Gets entries with full text search query on field', async () => {
 test('Gets entries with location proximity search', async () => {
   const response = await client.getEntries({
     content_type: '1t9IbcfdCk6m04uISSsaIK',
-    'fields.center[near]': '38,-122',
+    'fields.center[near]': [38, -122],
   })
 
   expect(response.items[0].fields.center.lat).toBeDefined()

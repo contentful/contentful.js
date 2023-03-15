@@ -1,4 +1,4 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectAssignable, expectType } from 'tsd'
 import { EntryFields } from '../../../lib'
 import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
 import { ExistenceFilter } from '../../../lib/types/query/existence'
@@ -7,47 +7,46 @@ import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
+// @ts-ignore
+import * as mocks from '../mocks'
 
-export const dateValue: EntryFields.Date = '2018-05-03T09:18:16.329Z'
-const stringValue = ''
-const booleanValue = true
+expectAssignable<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>({})
+expectType<Required<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>>({
+  'fields.testField': mocks.dateValue,
+})
 
-expectAssignable<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField': dateValue,
+expectAssignable<InequalityFilter<{ testField: EntryFields.Date }, 'fields'>>({})
+expectType<Required<InequalityFilter<{ testField: EntryFields.Date }, 'fields'>>>({
+  'fields.testField[ne]': mocks.dateValue,
 })
-expectAssignable<InequalityFilter<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[ne]': dateValue,
+
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Date }, 'fields'>>({})
+expectType<Required<ExistenceFilter<{ testField: EntryFields.Date }, 'fields'>>>({
+  'fields.testField[exists]': mocks.booleanValue,
 })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[exists]': booleanValue,
+
+expectAssignable<Required<LocationSearchFilters<{ testField: EntryFields.Date }, 'fields'>>>({})
+
+expectAssignable<RangeFilters<{ testField: EntryFields.Date }, 'fields'>>({})
+expectType<Required<RangeFilters<{ testField: EntryFields.Date }, 'fields'>>>({
+  'fields.testField[lt]': mocks.dateValue,
+  'fields.testField[lte]': mocks.dateValue,
+  'fields.testField[gt]': mocks.dateValue,
+  'fields.testField[gte]': mocks.dateValue,
 })
-expectNotAssignable<
-  LocationSearchFilters<
-    {
-      testField: EntryFields.Date
-    },
-    'fields'
-  >
->({
-  'fields.testField[near]': dateValue,
-  'fields.testField[within]': [0, 0, 0],
+
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({})
+expectType<Required<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>>({
+  'fields.testField[match]': mocks.stringValue,
 })
-expectAssignable<RangeFilters<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[lt]': dateValue,
-  'fields.testField[lte]': dateValue,
-  'fields.testField[gt]': dateValue,
-  'fields.testField[gte]': dateValue,
-})
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[match]': stringValue,
-})
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[match]': dateValue,
-})
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Date }>>({
+
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Date }>>({})
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Date }>>>({
   select: ['fields.testField'],
 })
-expectAssignable<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>({
-  'fields.testField[in]': dateValue,
-  'fields.testField[nin]': dateValue,
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>({})
+expectType<Required<SubsetFilters<{ testField: EntryFields.Date }, 'fields'>>>({
+  'fields.testField[in]': mocks.dateArrayValue,
+  'fields.testField[nin]': mocks.dateArrayValue,
 })
