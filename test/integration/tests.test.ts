@@ -1,7 +1,7 @@
 import { EntryFields } from '../../lib'
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validation-error'
-// @ts-ignore
+import { TypeCatFields } from './parseEntries.test'
 import { localeSpaceParams, params, previewParams } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -599,6 +599,44 @@ describe('Sync API', () => {
     expect(response.deletedEntries).toBeDefined()
     expect(response.nextSyncToken).toBeDefined()
   })
+
+  test('Sync has withoutUnresolvableLinks modifier', async () => {
+    const response = await client.withoutUnresolvableLinks.sync<TypeCatFields>({
+      initial: true,
+      type: 'Entry',
+      content_type: 'cat',
+    })
+
+    expect(response.entries[0].fields).toBeDefined()
+    expect(response.entries[0].fields.bestFriend).toEqual({})
+  })
+
+  test('Sync ignores withAllLocales modifier', async () => {
+    const responseWithLocales = await client.withAllLocales.sync({
+      initial: true,
+      type: 'Entry',
+      content_type: 'cat',
+    })
+
+    const responseWithoutLocales = await client.sync({
+      initial: true,
+      type: 'Entry',
+      content_type: 'cat',
+    })
+
+    expect(responseWithLocales).toStrictEqual(responseWithoutLocales)
+  })
+})
+
+test('Sync has withoutLinkResolution modifier', async () => {
+  const response = await client.withoutLinkResolution.sync<TypeCatFields>({
+    initial: true,
+    type: 'Entry',
+    content_type: 'cat',
+  })
+
+  expect(response.entries[0].fields).toBeDefined()
+  expect(response.entries[0].fields.bestFriend?.['en-US']?.sys.type).toEqual('Link')
 })
 
 test('Gets entries with linked includes with all locales using the withAllLocales client chain modifier', async () => {
