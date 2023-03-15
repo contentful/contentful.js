@@ -6,7 +6,7 @@ import { LocaleCode } from './locale'
 import { ChainModifiers } from '../utils/client-helpers'
 
 export type SyncOptions = {
-  paginate: boolean
+  paginate?: boolean
 }
 
 export type SyncQuery = {

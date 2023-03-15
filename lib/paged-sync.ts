@@ -34,7 +34,7 @@ export default async function pagedSync<
 >(
   http: AxiosInstance,
   query: SyncQuery,
-  options: SyncOptions & ChainOptions
+  options?: SyncOptions | ChainOptions
 ): Promise<SyncCollection<Fields, ModifiersFromOptions<Options>, Locales>> {
   if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error(
@@ -55,6 +55,7 @@ export default async function pagedSync<
     withoutUnresolvableLinks: false,
     paginate: true,
   }
+
   const { withoutLinkResolution, withoutUnresolvableLinks, paginate } = {
     ...defaultOptions,
     ...options,
