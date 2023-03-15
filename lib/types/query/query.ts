@@ -68,13 +68,15 @@ export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields>
   FixedQueryOptions &
   FixedPagedOptions & { mimetype_group?: AssetMimeType } & { order?: string }
 
-type TagName = { name: string }
+export type TagNameFilters = {
+  'name[exists]'?: boolean
+  name?: string
+  'name[ne]'?: string
+  'name[match]'?: string
+  'name[in]'?: string
+  'name[nin]'?: string
+}
 
-export type TagQueries =
-  | ExistenceFilter<TagName, ''>
-  | EqualityFilter<TagName, ''>
-  | InequalityFilter<TagName, ''>
-  | FullTextSearchFilters<TagName, ''>
-  | SubsetFilters<TagName, ''>
-  | (SysQueries<Pick<TagSys, 'createdAt' | 'updatedAt' | 'visibility' | 'id' | 'type'>> &
-      FixedPagedOptions & { order?: string })
+export type TagQueries = TagNameFilters &
+  SysQueries<Pick<TagSys, 'createdAt' | 'updatedAt' | 'visibility' | 'id' | 'type'>> &
+  FixedPagedOptions & { order?: string }
