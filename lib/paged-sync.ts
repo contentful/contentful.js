@@ -13,7 +13,10 @@ import {
   SyncOptions,
   SyncEntities,
   SyncQuery,
+  FieldsType,
+  LocaleCode,
 } from './types'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 
 /**
  * This module retrieves all the available pages for a sync operation
@@ -24,11 +27,15 @@ import {
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
  * @return {Promise<SyncCollection>}
  */
-export default async function pagedSync(
+export default async function pagedSync<
+  Fields extends FieldsType,
+  Locales extends LocaleCode,
+  Options extends ChainOptions
+>(
   http: AxiosInstance,
   query: SyncQuery,
-  options: SyncOptions
-): Promise<SyncCollection> {
+  options: SyncOptions & ChainOptions
+): Promise<SyncCollection<Fields, ModifiersFromOptions<Options>, Locales>> {
   if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error(
       'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
@@ -43,20 +50,23 @@ export default async function pagedSync(
     )
   }
 
-  const defaultOptions = { resolveLinks: true, removeUnresolved: false, paginate: true }
-  const { resolveLinks, removeUnresolved, paginate } = {
+  const defaultOptions = {
+    withoutLinkResolution: false,
+    withoutUnresolvableLinks: false,
+    paginate: true,
+  }
+  const { withoutLinkResolution, withoutUnresolvableLinks, paginate } = {
     ...defaultOptions,
     ...options,
   }
 
-  const syncOptions = {
-    paginate,
-  }
-
-  const response = await getSyncPage(http, [], query, syncOptions)
+  const response = await getSyncPage(http, [], query, { paginate })
   // clones response.items used in includes because we don't want these to be mutated
-  if (resolveLinks) {
-    response.items = resolveResponse(response, { removeUnresolved, itemEntryPoints: ['fields'] })
+  if (!withoutLinkResolution) {
+    response.items = resolveResponse(response, {
+      removeUnresolved: withoutUnresolvableLinks,
+      itemEntryPoints: ['fields'],
+    })
   }
   // maps response items again after getters are attached
   const mappedResponseItems = mapResponseItems(response.items)

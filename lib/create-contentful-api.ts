@@ -576,9 +576,32 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function sync(query: SyncQuery, options: SyncOptions = { paginate: true }) {
+  async function sync<Fields extends FieldsType = FieldsType>(
+    query: SyncQuery,
+    syncOptions: SyncOptions = { paginate: true }
+  ) {
+    return makePagedSync<Fields>(query, syncOptions, options)
+  }
+
+  async function makePagedSync<Fields extends FieldsType = FieldsType>(
+    query: SyncQuery,
+    syncOptions: SyncOptions,
+    options: ChainOptions = {
+      withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
+    }
+  ) {
+    const combinedOptions = {
+      ...syncOptions,
+      ...options,
+    }
     switchToEnvironment(http)
-    return pagedSync(http, query, options)
+    return pagedSync<Fields, any, Extract<ChainOptions, typeof options>>(
+      http,
+      query,
+      combinedOptions
+    )
   }
 
   function parseEntries<Fields extends FieldsType = FieldsType>(data) {

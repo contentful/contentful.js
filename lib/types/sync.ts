@@ -67,5 +67,6 @@ export interface SyncCollection<
   >
   deletedEntries: Array<DeletedEntry>
   deletedAssets: Array<DeletedAsset>
-  nextSyncToken: string
+  nextSyncToken?: string
+  nextPageToken?: string
 }
