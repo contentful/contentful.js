@@ -1,5 +1,5 @@
 import { expectAssignable } from 'tsd'
-import { EntriesQueries, EntryFields } from '../../lib'
+import { EntriesQueries, EntryFields, EntryLink, FieldsType } from '../../lib'
 import { EntryFieldsQueries } from '../../lib/types/query/query'
 import { BLOCKS } from '@contentful/rich-text-types'
 
@@ -124,6 +124,18 @@ expectAssignable<Required<EntryFieldsQueries<{ arrayStringField: EntryFields.Arr
   'fields.arrayStringField': stringValue,
   'fields.arrayStringField[ne]': stringValue,
   'fields.arrayStringField[match]': stringValue,
+})
+
+/*
+ * EntryFields: Type Reference
+ */
+expectAssignable<
+  Required<EntryFieldsQueries<{ referenceField: EntryFields.EntryLink<FieldsType> }>>
+>({
+  select: ['fields.referenceField'],
+  'fields.referenceField[exists]': booleanValue,
+  'fields.referenceField.sys.contentType.sys.id': stringValue,
+  'fields.referenceField.fields.numberField': numberValue,
 })
 
 /*
