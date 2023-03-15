@@ -250,8 +250,7 @@ The configuration options belong to two categories: request config and response 
 ##### Response configuration options
 
 > :warning: **Response config options** are in the process of being **deprecated** (`v10.0.0`).
-> They still work for the `sync` method.
-> The `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` methods already use the new [Chained Clients](#chained-clients) approach.
+> The `sync`, `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` methods already use the new [Chained Clients](#chained-clients) approach.
 
 | Name                          | Default | Description                                         |
 | ----------------------------- | ------- | --------------------------------------------------- |
@@ -262,7 +261,7 @@ The configuration options belong to two categories: request config and response 
 
 > Introduced in `v10.0.0`.
 
-The contentful.js library returns calls to `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` in different shapes, depending on the configurations listed in the respective sections below.
+The contentful.js library returns calls to `sync`, `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` in different shapes, depending on the configurations listed in the respective sections below.
 
 In order to provide type support for each configuration, we provide the possibility to chain modifiers to the Contentful client, providing the correct return types corresponding to the used modifiers.
 
@@ -277,7 +276,7 @@ When initialising a client, you will receive an instance of the [`DefaultClient`
 | _none (default)_           | Returns entries in a single locale. Resolvable linked entries will be inlined while unresolvable links will be kept as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
 | `withAllLocales`           | Returns entries in all locales.                                                                                                                                                                  |
 | `withoutLinkResolution`    | All linked entries will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution)                                                                                 |
-| `withoutUnresolvableLinks` | If linked entries are not resolvalbe, the corresponding link objects are removed from the response.                                                                                              |
+| `withoutUnresolvableLinks` | If linked entries are not resolvable, the corresponding link objects are removed from the response.                                                                                              |
 
 ##### Example
 
@@ -453,6 +452,26 @@ The default behaviour doesn't change, you can still do:
 // returns assets in one locale
 const assets = await client.getAssets()
 ```
+
+#### Sync
+
+The Sync API always retrieves all localized content, therefore `withAllLocales` is accepted, but ignored.
+
+| Chain                      | Modifier                                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| _none (default)_           | Returns content in all locales.                                                                              |
+| `withoutLinkResolution`    | Linked content will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
+| `withoutUnresolvableLinks` | If linked content is not resolvable, the corresponding link objects are removed from the response.           |
+
+##### Example
+
+```js
+// returns content in all locales, resolves linked entries, removing unresolvable links
+const { entries, assets, deletedEntries, deletedAssets } =
+  await client.withoutUnresolvableLinks.sync({ initial: true })
+```
+
+More information on behavior of the Sync API can be found in [the sync section in ADVANCED.md](ADVANCED.md#sync)
 
 ### Reference documentation
 

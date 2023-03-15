@@ -241,7 +241,7 @@ The return type of `getEntry` is matching the `fields` shape
 
 #### Limitation
 
-The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset`. Other methods returning entries (e.g. `sync`) or methods that can have localized responses still rely on the previous implementation, and might not always have correct response types.
+The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `sync`, `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset`. Other methods returning entries or methods that can have localized responses still rely on the previous implementation, and might not always have correct response types.
 
 ## Generating type definitions for content types
 
