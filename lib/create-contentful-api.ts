@@ -25,8 +25,8 @@ import {
   Entry,
   EntryCollection,
 } from './types'
-import { EntryQueries, TagQueries } from './types/query/query'
-import { FieldsType } from './types/query/util'
+import { EntryQueries, LocaleOption, TagQueries } from './types/query/query'
+import { FieldsType } from './types'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
@@ -43,11 +43,11 @@ const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
   getEntry<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
     id: string,
-    query?: Omit<EntryQueries, 'locale'>
+    query?: EntryQueries
   ): Promise<Entry<Fields, Modifiers, Locales>>
 
   getEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
-    query?: EntriesQueries<Fields> // TODO: omit locale if possible
+    query?: EntriesQueries<Fields>
   ): Promise<EntryCollection<Fields, Modifiers, Locales>>
 
   parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
@@ -59,7 +59,7 @@ type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
   ): Promise<Asset<'WITH_ALL_LOCALES', Locales>>
 
   getAssets<Locales extends LocaleCode = LocaleCode>(
-    query?: Omit<AssetQueries<AssetFields>, 'locale'>
+    query?: AssetQueries<AssetFields>
   ): Promise<AssetCollection<'WITH_ALL_LOCALES', Locales>>
 }
 
@@ -67,20 +67,20 @@ type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
   withAllLocales: Client<AddChainModifier<Modifiers, 'WITH_ALL_LOCALES'>>
   getEntry<Fields extends FieldsType>(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries & LocaleOption
   ): Promise<Entry<Fields, Modifiers>>
 
   getEntries<Fields extends FieldsType>(
-    query?: EntriesQueries<Fields>
+    query?: EntriesQueries<Fields> & LocaleOption
   ): Promise<EntryCollection<Fields, Modifiers>>
 
   parseEntries<Fields extends FieldsType = FieldsType>(
     data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>
   ): EntryCollection<Fields, Modifiers>
 
-  getAsset(id: string, query?: { locale?: string }): Promise<Asset<undefined>>
+  getAsset(id: string, query?: LocaleOption): Promise<Asset<undefined>>
 
-  getAssets(query?: AssetQueries<AssetFields>): Promise<AssetCollection<undefined>>
+  getAssets(query?: AssetQueries<AssetFields> & LocaleOption): Promise<AssetCollection<undefined>>
 }
 
 export type Client<Modifiers extends ChainModifiers> = BaseClient &
@@ -354,11 +354,16 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function getEntry<Fields extends FieldsType>(id: string, query: EntryQueries = {}) {
+  async function getEntry<Fields extends FieldsType>(
+    id: string,
+    query: EntryQueries & LocaleOption = {}
+  ) {
     return makeGetEntry<Fields>(id, query, options)
   }
 
-  async function getEntries<Fields extends FieldsType>(query: EntriesQueries<Fields> = {}) {
+  async function getEntries<Fields extends FieldsType>(
+    query: EntriesQueries<Fields> & LocaleOption = {}
+  ) {
     return makeGetEntries<Fields>(query, options)
   }
 

@@ -18,13 +18,16 @@ type FixedPagedOptions = {
 
 type FixedQueryOptions = {
   include?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-  locale?: string
   query?: string
 }
 
 type FixedLinkOptions = {
   links_to_asset?: string
   links_to_entry?: string
+}
+
+export type LocaleOption = {
+  locale?: string
 }
 
 export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
