@@ -5,74 +5,69 @@
 import resolveResponse from 'contentful-resolve-response'
 import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import mixinStringifySafe from './mixins/stringify-safe'
-import { SyncCollection } from './types'
-
-/**
- * @memberof Sync
- * @typedef SyncCollection
- * @prop {Array<Entities.Entry>} entries - All existing entries on first sync. New and updated entries on subsequent syncs.
- * @prop {Array<Entities.Asset>} assets - All existing assets on first sync. New and updated assets on subsequent syncs.
- * @prop {Array<Sync.DeletedEntry>} deletedEntries - List of deleted Entries since last sync
- * @prop {Array<Sync.DeletedAsset>} deletedAssets - List of deleted Assets since last sync
- * @prop {string} nextSyncToken - Token to be sent to the next sync call
- * @prop {function(): Object} toPlainObject() - Returns this Sync collection as a plain JS object
- * @prop {function(?function=, space=): Object} stringifySafe(replacer,space) - Stringifies the Sync collection, accounting for circular references. Circular references will be replaced with just a Link object, with a <code>circular</code> property set to <code>true</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">MDN</a> and <a href="https://www.npmjs.com/package/json-stringify-safe">json-stringify-safe</a> for more details on the arguments this method can take.
- */
-
-/**
- * Deleted Entries are the same as Entries, but only appear on the sync API.
- * @memberof Sync
- * @typedef DeletedEntry
- * @type Entities.Entry
- */
-
-/**
- * Deleted Assets are the same as Assets, but only appear on the sync API.
- * @memberof Sync
- * @typedef DeletedAsset
- * @type Entities.Asset
- */
+import {
+  SyncPageQuery,
+  SyncResponse,
+  SyncPageResponse,
+  SyncCollection,
+  SyncOptions,
+  SyncEntities,
+  SyncQuery,
+  FieldsType,
+  LocaleCode,
+} from './types'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 
 /**
  * This module retrieves all the available pages for a sync operation
  * @private
- * @param {Object} http - HTTP client
- * @param {Object} query - Query object
- * @param {Object} options - Sync options object
- * @param {boolean} [options.resolveLinks = true] - If links should be resolved
- * @param {boolean} [options.removeUnresolved = false] - If unresolvable links should get removed
+ * @param {AxiosInstance} http - HTTP client
+ * @param {SyncQuery} query - Query object
+ * @param {SyncOptions} options - Sync options object
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
  * @return {Promise<SyncCollection>}
  */
-export default async function pagedSync(http: AxiosInstance, query, options = {}) {
+export default async function pagedSync<
+  Fields extends FieldsType,
+  Locales extends LocaleCode,
+  Options extends ChainOptions
+>(
+  http: AxiosInstance,
+  query: SyncQuery,
+  options?: SyncOptions | ChainOptions
+): Promise<SyncCollection<Fields, ModifiersFromOptions<Options>, Locales>> {
   if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error(
       'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
     )
   }
 
-  if (query && query.content_type && !query.type) {
+  if (query['content_type'] && !query.type) {
     query.type = 'Entry'
-  } else if (query && query.content_type && query.type && query.type !== 'Entry') {
+  } else if (query['content_type'] && query.type && query.type !== 'Entry') {
     throw new Error(
       'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.'
     )
   }
 
-  const defaultOptions = { resolveLinks: true, removeUnresolved: false, paginate: true }
-  const { resolveLinks, removeUnresolved, paginate } = {
+  const defaultOptions = {
+    withoutLinkResolution: false,
+    withoutUnresolvableLinks: false,
+    paginate: true,
+  }
+
+  const { withoutLinkResolution, withoutUnresolvableLinks, paginate } = {
     ...defaultOptions,
     ...options,
   }
 
-  const syncOptions = {
-    paginate,
-  }
-
-  const response = await getSyncPage(http, [], query, syncOptions)
+  const response = await getSyncPage(http, [], query, { paginate })
   // clones response.items used in includes because we don't want these to be mutated
-  if (resolveLinks) {
-    response.items = resolveResponse(response, { removeUnresolved, itemEntryPoints: ['fields'] })
+  if (!withoutLinkResolution) {
+    response.items = resolveResponse(response, {
+      removeUnresolved: withoutUnresolvableLinks,
+      itemEntryPoints: ['fields'],
+    })
   }
   // maps response items again after getters are attached
   const mappedResponseItems = mapResponseItems(response.items)
@@ -90,7 +85,7 @@ export default async function pagedSync(http: AxiosInstance, query, options = {}
 
 /**
  * @private
- * @param {Array<Entities.Entry|Entities.Array|Sync.DeletedEntry|Sync.DeletedAsset>} items
+ * @param {Array<Entry|Array|DeletedEntry|DeletedAsset>} items
  * @return {Object} Entities mapped to an object for each entity type
  */
 function mapResponseItems(items): any {
@@ -111,6 +106,22 @@ function mapResponseItems(items): any {
   }
 }
 
+function createRequestQuery(originalQuery: SyncPageQuery): SyncPageQuery {
+  if (originalQuery.nextPageToken) {
+    return { sync_token: originalQuery.nextPageToken }
+  }
+
+  if (originalQuery.nextSyncToken) {
+    return { sync_token: originalQuery.nextSyncToken }
+  }
+
+  if (originalQuery.sync_token) {
+    return { sync_token: originalQuery.sync_token }
+  }
+
+  return originalQuery
+}
+
 /**
  * If the response contains a nextPageUrl, extracts the sync token to get the
  * next page and calls itself again with that token.
@@ -119,48 +130,41 @@ function mapResponseItems(items): any {
  * On each call of this function, any retrieved items are collected in the
  * supplied items array, which gets returned in the end
  * @private
- * @param {Object} http
- * @param {Array<Entities.Entry|Entities.Array|Sync.DeletedEntry|Sync.DeletedAsset>} items
- * @param {Object} query
- * @param {Object} options - Sync page options object
+ * @param {AxiosInstance} http
+ * @param {Array<Entry|Asset|DeletedEntry|DeletedAsset>} items
+ * @param {SyncPageQuery} query
+ * @param {SyncOptions} options - Sync page options object
  * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
- * @return {Promise<{items: Array, nextSyncToken: string}>}
+ * @return {Promise<SyncPageResponse>}
  */
-async function getSyncPage(http: AxiosInstance, items, query, { paginate }) {
-  if (query.nextSyncToken) {
-    query.sync_token = query.nextSyncToken
-    delete query.nextSyncToken
-  }
+async function getSyncPage(
+  http: AxiosInstance,
+  items: SyncEntities[],
+  query: SyncPageQuery,
+  { paginate }: SyncOptions
+): Promise<SyncPageResponse> {
+  const requestQuery = createRequestQuery(query)
 
-  if (query.nextPageToken) {
-    query.sync_token = query.nextPageToken
-    delete query.nextPageToken
-  }
+  const response = await http.get<SyncResponse>(
+    'sync',
+    createRequestConfig({ query: requestQuery })
+  )
 
-  if (query.sync_token) {
-    delete query.initial
-    delete query.type
-    delete query.content_type
-    delete query.limit
-  }
-
-  // Todo: better type sync response (SyncCollection)
-  const response = await http.get<any>('sync', createRequestConfig({ query: query }))
   const data = response.data || {}
   items = items.concat(data.items || [])
   if (data.nextPageUrl) {
     if (paginate) {
-      delete query.initial
-      query.sync_token = getToken(data.nextPageUrl)
-      return getSyncPage(http, items, query, { paginate })
+      delete requestQuery.initial
+      requestQuery.sync_token = getToken(data.nextPageUrl)
+      return getSyncPage(http, items, requestQuery, { paginate })
     }
     return {
-      items: items,
+      items,
       nextPageToken: getToken(data.nextPageUrl),
     }
   } else if (data.nextSyncUrl) {
     return {
-      items: items,
+      items,
       nextSyncToken: getToken(data.nextSyncUrl),
     }
   } else {
@@ -172,7 +176,7 @@ async function getSyncPage(http: AxiosInstance, items, query, { paginate }) {
  * Extracts token out of an url
  * @private
  */
-function getToken(url) {
+function getToken(url: string) {
   const urlParts = url.split('?')
   return urlParts.length > 0 ? urlParts[1].replace('sync_token=', '') : ''
 }

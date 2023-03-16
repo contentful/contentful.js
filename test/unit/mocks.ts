@@ -1,5 +1,5 @@
 import { AssetKey } from './../../lib/types/asset-key'
-import { TagLink, UserLink } from './../../lib/types/link'
+import { EntryLink, TagLink, UserLink } from './../../lib/types/link'
 import copy from 'fast-copy'
 import {
   Asset,
@@ -45,6 +45,12 @@ const userLinkMock: UserLink = {
   type: 'Link',
   linkType: 'User',
   id: 'myUser',
+}
+
+const entryLinkMock: EntryLink = {
+  type: 'Link',
+  linkType: 'Entry',
+  id: 'myLink',
 }
 
 const tagSysMock: TagSys = {
@@ -205,6 +211,20 @@ const assetKeyMock: AssetKey = {
   secret: '-jE6hqytutc_dygbjShVq0PijvDn80SdT0EWD1mNHgc',
 }
 
+const entryWithLinkMock = {
+  sys: Object.assign(copy(sysMock), {
+    type: 'Entry',
+    contentType: Object.assign(copy(spaceLinkMock), { linkType: 'ContentType' }),
+    locale: 'locale',
+  }),
+  fields: {
+    linked: { sys: entryLinkMock },
+  },
+  metadata: {
+    tags: [],
+  },
+}
+
 const entryWithResourceLinksMock = {
   sys: Object.assign(copy(sysMock), {
     type: 'Entry',
@@ -268,4 +288,5 @@ export {
   tagMock,
   assetKeyMock,
   entryWithResourceLinksMock,
+  entryWithLinkMock,
 }

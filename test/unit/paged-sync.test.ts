@@ -1,8 +1,8 @@
 import copy from 'fast-copy'
-import pagedSync from '../../lib/paged-sync'
-// @ts-ignore
-import { assetMock, entryMock } from './mocks'
 import { when } from 'jest-when'
+
+import pagedSync from '../../lib/paged-sync'
+import { assetMock, entryMock, entryWithLinkMock } from './mocks'
 
 function createEntry(id, deleted = false) {
   const entry = copy(entryMock)
@@ -10,6 +10,11 @@ function createEntry(id, deleted = false) {
   if (deleted) {
     entry.sys.type = ('Deleted' + entry.sys.type) as any
   }
+  return entry
+}
+
+function createLinkedEntry(id) {
+  const entry = copy(entryWithLinkMock)
   return entry
 }
 
@@ -34,7 +39,7 @@ describe('paged-sync', () => {
   })
 
   test('Rejects with no parameters', async () => {
-    await expect(pagedSync(http, {}, { resolveLinks: true })).rejects.toEqual(
+    await expect(pagedSync(http, {})).rejects.toEqual(
       new Error(
         'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
       )
@@ -48,6 +53,7 @@ describe('paged-sync', () => {
         {
           initial: true,
           content_type: 'id',
+          // @ts-ignore
           type: 'ContentType',
         },
         { resolveLinks: true }
@@ -66,7 +72,7 @@ describe('paged-sync', () => {
       },
     })
 
-    const response = await pagedSync(http, { initial: true }, { resolveLinks: true })
+    const response = await pagedSync(http, { initial: true })
     expect(response).toEqual({
       entries: [],
       assets: [],
@@ -80,9 +86,11 @@ describe('paged-sync', () => {
       },
     })
   })
+
   test('Returns empty response if response is empty', async () => {
     http.get.mockResolvedValue({})
-    const response = await pagedSync(http, { initial: true }, { resolveLinks: true })
+
+    const response = await pagedSync(http, { initial: true })
     expect(response).toEqual({
       entries: [],
       assets: [],
@@ -92,15 +100,8 @@ describe('paged-sync', () => {
   })
 
   test('Initial sync with one page', async () => {
-    const entryWithLink = createEntry('1')
-    // @ts-ignore
-    entryWithLink.fields.linked = {
-      sys: {
-        id: '2',
-        type: 'Link',
-        linkType: 'Entry',
-      },
-    }
+    const entryWithLink = createLinkedEntry('1')
+
     http.get.mockResolvedValue({
       data: {
         items: [
@@ -118,14 +119,14 @@ describe('paged-sync', () => {
       },
     })
 
-    const response = await pagedSync(http, { initial: true }, { resolveLinks: true })
+    const response = await pagedSync(http, { initial: true })
     expect(http.get.mock.calls[0][1].params.initial).toBeTruthy()
     expect(response.entries).toHaveLength(3)
     expect(response.deletedEntries).toHaveLength(2)
     expect(response.assets).toHaveLength(3)
     expect(response.deletedAssets).toHaveLength(1)
     expect(response.nextSyncToken).toEqual('nextsynctoken')
-    expect(response.entries[0].fields.linked.sys.type).toEqual('Entry')
+    expect(response.entries[0].fields.linked.sys.linkType).toEqual('Entry')
   })
 
   test('Initial sync with one page and filter', async () => {
@@ -136,11 +137,7 @@ describe('paged-sync', () => {
       },
     })
 
-    const response = await pagedSync(
-      http,
-      { initial: true, content_type: 'cat' },
-      { resolveLinks: true }
-    )
+    const response = await pagedSync(http, { initial: true, content_type: 'cat' })
 
     expect(http.get).toBeCalledWith('sync', {
       params: {
@@ -165,7 +162,7 @@ describe('paged-sync', () => {
       },
     })
 
-    const response = await pagedSync(http, { initial: true, limit: 10 }, { resolveLinks: true })
+    const response = await pagedSync(http, { initial: true, limit: 10 })
 
     expect(http.get).toBeCalledWith('sync', {
       params: {
@@ -182,7 +179,7 @@ describe('paged-sync', () => {
 
   test('Initial sync with multiple pages', async () => {
     when(http.get)
-      .calledWith('sync', { params: { initial: true, type: 'Entries' } })
+      .calledWith('sync', { params: { initial: true, type: 'Entry' } })
       .mockReturnValue(
         Promise.resolve({
           data: {
@@ -217,14 +214,10 @@ describe('paged-sync', () => {
         })
       )
 
-    const response = await pagedSync(
-      http,
-      { initial: true, type: 'Entries' },
-      { resolveLinks: true }
-    )
+    const response = await pagedSync(http, { initial: true, type: 'Entry' })
 
     expect(http.get.mock.calls[0][1].params.initial).toBeTruthy()
-    expect(http.get.mock.calls[0][1].params.type).toEqual('Entries')
+    expect(http.get.mock.calls[0][1].params.type).toEqual('Entry')
     expect(http.get.mock.calls[1][1].params.initial).toBeFalsy()
     expect(http.get.mock.calls[1][1].params.type).not.toBeDefined()
     expect(http.get.mock.calls[1][1].params.sync_token).toEqual('nextpage1')
@@ -238,7 +231,7 @@ describe('paged-sync', () => {
 
   test('Initial sync with limit and multiple pages', async () => {
     when(http.get)
-      .calledWith('sync', { params: { initial: true, limit: 10, type: 'Entries' } })
+      .calledWith('sync', { params: { initial: true, limit: 10, type: 'Entry' } })
       .mockReturnValue(
         Promise.resolve({
           data: {
@@ -273,14 +266,10 @@ describe('paged-sync', () => {
         })
       )
 
-    const response = await pagedSync(
-      http,
-      { initial: true, limit: 10, type: 'Entries' },
-      { resolveLinks: true }
-    )
+    const response = await pagedSync(http, { initial: true, limit: 10, type: 'Entry' })
     expect(http.get.mock.calls[0][1].params.initial).toBeTruthy()
     expect(http.get.mock.calls[0][1].params.limit).toEqual(10)
-    expect(http.get.mock.calls[0][1].params.type).toEqual('Entries')
+    expect(http.get.mock.calls[0][1].params.type).toEqual('Entry')
     expect(http.get.mock.calls[1][1].params.initial).toBeFalsy()
     expect(http.get.mock.calls[1][1].params.limit).toBeFalsy()
     expect(http.get.mock.calls[1][1].params.type).not.toBeDefined()
@@ -310,11 +299,7 @@ describe('paged-sync', () => {
         })
       )
 
-    const response = await pagedSync(
-      http,
-      { nextSyncToken: 'nextsynctoken' },
-      { resolveLinks: true }
-    )
+    const response = await pagedSync(http, { nextSyncToken: 'nextsynctoken' })
     expect(http.get.mock.calls[0][1].params.sync_token).toEqual('nextsynctoken')
     expect(response.entries).toHaveLength(1)
     expect(response.deletedEntries).toHaveLength(1)
@@ -325,7 +310,7 @@ describe('paged-sync', () => {
 
   test('Initial sync with multiple pages but pagination disabled', async () => {
     when(http.get)
-      .calledWith('sync', { params: { initial: true, type: 'Entries' } })
+      .calledWith('sync', { params: { initial: true, type: 'Entry' } })
       .mockReturnValue(
         Promise.resolve({
           data: {
@@ -360,10 +345,10 @@ describe('paged-sync', () => {
         })
       )
 
-    const response = await pagedSync(http, { initial: true, type: 'Entries' }, { paginate: false })
+    const response = await pagedSync(http, { initial: true, type: 'Entry' }, { paginate: false })
     expect(http.get).toHaveBeenCalledTimes(1)
     expect(http.get.mock.calls[0][1].params.initial).toBeDefined()
-    expect(http.get.mock.calls[0][1].params.type).toEqual('Entries')
+    expect(http.get.mock.calls[0][1].params.type).toEqual('Entry')
     expect(response.entries).toHaveLength(2)
     expect(response.deletedEntries).toHaveLength(0)
     expect(response.assets).toHaveLength(0)

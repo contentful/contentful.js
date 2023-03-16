@@ -24,6 +24,8 @@ import {
   TagCollection,
   Entry,
   EntryCollection,
+  SyncQuery,
+  SyncOptions,
 } from './types'
 import { EntryQueries, TagQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
@@ -202,7 +204,13 @@ interface BaseClient {
    * })
    * ```
    */
-  sync(query: any): Promise<SyncCollection>
+  sync<
+    Fields extends FieldsType = FieldsType,
+    Modifiers extends ChainModifiers = ChainModifiers,
+    Locales extends LocaleCode = LocaleCode
+  >(
+    query: SyncQuery
+  ): Promise<SyncCollection<Fields, Modifiers, Locales>>
 
   /**
    * Gets a Tag
@@ -567,10 +575,32 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function sync(query = {}, options = { paginate: true }) {
-    const { resolveLinks, removeUnresolved } = getGlobalOptions(query)
+  async function sync<Fields extends FieldsType = FieldsType>(
+    query: SyncQuery,
+    syncOptions: SyncOptions = { paginate: true }
+  ) {
+    return makePagedSync<Fields>(query, syncOptions, options)
+  }
+
+  async function makePagedSync<Fields extends FieldsType = FieldsType>(
+    query: SyncQuery,
+    syncOptions: SyncOptions,
+    options: ChainOptions = {
+      withAllLocales: false,
+      withoutLinkResolution: false,
+      withoutUnresolvableLinks: false,
+    }
+  ) {
+    const combinedOptions = {
+      ...syncOptions,
+      ...options,
+    }
     switchToEnvironment(http)
-    return pagedSync(http, query, { resolveLinks, removeUnresolved, ...options })
+    return pagedSync<Fields, any, Extract<ChainOptions, typeof options>>(
+      http,
+      query,
+      combinedOptions
+    )
   }
 
   function parseEntries<Fields extends FieldsType = FieldsType>(data) {
