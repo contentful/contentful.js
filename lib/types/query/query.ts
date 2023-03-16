@@ -9,6 +9,7 @@ import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } fro
 import { SubsetFilters } from './subset'
 import { FieldsType } from './util'
 import { ReferenceSearchFilters } from './reference'
+import { TagSys } from '../sys'
 
 type FixedPagedOptions = {
   skip?: number
@@ -43,7 +44,6 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | RangeFilters<Fields, 'fields'>
   | ReferenceSearchFilters<Fields, 'fields'>
 
-// TODO: create-contentful-api complained about non-optional fields when initialized with {}
 export type EntriesQueries<Fields extends FieldsType> =
   | (EntryFieldsQueries<Fields> & { content_type: string })
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
@@ -67,3 +67,16 @@ export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields>
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
   FixedQueryOptions &
   FixedPagedOptions & { mimetype_group?: AssetMimeType } & { order?: string }
+
+export type TagNameFilters = {
+  'name[exists]'?: boolean
+  name?: string
+  'name[ne]'?: string
+  'name[match]'?: string
+  'name[in]'?: string
+  'name[nin]'?: string
+}
+
+export type TagQueries = TagNameFilters &
+  SysQueries<Pick<TagSys, 'createdAt' | 'updatedAt' | 'visibility' | 'id' | 'type'>> &
+  FixedPagedOptions & { order?: string }

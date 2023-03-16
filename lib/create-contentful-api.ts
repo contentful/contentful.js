@@ -25,7 +25,7 @@ import {
   Entry,
   EntryCollection,
 } from './types'
-import { EntryQueries } from './types/query/query'
+import { EntryQueries, TagQueries } from './types/query/query'
 import { FieldsType } from './types/query/util'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
@@ -234,8 +234,7 @@ interface BaseClient {
    * const response = await client.getTags()
    * console.log(response.items)
    */
-  // TODO type query
-  getTags(query?: any): Promise<TagCollection>
+  getTags(query?: TagQueries): Promise<TagCollection>
 
   /**
    * Creates an asset key for signing asset URLs (Embargoed Assets)
