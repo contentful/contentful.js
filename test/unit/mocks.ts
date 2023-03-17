@@ -66,7 +66,6 @@ const tagSysMock: TagSys = {
   environment: { sys: copy(environmentLinkMock) },
 }
 
-// TODO make more generic
 const sysMock: EntrySys = {
   type: 'Entry',
   id: 'id',

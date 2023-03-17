@@ -25,5 +25,3 @@ export type EqualityFilter<Fields, Prefix extends string> = NonEmpty<
 export type InequalityFilter<Fields, Prefix extends string> = NonEmpty<
   ConditionalQueries<Fields, SupportedTypes, Prefix, '[ne]'>
 >
-
-// TODO: it still includes 'Link' fields
