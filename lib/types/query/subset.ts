@@ -1,9 +1,10 @@
 import { EntryFields } from '..'
-import { ConditionalQueries, NonEmpty } from './util'
+import { ConditionalListQueries } from './util'
 
 type SubsetFilterTypes = 'in' | 'nin'
 type SupportedTypes =
   | EntryFields.Symbol
+  | EntryFields.Symbol[]
   | EntryFields.Text
   | EntryFields.Integer
   | EntryFields.Number
@@ -19,6 +20,9 @@ type SupportedTypes =
  * // {'fields.myField', 'singleValue'}
  * // {'fields.myField', 'firstValue,secondValue'}
  */
-export type SubsetFilters<Fields, Prefix extends string> = NonEmpty<
-  NonNullable<ConditionalQueries<Fields, SupportedTypes, Prefix, `[${SubsetFilterTypes}]`>>
+export type SubsetFilters<Fields, Prefix extends string> = ConditionalListQueries<
+  Fields,
+  SupportedTypes,
+  Prefix,
+  `[${SubsetFilterTypes}]`
 >

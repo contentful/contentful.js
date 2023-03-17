@@ -28,7 +28,8 @@ import {
   SyncOptions,
 } from './types'
 import { EntryQueries, LocaleOption, TagQueries } from './types/query/query'
-import { FieldsType } from './types'
+import { FieldsType } from './types/query/util'
+import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
@@ -457,7 +458,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const entries = await get({
         context: 'environment',
         path: 'entries',
-        config: createRequestConfig({ query: normalizeSelect(query) }),
+        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
       })
 
       return resolveCircular(entries, {
@@ -534,7 +535,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return get({
         context: 'environment',
         path: 'assets',
-        config: createRequestConfig({ query: normalizeSelect(query) }),
+        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
       })
     } catch (error) {
       errorHandler(error as AxiosError)
@@ -552,7 +553,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return get<TagCollection>({
       context: 'environment',
       path: 'tags',
-      config: createRequestConfig({ query: normalizeSelect(query) }),
+      config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
     })
   }
 

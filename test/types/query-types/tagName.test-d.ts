@@ -1,49 +1,21 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { TagNameFilters } from '../../../lib/types/query/query'
-
-const booleanValue = false
-const stringValue = ''
-const rangeString = 'test1,test2'
+// @ts-ignore
+import * as mocks from '../mocks'
 
 expectAssignable<TagNameFilters>({
-  'name[exists]': booleanValue,
+  'name[exists]': mocks.booleanValue,
+  name: mocks.stringValue,
+  'name[match]': mocks.stringValue,
+  'name[ne]': mocks.stringValue,
+  'name[in]': mocks.stringArrayValue,
+  'name[nin]': mocks.stringArrayValue,
 })
 
-expectAssignable<TagNameFilters>({
-  name: stringValue,
-})
-
-expectAssignable<TagNameFilters>({
-  'name[match]': stringValue,
-})
-
-expectAssignable<TagNameFilters>({
-  'name[ne]': stringValue,
-})
-
-expectAssignable<TagNameFilters>({
-  'name[in]': rangeString,
-})
-
-expectAssignable<TagNameFilters>({
-  'name[nin]': rangeString,
-})
-
-expectNotAssignable<TagNameFilters>({
-  'name[near]': rangeString,
-})
-
-expectNotAssignable<TagNameFilters>({
-  'name[within]': rangeString,
-})
-
-expectNotAssignable<TagNameFilters>({
-  select: ['name'],
-})
-
-expectNotAssignable<TagNameFilters>({
-  'name[lt]': stringValue,
-  'name[lte]': stringValue,
-  'name[gt]': stringValue,
-  'name[gte]': stringValue,
-})
+expectNotAssignable<TagNameFilters>({ 'name[near]': mocks.anyValue })
+expectNotAssignable<TagNameFilters>({ 'name[within]': mocks.anyValue })
+expectNotAssignable<TagNameFilters>({ select: mocks.anyValue })
+expectNotAssignable<TagNameFilters>({ 'name[lt]': mocks.anyValue })
+expectNotAssignable<TagNameFilters>({ 'name[lte]': mocks.anyValue })
+expectNotAssignable<TagNameFilters>({ 'name[gt]': mocks.anyValue })
+expectNotAssignable<TagNameFilters>({ 'name[gte]': mocks.anyValue })

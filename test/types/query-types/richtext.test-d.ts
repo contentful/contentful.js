@@ -1,50 +1,36 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectAssignable, expectType } from 'tsd'
 import { EntryFields } from '../../../lib'
-// import { EqualityFilter, InequalityFilter } from '../../lib/types/query/equality'
+import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
 import { ExistenceFilter } from '../../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../../lib/types/query/location'
 import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
+// @ts-ignore
+import * as mocks from '../mocks'
 
-const stringValue = ''
-const booleanValue = true
+expectAssignable<Required<EqualityFilter<{ testField: EntryFields.RichText }, 'fields'>>>({})
 
-// TODO fix tests
-// expectNotAssignable<EqualityFilter<{ testField: EntryFields.RichText }, 'fields'>>({
-//   'fields.testField': stringValue,
-// })
-// expectNotAssignable<InequalityFilter<{ testField: EntryFields.RichText }, 'fields'>>({
-//   'fields.testField[ne]': stringValue,
-// })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.RichText }, 'fields'>>({
-  'fields.testField[exists]': booleanValue,
+expectAssignable<Required<InequalityFilter<{ testField: EntryFields.RichText }, 'fields'>>>({})
+
+expectAssignable<ExistenceFilter<{ testField: EntryFields.RichText }, 'fields'>>({})
+expectType<Required<ExistenceFilter<{ testField: EntryFields.RichText }, 'fields'>>>({
+  'fields.testField[exists]': mocks.booleanValue,
 })
-expectNotAssignable<
-  LocationSearchFilters<
-    {
-      testField: EntryFields.RichText
-    },
-    'fields'
-  >
->({
-  'fields.testField[near]': stringValue,
-  'fields.testField[within]': [0, 0, 0],
+
+expectAssignable<Required<LocationSearchFilters<{ testField: EntryFields.RichText }, 'fields'>>>({})
+
+expectType<Required<RangeFilters<{ testField: EntryFields.RichText }, 'fields'>>>({})
+
+expectAssignable<FullTextSearchFilters<{ testField: EntryFields.RichText }, 'fields'>>({})
+expectType<Required<FullTextSearchFilters<{ testField: EntryFields.RichText }, 'fields'>>>({
+  'fields.testField[match]': mocks.stringValue,
 })
-expectNotAssignable<RangeFilters<{ testField: EntryFields.RichText }, 'fields'>>({
-  'fields.testField[lt]': stringValue,
-  'fields.testField[lte]': stringValue,
-  'fields.testField[gt]': stringValue,
-  'fields.testField[gte]': stringValue,
-})
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.RichText }, 'fields'>>({
-  'fields.testField[match]': stringValue,
-})
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.RichText }>>({
+
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.RichText }>>({})
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.RichText }>>>({
   select: ['fields.testField'],
 })
-expectNotAssignable<SubsetFilters<{ testField: EntryFields.RichText }, 'fields'>>({
-  'fields.testField[in]': stringValue,
-  'fields.testField[nin]': stringValue,
-})
+
+expectAssignable<Required<SubsetFilters<{ testField: EntryFields.RichText }, 'fields'>>>({})

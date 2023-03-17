@@ -1,4 +1,4 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectAssignable, expectType } from 'tsd'
 import { EntryFields } from '../../../lib'
 import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
 import { ExistenceFilter } from '../../../lib/types/query/existence'
@@ -7,44 +7,43 @@ import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
+// @ts-ignore
+import * as mocks from '../mocks'
 
-const numberValue = 1
-const stringValue = ''
-const booleanValue = true
+expectAssignable<EqualityFilter<{ testField: EntryFields.Number }, 'fields'>>({})
+expectType<Required<EqualityFilter<{ testField: EntryFields.Number }, 'fields'>>>({
+  'fields.testField': mocks.numberValue,
+})
 
-expectAssignable<EqualityFilter<{ testField: EntryFields.Number }, 'fields'>>({
-  'fields.testField': numberValue,
+expectAssignable<InequalityFilter<{ testField: EntryFields.Number }, 'fields'>>({})
+expectType<Required<InequalityFilter<{ testField: EntryFields.Number }, 'fields'>>>({
+  'fields.testField[ne]': mocks.numberValue,
 })
-expectAssignable<InequalityFilter<{ testField: EntryFields.Number }, 'fields'>>({
-  'fields.testField[ne]': numberValue,
+
+expectAssignable<ExistenceFilter<{ testField: EntryFields.Number }, 'fields'>>({})
+expectType<Required<ExistenceFilter<{ testField: EntryFields.Number }, 'fields'>>>({
+  'fields.testField[exists]': mocks.booleanValue,
 })
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Number }, 'fields'>>({
-  'fields.testField[exists]': booleanValue,
+
+expectType<Required<LocationSearchFilters<{ testField: EntryFields.Number }, 'fields'>>>({})
+
+expectAssignable<RangeFilters<{ testField: EntryFields.Number }, 'fields'>>({})
+expectType<Required<RangeFilters<{ testField: EntryFields.Number }, 'fields'>>>({
+  'fields.testField[lt]': mocks.numberValue,
+  'fields.testField[lte]': mocks.numberValue,
+  'fields.testField[gt]': mocks.numberValue,
+  'fields.testField[gte]': mocks.numberValue,
 })
-expectNotAssignable<
-  LocationSearchFilters<
-    {
-      testField: EntryFields.Number
-    },
-    'fields'
-  >
->({
-  'fields.testField[near]': numberValue,
-  'fields.testField[within]': [0, 0, 0],
-})
-expectAssignable<RangeFilters<{ testField: EntryFields.Number }, 'fields'>>({
-  'fields.testField[lt]': numberValue,
-  'fields.testField[lte]': numberValue,
-  'fields.testField[gt]': numberValue,
-  'fields.testField[gte]': numberValue,
-})
-expectNotAssignable<FullTextSearchFilters<{ testField: EntryFields.Number }, 'fields'>>({
-  'fields.testField[match]': stringValue,
-})
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Number }>>({
+
+expectAssignable<Required<FullTextSearchFilters<{ testField: EntryFields.Number }, 'fields'>>>({})
+
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Number }>>({})
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Number }>>>({
   select: ['fields.testField'],
 })
-expectAssignable<SubsetFilters<{ testField: EntryFields.Number }, 'fields'>>({
-  'fields.testField[in]': numberValue,
-  'fields.testField[nin]': numberValue,
+
+expectAssignable<SubsetFilters<{ testField: EntryFields.Number }, 'fields'>>({})
+expectType<Required<SubsetFilters<{ testField: EntryFields.Number }, 'fields'>>>({
+  'fields.testField[in]': mocks.numberArrayValue,
+  'fields.testField[nin]': mocks.numberArrayValue,
 })

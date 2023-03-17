@@ -6,17 +6,34 @@ import {
   AssetLink,
   AssetSys,
   BaseEntry,
+  EntryFields,
   EntryLink,
   EntrySys,
   FieldsType,
 } from '../../lib'
+import {
+  BoundingBoxSearchFilterInput,
+  BoundingCircleSearchFilterInput,
+  ProximitySearchFilterInput,
+} from '../../lib/types/query/location'
 
+export const anyValue = '' as any
 export const stringValue = ''
+export const stringArrayValue = [stringValue]
 export const numberValue = 123
-export const booleanValue = true
-export const dateValue = '2018-05-03T09:18:16.329Z'
+export const numberArrayValue = [numberValue]
+
+export const booleanValue = true as boolean
+export const booleanArrayValue = [booleanValue]
+export const dateValue: EntryFields.Date = '2018-05-03T09:18:16.329Z'
+export const dateArrayValue = [dateValue]
 export const locationValue = { lat: 55.01496234536782, lon: 38.75813066219786 }
 export const jsonValue = {}
+
+export const nearLocationValue: ProximitySearchFilterInput = [1, 0]
+export const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0, 2]
+export const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
+
 export const metadataValue = { tags: [] }
 export const entryLink: EntryLink = {
   type: 'Link',
