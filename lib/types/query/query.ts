@@ -7,7 +7,12 @@ import { RangeFilters } from './range'
 import { FullTextSearchFilters } from './search'
 import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { SubsetFilters } from './subset'
-import { ConditionalFixedQueries, ConditionalListQueries, FieldsType } from './util'
+import {
+  ConditionalFixedQueries,
+  ConditionalListQueries,
+  FieldsType,
+  FieldsWithContentTypeIdType,
+} from './util'
 import { ReferenceSearchFilters } from './reference'
 import { TagSys } from '../sys'
 import { Metadata } from '../metadata'
@@ -63,8 +68,10 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | RangeFilters<Fields, 'fields'>
   | ReferenceSearchFilters<Fields, 'fields'>
 
-export type EntriesQueries<Fields extends FieldsType> =
-  | (EntryFieldsQueries<Fields> & { content_type: string })
+export type EntriesQueries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
+  | (EntryFieldsQueries<FieldsWithContentTypeId['fields']> & {
+      content_type: FieldsWithContentTypeId['contentTypeId']
+    })
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
       EntrySelectFilter &

@@ -26,9 +26,9 @@ import {
   EntryCollection,
   SyncQuery,
   SyncOptions,
+  FieldsWithContentTypeIdType,
 } from './types'
 import { EntryQueries, LocaleOption, TagQueries } from './types/query/query'
-import { FieldsType } from './types/query/util'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
@@ -48,18 +48,31 @@ import {
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
-  getEntry<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
+  getEntry<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    Locales extends LocaleCode = LocaleCode
+  >(
     id: string,
     query?: EntryQueries
-  ): Promise<Entry<Fields, Modifiers, Locales>>
+  ): Promise<Entry<FieldsWithContentTypeId, Modifiers, Locales>>
 
-  getEntries<Fields extends FieldsType, Locales extends LocaleCode = LocaleCode>(
-    query?: EntriesQueries<Fields>
-  ): Promise<EntryCollection<Fields, Modifiers, Locales>>
+  getEntries<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    Locales extends LocaleCode = LocaleCode
+  >(
+    query?: EntriesQueries<FieldsWithContentTypeId>
+  ): Promise<EntryCollection<FieldsWithContentTypeId, Modifiers, Locales>>
 
-  parseEntries<Fields extends FieldsType = FieldsType, Locales extends LocaleCode = LocaleCode>(
-    data: EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
-  ): EntryCollection<Fields, Modifiers, Locales>
+  parseEntries<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    Locales extends LocaleCode = LocaleCode
+  >(
+    data: EntryCollection<
+      FieldsWithContentTypeId,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      Locales
+    >
+  ): EntryCollection<FieldsWithContentTypeId, Modifiers, Locales>
 
   getAsset<Locales extends LocaleCode = LocaleCode>(
     id: string
@@ -72,18 +85,24 @@ type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
 
 type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
   withAllLocales: Client<AddChainModifier<Modifiers, 'WITH_ALL_LOCALES'>>
-  getEntry<Fields extends FieldsType>(
+  getEntry<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(
     id: string,
     query?: EntryQueries & LocaleOption
-  ): Promise<Entry<Fields, Modifiers>>
+  ): Promise<Entry<FieldsWithContentTypeId, Modifiers>>
 
-  getEntries<Fields extends FieldsType>(
-    query?: EntriesQueries<Fields> & LocaleOption
-  ): Promise<EntryCollection<Fields, Modifiers>>
+  getEntries<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(
+    query?: EntriesQueries<FieldsWithContentTypeId> & LocaleOption
+  ): Promise<EntryCollection<FieldsWithContentTypeId, Modifiers>>
 
-  parseEntries<Fields extends FieldsType = FieldsType>(
-    data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>
-  ): EntryCollection<Fields, Modifiers>
+  parseEntries<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(
+    data: EntryCollection<FieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'>
+  ): EntryCollection<FieldsWithContentTypeId, Modifiers>
 
   getAsset(id: string, query?: LocaleOption): Promise<Asset<undefined>>
 
@@ -210,12 +229,12 @@ interface BaseClient {
    * ```
    */
   sync<
-    Fields extends FieldsType = FieldsType,
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
     Modifiers extends ChainModifiers = ChainModifiers,
     Locales extends LocaleCode = LocaleCode
   >(
     query: SyncQuery
-  ): Promise<SyncCollection<Fields, Modifiers, Locales>>
+  ): Promise<SyncCollection<FieldsWithContentTypeId, Modifiers, Locales>>
 
   /**
    * Gets a Tag
@@ -367,20 +386,19 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function getEntry<Fields extends FieldsType>(
-    id: string,
-    query: EntryQueries & LocaleOption = {}
-  ) {
-    return makeGetEntry<Fields>(id, query, options)
+  async function getEntry<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(id: string, query: EntryQueries & LocaleOption = {}) {
+    return makeGetEntry<FieldsWithContentTypeId>(id, query, options)
   }
 
-  async function getEntries<Fields extends FieldsType>(
-    query: EntriesQueries<Fields> & LocaleOption = {}
-  ) {
-    return makeGetEntries<Fields>(query, options)
+  async function getEntries<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(query: EntriesQueries<FieldsWithContentTypeId> & LocaleOption = {}) {
+    return makeGetEntries<FieldsWithContentTypeId>(query, options)
   }
 
-  async function makeGetEntry<Fields extends FieldsType>(
+  async function makeGetEntry<FieldsWithContentTypeId extends FieldsWithContentTypeIdType>(
     id: string,
     query,
     options: ChainOptions = {
@@ -395,7 +413,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
 
-    return internalGetEntry<Fields, any, Extract<ChainOptions, typeof options>>(
+    return internalGetEntry<FieldsWithContentTypeId, any, Extract<ChainOptions, typeof options>>(
       id,
       withAllLocales ? { ...query, locale: '*' } : query,
       options
@@ -403,7 +421,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function internalGetEntry<
-    Fields extends FieldsType,
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
     Locales extends LocaleCode,
     Options extends ChainOptions
   >(id: string, query, options: Options) {
@@ -411,10 +429,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       throw notFoundError(id)
     }
     try {
-      const response = await internalGetEntries<Fields, Locales, Options>(
-        { 'sys.id': id, ...query },
-        options
-      )
+      const response = await internalGetEntries<
+        FieldsWithContentTypeIdType<FieldsWithContentTypeId>,
+        Locales,
+        Options
+      >({ 'sys.id': id, ...query }, options)
       if (response.items.length > 0) {
         return response.items[0]
       } else {
@@ -425,7 +444,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
-  async function makeGetEntries<Fields extends FieldsType>(
+  async function makeGetEntries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType>(
     query,
     options: ChainOptions = {
       withAllLocales: false,
@@ -439,7 +458,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
 
-    return internalGetEntries<Fields, any, Extract<ChainOptions, typeof options>>(
+    return internalGetEntries<FieldsWithContentTypeId, any, Extract<ChainOptions, typeof options>>(
       withAllLocales
         ? {
             ...query,
@@ -451,13 +470,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function internalGetEntries<
-    Fields extends FieldsType,
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
     Locales extends LocaleCode,
     Options extends ChainOptions
   >(
     query: Record<string, any>,
     options: Options
-  ): Promise<EntryCollection<Fields, ModifiersFromOptions<Options>, Locales>> {
+  ): Promise<EntryCollection<FieldsWithContentTypeId, ModifiersFromOptions<Options>, Locales>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     try {
@@ -587,14 +606,15 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function sync<Fields extends FieldsType = FieldsType>(
-    query: SyncQuery,
-    syncOptions: SyncOptions = { paginate: true }
-  ) {
-    return makePagedSync<Fields>(query, syncOptions, options)
+  async function sync<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(query: SyncQuery, syncOptions: SyncOptions = { paginate: true }) {
+    return makePagedSync<FieldsWithContentTypeId>(query, syncOptions, options)
   }
 
-  async function makePagedSync<Fields extends FieldsType = FieldsType>(
+  async function makePagedSync<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(
     query: SyncQuery,
     syncOptions: SyncOptions,
     options: ChainOptions = {
@@ -611,18 +631,20 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       ...options,
     }
     switchToEnvironment(http)
-    return pagedSync<Fields, any, Extract<ChainOptions, typeof options>>(
+    return pagedSync<FieldsWithContentTypeId, any, Extract<ChainOptions, typeof options>>(
       http,
       query,
       combinedOptions
     )
   }
 
-  function parseEntries<Fields extends FieldsType = FieldsType>(data) {
-    return makeParseEntries<Fields>(data, options)
+  function parseEntries<
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
+  >(data) {
+    return makeParseEntries<FieldsWithContentTypeId>(data, options)
   }
 
-  function makeParseEntries<Fields extends FieldsType>(
+  function makeParseEntries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType>(
     data,
     options: ChainOptions = {
       withAllLocales: false,
@@ -630,17 +652,21 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withoutUnresolvableLinks: false,
     }
   ) {
-    return internalParseEntries<Fields, any, Extract<ChainOptions, typeof options>>(data, options)
+    return internalParseEntries<
+      FieldsWithContentTypeId,
+      any,
+      Extract<ChainOptions, typeof options>
+    >(data, options)
   }
 
   function internalParseEntries<
-    Fields extends FieldsType,
+    FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
     Locales extends LocaleCode,
     Options extends ChainOptions
   >(
     data: unknown,
     options: Options
-  ): EntryCollection<Fields, ModifiersFromOptions<Options>, Locales> {
+  ): EntryCollection<FieldsWithContentTypeId, ModifiersFromOptions<Options>, Locales> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     return resolveCircular(data, {

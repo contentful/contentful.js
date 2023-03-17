@@ -1,5 +1,5 @@
 import { EntryFields } from '../entry'
-import { ConditionalFixedQueries } from './util'
+import { ConditionalFixedQueries, FieldsType } from './util'
 
 type SupportedTypes =
   | EntryFields.Text
@@ -12,10 +12,7 @@ type SupportedTypes =
  * @desc match - full text search
  * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/full-text-search}
  */
-export type FullTextSearchFilters<Fields, Prefix extends string> = ConditionalFixedQueries<
-  Fields,
-  SupportedTypes,
-  string,
-  Prefix,
-  '[match]'
->
+export type FullTextSearchFilters<
+  Fields extends FieldsType,
+  Prefix extends string
+> = ConditionalFixedQueries<Fields, SupportedTypes, string, Prefix, '[match]'>

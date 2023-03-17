@@ -4,7 +4,7 @@ import { ContentfulCollection } from './collection'
 import { AssetLink, ContentTypeLink, EntryLink } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
-import { FieldsType } from './query/util'
+import { FieldsWithContentTypeIdType } from './query/util'
 import { EntitySys } from './sys'
 import { ChainModifiers } from '../utils/client-helpers'
 import { JsonArray, JsonObject } from 'type-fest'
@@ -27,15 +27,19 @@ export declare namespace EntryFields {
     lon: number
   }
 
-  type EntryLink<Fields extends FieldsType> = Entry<Fields>
+  type EntryLink<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
+    Entry<FieldsWithContentTypeId>
   type AssetLink = Asset
-  type Link<Fields extends FieldsType> = AssetLink | EntryLink<Fields>
-  type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<FieldsType>> = Item[]
+  type Link<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
+    | AssetLink
+    | EntryLink<FieldsWithContentTypeId>
+  type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<FieldsWithContentTypeIdType>> =
+    Item[]
   type Object<Data extends JsonObject | JsonArray | null = JsonObject | JsonArray | null> = Data
   type RichText = RichTextDocument
 }
 
-export type EntryField<Fields extends FieldsType> =
+export type EntryField<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
   | EntryFields.Symbol
   | EntryFields.Text
   | EntryFields.Integer
@@ -45,11 +49,11 @@ export type EntryField<Fields extends FieldsType> =
   | EntryFields.Location
   | EntryFields.RichText
   | EntryFields.Object
-  | EntryFields.EntryLink<Fields>
+  | EntryFields.EntryLink<FieldsWithContentTypeId>
   | EntryFields.AssetLink
   | EntryFields.Array<EntryFields.Symbol>
   | EntryFields.Array<EntryFields.AssetLink>
-  | EntryFields.Array<EntryFields.EntryLink<Fields>>
+  | EntryFields.Array<EntryFields.EntryLink<FieldsWithContentTypeId>>
 
 export type BaseEntry = {
   sys: EntrySys
@@ -57,17 +61,17 @@ export type BaseEntry = {
 }
 
 type ResolvedLink<
-  Field extends EntryField<FieldsType>,
+  Field extends EntryField<FieldsWithContentTypeIdType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = Field extends EntryFields.EntryLink<infer LinkedFields>
+> = Field extends EntryFields.EntryLink<infer LinkedFieldsWithContentTypeId>
   ? ChainModifiers extends Modifiers
-    ? Entry<LinkedFields, Modifiers, Locales> | EntryLink | undefined
+    ? Entry<LinkedFieldsWithContentTypeId, Modifiers, Locales> | EntryLink | undefined
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? EntryLink
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? Entry<LinkedFields, Modifiers, Locales> | undefined
-    : Entry<LinkedFields, Modifiers, Locales> | EntryLink
+    ? Entry<LinkedFieldsWithContentTypeId, Modifiers, Locales> | undefined
+    : Entry<LinkedFieldsWithContentTypeId, Modifiers, Locales> | EntryLink
   : Field extends EntryFields.AssetLink
   ? ChainModifiers extends Modifiers
     ? Asset | AssetLink | undefined
@@ -79,7 +83,7 @@ type ResolvedLink<
   : Field
 
 export type ResolvedField<
-  Field extends EntryField<FieldsType>,
+  Field extends EntryField<FieldsWithContentTypeIdType>,
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode
 > = Field extends EntryFields.Array<infer Item>
@@ -87,36 +91,53 @@ export type ResolvedField<
   : ResolvedLink<Field, Modifiers, Locales>
 
 export type Entry<
-  Fields extends FieldsType = FieldsType,
+  FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
 > = BaseEntry & {
+  sys: { contentType: { sys: { id: FieldsWithContentTypeId['contentTypeId'] } } }
   fields: ChainModifiers extends Modifiers
     ?
         | {
-            [FieldName in keyof Fields]: {
-              [LocaleName in Locales]?: ResolvedField<Fields[FieldName], Modifiers, Locales>
+            [FieldName in keyof FieldsWithContentTypeId['fields']]: {
+              [LocaleName in Locales]?: ResolvedField<
+                FieldsWithContentTypeId['fields'][FieldName],
+                Modifiers,
+                Locales
+              >
             }
           }
         | {
-            [FieldName in keyof Fields]: ResolvedField<Fields[FieldName], Modifiers, Locales>
+            [FieldName in keyof FieldsWithContentTypeId['fields']]: ResolvedField<
+              FieldsWithContentTypeId['fields'][FieldName],
+              Modifiers,
+              Locales
+            >
           }
     : 'WITH_ALL_LOCALES' extends Modifiers
     ? {
-        [FieldName in keyof Fields]: {
-          [LocaleName in Locales]?: ResolvedField<Fields[FieldName], Modifiers, Locales>
+        [FieldName in keyof FieldsWithContentTypeId['fields']]: {
+          [LocaleName in Locales]?: ResolvedField<
+            FieldsWithContentTypeId['fields'][FieldName],
+            Modifiers,
+            Locales
+          >
         }
       }
     : {
-        [FieldName in keyof Fields]: ResolvedField<Fields[FieldName], Modifiers, Locales>
+        [FieldName in keyof FieldsWithContentTypeId['fields']]: ResolvedField<
+          FieldsWithContentTypeId['fields'][FieldName],
+          Modifiers,
+          Locales
+        >
       }
 }
 
 export type EntryCollection<
-  Fields extends FieldsType = FieldsType,
+  FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = ContentfulCollection<Entry<Fields, Modifiers, Locales>> & {
+> = ContentfulCollection<Entry<FieldsWithContentTypeId, Modifiers, Locales>> & {
   errors?: Array<any>
   includes?: {
     Entry?: any[]
