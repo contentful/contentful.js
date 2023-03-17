@@ -38,14 +38,14 @@ describe('getTags', () => {
     })
 
     it('gets the tags with the name in the list of the provided value', async () => {
-      const response = await client.getTags({ 'name[in]': 'public tag,public tag 1' })
+      const response = await client.getTags({ 'name[in]': ['public tag', 'public tag 1'] })
 
       expect(response.items).toHaveLength(1)
       expect(response.items[0].name).toEqual('public tag 1')
     })
 
     it('gets the tags with the name not in the list of the provided value', async () => {
-      const response = await client.getTags({ 'name[nin]': 'public tag,public tag 1' })
+      const response = await client.getTags({ 'name[nin]': ['public tag', 'public tag 1'] })
 
       expect(response.items).toHaveLength(0)
       expect(response.items).toEqual([])

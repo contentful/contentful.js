@@ -75,8 +75,8 @@ export type TagNameFilters = {
   name?: string
   'name[ne]'?: string
   'name[match]'?: string
-  'name[in]'?: string
-  'name[nin]'?: string
+  'name[in]'?: string[]
+  'name[nin]'?: string[]
 }
 
 export type TagQueries = TagNameFilters &
