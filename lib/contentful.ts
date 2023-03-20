@@ -76,9 +76,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
 
   const getGlobalOptions = createGlobalOptions({
     space: config.space,
-    resolveLinks: config.resolveLinks,
     environment: config.environment,
-    removeUnresolved: config.removeUnresolved,
     spaceBaseUrl: http.defaults.baseURL,
     environmentBaseUrl: `${http.defaults.baseURL}environments/${config.environment}`,
   })

@@ -182,9 +182,10 @@ describe('make Contentful API client', () => {
       promise: Promise.resolve({ data: data }),
     })
     await expect(api.getEntries()).resolves.toEqual(data)
+    expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeTruthy()
   })
 
-  test('API call getEntries with global resolveLinks overridden by chained modifier', async () => {
+  test('API call getEntries with link resolution disabled', async () => {
     const data = { sys: { id: 'id' } }
     const { api } = setupWithData({
       promise: Promise.resolve({ data: data }),
@@ -197,23 +198,6 @@ describe('make Contentful API client', () => {
 
     await expect(api.withoutLinkResolution.getEntries()).resolves.toEqual(data)
     expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeFalsy()
-  })
-
-  test('API call getEntries with global resolveLinks turned on', async () => {
-    const data = { sys: { id: 'id' } }
-
-    const { api } = setupWithData({
-      promise: Promise.resolve({ data: data }),
-      getGlobalOptions: jest.fn().mockReturnValue({
-        environment: 'master',
-        environmentBaseUrl: 'environmentUrl',
-        resolveLinks: true,
-        removeUnresolved: false,
-      }),
-    })
-
-    await expect(api.getEntries()).resolves.toEqual(data)
-    expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeTruthy()
   })
 
   test('API call getEntries fails', async () => {
