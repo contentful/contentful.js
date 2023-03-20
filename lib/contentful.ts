@@ -9,6 +9,7 @@ import { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 import { makeClient } from './make-client'
 import type { AxiosRequestConfig } from 'axios'
+import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string
 
@@ -40,6 +41,9 @@ export function createClient(params: CreateClientParams): ContentfulClientApi {
   if (!params.space) {
     throw new TypeError('Expected parameter space')
   }
+
+  validateResolveLinksParam(params)
+  validateRemoveUnresolvedParam(params)
 
   const defaultConfig = {
     resolveLinks: true,
