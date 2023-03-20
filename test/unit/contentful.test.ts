@@ -103,17 +103,6 @@ describe('contentful', () => {
     expect(callConfig[0].getGlobalOptions({ resolveLinks: false }).resolveLinks).toBeFalsy()
   })
 
-  test('Initializes API with link resolution turned on explicitly', () => {
-    createClient({
-      accessToken: 'accessToken',
-      space: 'spaceId',
-      resolveLinks: true,
-    })
-    const callConfig = createContentfulApiMock.mock.calls[0]
-    expect(callConfig[0].getGlobalOptions().resolveLinks).toBeTruthy()
-    expect(callConfig[0].getGlobalOptions({ resolveLinks: false }).resolveLinks).toBeFalsy()
-  })
-
   test('Initializes API and attaches default environment', () => {
     createClient({
       accessToken: 'accessToken',

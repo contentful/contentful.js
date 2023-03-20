@@ -26,8 +26,6 @@ export interface CreateClientParams {
   adapter?: any
   application?: string
   integration?: string
-  resolveLinks?: boolean
-  removeUnresolved?: boolean
   retryOnError?: boolean
   logHandler?: (level: ClientLogLevel, data?: any) => void
   timeout?: number
