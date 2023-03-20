@@ -3,6 +3,12 @@ import { EntryFields, EntriesQueries } from '../../../lib'
 // @ts-ignore
 import * as mocks from '../mocks'
 
+// all operator
+
+expectAssignable<EntriesQueries<{ numberField: number; stringArrayField: string[] }>>({
+  'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+})
+
 // equality
 
 expectAssignable<EntriesQueries<{ someField: string }>>({
@@ -27,6 +33,7 @@ expectNotAssignable<EntriesQueries<{ someField: string }>>({
 // exists operator (field is present)
 
 expectAssignable<EntriesQueries<{ someField: string }>>({
+  'metadata.tags[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
 })
 expectNotAssignable<EntriesQueries<{ someField: string }>>({
@@ -90,6 +97,7 @@ expectNotAssignable<EntriesQueries<{ numberField: number }>>({
 // in operator
 
 expectAssignable<EntriesQueries<{ numberField: number; stringArrayField: string[] }>>({
+  'metadata.tags.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
 expectNotAssignable<EntriesQueries<{ numberField: number; stringArrayField: string[] }>>({

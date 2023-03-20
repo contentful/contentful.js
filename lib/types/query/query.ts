@@ -7,9 +7,11 @@ import { RangeFilters } from './range'
 import { FullTextSearchFilters } from './search'
 import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { SubsetFilters } from './subset'
-import { FieldsType } from './util'
+import { ConditionalFixedQueries, ConditionalListQueries, FieldsType } from './util'
 import { ReferenceSearchFilters } from './reference'
 import { TagSys } from '../sys'
+import { Metadata } from '../metadata'
+import { TagLink } from '../link'
 
 type FixedPagedOptions = {
   skip?: number
@@ -36,6 +38,11 @@ export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   SubsetFilters<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'>
 
+export type MetadataTagsQueries =
+  | ConditionalFixedQueries<Pick<Metadata, 'tags'>, any, boolean, 'metadata', '[exists]'>
+  | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[all]'>
+  | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[in]'>
+
 export type EntryFieldsQueries<Fields extends FieldsType> =
   | EntrySelectFilterWithFields<Fields>
   | ExistenceFilter<Fields, 'fields'>
@@ -50,6 +57,7 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
 export type EntriesQueries<Fields extends FieldsType> =
   | (EntryFieldsQueries<Fields> & { content_type: string })
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+      MetadataTagsQueries &
       EntrySelectFilter &
       FixedQueryOptions &
       FixedPagedOptions &
@@ -67,6 +75,7 @@ export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fiel
 
 export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields> &
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+  MetadataTagsQueries &
   FixedQueryOptions &
   FixedPagedOptions & { mimetype_group?: AssetMimeType } & { order?: string }
 

@@ -5,6 +5,12 @@ import * as mocks from '../mocks'
 
 type DefaultAssetQueries = AssetQueries<AssetFields>
 
+// all operator
+
+expectAssignable<DefaultAssetQueries>({
+  'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+})
+
 // equality operator
 
 expectAssignable<DefaultAssetQueries>({
@@ -22,6 +28,7 @@ expectNotAssignable<DefaultAssetQueries>({
 
 expectAssignable<DefaultAssetQueries>({
   'fields.title[exists]': mocks.booleanValue,
+  'metadata.tags[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -53,6 +60,7 @@ expectNotAssignable<DefaultAssetQueries>({
 
 expectAssignable<DefaultAssetQueries>({
   'fields.title[in]': mocks.stringArrayValue,
+  'metadata.tags.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
