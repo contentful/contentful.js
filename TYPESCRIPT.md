@@ -95,11 +95,13 @@ Dynamic query keys are based on the given shape of the expected entries' content
 To calculate dynamic keys, we have to define the shape of the fields of the entries' content type:
 
 ```typescript
+import * as contentful from 'contentful'
+
 type ExampleEntryFields = {
-  productName: Contentful.EntryFields.Text
-  image: Contentful.Asset
-  price: Contentful.EntryFields.Number
-  categories: Contentful.Entry<CategoryEntryFields>[]
+  productName: contentful.EntryFields.Text
+  image: contentful.Asset
+  price: contentful.EntryFields.Number
+  categories: contentful.Entry<CategoryEntryFields>[]
 }
 ```
 
