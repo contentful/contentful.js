@@ -50,24 +50,6 @@ describe('getEntry via chained clients', () => {
       expect(response.fields.bestFriend.fields).toBeDefined()
     })
 
-    test('Gets entry with link resolution and includes, does not consider global `removeUnresolved` option', async () => {
-      const removeUnresolvedClient = contentful.createClient({
-        ...params,
-        removeUnresolved: true,
-      })
-      const response = await removeUnresolvedClient.getEntry(entryWithUnresolvableLink, {
-        include: 2,
-      })
-      expect(response.fields).toBeDefined()
-      expect(response.fields.bestFriend).toMatchObject({
-        sys: {
-          type: 'Link',
-          linkType: 'Entry',
-          id: '6SiPbntBPYYjnVHmipxJBF',
-        },
-      })
-    })
-
     test('Gets an entry that has resource links', async () => {
       const response = await client.getEntry('xspaceEntry')
 
@@ -125,19 +107,6 @@ describe('getEntry via chained clients', () => {
       const response = await client.withoutUnresolvableLinks.getEntry(entryWithUnresolvableLink, {
         include: 2,
       })
-      expect(response.fields).toBeDefined()
-      expect(response.fields.bestFriend).toBeUndefined()
-    })
-
-    test('Gets entry with link resolution and includes, removing unresolvable links, overriding client config with client chain', async () => {
-      const keepUnresolvedClient = contentful.createClient({
-        ...params,
-        removeUnresolved: false,
-      })
-      const response = await keepUnresolvedClient.withoutUnresolvableLinks.getEntry(
-        entryWithUnresolvableLink,
-        { include: 2 }
-      )
       expect(response.fields).toBeDefined()
       expect(response.fields.bestFriend).toBeUndefined()
     })

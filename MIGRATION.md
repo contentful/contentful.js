@@ -56,13 +56,19 @@ Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a 
 **Browser support**
 - We completely dropped support for old IE browsers (no `legacy` bundle). See [version compatibility](#version-compatibility) for more info.
 
-**Calls to `getEntries` and `getEntry`** 
+**Configuration** 
 
-- Using `resolveLinks` as a client config option or as a query parameter are no longer supported for `getEntries` and `getEntry` calls. Instead, you should use the client modifier `withoutLinkResolution` to achieve the same result. See [response modifiers](#response-modifiers) for migration instructions.
+- Using `resolveLinks` as a client config option or as a query parameter are no longer supported for `getEntries`, `getEntry`, `parseEntries`, or initial `sync` calls. 
+  Instead, you should use the client modifier `withoutLinkResolution` to achieve the same result.
+  See [response modifiers](#response-modifiers) for migration instructions.
 
-- Using `removeUnresolved` as a client config option is no longer supported for `getEntries` and `getEntry` calls. Instead, you should use the client modifier `withoutUnresolvableLinks` to achieve the same result. See [response modifiers](#response-modifiers) for migration instructions.
+- Using `removeUnresolved` as a client config option is no longer supported for `getEntries` and `getEntry`, `parseEntries`, or initial `sync` calls.
+  Instead, you should use the client modifier `withoutUnresolvableLinks` to achieve the same result.
+  See [response modifiers](#response-modifiers) for migration instructions.
  
-- Similarly, `getEntries` and `getEntry` no longer support setting the query parameter `locale` to `*`. In order to fetch entries in all locales, you should use the client modifier `withAllLocales` to achieve the same result. See [response modifiers](#response-modifiers) for migration instructions.
+- Similarly, `getEntries`, `getEntry`, `getAssets`, and `getAsset` no longer support setting the query parameter `locale` to `*`.
+  In order to fetch entries in all locales, you should use the client modifier `withAllLocales` to achieve the same result.
+- See [response modifiers](#response-modifiers) for migration instructions.
 
 ### Version compatibility
 - Node: >= 12 (LTS)
