@@ -249,13 +249,7 @@ The configuration options belong to two categories: request config and response 
 
 ##### Response configuration options
 
-> :warning: **Response config options** are in the process of being **deprecated** (`v10.0.0`).
-> The `sync`, `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset` methods already use the new [Chained Clients](#chained-clients) approach.
-
-| Name                          | Default | Description                                         |
-| ----------------------------- | ------- | --------------------------------------------------- |
-| <code>resolveLinks</code>     | true    | Turn off to disable link resolving.                 |
-| <code>removeUnresolved</code> | false   | Remove fields from response for unresolvable links. |
+> :warning: **Response config options** are have been **removed** in `v10.0.0` in favor of the new [Chained Clients](#chained-clients) approach.
 
 ### Chained Clients
 
