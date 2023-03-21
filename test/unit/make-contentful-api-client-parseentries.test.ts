@@ -1,18 +1,22 @@
 import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
-import { EntrySys, EntryCollection, Link } from '../../lib/types'
+import { EntrySys, EntryCollection, Link, FieldsWithContentTypeIdType } from '../../lib/types'
 import { ResourceLink } from '../../lib/types/resource-link'
 
-export interface AnimalTypeFields {
+interface AnimalTypeFields {
   animal?: { sys: Link<'Entry'> }
   metadata?: { sys: Link<'Entry'> }
   anotheranimal?: { sys: Link<'Entry'> }
 }
 
+type AnimalTypeFieldsWithContentTypeId = FieldsWithContentTypeIdType<AnimalTypeFields>
+
 export interface XspaceTypeFields {
   xspace?: { sys: ResourceLink }[]
   xspace2?: { sys: ResourceLink }[]
 }
+
+type XspaceTypeFieldsWithContentTypeId = FieldsWithContentTypeIdType<XspaceTypeFields>
 
 const pigEntry = {
   sys: {
@@ -40,7 +44,7 @@ test('Given json should be parsed correctly as a collection of entries', () => {
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
 
-  const data: EntryCollection<AnimalTypeFields, 'WITHOUT_LINK_RESOLUTION'> = {
+  const data: EntryCollection<AnimalTypeFieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -87,7 +91,7 @@ test('Given json should be parsed correctly as a collection of entries where a f
     // @ts-ignore
     getGlobalOptions: createGlobalOptions({ resolveLinks: true }),
   })
-  const data: EntryCollection<AnimalTypeFields, 'WITHOUT_LINK_RESOLUTION'> = {
+  const data: EntryCollection<AnimalTypeFieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'> = {
     total: 1,
     skip: 0,
     limit: 1,
@@ -143,7 +147,7 @@ test('Given json should be parsed correctly as a collection of entries with reso
     getGlobalOptions: createGlobalOptions({ resolveLinks: false }),
   })
 
-  const data: EntryCollection<XspaceTypeFields, 'WITHOUT_LINK_RESOLUTION'> = {
+  const data: EntryCollection<XspaceTypeFieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'> = {
     total: 1,
     skip: 0,
     limit: 1,

@@ -13,6 +13,7 @@ import {
   Tag,
   TagSys,
   Entry,
+  FieldsWithContentTypeIdType,
 } from '../../lib'
 
 const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'
@@ -147,11 +148,11 @@ const contentTypeMock: ContentType = {
   ],
 }
 
-export type EntryFields = {
+export type EntryFieldsWithContentTypeId = FieldsWithContentTypeIdType<{
   field1: string
-}
+}>
 
-const entryMock: Entry<EntryFields> = {
+const entryMock: Entry<EntryFieldsWithContentTypeId> = {
   sys: {
     ...copy(sysMock),
     locale: 'locale',
