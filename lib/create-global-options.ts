@@ -7,9 +7,7 @@
  */
 
 export interface GlobalOptionsParams {
-  resolveLinks?: boolean
   environment?: string
-  removeUnresolved?: boolean
   space?: string
   spaceBaseUrl?: string
   environmentBaseUrl?: string

@@ -39,7 +39,11 @@ import {
   ChainOptions,
   ModifiersFromOptions,
 } from './utils/client-helpers'
-import { validateLocaleParam, validateResolveLinksParam } from './utils/validate-params'
+import {
+  validateLocaleParam,
+  validateRemoveUnresolvedParam,
+  validateResolveLinksParam,
+} from './utils/validate-params'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -389,6 +393,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     validateLocaleParam(query, withAllLocales as boolean)
     validateResolveLinksParam(query)
+    validateRemoveUnresolvedParam(query)
 
     return internalGetEntry<Fields, any, Extract<ChainOptions, typeof options>>(
       id,
@@ -432,6 +437,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     validateLocaleParam(query, withAllLocales)
     validateResolveLinksParam(query)
+    validateRemoveUnresolvedParam(query)
 
     return internalGetEntries<Fields, any, Extract<ChainOptions, typeof options>>(
       withAllLocales
@@ -597,6 +603,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withoutUnresolvableLinks: false,
     }
   ) {
+    validateResolveLinksParam(query)
+    validateRemoveUnresolvedParam(query)
+
     const combinedOptions = {
       ...syncOptions,
       ...options,
