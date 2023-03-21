@@ -1,4 +1,4 @@
-import { expectAssignable, expectType } from 'tsd'
+import { expectAssignable, expectNotAssignable, expectType } from 'tsd'
 import { EntryFields } from '../../../lib'
 import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
 import { ExistenceFilter } from '../../../lib/types/query/existence'
@@ -7,6 +7,7 @@ import { RangeFilters } from '../../../lib/types/query/range'
 import { FullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
+import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
 // @ts-ignore
 import * as mocks from '../mocks'
 
@@ -24,6 +25,10 @@ expectAssignable<Required<LocationSearchFilters<{ testField: EntryFields.Object 
 expectAssignable<Required<RangeFilters<{ testField: EntryFields.Object }, 'fields'>>>({})
 
 expectAssignable<Required<FullTextSearchFilters<{ testField: EntryFields.Object }, 'fields'>>>({})
+
+expectNotAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Object }>>({
+  order: ['fields.testField'],
+})
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Object }>>({})
 expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Object }>>>({

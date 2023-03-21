@@ -232,6 +232,34 @@ expectNotAssignable<EntriesQueries<{ numberField: number; stringArrayField: stri
   'fields.unknownField[nin]': mocks.anyValue,
 })
 
+// order operator
+
+expectAssignable<EntriesQueries<{ someField: string }>>({
+  order: ['sys.createdAt', '-sys.createdAt'],
+})
+expectNotAssignable<EntriesQueries<{ someField: string }>>({ order: ['sys.unknownProperty'] })
+
+expectNotAssignable<EntriesQueries<{ someField: string }>>({ order: ['fields.someField'] })
+expectAssignable<EntriesQueries<{ someField: string }>>({
+  content_type: 'id',
+  order: ['fields.someField', '-fields.someField'],
+})
+expectAssignable<
+  EntriesQueries<{ mediaField: EntryFields.AssetLink; referenceField: EntryFields.EntryLink<any> }>
+>({
+  content_type: 'id',
+  order: [
+    'fields.mediaField.sys.id',
+    '-fields.mediaField.sys.id',
+    'fields.referenceField.sys.id',
+    '-fields.referenceField.sys.id',
+  ],
+})
+expectNotAssignable<EntriesQueries<{ someField: string }>>({
+  content_type: 'id',
+  order: ['fields.unknownField'],
+})
+
 // select operator
 
 expectAssignable<EntriesQueries<{ someField: string }>>({ select: ['sys'] })

@@ -9,6 +9,7 @@ import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
 // @ts-ignore
 import * as mocks from '../mocks'
+import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Number }, 'fields'>>({})
 expectType<Required<EqualityFilter<{ testField: EntryFields.Number }, 'fields'>>>({
@@ -36,6 +37,11 @@ expectType<Required<RangeFilters<{ testField: EntryFields.Number }, 'fields'>>>(
 })
 
 expectAssignable<Required<FullTextSearchFilters<{ testField: EntryFields.Number }, 'fields'>>>({})
+
+expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Number }>>({})
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Number }>>>({
+  order: ['fields.testField', '-fields.testField'],
+})
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Number }>>({})
 expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Number }>>>({
