@@ -78,7 +78,7 @@ Static query keys are not influenced by the shape of the entries or assets you'r
 
 ![](images/static-query-keys.png)
 
-```
+```js
 getEntries({
     'skip': 10,
     'limit': 20,
@@ -92,23 +92,26 @@ Dynamic query keys are based on the given shape of the expected entries' content
 
 ![](images/dynamic-query-keys.png)
 
-To calculate dynamic keys, we have to define the shape of the fields of the entries' content type:
+To calculate dynamic keys, we have to define the shape the entries' content type:
 
 ```typescript
 import * as contentful from 'contentful'
 
-type ExampleEntryFields = {
-  productName: contentful.EntryFields.Text
-  image: contentful.Asset
-  price: contentful.EntryFields.Number
-  categories: contentful.Entry<CategoryEntryFields>[]
+type ExampleEntryFieldsWithContentTypeId = {
+  contentTypeId: 'product',
+  fields: {
+    productName: contentful.EntryFields.Text
+    image: contentful.Asset
+    price: contentful.EntryFields.Number
+    categories: contentful.Entry<CategoryEntryFields>[]
+  }
 }
 ```
 
 We can then pass this shape to our `getEntries` call. This gives us the relevant information needed to calculate the dynamic keys and their possible value types.
 
 ```typescript
-getEntries<ExampleEntryFields>({
+getEntries<ExampleEntryFieldsWithContentTypeId>({
   'fields.price[gt]': 100,
 })
 ```
@@ -136,9 +139,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type Fields = { productName: contentful.EntryFields.Text }
+type FieldsWithContentTypeId = {
+  fields: { productName: contentful.EntryFields.Text },
+  contentTypeId: 'product'
+}
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withAllLocales.getEntry<Fields, Locales>('some-entry-id')
+const entry = client.withAllLocales.getEntry<FieldsWithContentTypeId, Locales>('some-entry-id')
 ```
 
 The return type of the `getEntry` is matching the `fields` shape
@@ -191,11 +197,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type Fields = {
-  relatedProduct: contentful.EntryFields.Entry,
+type FieldsWithContentTypeId = {
+  fields: { relatedProduct: contentful.EntryFields.Entry },
+  contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutLinkResolution.getEntry<Fields, Locales>('some-entry-id')
+const entry = client.withoutLinkResolution.getEntry<FieldsWithContentTypeId, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -226,11 +233,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type Fields = {
-  relatedProduct: contentful.EntryFields.Entry,
+type FieldsWithContentTypeId = {
+  fields: { relatedProduct: contentful.EntryFields.Entry },
+  contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutUnresolvableLinks.getEntry<Fields, Locales>('some-entry-id')
+const entry = client.withoutUnresolvableLinks.getEntry<FieldsWithContentTypeId, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
