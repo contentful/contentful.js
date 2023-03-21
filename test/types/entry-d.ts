@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields, Entry } from '../../lib'
+import { EntryFields, Entry, FieldsWithContentTypeIdType } from '../../lib'
 // @ts-ignore
 import * as mocks from './mocks'
 
@@ -11,7 +11,7 @@ import * as mocks from './mocks'
  * @namespace: Typescript - type test
  * @description: A simple Entry with generic fields
  */
-expectAssignable<Entry<Record<string, any>>>({
+expectAssignable<Entry<FieldsWithContentTypeIdType<Record<string, any>>>>({
   ...mocks.entryBasics,
   fields: {
     stringField: mocks.stringValue,
@@ -23,7 +23,7 @@ expectAssignable<Entry<Record<string, any>>>({
  * @namespace: Typescript - type test
  * @description: A simple Entry generic
  */
-expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
+expectAssignable<Entry<FieldsWithContentTypeIdType<{ stringField: EntryFields.Text }>>>({
   ...mocks.entryBasics,
   fields: {
     stringField: mocks.stringValue,
@@ -35,10 +35,12 @@ expectAssignable<Entry<{ stringField: EntryFields.Text }>>({
  * @description: A simple Entry generic with a referenced fields wildcard
  */
 expectAssignable<
-  Entry<{
-    stringField: EntryFields.Text
-    referenceField: EntryFields.Link<Record<string, any>>
-  }>
+  Entry<
+    FieldsWithContentTypeIdType<{
+      stringField: EntryFields.Text
+      referenceField: EntryFields.Link<FieldsWithContentTypeIdType<Record<string, any>>>
+    }>
+  >
 >({
   ...mocks.entryBasics,
   fields: {
@@ -56,13 +58,13 @@ expectAssignable<
  */
 expectAssignable<
   Entry<
-    {
+    FieldsWithContentTypeIdType<{
       stringField: EntryFields.Text
-      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      multiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
+      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      multiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
       assetReferenceField: EntryFields.AssetLink
       multiAssetReferenceField: EntryFields.AssetLink[]
-    },
+    }>,
     'WITHOUT_LINK_RESOLUTION'
   >
 >(
@@ -77,41 +79,75 @@ expectAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+    }>,
     'WITHOUT_LINK_RESOLUTION'
   >
 >(mocks.getEntry({ referenceField: undefined }))
 
 expectNotAssignable<
-  Entry<{ referenceField: EntryFields.Link<mocks.SimpleEntryFields> }, 'WITHOUT_LINK_RESOLUTION'>
+  Entry<
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.Link<mocks.SimpleEntryFieldsWithContentTypeId>
+    }>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
 >(mocks.getEntry({ referenceField: mocks.entry }))
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
     'WITHOUT_LINK_RESOLUTION'
   >
 >(mocks.getEntry({ referenceField: [undefined] }))
 
 expectNotAssignable<
-  Entry<{ referenceField: EntryFields.Link<mocks.SimpleEntryFields>[] }, 'WITHOUT_LINK_RESOLUTION'>
+  Entry<
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.Link<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
 >(mocks.getEntry({ referenceField: [mocks.entry] }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.getEntry({ referenceField: undefined })
-)
+expectNotAssignable<
+  Entry<
+    FieldsWithContentTypeIdType<
+      { referenceField: EntryFields.AssetLink },
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >
+>(mocks.getEntry({ referenceField: undefined }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.getEntry({ referenceField: mocks.asset })
-)
+expectNotAssignable<
+  Entry<
+    FieldsWithContentTypeIdType<
+      { referenceField: EntryFields.AssetLink },
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >
+>(mocks.getEntry({ referenceField: mocks.asset }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.getEntry({ referenceField: [undefined] })
-)
+expectNotAssignable<
+  Entry<
+    FieldsWithContentTypeIdType<
+      { referenceField: EntryFields.AssetLink[] },
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >
+>(mocks.getEntry({ referenceField: [undefined] }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.getEntry({ referenceField: [mocks.asset] })
-)
+expectNotAssignable<
+  Entry<
+    FieldsWithContentTypeIdType<
+      { referenceField: EntryFields.AssetLink[] },
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >
+>(mocks.getEntry({ referenceField: [mocks.asset] }))
 
 /**
  * @namespace: Typescript - type test
@@ -120,19 +156,19 @@ expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_
  */
 expectAssignable<
   Entry<
-    {
+    FieldsWithContentTypeIdType<{
       stringField: EntryFields.Text
-      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
+      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
       resolvableAssetReferenceField: EntryFields.AssetLink
       unresolvableAssetReferenceField: EntryFields.AssetLink
       resolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       unresolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       mixedMultiAssetReferenceField: EntryFields.AssetLink[]
-    },
+    }>,
     undefined
   >
 >(
@@ -152,20 +188,30 @@ expectAssignable<
 )
 
 expectNotAssignable<
-  Entry<{ referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> }, undefined>
+  Entry<
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+    }>,
+    undefined
+  >
 >(mocks.getEntry({ referenceField: undefined }))
 
 expectNotAssignable<
-  Entry<{ referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] }, undefined>
+  Entry<
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
+    undefined
+  >
 >(mocks.getEntry({ referenceField: [undefined] }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, undefined>>(
-  mocks.getEntry({ referenceField: undefined })
-)
+expectNotAssignable<
+  Entry<FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink }>, undefined>
+>(mocks.getEntry({ referenceField: undefined }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, undefined>>(
-  mocks.getEntry({ referenceField: [undefined] })
-)
+expectNotAssignable<
+  Entry<FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink[] }>, undefined>
+>(mocks.getEntry({ referenceField: [undefined] }))
 
 /**
  * @namespace: Typescript - type test
@@ -174,13 +220,13 @@ expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink[] }, undefined
  */
 expectAssignable<
   Entry<
-    {
+    FieldsWithContentTypeIdType<{
       stringField: EntryFields.Text
-      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      multiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
+      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      multiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
       assetReferenceField: EntryFields.AssetLink
       multiAssetReferenceField: EntryFields.AssetLink[]
-    },
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -197,10 +243,10 @@ expectAssignable<
 /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
 expectAssignable<
   Entry<
-    {
-      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
+    FieldsWithContentTypeIdType<{
+      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
       assetReferenceField: EntryFields.AssetLink
-    },
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -210,7 +256,9 @@ expectAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -218,7 +266,9 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -226,7 +276,9 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -234,7 +286,7 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.AssetLink },
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -242,7 +294,7 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.AssetLink[] },
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink[] }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -250,7 +302,7 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.AssetLink[] },
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink[] }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
     'US' | 'DE'
   >
@@ -263,19 +315,19 @@ expectNotAssignable<
  */
 expectAssignable<
   Entry<
-    {
+    FieldsWithContentTypeIdType<{
       stringField: EntryFields.Text
-      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
+      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
       resolvableAssetReferenceField: EntryFields.AssetLink
       unresolvableAssetReferenceField: EntryFields.AssetLink
       resolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       unresolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       mixedMultiAssetReferenceField: EntryFields.AssetLink[]
-    },
+    }>,
     'WITH_ALL_LOCALES',
     'US' | 'DE'
   >
@@ -305,10 +357,10 @@ expectAssignable<
 /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
 expectAssignable<
   Entry<
-    {
-      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
+    FieldsWithContentTypeIdType<{
+      entryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
       assetReferenceField: EntryFields.AssetLink
-    },
+    }>,
     'WITH_ALL_LOCALES',
     'US' | 'DE'
   >
@@ -318,36 +370,42 @@ expectAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
     'WITH_ALL_LOCALES',
     'US' | 'DE'
   >
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 expectNotAssignable<
-  Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITH_ALL_LOCALES', 'US' | 'DE'>
+  Entry<
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink[] }>,
+    'WITH_ALL_LOCALES',
+    'US' | 'DE'
+  >
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 /**
  * @namespace: Typescript - type test
  * @description: EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entities are present.
- * unresolvable links are completely removed.
+> * unresolvable links are completely removed.
  */
 expectAssignable<
   Entry<
-    {
+    FieldsWithContentTypeIdType<{
       stringField: EntryFields.Text
-      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
+      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
       resolvableAssetReferenceField: EntryFields.AssetLink
       unresolvableAssetReferenceField: EntryFields.AssetLink
       resolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       unresolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       mixedMultiAssetReferenceField: EntryFields.AssetLink[]
-    },
+    }>,
     'WITHOUT_UNRESOLVABLE_LINKS'
   >
 >(
@@ -368,24 +426,34 @@ expectAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+    }>,
     'WITHOUT_UNRESOLVABLE_LINKS'
   >
 >(mocks.getEntry({ referenceField: mocks.entryLink }))
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
     'WITHOUT_UNRESOLVABLE_LINKS'
   >
 >(mocks.getEntry({ referenceField: [mocks.entryLink] }))
 
-expectNotAssignable<Entry<{ referenceField: EntryFields.AssetLink }, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.getEntry({ referenceField: mocks.assetLink })
-)
+expectNotAssignable<
+  Entry<
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink }>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(mocks.getEntry({ referenceField: mocks.assetLink }))
 
 expectNotAssignable<
-  Entry<{ referenceField: EntryFields.AssetLink[] }, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  Entry<
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink[] }>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
 >(mocks.getEntry({ referenceField: [mocks.assetLink] }))
 
 /**
@@ -394,19 +462,19 @@ expectNotAssignable<
  */
 expectAssignable<
   Entry<
-    {
+    FieldsWithContentTypeIdType<{
       stringField: EntryFields.Text
-      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>
-      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
-      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[]
+      resolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      unresolvableEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+      resolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      unresolvableMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+      mixedMultiEntryReferenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
       resolvableAssetReferenceField: EntryFields.AssetLink
       unresolvableAssetReferenceField: EntryFields.AssetLink
       resolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       unresolvableMultiAssetReferenceField: EntryFields.AssetLink[]
       mixedMultiAssetReferenceField: EntryFields.AssetLink[]
-    },
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
   >
@@ -431,7 +499,9 @@ expectAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields> },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
   >
@@ -439,7 +509,9 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.EntryLink<mocks.SimpleEntryFields>[] },
+    FieldsWithContentTypeIdType<{
+      referenceField: EntryFields.EntryLink<mocks.SimpleEntryFieldsWithContentTypeId>[]
+    }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
   >
@@ -447,7 +519,7 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.AssetLink },
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
   >
@@ -455,7 +527,7 @@ expectNotAssignable<
 
 expectNotAssignable<
   Entry<
-    { referenceField: EntryFields.AssetLink[] },
+    FieldsWithContentTypeIdType<{ referenceField: EntryFields.AssetLink[] }>,
     'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
     'US' | 'DE'
   >

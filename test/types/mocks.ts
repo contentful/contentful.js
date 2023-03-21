@@ -57,8 +57,11 @@ export const entryBasics = {
   metadata: metadataValue,
 }
 
-export type SimpleEntryFields = {
-  title: string
+export type SimpleEntryFieldsWithContentTypeId = {
+  fields: {
+    title: string
+  }
+  contentTypeId: string
 }
 
 export type LocalizedEntryFields = {

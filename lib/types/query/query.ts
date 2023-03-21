@@ -1,4 +1,4 @@
-import { AssetDetails, AssetFields, AssetFile, AssetMimeType, AssetSys } from '../asset'
+import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset'
 import { EntrySys } from '../entry'
 import { EqualityFilter, InequalityFilter } from './equality'
 import { ExistenceFilter } from './existence'

@@ -1,5 +1,6 @@
 import { expectType } from 'tsd'
-import { createClient, EntryCollection, Entry, FieldsType } from '../../../lib'
+import { createClient, EntryCollection, Entry } from '../../../lib'
+import { FieldsWithContentTypeIdType } from '../../../dist/types/types/query/util'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -10,96 +11,118 @@ type LinkedFields = {
   name: string
 }
 
+type LinkedFieldsWithContentTypeId = FieldsWithContentTypeIdType<LinkedFields>
+
 type Fields = {
   title: string
-  link: Entry<LinkedFields>
-  moreLinks: Entry<LinkedFields>[]
+  link: Entry<LinkedFieldsWithContentTypeId>
+  moreLinks: Entry<LinkedFieldsWithContentTypeId>[]
 }
+
+type FieldsWithContentTypeId = FieldsWithContentTypeIdType<Fields>
 
 type Locale = 'en'
 
-expectType<Entry<FieldsType, undefined>>(await client.getEntry('entry-id'))
-expectType<Entry<Fields, undefined>>(await client.getEntry<Fields>('entry-id'))
-expectType<EntryCollection<FieldsType, undefined>>(await client.getEntries())
-expectType<EntryCollection<Fields, undefined>>(await client.getEntries<Fields>())
+expectType<Entry<FieldsWithContentTypeIdType, undefined>>(await client.getEntry('entry-id'))
+expectType<Entry<FieldsWithContentTypeId, undefined>>(
+  await client.getEntry<FieldsWithContentTypeId>('entry-id')
+)
+expectType<EntryCollection<FieldsWithContentTypeIdType, undefined>>(await client.getEntries())
+expectType<EntryCollection<FieldsWithContentTypeId, undefined>>(
+  await client.getEntries<FieldsWithContentTypeId>()
+)
 
-expectType<Entry<FieldsType, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+expectType<Entry<FieldsWithContentTypeIdType, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   await client.withoutUnresolvableLinks.getEntry('entry-id')
 )
-expectType<Entry<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  await client.withoutUnresolvableLinks.getEntry<Fields>('entry-id')
+expectType<Entry<FieldsWithContentTypeId, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  await client.withoutUnresolvableLinks.getEntry<FieldsWithContentTypeId>('entry-id')
 )
-expectType<EntryCollection<FieldsType, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+expectType<EntryCollection<FieldsWithContentTypeIdType, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   await client.withoutUnresolvableLinks.getEntries()
 )
-expectType<EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  await client.withoutUnresolvableLinks.getEntries<Fields>()
+expectType<EntryCollection<FieldsWithContentTypeId, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  await client.withoutUnresolvableLinks.getEntries<FieldsWithContentTypeId>()
 )
 
-expectType<Entry<FieldsType, 'WITHOUT_LINK_RESOLUTION'>>(
+expectType<Entry<FieldsWithContentTypeIdType, 'WITHOUT_LINK_RESOLUTION'>>(
   await client.withoutLinkResolution.getEntry('entry-id')
 )
-expectType<Entry<Fields, 'WITHOUT_LINK_RESOLUTION'>>(
-  await client.withoutLinkResolution.getEntry<Fields>('entry-id')
+expectType<Entry<FieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'>>(
+  await client.withoutLinkResolution.getEntry<FieldsWithContentTypeId>('entry-id')
 )
-expectType<EntryCollection<FieldsType, 'WITHOUT_LINK_RESOLUTION'>>(
+expectType<EntryCollection<FieldsWithContentTypeIdType, 'WITHOUT_LINK_RESOLUTION'>>(
   await client.withoutLinkResolution.getEntries()
 )
-expectType<EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>>(
-  await client.withoutLinkResolution.getEntries<Fields>()
+expectType<EntryCollection<FieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'>>(
+  await client.withoutLinkResolution.getEntries<FieldsWithContentTypeId>()
 )
 
-expectType<Entry<FieldsType, 'WITH_ALL_LOCALES'>>(await client.withAllLocales.getEntry('entry-id'))
-expectType<Entry<Fields, 'WITH_ALL_LOCALES'>>(
-  await client.withAllLocales.getEntry<Fields>('entry-id')
+expectType<Entry<FieldsWithContentTypeIdType, 'WITH_ALL_LOCALES'>>(
+  await client.withAllLocales.getEntry('entry-id')
 )
-expectType<Entry<Fields, 'WITH_ALL_LOCALES', Locale>>(
-  await client.withAllLocales.getEntry<Fields, Locale>('entry-id')
+expectType<Entry<FieldsWithContentTypeId, 'WITH_ALL_LOCALES'>>(
+  await client.withAllLocales.getEntry<FieldsWithContentTypeId>('entry-id')
 )
-expectType<EntryCollection<FieldsType, 'WITH_ALL_LOCALES'>>(
+expectType<Entry<FieldsWithContentTypeId, 'WITH_ALL_LOCALES', Locale>>(
+  await client.withAllLocales.getEntry<FieldsWithContentTypeId, Locale>('entry-id')
+)
+expectType<EntryCollection<FieldsWithContentTypeIdType, 'WITH_ALL_LOCALES'>>(
   await client.withAllLocales.getEntries()
 )
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES'>>(
-  await client.withAllLocales.getEntries<Fields>()
+expectType<EntryCollection<FieldsWithContentTypeId, 'WITH_ALL_LOCALES'>>(
+  await client.withAllLocales.getEntries<FieldsWithContentTypeId>()
 )
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES', Locale>>(
-  await client.withAllLocales.getEntries<Fields, Locale>()
+expectType<EntryCollection<FieldsWithContentTypeId, 'WITH_ALL_LOCALES', Locale>>(
+  await client.withAllLocales.getEntries<FieldsWithContentTypeId, Locale>()
 )
 
-expectType<Entry<FieldsType, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+expectType<Entry<FieldsWithContentTypeIdType, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   await client.withAllLocales.withoutUnresolvableLinks.getEntry('entry-id')
 )
-expectType<Entry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  await client.withAllLocales.withoutUnresolvableLinks.getEntry<Fields>('entry-id')
+expectType<Entry<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  await client.withAllLocales.withoutUnresolvableLinks.getEntry<FieldsWithContentTypeId>('entry-id')
 )
-expectType<Entry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locale>>(
-  await client.withAllLocales.withoutUnresolvableLinks.getEntry<Fields, Locale>('entry-id')
+expectType<
+  Entry<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locale>
+>(
+  await client.withAllLocales.withoutUnresolvableLinks.getEntry<FieldsWithContentTypeId, Locale>(
+    'entry-id'
+  )
 )
-expectType<EntryCollection<FieldsType, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  await client.withAllLocales.withoutUnresolvableLinks.getEntries()
-)
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  await client.withAllLocales.withoutUnresolvableLinks.getEntries<Fields>()
-)
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locale>>(
-  await client.withAllLocales.withoutUnresolvableLinks.getEntries<Fields, Locale>()
+expectType<
+  EntryCollection<FieldsWithContentTypeIdType, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(await client.withAllLocales.withoutUnresolvableLinks.getEntries())
+expectType<
+  EntryCollection<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(await client.withAllLocales.withoutUnresolvableLinks.getEntries<FieldsWithContentTypeId>())
+expectType<
+  EntryCollection<
+    FieldsWithContentTypeId,
+    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+    Locale
+  >
+>(
+  await client.withAllLocales.withoutUnresolvableLinks.getEntries<FieldsWithContentTypeId, Locale>()
 )
 
-expectType<Entry<FieldsType, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
+expectType<Entry<FieldsWithContentTypeIdType, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
   await client.withAllLocales.withoutLinkResolution.getEntry('entry-id')
 )
-expectType<Entry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
-  await client.withAllLocales.withoutLinkResolution.getEntry<Fields>('entry-id')
+expectType<Entry<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
+  await client.withAllLocales.withoutLinkResolution.getEntry<FieldsWithContentTypeId>('entry-id')
 )
-expectType<Entry<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>>(
-  await client.withAllLocales.withoutLinkResolution.getEntry<Fields, Locale>('entry-id')
+expectType<Entry<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>>(
+  await client.withAllLocales.withoutLinkResolution.getEntry<FieldsWithContentTypeId, Locale>(
+    'entry-id'
+  )
 )
-expectType<EntryCollection<FieldsType, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
-  await client.withAllLocales.withoutLinkResolution.getEntries()
-)
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
-  await client.withAllLocales.withoutLinkResolution.getEntries<Fields>()
-)
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>>(
-  await client.withAllLocales.withoutLinkResolution.getEntries<Fields, Locale>()
-)
+expectType<
+  EntryCollection<FieldsWithContentTypeIdType, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+>(await client.withAllLocales.withoutLinkResolution.getEntries())
+expectType<
+  EntryCollection<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+>(await client.withAllLocales.withoutLinkResolution.getEntries<FieldsWithContentTypeId>())
+expectType<
+  EntryCollection<FieldsWithContentTypeId, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>
+>(await client.withAllLocales.withoutLinkResolution.getEntries<FieldsWithContentTypeId, Locale>())

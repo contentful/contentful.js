@@ -1,5 +1,5 @@
 import { expectAssignable } from 'tsd'
-import { EntriesQueries, EntryFields, FieldsType } from '../../lib'
+import { EntriesQueries, EntryFields, FieldsWithContentTypeIdType } from '../../lib'
 import { EntryFieldsQueries } from '../../lib/types/query/query'
 
 export const stringValue = ''
@@ -128,7 +128,9 @@ expectAssignable<Required<EntryFieldsQueries<{ arrayStringField: EntryFields.Arr
  * EntryFields: Type Reference
  */
 expectAssignable<
-  Required<EntryFieldsQueries<{ referenceField: EntryFields.EntryLink<FieldsType> }>>
+  Required<
+    EntryFieldsQueries<{ referenceField: EntryFields.EntryLink<FieldsWithContentTypeIdType> }>
+  >
 >({
   select: ['fields.referenceField'],
   'fields.referenceField[exists]': booleanValue,
@@ -140,10 +142,12 @@ expectAssignable<
  * Entry
  */
 expectAssignable<
-  EntriesQueries<{
-    stringField: EntryFields.Text
-    numberField: EntryFields.Number
-  }>
+  EntriesQueries<
+    FieldsWithContentTypeIdType<{
+      stringField: EntryFields.Text
+      numberField: EntryFields.Number
+    }>
+  >
 >({
   content_type: 'id',
   'fields.stringField[exists]': booleanValue,
