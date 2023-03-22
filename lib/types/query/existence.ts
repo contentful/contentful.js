@@ -1,5 +1,6 @@
 import { EntryField } from '../entry'
 import { ConditionalFixedQueries, FieldsType } from './util'
+import { AssetDetails, AssetFile } from '../asset'
 
 /**
  * @name exists
@@ -9,4 +10,10 @@ import { ConditionalFixedQueries, FieldsType } from './util'
 export type ExistenceFilter<
   Fields extends FieldsType,
   Prefix extends string
-> = ConditionalFixedQueries<Fields, EntryField<Fields> | undefined, boolean, Prefix, '[exists]'>
+> = ConditionalFixedQueries<
+  Fields,
+  EntryField<Fields> | AssetFile | AssetDetails | undefined,
+  boolean,
+  Prefix,
+  '[exists]'
+>

@@ -14,6 +14,11 @@ expectAssignable<DefaultAssetQueries>({
 // equality operator
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.description': mocks.stringValue,
+  'fields.file.contentType': mocks.stringValue,
+  'fields.file.details.size': mocks.numberValue,
+  'fields.file.fileName': mocks.stringValue,
+  'fields.file.url': mocks.stringValue,
   'fields.title': mocks.stringValue,
   'sys.updatedAt': mocks.dateValue,
 })
@@ -27,6 +32,13 @@ expectNotAssignable<DefaultAssetQueries>({
 // exists operator (field is present)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.description[exists]': mocks.booleanValue,
+  'fields.file[exists]': mocks.booleanValue,
+  'fields.file.contentType[exists]': mocks.booleanValue,
+  'fields.file.details[exists]': mocks.booleanValue,
+  'fields.file.details.size[exists]': mocks.booleanValue,
+  'fields.file.fileName[exists]': mocks.booleanValue,
+  'fields.file.url[exists]': mocks.booleanValue,
   'fields.title[exists]': mocks.booleanValue,
   'metadata.tags[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
@@ -41,6 +53,7 @@ expectNotAssignable<DefaultAssetQueries>({
 // gt operator (range)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.file.details.size[gt]': mocks.numberValue,
   'sys.updatedAt[gt]': mocks.dateValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -50,6 +63,7 @@ expectNotAssignable<DefaultAssetQueries>({
 // gte operator (range)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.file.details.size[gte]': mocks.numberValue,
   'sys.updatedAt[gte]': mocks.dateValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -59,6 +73,11 @@ expectNotAssignable<DefaultAssetQueries>({
 // in operator
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.description[in]': mocks.stringArrayValue,
+  'fields.file.contentType[in]': mocks.stringArrayValue,
+  'fields.file.details.size[in]': mocks.numberArrayValue,
+  'fields.file.fileName[in]': mocks.stringArrayValue,
+  'fields.file.url[in]': mocks.stringArrayValue,
   'fields.title[in]': mocks.stringArrayValue,
   'metadata.tags.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
@@ -73,6 +92,7 @@ expectNotAssignable<DefaultAssetQueries>({
 // lt operator (range)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.file.details.size[lt]': mocks.numberValue,
   'sys.updatedAt[lt]': mocks.dateValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -82,6 +102,7 @@ expectNotAssignable<DefaultAssetQueries>({
 // lte operator (range)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.file.details.size[lte]': mocks.numberValue,
   'sys.updatedAt[lte]': mocks.dateValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -91,6 +112,10 @@ expectNotAssignable<DefaultAssetQueries>({
 // match operator (full-text search)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.description[match]': mocks.stringValue,
+  'fields.file.contentType[match]': mocks.stringValue,
+  'fields.file.fileName[match]': mocks.stringValue,
+  'fields.file.url[match]': mocks.stringValue,
   'fields.title[match]': mocks.stringValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -100,6 +125,11 @@ expectNotAssignable<DefaultAssetQueries>({
 // ne operator (inequality)
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.description[ne]': mocks.stringValue,
+  'fields.file.contentType[ne]': mocks.stringValue,
+  'fields.file.details.size[ne]': mocks.numberValue,
+  'fields.file.fileName[ne]': mocks.stringValue,
+  'fields.file.url[ne]': mocks.stringValue,
   'fields.title[ne]': mocks.stringValue,
   'sys.updatedAt[ne]': mocks.dateValue,
 })
@@ -113,6 +143,11 @@ expectNotAssignable<DefaultAssetQueries>({
 // nin operator
 
 expectAssignable<DefaultAssetQueries>({
+  'fields.description[nin]': mocks.stringArrayValue,
+  'fields.file.contentType[nin]': mocks.stringArrayValue,
+  'fields.file.details.size[nin]': mocks.numberArrayValue,
+  'fields.file.fileName[nin]': mocks.stringArrayValue,
+  'fields.file.url[nin]': mocks.stringArrayValue,
   'fields.title[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
