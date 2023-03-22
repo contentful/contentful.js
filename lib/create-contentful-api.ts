@@ -44,6 +44,7 @@ import {
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
 } from './utils/validate-params'
+import validateSearchParameters from './utils/validate-search-parameters'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -394,6 +395,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateLocaleParam(query, withAllLocales as boolean)
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
+    validateSearchParameters(query)
 
     return internalGetEntry<Fields, any, Extract<ChainOptions, typeof options>>(
       id,
@@ -438,6 +440,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateLocaleParam(query, withAllLocales)
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
+    validateSearchParameters(query)
 
     return internalGetEntries<Fields, any, Extract<ChainOptions, typeof options>>(
       withAllLocales
@@ -495,6 +498,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     const { withAllLocales } = options
 
     validateLocaleParam(query, withAllLocales)
+    validateSearchParameters(query)
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
@@ -528,6 +532,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     const { withAllLocales } = options
 
     validateLocaleParam(query, withAllLocales)
+    validateSearchParameters(query)
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
@@ -556,6 +561,8 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function getTags(query = {}): Promise<TagCollection> {
+    validateSearchParameters(query)
+
     return get<TagCollection>({
       context: 'environment',
       path: 'tags',
@@ -580,6 +587,8 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function getLocales(query = {}): Promise<LocaleCollection> {
+    validateSearchParameters(query)
+
     return get<LocaleCollection>({
       context: 'environment',
       path: 'locales',
