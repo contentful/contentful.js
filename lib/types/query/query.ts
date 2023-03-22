@@ -1,4 +1,4 @@
-import { AssetMimeType, AssetSys } from '../asset'
+import { AssetDetails, AssetFields, AssetFile, AssetMimeType, AssetSys } from '../asset'
 import { EntrySys } from '../entry'
 import { EqualityFilter, InequalityFilter } from './equality'
 import { ExistenceFilter } from './existence'
@@ -84,7 +84,25 @@ export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fiel
   RangeFilters<Fields, 'fields'> &
   SubsetFilters<Fields, 'fields'>
 
+export type AssetFieldsFileQueries = ExistenceFilter<AssetFile, 'fields.file'> &
+  EqualityFilter<AssetFile, 'fields.file'> &
+  InequalityFilter<AssetFile, 'fields.file'> &
+  FullTextSearchFilters<AssetFile, 'fields.file'> &
+  RangeFilters<AssetFile, 'fields.file'> &
+  SubsetFilters<AssetFile, 'fields.file'>
+
+export type AssetFieldsFileDetailsQueries = ExistenceFilter<
+  Pick<AssetDetails, 'size'>,
+  'fields.file.details'
+> &
+  EqualityFilter<Pick<AssetDetails, 'size'>, 'fields.file.details'> &
+  InequalityFilter<Pick<AssetDetails, 'size'>, 'fields.file.details'> &
+  RangeFilters<Pick<AssetDetails, 'size'>, 'fields.file.details'> &
+  SubsetFilters<Pick<AssetDetails, 'size'>, 'fields.file.details'>
+
 export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields> &
+  AssetFieldsFileQueries &
+  AssetFieldsFileDetailsQueries &
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
   MetadataTagsQueries &
   FixedQueryOptions &
