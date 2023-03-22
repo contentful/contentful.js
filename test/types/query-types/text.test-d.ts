@@ -10,6 +10,12 @@ import { SubsetFilters } from '../../../lib/types/query/subset'
 // @ts-ignore
 import * as mocks from '../mocks'
 import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
+import { SetFilter } from '../../../lib/types/query/set'
+
+expectAssignable<SetFilter<{ testField: EntryFields.Text }, 'fields'>>({})
+expectType<Required<SetFilter<{ testField: EntryFields.Text }, 'fields'>>>({
+  'fields.testField[all]': mocks.stringArrayValue,
+})
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Text }, 'fields'>>({})
 expectType<Required<EqualityFilter<{ testField: EntryFields.Text }, 'fields'>>>({

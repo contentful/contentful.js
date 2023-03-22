@@ -18,6 +18,7 @@ import {
   EntryOrderFilterWithFields,
   TagOrderFilter,
 } from './order'
+import { SetFilter } from './set'
 
 type FixedPagedOptions = {
   skip?: number
@@ -57,6 +58,7 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | InequalityFilter<Fields, 'fields'>
   | FullTextSearchFilters<Fields, 'fields'>
   | SubsetFilters<Fields, 'fields'>
+  | SetFilter<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
   | RangeFilters<Fields, 'fields'>
   | ReferenceSearchFilters<Fields, 'fields'>
