@@ -141,9 +141,7 @@ describe('make Contentful API client', () => {
       promise: Promise.resolve({ data: mocks.entryMock }),
     })
     api.getEntries = jest.fn().mockResolvedValue({ items: [mocks.entryMock] })
-    await expect(api.getEntry<mocks.EntryFieldsWithContentTypeId>('eid')).resolves.toEqual(
-      mocks.entryMock
-    )
+    await expect(api.getEntry<mocks.EntrySkeleton>('eid')).resolves.toEqual(mocks.entryMock)
     expect(api.getEntries).toHaveBeenCalledTimes(1)
   })
 
@@ -157,10 +155,7 @@ describe('make Contentful API client', () => {
     const { api } = setupWithData({
       promise: Promise.reject(rejectError),
     })
-    await expect(api.getEntry<mocks.EntryFieldsWithContentTypeId>('eid')).rejects.toHaveProperty(
-      'data',
-      data
-    )
+    await expect(api.getEntry<mocks.EntrySkeleton>('eid')).rejects.toHaveProperty('data', data)
   })
 
   test('API call getEntries', async () => {

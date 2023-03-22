@@ -11,7 +11,7 @@ import {
   ConditionalFixedQueries,
   ConditionalListQueries,
   FieldsType,
-  FieldsWithContentTypeIdType,
+  EntrySkeletonType,
 } from './util'
 import { ReferenceSearchFilters } from './reference'
 import { TagSys } from '../sys'
@@ -72,9 +72,9 @@ export type EntryContentTypeQuery<T extends string> = {
   content_type: T
 }
 
-export type EntriesQueries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
-  | (EntryFieldsQueries<FieldsWithContentTypeId['fields']> &
-      EntryContentTypeQuery<FieldsWithContentTypeId['contentTypeId']>)
+export type EntriesQueries<EntrySkeleton extends EntrySkeletonType> =
+  | (EntryFieldsQueries<EntrySkeleton['fields']> &
+      EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
       EntrySelectFilter &

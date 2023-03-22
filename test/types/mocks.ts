@@ -57,7 +57,7 @@ export const entryBasics = {
   metadata: metadataValue,
 }
 
-export type SimpleEntryFieldsWithContentTypeId = {
+export type SimpleEntrySkeleton = {
   fields: {
     title: string
   }

@@ -1,5 +1,5 @@
 import * as contentful from '../../lib/contentful'
-import { TypeCatFieldsWithContentTypeId } from './parseEntries.test'
+import { TypeCatSkeleton } from './parseEntries.test'
 import { params } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -58,7 +58,7 @@ describe('Sync API', () => {
   })
 
   test('Sync has withoutUnresolvableLinks modifier', async () => {
-    const response = await client.withoutUnresolvableLinks.sync<TypeCatFieldsWithContentTypeId>({
+    const response = await client.withoutUnresolvableLinks.sync<TypeCatSkeleton>({
       initial: true,
       type: 'Entry',
       content_type: 'cat',
@@ -85,7 +85,7 @@ describe('Sync API', () => {
   })
 
   test('Sync has withoutLinkResolution modifier', async () => {
-    const response = await client.withoutLinkResolution.sync<TypeCatFieldsWithContentTypeId>({
+    const response = await client.withoutLinkResolution.sync<TypeCatSkeleton>({
       initial: true,
       type: 'Entry',
       content_type: 'cat',

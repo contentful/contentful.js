@@ -26,7 +26,7 @@ import {
   EntryCollection,
   SyncQuery,
   SyncOptions,
-  FieldsWithContentTypeIdType,
+  EntrySkeletonType,
 } from './types'
 import { EntryQueries, LocaleOption, TagQueries } from './types/query/query'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
@@ -49,30 +49,26 @@ const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
 type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
   getEntry<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
     id: string,
     query?: EntryQueries
-  ): Promise<Entry<FieldsWithContentTypeId, Modifiers, Locales>>
+  ): Promise<Entry<EntrySkeleton, Modifiers, Locales>>
 
   getEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
-    query?: EntriesQueries<FieldsWithContentTypeId>
-  ): Promise<EntryCollection<FieldsWithContentTypeId, Modifiers, Locales>>
+    query?: EntriesQueries<EntrySkeleton>
+  ): Promise<EntryCollection<EntrySkeleton, Modifiers, Locales>>
 
   parseEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
-    data: EntryCollection<
-      FieldsWithContentTypeId,
-      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-      Locales
-    >
-  ): EntryCollection<FieldsWithContentTypeId, Modifiers, Locales>
+    data: EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
+  ): EntryCollection<EntrySkeleton, Modifiers, Locales>
 
   getAsset<Locales extends LocaleCode = LocaleCode>(
     id: string
@@ -85,24 +81,18 @@ type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
 
 type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
   withAllLocales: Client<AddChainModifier<Modifiers, 'WITH_ALL_LOCALES'>>
-  getEntry<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(
+  getEntry<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     id: string,
     query?: EntryQueries & LocaleOption
-  ): Promise<Entry<FieldsWithContentTypeId, Modifiers>>
+  ): Promise<Entry<EntrySkeleton, Modifiers>>
 
-  getEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(
-    query?: EntriesQueries<FieldsWithContentTypeId> & LocaleOption
-  ): Promise<EntryCollection<FieldsWithContentTypeId, Modifiers>>
+  getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
+    query?: EntriesQueries<EntrySkeleton> & LocaleOption
+  ): Promise<EntryCollection<EntrySkeleton, Modifiers>>
 
-  parseEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(
-    data: EntryCollection<FieldsWithContentTypeId, 'WITHOUT_LINK_RESOLUTION'>
-  ): EntryCollection<FieldsWithContentTypeId, Modifiers>
+  parseEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
+    data: EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>
+  ): EntryCollection<EntrySkeleton, Modifiers>
 
   getAsset(id: string, query?: LocaleOption): Promise<Asset<undefined>>
 
@@ -229,12 +219,12 @@ interface BaseClient {
    * ```
    */
   sync<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Modifiers extends ChainModifiers = ChainModifiers,
     Locales extends LocaleCode = LocaleCode
   >(
     query: SyncQuery
-  ): Promise<SyncCollection<FieldsWithContentTypeId, Modifiers, Locales>>
+  ): Promise<SyncCollection<EntrySkeleton, Modifiers, Locales>>
 
   /**
    * Gets a Tag
@@ -386,19 +376,20 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function getEntry<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(id: string, query: EntryQueries & LocaleOption = {}) {
-    return makeGetEntry<FieldsWithContentTypeId>(id, query, options)
+  async function getEntry<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
+    id: string,
+    query: EntryQueries & LocaleOption = {}
+  ) {
+    return makeGetEntry<EntrySkeleton>(id, query, options)
   }
 
-  async function getEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(query: EntriesQueries<FieldsWithContentTypeId> & LocaleOption = {}) {
-    return makeGetEntries<FieldsWithContentTypeId>(query, options)
+  async function getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
+    query: EntriesQueries<EntrySkeleton> & LocaleOption = {}
+  ) {
+    return makeGetEntries<EntrySkeleton>(query, options)
   }
 
-  async function makeGetEntry<FieldsWithContentTypeId extends FieldsWithContentTypeIdType>(
+  async function makeGetEntry<EntrySkeleton extends EntrySkeletonType>(
     id: string,
     query,
     options: ChainOptions = {
@@ -413,7 +404,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
 
-    return internalGetEntry<FieldsWithContentTypeId, any, Extract<ChainOptions, typeof options>>(
+    return internalGetEntry<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       id,
       withAllLocales ? { ...query, locale: '*' } : query,
       options
@@ -421,7 +412,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function internalGetEntry<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
     Options extends ChainOptions
   >(id: string, query, options: Options) {
@@ -429,11 +420,10 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       throw notFoundError(id)
     }
     try {
-      const response = await internalGetEntries<
-        FieldsWithContentTypeIdType<FieldsWithContentTypeId>,
-        Locales,
-        Options
-      >({ 'sys.id': id, ...query }, options)
+      const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
+        { 'sys.id': id, ...query },
+        options
+      )
       if (response.items.length > 0) {
         return response.items[0]
       } else {
@@ -444,7 +434,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
-  async function makeGetEntries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType>(
+  async function makeGetEntries<EntrySkeleton extends EntrySkeletonType>(
     query,
     options: ChainOptions = {
       withAllLocales: false,
@@ -458,7 +448,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
 
-    return internalGetEntries<FieldsWithContentTypeId, any, Extract<ChainOptions, typeof options>>(
+    return internalGetEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       withAllLocales
         ? {
             ...query,
@@ -470,13 +460,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function internalGetEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
     Options extends ChainOptions
   >(
     query: Record<string, any>,
     options: Options
-  ): Promise<EntryCollection<FieldsWithContentTypeId, ModifiersFromOptions<Options>, Locales>> {
+  ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     try {
@@ -606,15 +596,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function sync<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(query: SyncQuery, syncOptions: SyncOptions = { paginate: true }) {
-    return makePagedSync<FieldsWithContentTypeId>(query, syncOptions, options)
+  async function sync<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
+    query: SyncQuery,
+    syncOptions: SyncOptions = { paginate: true }
+  ) {
+    return makePagedSync<EntrySkeleton>(query, syncOptions, options)
   }
 
-  async function makePagedSync<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(
+  async function makePagedSync<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     query: SyncQuery,
     syncOptions: SyncOptions,
     options: ChainOptions = {
@@ -631,20 +620,18 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       ...options,
     }
     switchToEnvironment(http)
-    return pagedSync<FieldsWithContentTypeId, any, Extract<ChainOptions, typeof options>>(
+    return pagedSync<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       http,
       query,
       combinedOptions
     )
   }
 
-  function parseEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType
-  >(data) {
-    return makeParseEntries<FieldsWithContentTypeId>(data, options)
+  function parseEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(data) {
+    return makeParseEntries<EntrySkeleton>(data, options)
   }
 
-  function makeParseEntries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType>(
+  function makeParseEntries<EntrySkeleton extends EntrySkeletonType>(
     data,
     options: ChainOptions = {
       withAllLocales: false,
@@ -652,21 +639,20 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withoutUnresolvableLinks: false,
     }
   ) {
-    return internalParseEntries<
-      FieldsWithContentTypeId,
-      any,
-      Extract<ChainOptions, typeof options>
-    >(data, options)
+    return internalParseEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
+      data,
+      options
+    )
   }
 
   function internalParseEntries<
-    FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
+    EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
     Options extends ChainOptions
   >(
     data: unknown,
     options: Options
-  ): EntryCollection<FieldsWithContentTypeId, ModifiersFromOptions<Options>, Locales> {
+  ): EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     return resolveCircular(data, {

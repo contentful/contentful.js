@@ -2,7 +2,7 @@ import { ConditionalPick } from 'type-fest'
 
 export type FieldsType = Record<string, any>
 
-export type FieldsWithContentTypeIdType<Fields extends FieldsType = FieldsType, Id = string> = {
+export type EntrySkeletonType<Fields extends FieldsType = FieldsType, Id = string> = {
   fields: Fields
   contentTypeId: Id
 }

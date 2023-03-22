@@ -4,7 +4,7 @@ import { ContentfulCollection } from './collection'
 import { AssetLink, ContentTypeLink, EntryLink } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
-import { FieldsWithContentTypeIdType } from './query/util'
+import { EntrySkeletonType } from './query'
 import { EntitySys } from './sys'
 import { ChainModifiers } from '../utils/client-helpers'
 import { JsonArray, JsonObject } from 'type-fest'
@@ -27,19 +27,15 @@ export declare namespace EntryFields {
     lon: number
   }
 
-  type EntryLink<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
-    Entry<FieldsWithContentTypeId>
+  type EntryLink<EntrySkeleton extends EntrySkeletonType> = Entry<EntrySkeleton>
   type AssetLink = Asset
-  type Link<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
-    | AssetLink
-    | EntryLink<FieldsWithContentTypeId>
-  type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<FieldsWithContentTypeIdType>> =
-    Item[]
+  type Link<EntrySkeleton extends EntrySkeletonType> = AssetLink | EntryLink<EntrySkeleton>
+  type Array<Item extends EntryFields.Symbol | AssetLink | EntryLink<EntrySkeletonType>> = Item[]
   type Object<Data extends JsonObject | JsonArray | null = JsonObject | JsonArray | null> = Data
   type RichText = RichTextDocument
 }
 
-export type EntryField<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
+export type EntryField<EntrySkeleton extends EntrySkeletonType> =
   | EntryFields.Symbol
   | EntryFields.Text
   | EntryFields.Integer
@@ -49,11 +45,11 @@ export type EntryField<FieldsWithContentTypeId extends FieldsWithContentTypeIdTy
   | EntryFields.Location
   | EntryFields.RichText
   | EntryFields.Object
-  | EntryFields.EntryLink<FieldsWithContentTypeId>
+  | EntryFields.EntryLink<EntrySkeleton>
   | EntryFields.AssetLink
   | EntryFields.Array<EntryFields.Symbol>
   | EntryFields.Array<EntryFields.AssetLink>
-  | EntryFields.Array<EntryFields.EntryLink<FieldsWithContentTypeId>>
+  | EntryFields.Array<EntryFields.EntryLink<EntrySkeleton>>
 
 export type BaseEntry = {
   sys: EntrySys
@@ -61,17 +57,17 @@ export type BaseEntry = {
 }
 
 type ResolvedLink<
-  Field extends EntryField<FieldsWithContentTypeIdType>,
+  Field extends EntryField<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = Field extends EntryFields.EntryLink<infer LinkedFieldsWithContentTypeId>
+> = Field extends EntryFields.EntryLink<infer LinkedSkeleton>
   ? ChainModifiers extends Modifiers
-    ? Entry<LinkedFieldsWithContentTypeId, Modifiers, Locales> | EntryLink | undefined
+    ? Entry<LinkedSkeleton, Modifiers, Locales> | EntryLink | undefined
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? EntryLink
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? Entry<LinkedFieldsWithContentTypeId, Modifiers, Locales> | undefined
-    : Entry<LinkedFieldsWithContentTypeId, Modifiers, Locales> | EntryLink
+    ? Entry<LinkedSkeleton, Modifiers, Locales> | undefined
+    : Entry<LinkedSkeleton, Modifiers, Locales> | EntryLink
   : Field extends EntryFields.AssetLink
   ? ChainModifiers extends Modifiers
     ? Asset | AssetLink | undefined
@@ -83,7 +79,7 @@ type ResolvedLink<
   : Field
 
 export type ResolvedField<
-  Field extends EntryField<FieldsWithContentTypeIdType>,
+  Field extends EntryField<EntrySkeletonType>,
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode
 > = Field extends EntryFields.Array<infer Item>
@@ -91,42 +87,42 @@ export type ResolvedField<
   : ResolvedLink<Field, Modifiers, Locales>
 
 export type Entry<
-  FieldsWithContentTypeId extends FieldsWithContentTypeIdType = FieldsWithContentTypeIdType,
+  EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
 > = BaseEntry & {
-  sys: { contentType: { sys: { id: FieldsWithContentTypeId['contentTypeId'] } } }
+  sys: { contentType: { sys: { id: EntrySkeleton['contentTypeId'] } } }
   fields: ChainModifiers extends Modifiers
     ?
         | {
-            [FieldName in keyof FieldsWithContentTypeId['fields']]: {
+            [FieldName in keyof EntrySkeleton['fields']]: {
               [LocaleName in Locales]?: ResolvedField<
-                FieldsWithContentTypeId['fields'][FieldName],
+                EntrySkeleton['fields'][FieldName],
                 Modifiers,
                 Locales
               >
             }
           }
         | {
-            [FieldName in keyof FieldsWithContentTypeId['fields']]: ResolvedField<
-              FieldsWithContentTypeId['fields'][FieldName],
+            [FieldName in keyof EntrySkeleton['fields']]: ResolvedField<
+              EntrySkeleton['fields'][FieldName],
               Modifiers,
               Locales
             >
           }
     : 'WITH_ALL_LOCALES' extends Modifiers
     ? {
-        [FieldName in keyof FieldsWithContentTypeId['fields']]: {
+        [FieldName in keyof EntrySkeleton['fields']]: {
           [LocaleName in Locales]?: ResolvedField<
-            FieldsWithContentTypeId['fields'][FieldName],
+            EntrySkeleton['fields'][FieldName],
             Modifiers,
             Locales
           >
         }
       }
     : {
-        [FieldName in keyof FieldsWithContentTypeId['fields']]: ResolvedField<
-          FieldsWithContentTypeId['fields'][FieldName],
+        [FieldName in keyof EntrySkeleton['fields']]: ResolvedField<
+          EntrySkeleton['fields'][FieldName],
           Modifiers,
           Locales
         >
@@ -134,10 +130,10 @@ export type Entry<
 }
 
 export type EntryCollection<
-  FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
+  EntrySkeleton extends EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = ContentfulCollection<Entry<FieldsWithContentTypeId, Modifiers, Locales>> & {
+> = ContentfulCollection<Entry<EntrySkeleton, Modifiers, Locales>> & {
   errors?: Array<any>
   includes?: {
     Entry?: any[]

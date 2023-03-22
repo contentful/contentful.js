@@ -97,7 +97,7 @@ To calculate dynamic keys, we have to define the shape the entries' content type
 ```typescript
 import * as contentful from 'contentful'
 
-type ExampleEntryFieldsWithContentTypeId = {
+type ExampleEntrySkeleton = {
   contentTypeId: 'product',
   fields: {
     productName: contentful.EntryFields.Text
@@ -111,7 +111,7 @@ type ExampleEntryFieldsWithContentTypeId = {
 We can then pass this shape to our `getEntries` call. This gives us the relevant information needed to calculate the dynamic keys and their possible value types.
 
 ```typescript
-getEntries<ExampleEntryFieldsWithContentTypeId>({
+getEntries<ExampleEntrySkeleton>({
   'fields.price[gt]': 100,
 })
 ```
@@ -139,12 +139,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type FieldsWithContentTypeId = {
+type ProductSkeleton = {
   fields: { productName: contentful.EntryFields.Text },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withAllLocales.getEntry<FieldsWithContentTypeId, Locales>('some-entry-id')
+const entry = client.withAllLocales.getEntry<ProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of the `getEntry` is matching the `fields` shape
@@ -197,12 +197,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type FieldsWithContentTypeId = {
+type ProductSkeleton = {
   fields: { relatedProduct: contentful.EntryFields.Entry },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutLinkResolution.getEntry<FieldsWithContentTypeId, Locales>('some-entry-id')
+const entry = client.withoutLinkResolution.getEntry<ProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -233,12 +233,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type FieldsWithContentTypeId = {
+type ProductSkeleton = {
   fields: { relatedProduct: contentful.EntryFields.Entry },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutUnresolvableLinks.getEntry<FieldsWithContentTypeId, Locales>('some-entry-id')
+const entry = client.withoutUnresolvableLinks.getEntry<ProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape

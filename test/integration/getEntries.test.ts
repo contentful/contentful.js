@@ -1,4 +1,4 @@
-import { FieldsWithContentTypeIdType } from '../../lib'
+import { EntrySkeletonType } from '../../lib'
 import * as contentful from '../../lib/contentful'
 import { params, previewParams } from './utils'
 
@@ -28,7 +28,7 @@ describe('getEntries via chained clients', () => {
     })
 
     test('Gets entries with select', async () => {
-      type FieldsWithContentTypeId = FieldsWithContentTypeIdType<
+      type TypeCatSkeleton = EntrySkeletonType<
         {
           name: string
           likes: string
@@ -37,7 +37,7 @@ describe('getEntries via chained clients', () => {
         'cat'
       >
 
-      const response = await client.getEntries<FieldsWithContentTypeId>({
+      const response = await client.getEntries<TypeCatSkeleton>({
         select: ['fields.name', 'fields.likes'],
         content_type: 'cat',
       })

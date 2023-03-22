@@ -3,12 +3,12 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntryFields, FieldsWithContentTypeIdType, ResolvedField } from '../../lib'
+import { EntryFields, EntrySkeletonType, ResolvedField } from '../../lib'
 // @ts-ignore
 import * as mocks from './mocks'
 
 type SimpleEntryFields = { title: string }
-type SimpleEntryWithContentTypeId = FieldsWithContentTypeIdType<SimpleEntryFields>
+type SimpleEntryWithContentTypeId = EntrySkeletonType<SimpleEntryFields>
 
 expectAssignable<ResolvedField<EntryFields.Symbol, undefined>>(mocks.stringValue)
 expectAssignable<ResolvedField<EntryFields.Text, undefined>>(mocks.stringValue)

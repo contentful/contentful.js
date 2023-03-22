@@ -1,7 +1,7 @@
 import { Asset } from './asset'
 import { Entry } from './entry'
 import { EntitySys } from './sys'
-import { FieldsWithContentTypeIdType } from './query'
+import { EntrySkeletonType } from './query'
 import { LocaleCode } from './locale'
 import { ChainModifiers } from '../utils/client-helpers'
 
@@ -41,16 +41,16 @@ export type DeletedAsset = {
   sys: EntitySys & { type: 'DeletedAsset' }
 }
 
-export type SyncEntities = Entry<FieldsWithContentTypeIdType> | Asset | DeletedEntry | DeletedAsset
+export type SyncEntities = Entry<EntrySkeletonType> | Asset | DeletedEntry | DeletedAsset
 
 export interface SyncCollection<
-  FieldsWithContentTypeId extends FieldsWithContentTypeIdType,
+  EntrySkeleton extends EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
 > {
   entries: Array<
     Entry<
-      FieldsWithContentTypeId,
+      EntrySkeleton,
       ChainModifiers extends Modifiers
         ? ChainModifiers
         : Exclude<Modifiers, undefined> | 'WITH_ALL_LOCALES',
