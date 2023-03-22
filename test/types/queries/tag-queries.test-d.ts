@@ -115,7 +115,16 @@ expectNotAssignable<TagQueries>({ 'sys.updatedBy[nin]': mocks.anyValue })
 expectNotAssignable<TagQueries>({ 'sys.version[nin]': mocks.anyValue })
 expectNotAssignable<TagQueries>({ 'sys.revision[nin]': mocks.anyValue })
 
+// order operator
+
+expectAssignable<TagQueries>({
+  order: ['sys.id', 'sys.createdAt', 'sys.updatedAt', 'sys.visibility', 'sys.type'],
+})
+expectAssignable<TagQueries>({
+  order: ['-sys.id', '-sys.createdAt', '-sys.updatedAt', '-sys.visibility', '-sys.type'],
+})
+
 // Fixed query filters
 
-expectAssignable<TagQueries>({ skip: 1, limit: 1, order: 'sys.updatedAt' })
+expectAssignable<TagQueries>({ skip: 1, limit: 1 })
 expectNotAssignable<TagQueries>({ locale: 'en' })

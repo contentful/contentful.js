@@ -35,3 +35,14 @@ export function validateResolveLinksParam(query) {
   }
   return
 }
+
+export function validateRemoveUnresolvedParam(query) {
+  if ('removeUnresolved' in query) {
+    throw new ValidationError(
+      'removeUnresolved',
+      `The use of the 'removeUnresolved' parameter is no longer supported. By default, unresolved links are kept as link objects.
+      If you do not want to include unresolved links, use client.withoutUnresolvableLinks.`
+    )
+  }
+  return
+}

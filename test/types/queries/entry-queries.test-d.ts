@@ -5,8 +5,20 @@ import * as mocks from '../mocks'
 
 // all operator
 
-expectAssignable<EntriesQueries<{ numberField: number; stringArrayField: string[] }>>({
+expectAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+})
+expectNotAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
+  'fields.stringField[all]': mocks.anyValue,
+})
+expectAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
+  content_type: 'id',
+  'fields.stringField[all]': mocks.stringArrayValue,
+  'fields.stringArrayField[all]': mocks.stringArrayValue,
+})
+expectNotAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
+  content_type: 'id',
+  'fields.unknownField[all]': mocks.anyValue,
 })
 
 // equality
@@ -230,6 +242,34 @@ expectNotAssignable<EntriesQueries<{ someField: string }>>({
 expectNotAssignable<EntriesQueries<{ numberField: number; stringArrayField: string[] }>>({
   content_type: 'id',
   'fields.unknownField[nin]': mocks.anyValue,
+})
+
+// order operator
+
+expectAssignable<EntriesQueries<{ someField: string }>>({
+  order: ['sys.createdAt', '-sys.createdAt'],
+})
+expectNotAssignable<EntriesQueries<{ someField: string }>>({ order: ['sys.unknownProperty'] })
+
+expectNotAssignable<EntriesQueries<{ someField: string }>>({ order: ['fields.someField'] })
+expectAssignable<EntriesQueries<{ someField: string }>>({
+  content_type: 'id',
+  order: ['fields.someField', '-fields.someField'],
+})
+expectAssignable<
+  EntriesQueries<{ mediaField: EntryFields.AssetLink; referenceField: EntryFields.EntryLink<any> }>
+>({
+  content_type: 'id',
+  order: [
+    'fields.mediaField.sys.id',
+    '-fields.mediaField.sys.id',
+    'fields.referenceField.sys.id',
+    '-fields.referenceField.sys.id',
+  ],
+})
+expectNotAssignable<EntriesQueries<{ someField: string }>>({
+  content_type: 'id',
+  order: ['fields.unknownField'],
 })
 
 // select operator

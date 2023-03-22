@@ -9,6 +9,14 @@ import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
 // @ts-ignore
 import * as mocks from '../mocks'
+import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
+import { SetFilter } from '../../../lib/types/query/set'
+
+// we can’t tell dates from text fields so the [all] operator is included here
+expectAssignable<SetFilter<{ testField: EntryFields.Symbol }, 'fields'>>({})
+expectType<Required<SetFilter<{ testField: EntryFields.Symbol }, 'fields'>>>({
+  'fields.testField[all]': mocks.stringArrayValue,
+})
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>({})
 expectType<Required<EqualityFilter<{ testField: EntryFields.Date }, 'fields'>>>({
@@ -38,6 +46,11 @@ expectType<Required<RangeFilters<{ testField: EntryFields.Date }, 'fields'>>>({
 expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>({})
 expectType<Required<FullTextSearchFilters<{ testField: EntryFields.Date }, 'fields'>>>({
   'fields.testField[match]': mocks.stringValue,
+})
+
+expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Date }>>({})
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Date }>>>({
+  order: ['fields.testField', '-fields.testField'],
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Date }>>({})

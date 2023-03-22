@@ -95,11 +95,13 @@ Dynamic query keys are based on the given shape of the expected entries' content
 To calculate dynamic keys, we have to define the shape of the fields of the entries' content type:
 
 ```typescript
+import * as contentful from 'contentful'
+
 type ExampleEntryFields = {
-  productName: Contentful.EntryFields.Text
-  image: Contentful.Asset
-  price: Contentful.EntryFields.Number
-  categories: Contentful.Entry<CategoryEntryFields>[]
+  productName: contentful.EntryFields.Text
+  image: contentful.Asset
+  price: contentful.EntryFields.Number
+  categories: contentful.Entry<CategoryEntryFields>[]
 }
 ```
 
@@ -134,8 +136,8 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Fields = { productName: Contentful.EntryFields.Text }
-const Locales = 'en-US' | 'de-DE'
+type Fields = { productName: contentful.EntryFields.Text }
+type Locales = 'en-US' | 'de-DE'
 const entry = client.withAllLocales.getEntry<Fields, Locales>('some-entry-id')
 ```
 
@@ -162,7 +164,7 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Locales = 'en-US' | 'de-DE'
+type Locales = 'en-US' | 'de-DE'
 const asset = client.withAllLocales.getAsset<Locales>('some-asset-id')
 ```
 
@@ -189,10 +191,10 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Fields = {
-  relatedProduct: Contentful.EntryFields.Entry,
+type Fields = {
+  relatedProduct: contentful.EntryFields.Entry,
 }
-const Locales = 'en-US' | 'de-DE'
+type Locales = 'en-US' | 'de-DE'
 const entry = client.withoutLinkResolution.getEntry<Fields, Locales>('some-entry-id')
 ```
 
@@ -224,10 +226,10 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-const Fields = {
-  relatedProduct: Contentful.EntryFields.Entry,
+type Fields = {
+  relatedProduct: contentful.EntryFields.Entry,
 }
-const Locales = 'en-US' | 'de-DE'
+type Locales = 'en-US' | 'de-DE'
 const entry = client.withoutUnresolvableLinks.getEntry<Fields, Locales>('some-entry-id')
 ```
 
