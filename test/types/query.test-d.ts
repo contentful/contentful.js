@@ -151,7 +151,7 @@ expectAssignable<
   'fields.numberField[gte]': numberValue,
   select: ['fields.stringField', 'fields.numberField'],
   limit: numberValue,
-  order: stringValue,
+  order: ['fields.stringField', '-fields.numberField'],
   links_to_asset: stringValue,
   links_to_entry: stringValue,
 })

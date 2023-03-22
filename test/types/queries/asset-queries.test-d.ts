@@ -123,6 +123,21 @@ expectNotAssignable<DefaultAssetQueries>({
   'sys.unknownProp[nin]': mocks.anyValue,
 })
 
+// order operator
+
+expectAssignable<DefaultAssetQueries>({ order: ['sys.createdAt', '-sys.createdAt'] })
+expectNotAssignable<DefaultAssetQueries>({ order: ['sys.unknownProperty'] })
+
+expectAssignable<DefaultAssetQueries>({
+  order: [
+    'fields.file.contentType',
+    '-fields.file.contentType',
+    'fields.file.fileName',
+    '-fields.file.fileName',
+  ],
+})
+expectNotAssignable<DefaultAssetQueries>({ order: ['fields.unknownField'] })
+
 // select operator
 
 expectAssignable<DefaultAssetQueries>({ select: ['sys'] })
