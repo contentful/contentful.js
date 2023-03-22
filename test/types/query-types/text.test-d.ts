@@ -38,7 +38,7 @@ expectType<Required<FullTextSearchFilters<{ testField: EntryFields.Text }, 'fiel
 // can’t distinguish between symbol and text types
 expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Text }>>({})
 expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Text }>>>({
-  order: ['fields.testField'],
+  order: ['fields.testField', '-fields.testField'],
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Text }>>({})

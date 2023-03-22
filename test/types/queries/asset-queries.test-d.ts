@@ -125,7 +125,7 @@ expectNotAssignable<DefaultAssetQueries>({
 
 // order operator
 
-expectAssignable<DefaultAssetQueries>({ order: ['sys.createdAt'] })
+expectAssignable<DefaultAssetQueries>({ order: ['sys.createdAt', '-sys.createdAt'] })
 expectNotAssignable<DefaultAssetQueries>({ order: ['sys.unknownProperty'] })
 
 expectAssignable<DefaultAssetQueries>({
