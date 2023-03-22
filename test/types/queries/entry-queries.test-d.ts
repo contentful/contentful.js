@@ -5,18 +5,26 @@ import * as mocks from '../mocks'
 
 // all operator
 
-expectAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>>({
+expectAssignable<
+  EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>
+>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
 })
-expectNotAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>>({
+expectNotAssignable<
+  EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>
+>({
   'fields.stringField[all]': mocks.anyValue,
 })
-expectAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>>({
+expectAssignable<
+  EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>
+>({
   content_type: 'id',
   'fields.stringField[all]': mocks.stringArrayValue,
   'fields.stringArrayField[all]': mocks.stringArrayValue,
 })
-expectNotAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>>({
+expectNotAssignable<
+  EntriesQueries<FieldsWithContentTypeIdType<{ stringField: string; stringArrayField: string[] }>>
+>({
   content_type: 'id',
   'fields.unknownField[all]': mocks.anyValue,
 })
@@ -271,15 +279,24 @@ expectNotAssignable<
 expectAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ someField: string }>>>({
   order: ['sys.createdAt', '-sys.createdAt'],
 })
-expectNotAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ someField: string }>>>({ order: ['sys.unknownProperty'] })
+expectNotAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ someField: string }>>>({
+  order: ['sys.unknownProperty'],
+})
 
-expectNotAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ someField: string }>>>({ order: ['fields.someField'] })
+expectNotAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ someField: string }>>>({
+  order: ['fields.someField'],
+})
 expectAssignable<EntriesQueries<FieldsWithContentTypeIdType<{ someField: string }>>>({
   content_type: 'id',
   order: ['fields.someField', '-fields.someField'],
 })
 expectAssignable<
-  EntriesQueries<FieldsWithContentTypeIdType<{ mediaField: EntryFields.AssetLink; referenceField: EntryFields.EntryLink<any> }>>
+  EntriesQueries<
+    FieldsWithContentTypeIdType<{
+      mediaField: EntryFields.AssetLink
+      referenceField: EntryFields.EntryLink<any>
+    }>
+  >
 >({
   content_type: 'id',
   order: [

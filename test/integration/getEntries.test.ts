@@ -1,6 +1,5 @@
 import { FieldsWithContentTypeIdType } from '../../lib'
 import * as contentful from '../../lib/contentful'
-// @ts-ignore
 import { params, previewParams } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {

@@ -68,10 +68,13 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | RangeFilters<Fields, 'fields'>
   | ReferenceSearchFilters<Fields, 'fields'>
 
+export type EntryContentTypeQuery<T extends string> = {
+  content_type: T
+}
+
 export type EntriesQueries<FieldsWithContentTypeId extends FieldsWithContentTypeIdType> =
-  | (EntryFieldsQueries<FieldsWithContentTypeId['fields']> & {
-      content_type: FieldsWithContentTypeId['contentTypeId']
-    })
+  | (EntryFieldsQueries<FieldsWithContentTypeId['fields']> &
+      EntryContentTypeQuery<FieldsWithContentTypeId['contentTypeId']>)
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
       EntrySelectFilter &

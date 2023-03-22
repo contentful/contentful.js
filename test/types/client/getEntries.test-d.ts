@@ -1,6 +1,5 @@
-import { expectType } from 'tsd'
-import { createClient, EntryCollection, Entry } from '../../../lib'
-import { FieldsWithContentTypeIdType } from '../../../dist/types/types/query/util'
+import { expectType, expectError } from 'tsd'
+import { createClient, EntryCollection, Entry, FieldsWithContentTypeIdType } from '../../../lib'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -11,7 +10,7 @@ type LinkedFields = {
   name: string
 }
 
-type LinkedFieldsWithContentTypeId = FieldsWithContentTypeIdType<LinkedFields>
+type LinkedFieldsWithContentTypeId = FieldsWithContentTypeIdType<LinkedFields, 'linked-type-id'>
 
 type Fields = {
   title: string
@@ -19,7 +18,7 @@ type Fields = {
   moreLinks: Entry<LinkedFieldsWithContentTypeId>[]
 }
 
-type FieldsWithContentTypeId = FieldsWithContentTypeIdType<Fields>
+type FieldsWithContentTypeId = FieldsWithContentTypeIdType<Fields, 'content-type-id'>
 
 type Locale = 'en'
 
@@ -30,6 +29,16 @@ expectType<Entry<FieldsWithContentTypeId, undefined>>(
 expectType<EntryCollection<FieldsWithContentTypeIdType, undefined>>(await client.getEntries())
 expectType<EntryCollection<FieldsWithContentTypeId, undefined>>(
   await client.getEntries<FieldsWithContentTypeId>()
+)
+
+expectType<EntryCollection<FieldsWithContentTypeId, undefined>>(
+  await client.getEntries<FieldsWithContentTypeId>({ content_type: 'content-type-id' })
+)
+expectError(await client.getEntries<FieldsWithContentTypeId>({ content_type: 'unexpected' }))
+expectType<EntryCollection<FieldsWithContentTypeId | LinkedFieldsWithContentTypeId, undefined>>(
+  await client.getEntries<FieldsWithContentTypeId | LinkedFieldsWithContentTypeId>({
+    content_type: 'content-type-id',
+  })
 )
 
 expectType<Entry<FieldsWithContentTypeIdType, 'WITHOUT_UNRESOLVABLE_LINKS'>>(

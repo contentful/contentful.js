@@ -1,5 +1,4 @@
 import * as contentful from '../../lib/contentful'
-// @ts-ignore
 import { localeSpaceParams, params, previewParams } from './utils'
 import { EntryFields } from '../../lib'
 import { FieldsWithContentTypeIdType } from '../../lib/types/query/util'
