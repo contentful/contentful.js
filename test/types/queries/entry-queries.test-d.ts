@@ -5,8 +5,20 @@ import * as mocks from '../mocks'
 
 // all operator
 
-expectAssignable<EntriesQueries<{ numberField: number; stringArrayField: string[] }>>({
+expectAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+})
+expectNotAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
+  'fields.stringField[all]': mocks.anyValue,
+})
+expectAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
+  content_type: 'id',
+  'fields.stringField[all]': mocks.stringArrayValue,
+  'fields.stringArrayField[all]': mocks.stringArrayValue,
+})
+expectNotAssignable<EntriesQueries<{ stringField: string; stringArrayField: string[] }>>({
+  content_type: 'id',
+  'fields.unknownField[all]': mocks.anyValue,
 })
 
 // equality
