@@ -56,6 +56,10 @@ export type AssetOrderFilter = {
     | '-fields.file.contentType'
     | 'fields.file.fileName'
     | '-fields.file.fileName'
+    | 'fields.file.url'
+    | '-fields.file.url'
+    | 'fields.file.details.size'
+    | '-fields.file.details.size'
   )[]
 }
 
