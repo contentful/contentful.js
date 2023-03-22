@@ -241,7 +241,7 @@ describe('getEntries via chained clients', () => {
 
     test('Gets entries by creation order', async () => {
       const response = await client.getEntries({
-        order: 'sys.createdAt',
+        order: ['sys.createdAt'],
       })
 
       expect(new Date(response.items[0].sys.createdAt).getTime()).toBeLessThan(
@@ -251,7 +251,7 @@ describe('getEntries via chained clients', () => {
 
     test('Gets entries by inverse creation order', async () => {
       const response = await client.getEntries({
-        order: '-sys.createdAt',
+        order: ['-sys.createdAt'],
       })
 
       expect(new Date(response.items[0].sys.createdAt).getTime()).toBeGreaterThan(
@@ -270,7 +270,7 @@ describe('getEntries via chained clients', () => {
      */
     test('Gets entries by creation order and id order', async () => {
       const response = await client.getEntries({
-        order: 'sys.contentType.sys.id,sys.id',
+        order: ['sys.contentType.sys.id', 'sys.id'],
       })
 
       const contentTypeOrder = response.items

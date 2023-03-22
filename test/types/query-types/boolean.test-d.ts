@@ -9,6 +9,10 @@ import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { SubsetFilters } from '../../../lib/types/query/subset'
 // @ts-ignore
 import * as mocks from '../mocks'
+import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
+import { SetFilter } from '../../../lib/types/query/set'
+
+expectAssignable<Required<SetFilter<{ testField: EntryFields.Boolean }, 'fields'>>>({})
 
 expectAssignable<EqualityFilter<{ testField: EntryFields.Boolean }, 'fields'>>({})
 expectType<Required<EqualityFilter<{ testField: EntryFields.Boolean }, 'fields'>>>({
@@ -30,6 +34,11 @@ expectAssignable<Required<LocationSearchFilters<{ testField: EntryFields.Boolean
 expectAssignable<Required<RangeFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
 
 expectAssignable<Required<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
+
+expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Boolean }>>({})
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Boolean }>>>({
+  order: ['fields.testField', '-fields.testField'],
+})
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Boolean }>>({})
 expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Boolean }>>>({
