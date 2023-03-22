@@ -44,7 +44,7 @@ jobs:
       - image: cimg/node:16.13.2-browsers
     steps:
       - checkout
-      - vault/get-secrets:
+      - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
       - run: npm ci
       - run: npm run build
