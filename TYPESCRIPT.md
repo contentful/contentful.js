@@ -92,7 +92,7 @@ Dynamic query keys are based on the given shape of the expected entries' content
 
 ![](images/dynamic-query-keys.png)
 
-To calculate dynamic keys, we have to define the shape the entries' content type:
+To calculate dynamic keys, we have to provide the shape of the entries:
 
 ```typescript
 import * as contentful from 'contentful'
