@@ -7,6 +7,11 @@ export type EntrySkeletonType<Fields extends FieldsType = FieldsType, Id = strin
   contentTypeId: Id
 }
 
+export type EntrySkeletonFromId<
+  EntrySkeletons extends EntrySkeletonType,
+  ContentTypeId extends string
+> = Extract<EntrySkeletons & { contentTypeId: ContentTypeId }, EntrySkeletons>
+
 export type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
 
 export type NonEmpty<T> = T extends Record<string, never> ? never : T

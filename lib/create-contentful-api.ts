@@ -44,6 +44,7 @@ import {
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
 } from './utils/validate-params'
+import { EntrySkeletonFromId } from './types/query/util'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -87,8 +88,11 @@ type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
   ): Promise<Entry<EntrySkeleton, Modifiers>>
 
   getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    query?: EntriesQueries<EntrySkeleton> & LocaleOption
+    query?: EntriesQueries<EntrySkeleton> & LocaleOption & { content_type: never }
   ): Promise<EntryCollection<EntrySkeleton, Modifiers>>
+  getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType, ContentTypeId extends string = string>(
+    query: EntriesQueries<EntrySkeletonFromId<EntrySkeleton, ContentTypeId>> & LocaleOption
+  ): Promise<EntryCollection<EntrySkeletonFromId<EntrySkeleton, ContentTypeId>, Modifiers>>
 
   parseEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     data: EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>

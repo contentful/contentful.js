@@ -36,6 +36,16 @@ expectType<EntryCollection<EntrySkeleton | LinkedSkeleton, undefined>>(
     content_type: 'content-type-id',
   })
 )
+expectType<EntryCollection<EntrySkeleton, undefined>>(
+  await client.getEntries<EntrySkeleton | LinkedSkeleton, 'content-type-id'>({
+    content_type: 'content-type-id',
+  })
+)
+expectError(
+  await client.getEntries<EntrySkeleton | LinkedSkeleton, 'content-type-id'>({
+    content_type: 'linked-type-id',
+  })
+)
 
 expectType<Entry<EntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   await client.withoutUnresolvableLinks.getEntry('entry-id')
