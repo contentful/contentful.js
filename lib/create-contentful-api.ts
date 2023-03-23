@@ -90,7 +90,10 @@ type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
   getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     query?: EntriesQueries<EntrySkeleton> & LocaleOption & { content_type: never }
   ): Promise<EntryCollection<EntrySkeleton, Modifiers>>
-  getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType, ContentTypeId extends string = string>(
+  getEntries<
+    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
+    ContentTypeId extends string = string
+  >(
     query: EntriesQueries<EntrySkeletonFromId<EntrySkeleton, ContentTypeId>> & LocaleOption
   ): Promise<EntryCollection<EntrySkeletonFromId<EntrySkeleton, ContentTypeId>, Modifiers>>
 
