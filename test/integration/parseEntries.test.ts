@@ -1,8 +1,9 @@
 import * as contentful from '../../lib/contentful'
-import { Link } from '../../lib/types'
+import { EntrySkeletonType, Link } from '../../lib/types'
 import { EntryFields, EntryCollection } from '../../lib/types/entry'
 import { params } from './utils'
-export interface TypeCatFields {
+
+interface TypeCatFields {
   name: EntryFields.Text
   likes?: EntryFields.Symbol[]
   color?: EntryFields.Symbol
@@ -13,6 +14,8 @@ export interface TypeCatFields {
   image?: { sys: Link<'Asset'> }
 }
 
+export type TypeCatSkeleton = EntrySkeletonType<TypeCatFields, 'cat'>
+
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
   params.insecure = true
@@ -20,15 +23,15 @@ if (process.env.API_INTEGRATION_TESTS) {
 
 const client = contentful.createClient(params)
 
-let dataWithResolvableLink = {} as EntryCollection<TypeCatFields, 'WITHOUT_LINK_RESOLUTION'>
+let dataWithResolvableLink = {} as EntryCollection<TypeCatSkeleton, 'WITHOUT_LINK_RESOLUTION'>
 let dataWithResolvableLinkAndAllLocales = {} as EntryCollection<
-  TypeCatFields,
+  TypeCatSkeleton,
   'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
   'en-US' | 'tlh'
 >
-let dataWithUnresolvableLink = {} as EntryCollection<TypeCatFields, 'WITHOUT_LINK_RESOLUTION'>
+let dataWithUnresolvableLink = {} as EntryCollection<TypeCatSkeleton, 'WITHOUT_LINK_RESOLUTION'>
 let dataWithUnresolvableLinkAndAllLocales = {} as EntryCollection<
-  TypeCatFields,
+  TypeCatSkeleton,
   'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
   'en-US' | 'tlh'
 >

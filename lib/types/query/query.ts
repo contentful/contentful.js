@@ -1,4 +1,4 @@
-import { AssetDetails, AssetFields, AssetFile, AssetMimeType, AssetSys } from '../asset'
+import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset'
 import { EntrySys } from '../entry'
 import { EqualityFilter, InequalityFilter } from './equality'
 import { ExistenceFilter } from './existence'
@@ -7,7 +7,12 @@ import { RangeFilters } from './range'
 import { FullTextSearchFilters } from './search'
 import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { SubsetFilters } from './subset'
-import { ConditionalFixedQueries, ConditionalListQueries, FieldsType } from './util'
+import {
+  ConditionalFixedQueries,
+  ConditionalListQueries,
+  FieldsType,
+  EntrySkeletonType,
+} from './util'
 import { ReferenceSearchFilters } from './reference'
 import { TagSys } from '../sys'
 import { Metadata } from '../metadata'
@@ -63,8 +68,13 @@ export type EntryFieldsQueries<Fields extends FieldsType> =
   | RangeFilters<Fields, 'fields'>
   | ReferenceSearchFilters<Fields, 'fields'>
 
-export type EntriesQueries<Fields extends FieldsType> =
-  | (EntryFieldsQueries<Fields> & { content_type: string })
+export type EntryContentTypeQuery<T extends string> = {
+  content_type: T
+}
+
+export type EntriesQueries<EntrySkeleton extends EntrySkeletonType> =
+  | (EntryFieldsQueries<EntrySkeleton['fields']> &
+      EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
   | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
       EntrySelectFilter &

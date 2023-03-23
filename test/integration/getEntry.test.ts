@@ -1,7 +1,6 @@
 import * as contentful from '../../lib/contentful'
-// @ts-ignore
 import { localeSpaceParams, params, previewParams } from './utils'
-import { EntryFields } from '../../lib'
+import { EntryFields, EntrySkeletonType } from '../../lib'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -28,9 +27,12 @@ describe('getEntry via chained clients', () => {
     })
 
     test('Gets an entry with a specific locale', async () => {
-      const entry = await client.getEntry<{ test: EntryFields.Symbol }>(entryWithResolvableLink, {
-        locale: 'tlh',
-      })
+      const entry = await client.getEntry<EntrySkeletonType<{ test: EntryFields.Symbol }>>(
+        entryWithResolvableLink,
+        {
+          locale: 'tlh',
+        }
+      )
       expect(entry.sys.locale).toBe('tlh')
     })
 
@@ -179,14 +181,14 @@ describe('getEntry via chained clients', () => {
 })
 
 test('Get entry with fallback locale', async () => {
-  type Fields = { title: string }
+  type EntrySkeleton = EntrySkeletonType<{ title: string }>
 
   const entries = await Promise.all([
-    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'af' }),
-    localeClient.getEntry<Fields>('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
-    localeClient.getEntry<Fields>('no-zu-ZA', { locale: 'zu-ZA' }),
-    localeClient.getEntry<Fields>('no-ne-NP', { locale: 'ne-NP' }),
-    localeClient.getEntry<Fields>('no-af', { locale: 'af' }),
+    localeClient.getEntry<EntrySkeleton>('no-af-and-no-zu-za', { locale: 'af' }),
+    localeClient.getEntry<EntrySkeleton>('no-af-and-no-zu-za', { locale: 'zu-ZA' }),
+    localeClient.getEntry<EntrySkeleton>('no-zu-ZA', { locale: 'zu-ZA' }),
+    localeClient.getEntry<EntrySkeleton>('no-ne-NP', { locale: 'ne-NP' }),
+    localeClient.getEntry<EntrySkeleton>('no-af', { locale: 'af' }),
   ])
 
   expect(entries[0].fields.title).not.toBe('')

@@ -13,8 +13,8 @@ import {
   SyncOptions,
   SyncEntities,
   SyncQuery,
-  FieldsType,
   LocaleCode,
+  EntrySkeletonType,
 } from './types'
 import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 
@@ -28,14 +28,14 @@ import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
  * @return {Promise<SyncCollection>}
  */
 export default async function pagedSync<
-  Fields extends FieldsType,
+  EntrySkeleton extends EntrySkeletonType,
   Locales extends LocaleCode,
   Options extends ChainOptions
 >(
   http: AxiosInstance,
   query: SyncQuery,
   options?: SyncOptions | ChainOptions
-): Promise<SyncCollection<Fields, ModifiersFromOptions<Options>, Locales>> {
+): Promise<SyncCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
   if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error(
       'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'

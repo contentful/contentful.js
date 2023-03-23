@@ -2,12 +2,17 @@ import { ConditionalPick } from 'type-fest'
 
 export type FieldsType = Record<string, any>
 
+export type EntrySkeletonType<Fields extends FieldsType = FieldsType, Id = string> = {
+  fields: Fields
+  contentTypeId: Id
+}
+
 export type BaseOrArrayType<T> = T extends Array<infer U> ? U : T
 
 export type NonEmpty<T> = T extends Record<string, never> ? never : T
 
 export type ConditionalFixedQueries<
-  Fields,
+  Fields extends FieldsType,
   SupportedTypes,
   ValueType,
   Prefix extends string,

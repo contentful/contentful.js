@@ -1,5 +1,5 @@
+import { EntrySkeletonType } from '../../lib'
 import * as contentful from '../../lib/contentful'
-// @ts-ignore
 import { params, previewParams } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -28,13 +28,16 @@ describe('getEntries via chained clients', () => {
     })
 
     test('Gets entries with select', async () => {
-      type Fields = {
-        name: string
-        likes: string
-        color: string
-      }
+      type TypeCatSkeleton = EntrySkeletonType<
+        {
+          name: string
+          likes: string
+          color: string
+        },
+        'cat'
+      >
 
-      const response = await client.getEntries<Fields>({
+      const response = await client.getEntries<TypeCatSkeleton>({
         select: ['fields.name', 'fields.likes'],
         content_type: 'cat',
       })

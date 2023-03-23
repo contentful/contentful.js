@@ -1,5 +1,5 @@
 import { expectType } from 'tsd'
-import { createClient, EntryCollection, EntrySys, FieldsType, Link, LocaleCode } from '../../../lib'
+import { createClient, EntryCollection, EntrySys, EntrySkeletonType, Link } from '../../../lib'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -12,7 +12,9 @@ type Fields = {
   moreLinks: { sys: Link<'Entry'> }[]
 }
 
-const data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'> = {
+type EntrySkeleton = EntrySkeletonType<Fields>
+
+const data: EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'> = {
   total: 10,
   skip: 0,
   limit: 1,
@@ -50,7 +52,7 @@ const data: EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'> = {
 type Locales = 'en' | 'de'
 
 const dataWithAllLocales: EntryCollection<
-  Fields,
+  EntrySkeleton,
   'WITHOUT_LINK_RESOLUTION' | 'WITH_ALL_LOCALES',
   Locales
 > = {
@@ -95,49 +97,55 @@ const dataWithAllLocales: EntryCollection<
   ],
 }
 
-expectType<EntryCollection<Fields, undefined>>(client.parseEntries(data))
-expectType<EntryCollection<Fields, undefined>>(client.parseEntries<Fields>(data))
+expectType<EntryCollection<EntrySkeleton, undefined>>(client.parseEntries(data))
+expectType<EntryCollection<EntrySkeleton, undefined>>(client.parseEntries<EntrySkeleton>(data))
 
-expectType<EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+expectType<EntryCollection<EntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   client.withoutUnresolvableLinks.parseEntries(data)
 )
-expectType<EntryCollection<Fields, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  client.withoutUnresolvableLinks.parseEntries<Fields>(data)
+expectType<EntryCollection<EntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  client.withoutUnresolvableLinks.parseEntries<EntrySkeleton>(data)
 )
 
-expectType<EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>>(
+expectType<EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
   client.withoutLinkResolution.parseEntries(data)
 )
-expectType<EntryCollection<Fields, 'WITHOUT_LINK_RESOLUTION'>>(
-  client.withoutLinkResolution.parseEntries<Fields>(data)
+expectType<EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
+  client.withoutLinkResolution.parseEntries<EntrySkeleton>(data)
 )
 
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES', Locales>>(
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES', Locales>>(
   client.withAllLocales.parseEntries(dataWithAllLocales)
 )
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES'>>(
-  client.withAllLocales.parseEntries<Fields>(dataWithAllLocales)
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES'>>(
+  client.withAllLocales.parseEntries<EntrySkeleton>(dataWithAllLocales)
 )
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES', Locales>>(
-  client.withAllLocales.parseEntries<Fields, Locales>(dataWithAllLocales)
-)
-
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>>(
-  client.withAllLocales.withoutUnresolvableLinks.parseEntries(dataWithAllLocales)
-)
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  client.withAllLocales.withoutUnresolvableLinks.parseEntries<Fields>(dataWithAllLocales)
-)
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>>(
-  client.withAllLocales.withoutUnresolvableLinks.parseEntries<Fields, Locales>(dataWithAllLocales)
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES', Locales>>(
+  client.withAllLocales.parseEntries<EntrySkeleton, Locales>(dataWithAllLocales)
 )
 
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>(
+expectType<
+  EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
+>(client.withAllLocales.withoutUnresolvableLinks.parseEntries(dataWithAllLocales))
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  client.withAllLocales.withoutUnresolvableLinks.parseEntries<EntrySkeleton>(dataWithAllLocales)
+)
+expectType<
+  EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
+>(
+  client.withAllLocales.withoutUnresolvableLinks.parseEntries<EntrySkeleton, Locales>(
+    dataWithAllLocales
+  )
+)
+
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>(
   client.withAllLocales.withoutLinkResolution.parseEntries(dataWithAllLocales)
 )
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
-  client.withAllLocales.withoutLinkResolution.parseEntries<Fields>(dataWithAllLocales)
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
+  client.withAllLocales.withoutLinkResolution.parseEntries<EntrySkeleton>(dataWithAllLocales)
 )
-expectType<EntryCollection<Fields, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>(
-  client.withAllLocales.withoutLinkResolution.parseEntries<Fields, Locales>(dataWithAllLocales)
+expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>(
+  client.withAllLocales.withoutLinkResolution.parseEntries<EntrySkeleton, Locales>(
+    dataWithAllLocales
+  )
 )
