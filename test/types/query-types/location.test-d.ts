@@ -46,8 +46,9 @@ expectAssignable<Required<RangeFilters<{ testField: EntryFields.Location }, 'fie
 
 expectAssignable<Required<FullTextSearchFilters<{ testField: EntryFields.Location }, 'fields'>>>({})
 
-expectNotAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Location }>>>({
-  order: ['fields.testField'],
+expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Number }>>({})
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Location }>>>({
+  order: ['fields.testField', '-fields.testField'],
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Location }>>({})
