@@ -10,6 +10,7 @@ type SupportedTypes =
   | EntryFields.Number
   | EntryFields.Date
   | EntryFields.Boolean
+  | EntryFields.Location
   | undefined
 
 type SupportedLinkTypes = EntryFields.AssetLink | EntryFields.EntryLink<any> | undefined
