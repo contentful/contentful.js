@@ -1,7 +1,7 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { AssetLink, ContentTypeLink, EntryLink, Link } from './link'
+import { AssetLink, ContentTypeLink, Link } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntrySkeletonType } from './query'
@@ -128,34 +128,48 @@ export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
     ? EntryFields.Object<Data>
     : never
 
+type ResolvedEntryLink<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+  LinkedEntry extends EntrySkeletonType
+> = ChainModifiers extends Modifiers
+  ? Entry<LinkedEntry, Modifiers, Locales> | { sys: Link<'Entry'> } | undefined
+  : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+  ? { sys: Link<'Entry'> }
+  : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+  ? Entry<LinkedEntry, Modifiers, Locales> | undefined
+  : Entry<LinkedEntry, Modifiers, Locales> | { sys: Link<'Entry'> }
+
+type ResolvedEntryResourceLink<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+  LinkedEntry extends EntrySkeletonType
+> = ChainModifiers extends Modifiers
+  ? Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink } | undefined
+  : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+  ? { sys: ResourceLink }
+  : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+  ? Entry<LinkedEntry, Modifiers, Locales> | undefined
+  : Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink }
+
+type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extends Modifiers
+  ? Asset | { sys: AssetLink } | undefined
+  : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+  ? { sys: AssetLink }
+  : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+  ? Asset | undefined
+  : Asset | { sys: AssetLink }
+
 type ResolvedLink<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = Field extends EntryFieldTypes.EntryLink<infer LinkedSkeleton>
-  ? ChainModifiers extends Modifiers
-    ? Entry<LinkedSkeleton, Modifiers, Locales> | { sys: Link<'Entry'> } | undefined
-    : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? { sys: Link<'Entry'> }
-    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? Entry<LinkedSkeleton, Modifiers, Locales> | undefined
-    : Entry<LinkedSkeleton, Modifiers, Locales> | { sys: Link<'Entry'> }
-  : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedSkeleton>
-  ? ChainModifiers extends Modifiers
-    ? Entry<LinkedSkeleton, Modifiers, Locales> | { sys: ResourceLink } | undefined
-    : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? { sys: ResourceLink }
-    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? Entry<LinkedSkeleton, Modifiers, Locales> | undefined
-    : Entry<LinkedSkeleton, Modifiers, Locales> | { sys: ResourceLink }
+> = Field extends EntryFieldTypes.EntryLink<infer LinkedEntry>
+  ? ResolvedEntryLink<Modifiers, Locales, LinkedEntry>
+  : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedEntry>
+  ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
   : Field extends EntryFieldTypes.AssetLink
-  ? ChainModifiers extends Modifiers
-    ? Asset | { sys: AssetLink } | undefined
-    : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? { sys: AssetLink }
-    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? Asset | undefined
-    : Asset | { sys: AssetLink }
+  ? ResolvedAssetLink<Modifiers>
   : BaseFieldMap<Field>
 
 export type ResolvedField<

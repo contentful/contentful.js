@@ -8,7 +8,6 @@ import {
   BaseEntry,
   EntryFields,
   EntryFieldTypes,
-  EntryLink,
   EntrySys,
   FieldsType,
   Link,

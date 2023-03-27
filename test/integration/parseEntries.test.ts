@@ -1,5 +1,5 @@
 import * as contentful from '../../lib/contentful'
-import { EntryFieldTypes, EntrySkeletonType, Link } from '../../lib/types'
+import { EntryFieldTypes, EntrySkeletonType } from '../../lib/types'
 import { EntryCollection } from '../../lib/types/entry'
 import { params } from './utils'
 
