@@ -1,59 +1,67 @@
-import { expectAssignable, expectType } from 'tsd'
-import { EntryFields } from '../../../lib'
-import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
-import { ExistenceFilter } from '../../../lib/types/query/existence'
+import { expectAssignable, expectNotAssignable, expectType } from 'tsd'
+import { EntryFieldTypes } from '../../../lib'
+import {
+  EntryFieldsEqualityFilter,
+  EntryFieldsInequalityFilter,
+} from '../../../lib/types/query/equality'
+import { EntryFieldsExistenceFilter } from '../../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../../lib/types/query/location'
-import { RangeFilters } from '../../../lib/types/query/range'
-import { FullTextSearchFilters } from '../../../lib/types/query/search'
+import { EntryFieldsRangeFilters } from '../../../lib/types/query/range'
+import { EntryFieldsFullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
-import { SubsetFilters } from '../../../lib/types/query/subset'
+import { EntryFieldsSubsetFilters } from '../../../lib/types/query/subset'
 // @ts-ignore
 import * as mocks from '../mocks'
 import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
-import { SetFilter } from '../../../lib/types/query/set'
+import { EntryFieldsSetFilter } from '../../../lib/types/query/set'
 
-expectAssignable<SetFilter<{ testField: EntryFields.Text }, 'fields'>>({})
-expectType<Required<SetFilter<{ testField: EntryFields.Text }, 'fields'>>>({
+expectAssignable<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>({})
+expectType<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>>({
   'fields.testField[all]': mocks.stringArrayValue,
 })
 
-expectAssignable<EqualityFilter<{ testField: EntryFields.Text }, 'fields'>>({})
-expectType<Required<EqualityFilter<{ testField: EntryFields.Text }, 'fields'>>>({
+expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>({})
+expectType<Required<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>>({
   'fields.testField': mocks.stringValue,
 })
 
-expectAssignable<InequalityFilter<{ testField: EntryFields.Text }, 'fields'>>({})
-expectType<Required<InequalityFilter<{ testField: EntryFields.Text }, 'fields'>>>({
+expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>({})
+expectType<Required<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>>({
   'fields.testField[ne]': mocks.stringValue,
 })
 
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Text }, 'fields'>>({})
-expectType<Required<ExistenceFilter<{ testField: EntryFields.Text }, 'fields'>>>({
+expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>({})
+expectType<Required<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Text }, 'fields'>>>({
   'fields.testField[exists]': mocks.booleanValue,
 })
 
-expectAssignable<Required<LocationSearchFilters<{ testField: EntryFields.Text }, 'fields'>>>({})
+expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>>({})
 
-expectAssignable<Required<RangeFilters<{ testField: EntryFields.Text }, 'fields'>>>({})
+expectAssignable<Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>>(
+  {}
+)
 
-expectAssignable<FullTextSearchFilters<{ testField: EntryFields.Text }, 'fields'>>({})
-expectType<Required<FullTextSearchFilters<{ testField: EntryFields.Text }, 'fields'>>>({
+expectAssignable<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>(
+  {}
+)
+expectType<
+  Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>
+>({
   'fields.testField[match]': mocks.stringValue,
 })
 
-// can’t distinguish between symbol and text types
-expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Text }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Text }>>>({
+expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Text }>>({})
+expectNotAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Text }>>({
   order: ['fields.testField', '-fields.testField'],
 })
 
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Text }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Text }>>>({
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Text }>>({})
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Text }>>>({
   select: ['fields.testField'],
 })
 
-expectAssignable<SubsetFilters<{ testField: EntryFields.Text }, 'fields'>>({})
-expectType<Required<SubsetFilters<{ testField: EntryFields.Text }, 'fields'>>>({
+expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>({})
+expectType<Required<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>>({
   'fields.testField[in]': mocks.stringArrayValue,
   'fields.testField[nin]': mocks.stringArrayValue,
 })

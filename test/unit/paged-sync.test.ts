@@ -126,7 +126,7 @@ describe('paged-sync', () => {
     expect(response.assets).toHaveLength(3)
     expect(response.deletedAssets).toHaveLength(1)
     expect(response.nextSyncToken).toEqual('nextsynctoken')
-    expect(response.entries[0].fields.linked.sys.linkType).toEqual('Entry')
+    expect(response.entries[0].fields.linked).toHaveProperty('sys.linkType', 'Entry')
   })
 
   test('Initial sync with one page and filter', async () => {

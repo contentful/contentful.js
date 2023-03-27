@@ -1,19 +1,18 @@
 import { makeClient } from '../../lib/make-client'
 import createGlobalOptions from '../../lib/create-global-options'
-import { EntrySys, EntryCollection, Link, EntrySkeletonType } from '../../lib/types'
-import { ResourceLink } from '../../lib/types/resource-link'
+import { EntrySys, EntryCollection, EntrySkeletonType, EntryFieldTypes } from '../../lib/types'
 
 interface AnimalTypeFields {
-  animal?: { sys: Link<'Entry'> }
-  metadata?: { sys: Link<'Entry'> }
-  anotheranimal?: { sys: Link<'Entry'> }
+  animal?: EntryFieldTypes.EntryLink<EntrySkeletonType>
+  metadata?: EntryFieldTypes.EntryLink<EntrySkeletonType>
+  anotheranimal?: EntryFieldTypes.EntryLink<EntrySkeletonType>
 }
 
 type AnimalTypeSkeleton = EntrySkeletonType<AnimalTypeFields>
 
 export interface XspaceTypeFields {
-  xspace?: { sys: ResourceLink }[]
-  xspace2?: { sys: ResourceLink }[]
+  xspace?: EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<EntrySkeletonType>>
+  xspace2?: EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<EntrySkeletonType>>
 }
 
 type XspaceTypeSkeleton = EntrySkeletonType<XspaceTypeFields>
@@ -136,7 +135,7 @@ test('Given json should be parsed correctly as a collection of entries where a f
   }
   const parsedData = api.parseEntries<any>(data)
   expect(parsedData).toBeDefined()
-  expect(parsedData.items[0].fields.metadata.sys).toEqual(pigEntry.sys)
+  expect(parsedData.items[0].fields.metadata).toHaveProperty('sys', pigEntry.sys)
 })
 
 test('Given json should be parsed correctly as a collection of entries with resource links', () => {

@@ -1,5 +1,5 @@
-import { FieldsType } from './util'
-import { EntryFields, EntrySys } from '../entry'
+import { EntrySkeletonType, FieldsType } from './util'
+import { EntryFields, EntryFieldType, EntryFieldTypes, EntrySys } from '../entry'
 import { AssetSys } from '../asset'
 import { ConditionalPick } from 'type-fest'
 import { TagSys } from '../tag'
@@ -13,9 +13,18 @@ type SupportedTypes =
   | EntryFields.Location
   | undefined
 
-type SupportedLinkTypes = EntryFields.AssetLink | EntryFields.EntryLink<any> | undefined
+type SupportedEntryFieldTypes =
+  | EntryFieldTypes.Symbol
+  | EntryFieldTypes.Integer
+  | EntryFieldTypes.Number
+  | EntryFieldTypes.Date
+  | EntryFieldTypes.Boolean
+  | EntryFieldTypes.Location
+  | undefined
 
-export type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
+type SupportedLinkTypes = EntryFieldTypes.AssetLink | EntryFieldTypes.EntryLink<any> | undefined
+
+type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
   | `${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
   | `-${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
 
@@ -23,9 +32,12 @@ export type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
  * @desc order for entries
  * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
  */
-export type EntryOrderFilterWithFields<Fields extends FieldsType> = {
+export type EntryOrderFilterWithFields<
+  Fields extends Record<string, EntryFieldType<EntrySkeletonType>>
+> = {
   order?: (
-    | OrderFilterPaths<Fields, 'fields'>
+    | `fields.${keyof ConditionalPick<Fields, SupportedEntryFieldTypes> & string}`
+    | `-fields.${keyof ConditionalPick<Fields, SupportedEntryFieldTypes> & string}`
     | `fields.${keyof ConditionalPick<Fields, SupportedLinkTypes> & string}.sys.id`
     | `-fields.${keyof ConditionalPick<Fields, SupportedLinkTypes> & string}.sys.id`
     | OrderFilterPaths<EntrySys, 'sys'>

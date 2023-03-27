@@ -1,17 +1,50 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { AssetLink, ContentTypeLink, EntryLink } from './link'
+import { AssetLink, ContentTypeLink, EntryLink, Link } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntrySkeletonType } from './query'
 import { EntitySys } from './sys'
 import { ChainModifiers } from '../utils/client-helpers'
 import { JsonArray, JsonObject } from 'type-fest'
+import { ResourceLink } from './resource-link'
 
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
   type: 'Entry'
+}
+
+export declare namespace EntryFieldTypes {
+  type Symbol = { type: 'Symbol' }
+  type Text = { type: 'Text' }
+  type Integer = { type: 'Integer' }
+  type Number = { type: 'Number' }
+  type Date = { type: 'Date' }
+  type Boolean = { type: 'Boolean' }
+  type Location = { type: 'Location' }
+  type RichText = { type: 'RichText' }
+
+  type EntryLink<EntrySkeleton extends EntrySkeletonType> = {
+    type: 'EntryLink'
+    entry: EntrySkeleton
+  }
+  type EntryResourceLink<EntrySkeleton extends EntrySkeletonType> = {
+    type: 'EntryResourceLink'
+    entry: EntrySkeleton
+  }
+  type AssetLink = { type: 'AssetLink' }
+  type Array<
+    Item extends
+      | EntryFieldTypes.Symbol
+      | EntryFieldTypes.AssetLink
+      | EntryFieldTypes.EntryLink<EntrySkeletonType>
+      | EntryFieldTypes.EntryResourceLink<EntrySkeletonType>
+  > = { type: 'Array'; item: Item }
+  type Object<Data extends JsonObject | JsonArray | null = JsonObject | JsonArray | null> = {
+    type: 'Object'
+    data: Data
+  }
 }
 
 export declare namespace EntryFields {
@@ -35,6 +68,24 @@ export declare namespace EntryFields {
   type RichText = RichTextDocument
 }
 
+export type EntryFieldType<EntrySkeleton extends EntrySkeletonType> =
+  | EntryFieldTypes.Symbol
+  | EntryFieldTypes.Text
+  | EntryFieldTypes.Integer
+  | EntryFieldTypes.Number
+  | EntryFieldTypes.Date
+  | EntryFieldTypes.Boolean
+  | EntryFieldTypes.Location
+  | EntryFieldTypes.RichText
+  | EntryFieldTypes.Object
+  | EntryFieldTypes.EntryLink<EntrySkeleton>
+  | EntryFieldTypes.EntryResourceLink<EntrySkeleton>
+  | EntryFieldTypes.AssetLink
+  | EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  | EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+  | EntryFieldTypes.Array<EntryFieldTypes.EntryLink<EntrySkeleton>>
+  | EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<EntrySkeleton>>
+
 export type EntryField<EntrySkeleton extends EntrySkeletonType> =
   | EntryFields.Symbol
   | EntryFields.Text
@@ -56,33 +107,62 @@ export type BaseEntry = {
   metadata: Metadata
 }
 
+export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
+  Field extends EntryFieldTypes.Symbol
+    ? EntryFields.Symbol
+    : Field extends EntryFieldTypes.Text
+    ? EntryFields.Text
+    : Field extends EntryFieldTypes.Integer
+    ? EntryFields.Integer
+    : Field extends EntryFieldTypes.Number
+    ? EntryFields.Number
+    : Field extends EntryFieldTypes.Date
+    ? EntryFields.Date
+    : Field extends EntryFieldTypes.Boolean
+    ? EntryFields.Boolean
+    : Field extends EntryFieldTypes.Location
+    ? EntryFields.Location
+    : Field extends EntryFieldTypes.RichText
+    ? EntryFields.RichText
+    : Field extends EntryFieldTypes.Object<infer Data>
+    ? EntryFields.Object<Data>
+    : never
+
 type ResolvedLink<
-  Field extends EntryField<EntrySkeletonType>,
+  Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = Field extends EntryFields.EntryLink<infer LinkedSkeleton>
+> = Field extends EntryFieldTypes.EntryLink<infer LinkedSkeleton>
   ? ChainModifiers extends Modifiers
-    ? Entry<LinkedSkeleton, Modifiers, Locales> | EntryLink | undefined
+    ? Entry<LinkedSkeleton, Modifiers, Locales> | { sys: Link<'Entry'> } | undefined
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? EntryLink
+    ? { sys: Link<'Entry'> }
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
     ? Entry<LinkedSkeleton, Modifiers, Locales> | undefined
-    : Entry<LinkedSkeleton, Modifiers, Locales> | EntryLink
-  : Field extends EntryFields.AssetLink
+    : Entry<LinkedSkeleton, Modifiers, Locales> | { sys: Link<'Entry'> }
+  : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedSkeleton>
   ? ChainModifiers extends Modifiers
-    ? Asset | AssetLink | undefined
+    ? Entry<LinkedSkeleton, Modifiers, Locales> | { sys: ResourceLink } | undefined
     : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? AssetLink
+    ? { sys: ResourceLink }
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+    ? Entry<LinkedSkeleton, Modifiers, Locales> | undefined
+    : Entry<LinkedSkeleton, Modifiers, Locales> | { sys: ResourceLink }
+  : Field extends EntryFieldTypes.AssetLink
+  ? ChainModifiers extends Modifiers
+    ? Asset | { sys: AssetLink } | undefined
+    : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+    ? { sys: AssetLink }
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
     ? Asset | undefined
-    : Asset | AssetLink
-  : Field
+    : Asset | { sys: AssetLink }
+  : BaseFieldMap<Field>
 
 export type ResolvedField<
-  Field extends EntryField<EntrySkeletonType>,
+  Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode
-> = Field extends EntryFields.Array<infer Item>
+> = Field extends EntryFieldTypes.Array<infer Item>
   ? Array<ResolvedLink<Item, Modifiers, Locales>>
   : ResolvedLink<Field, Modifiers, Locales>
 
