@@ -63,7 +63,5 @@ export type EntryFieldsConditionalQueries<
   QueryFilter extends string = ''
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
-    FieldName}${QueryFilter}`]?: Fields[FieldName] extends EntryFieldTypes.Array<infer T>
-    ? BaseFieldMap<T>
-    : BaseFieldMap<Fields[FieldName]>
+    FieldName}${QueryFilter}`]?: BaseFieldMap<EntryFieldBaseOrArrayType<Fields[FieldName]>>
 }

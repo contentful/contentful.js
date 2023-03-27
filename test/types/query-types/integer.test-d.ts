@@ -20,28 +20,30 @@ expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Inte
 )
 
 expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})
-expectType<Required<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>>({
+expectType<Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Integer }, 'fields'>>>({
   'fields.testField': mocks.numberValue,
 })
 
 expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})
-expectType<Required<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>>(
-  {
-    'fields.testField[ne]': mocks.numberValue,
-  }
-)
+expectType<
+  Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Integer }, 'fields'>>
+>({
+  'fields.testField[ne]': mocks.numberValue,
+})
 
 expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>>({
-  'fields.testField[exists]': mocks.booleanValue,
-})
+expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Integer }, 'fields'>>>(
+  {
+    'fields.testField[exists]': mocks.booleanValue,
+  }
+)
 
 expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>>(
   {}
 )
 
 expectAssignable<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})
-expectType<Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>>({
+expectType<Required<EntryFieldsRangeFilters<{ testField?: EntryFieldTypes.Integer }, 'fields'>>>({
   'fields.testField[lt]': mocks.numberValue,
   'fields.testField[lte]': mocks.numberValue,
   'fields.testField[gt]': mocks.numberValue,
@@ -53,17 +55,17 @@ expectAssignable<
 >({})
 
 expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Integer }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Integer }>>>({
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Integer }>>>({
   order: ['fields.testField', '-fields.testField'],
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Integer }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Integer }>>>({
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Integer }>>>({
   select: ['fields.testField'],
 })
 
 expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})
-expectType<Required<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>>({
+expectType<Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Integer }, 'fields'>>>({
   'fields.testField[in]': mocks.numberArrayValue,
   'fields.testField[nin]': mocks.numberArrayValue,
 })
