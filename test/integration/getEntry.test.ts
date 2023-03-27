@@ -21,9 +21,9 @@ describe('getEntry via chained clients', () => {
         include: 2,
       })
 
-      expect(response.fields.bestFriend.sys.type).toBe('Entry')
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Entry')
       expect(response.fields.color).toBe('rainbow')
-      expect(response.fields.color['en-US']).not.toBeDefined()
+      expect(response.fields.color).not.toHaveProperty('[en-US]')
     })
 
     test('Gets an entry with a specific locale', async () => {
@@ -48,8 +48,8 @@ describe('getEntry via chained clients', () => {
     test('Gets entry with link resolution', async () => {
       const response = await client.getEntry(entryWithResolvableLink, { include: 2 })
 
-      expect(response.fields.bestFriend.sys.type).toEqual('Entry')
-      expect(response.fields.bestFriend.fields).toBeDefined()
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Entry')
+      expect(response.fields.bestFriend).toHaveProperty('fields')
     })
 
     test('Gets an entry that has resource links', async () => {
@@ -121,7 +121,7 @@ describe('getEntry via chained clients', () => {
       })
 
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend['en-US'].sys.type).not.toBe('Link')
+      expect(response.fields.bestFriend).not.toHaveProperty('[en-US].sys.type', 'Link')
     })
 
     test('client.withAllLocales.withoutLinkResolution', async () => {
@@ -132,7 +132,7 @@ describe('getEntry via chained clients', () => {
         }
       )
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend['en-US'].sys.type).toBe('Link')
+      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
@@ -152,7 +152,7 @@ describe('getEntry via chained clients', () => {
     test('client.withoutLinkResolution', async () => {
       const response = await client.withoutLinkResolution.getEntry(entryWithResolvableLink)
 
-      expect(response.fields.bestFriend.sys.type).toBe('Link')
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Link')
     })
 
     test('client.withoutLinkResolution.withAllLocales', async () => {
@@ -161,7 +161,7 @@ describe('getEntry via chained clients', () => {
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend['en-US'].sys.type).toBe('Link')
+      expect(response.fields.bestFriend).toHaveProperty('[en-US]sys.type', 'Link')
     })
 
     test('Gets entry with without link resolution but with includes', async () => {

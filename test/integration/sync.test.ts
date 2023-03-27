@@ -24,7 +24,7 @@ describe('Sync API', () => {
     expect(response.entries).toBeDefined()
 
     const entryWithImageLink = response.entries.find((entry) => entry.fields && entry.fields.image)
-    expect(entryWithImageLink?.fields?.image['en-US']?.sys?.type).toEqual('Asset')
+    expect(entryWithImageLink?.fields?.image).toHaveProperty(`[en-US]sys.type`, 'Asset')
   })
 
   test('Sync space with token', async () => {
@@ -92,6 +92,6 @@ describe('Sync API', () => {
     })
 
     expect(response.entries[0].fields).toBeDefined()
-    expect(response.entries[0].fields.bestFriend?.['en-US']?.sys.type).toEqual('Link')
+    expect(response.entries[0].fields.bestFriend).toHaveProperty('[en-US]sys.type', 'Link')
   })
 })

@@ -7,15 +7,17 @@ import {
   AssetSys,
   BaseEntry,
   EntryFields,
-  EntryLink,
+  EntryFieldTypes,
   EntrySys,
   FieldsType,
+  Link,
 } from '../../lib'
 import {
   BoundingBoxSearchFilterInput,
   BoundingCircleSearchFilterInput,
   ProximitySearchFilterInput,
 } from '../../lib/types/query/location'
+import { ResourceLink } from '../../lib/types/resource-link'
 
 export const anyValue = '' as any
 export const stringValue = ''
@@ -35,10 +37,19 @@ export const withinCircleLocationValue: BoundingCircleSearchFilterInput = [1, 0,
 export const withinBoxLocationValue: BoundingBoxSearchFilterInput = [1, 0, 2, 1]
 
 export const metadataValue = { tags: [] }
-export const entryLink: EntryLink = {
-  type: 'Link',
-  linkType: 'Entry',
-  id: stringValue,
+export const entryLink: { sys: Link<'Entry'> } = {
+  sys: {
+    type: 'Link',
+    linkType: 'Entry',
+    id: stringValue,
+  },
+}
+export const entryResourceLink: { sys: ResourceLink } = {
+  sys: {
+    type: 'ResourceLink',
+    linkType: 'Contentful:Entry',
+    urn: stringValue,
+  },
 }
 
 export const entrySys: EntrySys = {
@@ -59,7 +70,7 @@ export const entryBasics = {
 
 export type SimpleEntrySkeleton = {
   fields: {
-    title: string
+    title: EntryFieldTypes.Symbol
   }
   contentTypeId: string
 }
@@ -86,10 +97,12 @@ export const getEntry = <Fields extends FieldsType>(
   fields: Fields
 ): BaseEntry & { fields: Fields } => ({ ...entryBasics, fields })
 
-export const assetLink: AssetLink = {
-  type: 'Link',
-  linkType: 'Asset',
-  id: stringValue,
+export const assetLink: { sys: AssetLink } = {
+  sys: {
+    type: 'Link',
+    linkType: 'Asset',
+    id: stringValue,
+  },
 }
 
 export const assetSys: AssetSys = {

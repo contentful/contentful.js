@@ -1,15 +1,17 @@
-import { EntryFields } from '..'
-import { ConditionalListQueries } from './util'
+import { EntryFieldType, EntryFieldTypes } from '..'
+import { EntryFieldsConditionalListQueries } from './util'
 
-type SupportedTypes = EntryFields.Symbol | EntryFields.Symbol[] | EntryFields.Text | undefined
+type SupportedTypes =
+  | EntryFieldTypes.Symbol
+  | EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  | EntryFieldTypes.Text
+  | undefined
 
 /**
  * @desc match multiple values
  * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/array-with-multiple-values}
  */
-export type SetFilter<Fields, Prefix extends string> = ConditionalListQueries<
-  Fields,
-  SupportedTypes,
-  Prefix,
-  `[all]`
->
+export type EntryFieldsSetFilter<
+  Fields extends Record<string, EntryFieldType<any>>,
+  Prefix extends string
+> = EntryFieldsConditionalListQueries<Fields, SupportedTypes, Prefix, `[all]`>

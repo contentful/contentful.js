@@ -1,17 +1,17 @@
 import * as contentful from '../../lib/contentful'
-import { EntrySkeletonType, Link } from '../../lib/types'
-import { EntryFields, EntryCollection } from '../../lib/types/entry'
+import { EntryFieldTypes, EntrySkeletonType } from '../../lib/types'
+import { EntryCollection } from '../../lib/types/entry'
 import { params } from './utils'
 
 interface TypeCatFields {
-  name: EntryFields.Text
-  likes?: EntryFields.Symbol[]
-  color?: EntryFields.Symbol
-  bestFriend?: { sys: Link<'Entry'> }
-  birthday?: EntryFields.Date
-  lifes?: EntryFields.Integer
-  lives?: EntryFields.Integer
-  image?: { sys: Link<'Asset'> }
+  name: EntryFieldTypes.Text
+  likes?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  color?: EntryFieldTypes.Symbol
+  bestFriend?: EntryFieldTypes.EntryLink<EntrySkeletonType>
+  birthday?: EntryFieldTypes.Date
+  lifes?: EntryFieldTypes.Integer
+  lives?: EntryFieldTypes.Integer
+  image?: EntryFieldTypes.AssetLink
 }
 
 export type TypeCatSkeleton = EntrySkeletonType<TypeCatFields, 'cat'>

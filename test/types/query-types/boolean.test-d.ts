@@ -1,52 +1,65 @@
 import { expectAssignable, expectType } from 'tsd'
-import { EntryFields } from '../../../lib'
-import { EqualityFilter, InequalityFilter } from '../../../lib/types/query/equality'
-import { ExistenceFilter } from '../../../lib/types/query/existence'
+import { EntryFieldTypes } from '../../../lib'
+import {
+  EntryFieldsEqualityFilter,
+  EntryFieldsInequalityFilter,
+} from '../../../lib/types/query/equality'
+import { EntryFieldsExistenceFilter } from '../../../lib/types/query/existence'
 import { LocationSearchFilters } from '../../../lib/types/query/location'
-import { RangeFilters } from '../../../lib/types/query/range'
-import { FullTextSearchFilters } from '../../../lib/types/query/search'
+import { EntryFieldsRangeFilters } from '../../../lib/types/query/range'
+import { EntryFieldsFullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
-import { SubsetFilters } from '../../../lib/types/query/subset'
+import { EntryFieldsSubsetFilters } from '../../../lib/types/query/subset'
 // @ts-ignore
 import * as mocks from '../mocks'
 import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
-import { SetFilter } from '../../../lib/types/query/set'
+import { EntryFieldsSetFilter } from '../../../lib/types/query/set'
 
-expectAssignable<Required<SetFilter<{ testField: EntryFields.Boolean }, 'fields'>>>({})
+expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>(
+  {}
+)
 
-expectAssignable<EqualityFilter<{ testField: EntryFields.Boolean }, 'fields'>>({})
-expectType<Required<EqualityFilter<{ testField: EntryFields.Boolean }, 'fields'>>>({
+expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
+expectType<Required<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>({
   'fields.testField': mocks.booleanValue,
 })
 
-expectAssignable<InequalityFilter<{ testField: EntryFields.Boolean }, 'fields'>>({})
-expectType<Required<InequalityFilter<{ testField: EntryFields.Boolean }, 'fields'>>>({
-  'fields.testField[ne]': mocks.booleanValue,
-})
+expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
+expectType<Required<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>(
+  {
+    'fields.testField[ne]': mocks.booleanValue,
+  }
+)
 
-expectAssignable<ExistenceFilter<{ testField: EntryFields.Boolean }, 'fields'>>({})
-expectType<Required<ExistenceFilter<{ testField: EntryFields.Boolean }, 'fields'>>>({
+expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
+expectType<Required<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>({
   'fields.testField[exists]': mocks.booleanValue,
 })
 
-expectAssignable<Required<LocationSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
+expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>(
+  {}
+)
 
-expectAssignable<Required<RangeFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
+expectAssignable<
+  Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>
+>({})
 
-expectAssignable<Required<FullTextSearchFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({})
+expectAssignable<
+  Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>
+>({})
 
-expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFields.Boolean }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFields.Boolean }>>>({
+expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>({})
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>>({
   order: ['fields.testField', '-fields.testField'],
 })
 
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFields.Boolean }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFields.Boolean }>>>({
+expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>({})
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>>({
   select: ['fields.testField'],
 })
 
-expectAssignable<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>({})
-expectType<Required<SubsetFilters<{ testField: EntryFields.Boolean }, 'fields'>>>({
+expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
+expectType<Required<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>({
   'fields.testField[in]': mocks.booleanArrayValue,
   'fields.testField[nin]': mocks.booleanArrayValue,
 })

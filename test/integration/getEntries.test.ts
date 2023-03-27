@@ -1,4 +1,4 @@
-import { EntrySkeletonType } from '../../lib'
+import { EntryFieldTypes, EntrySkeletonType } from '../../lib'
 import * as contentful from '../../lib/contentful'
 import { params, previewParams } from './utils'
 
@@ -16,10 +16,12 @@ describe('getEntries via chained clients', () => {
 
   describe('default client', () => {
     test('client', async () => {
-      const response = await client.getEntries({
-        'sys.id': entryWithResolvableLink,
-        include: 2,
-      })
+      const response = await client.getEntries<
+        EntrySkeletonType<{
+          bestFriend: EntryFieldTypes.EntryLink<EntrySkeletonType>
+          color: EntryFieldTypes.Symbol
+        }>
+      >({ 'sys.id': entryWithResolvableLink, include: 2 })
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend.sys.type).toBe('Entry')
@@ -79,7 +81,9 @@ describe('getEntries via chained clients', () => {
     })
 
     test('Gets entries with linked includes', async () => {
-      const response = await client.getEntries({ include: 2, 'sys.id': entryWithResolvableLink })
+      const response = await client.getEntries<
+        EntrySkeletonType<{ bestFriend: EntryFieldTypes.EntryLink<EntrySkeletonType> }>
+      >({ include: 2, 'sys.id': entryWithResolvableLink })
 
       expect(response.includes).toBeDefined()
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -87,7 +91,7 @@ describe('getEntries via chained clients', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
       expect(response.items[0].fields.bestFriend.sys.type).toEqual('Entry')
-      expect(response.items[0].fields.bestFriend.fields).toBeDefined()
+      expect(response.items[0].fields.bestFriend).toHaveProperty('fields')
     })
 
     test('Gets entries with content type query param', async () => {
@@ -118,20 +122,18 @@ describe('getEntries via chained clients', () => {
     })
 
     test('Gets entries with array equality query', async () => {
-      const response = await client.getEntries({
-        content_type: 'cat',
-        'fields.likes': 'lasagna',
-      })
+      const response = await client.getEntries<
+        EntrySkeletonType<{ likes: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }>
+      >({ content_type: 'cat', 'fields.likes': 'lasagna' })
 
       expect(response.total).toBe(1)
       expect(response.items[0].fields.likes.filter((i) => i === 'lasagna')).toHaveLength(1)
     })
 
     test('Gets entries with array inequality query', async () => {
-      const response = await client.getEntries({
-        content_type: 'cat',
-        'fields.likes[ne]': 'lasagna',
-      })
+      const response = await client.getEntries<
+        EntrySkeletonType<{ likes: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }>
+      >({ content_type: 'cat', 'fields.likes[ne]': 'lasagna' })
 
       expect(response.total).toBeGreaterThan(0)
       expect(response.items[0].fields.likes.filter((i) => i === 'lasagna')).toHaveLength(0)
@@ -146,10 +148,9 @@ describe('getEntries via chained clients', () => {
     })
 
     test('Gets entries with exclusion query', async () => {
-      const response = await client.getEntries({
-        content_type: 'cat',
-        'fields.likes[nin]': 'rainbows,lasagna',
-      })
+      const response = await client.getEntries<
+        EntrySkeletonType<{ likes: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }>
+      >({ content_type: 'cat', 'fields.likes[nin]': ['rainbows', 'lasagna'] })
 
       expect(response.total).toBeGreaterThan(0)
       expect(response.items[0].fields.likes.filter((i) => i === 'lasagna')).toHaveLength(0)
@@ -215,20 +216,18 @@ describe('getEntries via chained clients', () => {
     })
 
     test('Gets entries with location proximity search', async () => {
-      const response = await client.getEntries({
-        content_type: '1t9IbcfdCk6m04uISSsaIK',
-        'fields.center[near]': [38, -122],
-      })
+      const response = await client.getEntries<
+        EntrySkeletonType<{ center: EntryFieldTypes.Location }>
+      >({ content_type: '1t9IbcfdCk6m04uISSsaIK', 'fields.center[near]': [38, -122] })
 
       expect(response.items[0].fields.center.lat).toBeDefined()
       expect(response.items[0].fields.center.lon).toBeDefined()
     })
 
     test('Gets entries with location in bounding object', async () => {
-      const response = await client.getEntries({
-        content_type: '1t9IbcfdCk6m04uISSsaIK',
-        'fields.center[within]': '40,-124,36,-120',
-      })
+      const response = await client.getEntries<
+        EntrySkeletonType<{ center: EntryFieldTypes.Location }>
+      >({ content_type: '1t9IbcfdCk6m04uISSsaIK', 'fields.center[within]': [40, -124, 36, -120] })
 
       const lat = response.items[0].fields.center.lat
       const lon = response.items[0].fields.center.lon
@@ -344,13 +343,18 @@ describe('getEntries via chained clients', () => {
     })
 
     test('client.withAllLocales.withoutLinkResolution', async () => {
-      const response = await client.withAllLocales.withoutLinkResolution.getEntries({
+      const response = await client.withAllLocales.withoutLinkResolution.getEntries<
+        EntrySkeletonType<{
+          bestFriend: EntryFieldTypes.EntryLink<EntrySkeletonType>
+          color: EntryFieldTypes.Symbol
+        }>
+      >({
         'sys.id': entryWithResolvableLink,
         include: 2,
       })
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Link')
+      expect(response.items[0].fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
@@ -368,7 +372,11 @@ describe('getEntries via chained clients', () => {
 
   describe('client has withoutLinkResolution modifier', () => {
     test('client.withoutLinkResolution', async () => {
-      const response = await client.withoutLinkResolution.getEntries({
+      const response = await client.withoutLinkResolution.getEntries<
+        EntrySkeletonType<{
+          bestFriend: EntryFieldTypes.EntryLink<EntrySkeletonType>
+        }>
+      >({
         'sys.id': entryWithResolvableLink,
       })
 
@@ -377,14 +385,20 @@ describe('getEntries via chained clients', () => {
     })
 
     test('client.withoutLinkResolution.withAllLocales', async () => {
-      const response = await client.withoutLinkResolution.withAllLocales.getEntries({
+      const response = await client.withoutLinkResolution.withAllLocales.getEntries<
+        EntrySkeletonType<{
+          bestFriend: EntryFieldTypes.EntryLink<EntrySkeletonType>
+          color: EntryFieldTypes.Symbol
+          name: EntryFieldTypes.Symbol
+        }>
+      >({
         'sys.id': entryWithResolvableLink,
       })
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Link')
+      expect(response.items[0].fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
     })
   })
 })

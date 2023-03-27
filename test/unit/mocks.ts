@@ -14,6 +14,7 @@ import {
   TagSys,
   Entry,
   EntrySkeletonType,
+  EntryFieldTypes,
 } from '../../lib'
 
 const date: EntryFields.Date = '2018-05-03T09:18:16.329Z'
@@ -149,7 +150,7 @@ const contentTypeMock: ContentType = {
 }
 
 export type EntrySkeleton = EntrySkeletonType<{
-  field1: string
+  field1: EntryFieldTypes.Symbol
 }>
 
 const entryMock: Entry<EntrySkeleton> = {

@@ -1,12 +1,17 @@
 import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset'
 import { EntrySys } from '../entry'
-import { EqualityFilter, InequalityFilter } from './equality'
-import { ExistenceFilter } from './existence'
+import {
+  EntryFieldsEqualityFilter,
+  EntryFieldsInequalityFilter,
+  EqualityFilter,
+  InequalityFilter,
+} from './equality'
+import { EntryFieldsExistenceFilter, ExistenceFilter } from './existence'
 import { LocationSearchFilters } from './location'
-import { RangeFilters } from './range'
-import { FullTextSearchFilters } from './search'
+import { EntryFieldsRangeFilters, RangeFilters } from './range'
+import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search'
 import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
-import { SubsetFilters } from './subset'
+import { EntryFieldsSubsetFilters, SubsetFilters } from './subset'
 import {
   ConditionalFixedQueries,
   ConditionalListQueries,
@@ -23,7 +28,7 @@ import {
   EntryOrderFilterWithFields,
   TagOrderFilter,
 } from './order'
-import { SetFilter } from './set'
+import { EntryFieldsSetFilter } from './set'
 
 type FixedPagedOptions = {
   skip?: number
@@ -58,14 +63,14 @@ export type MetadataTagsQueries =
 export type EntryFieldsQueries<Fields extends FieldsType> =
   | EntrySelectFilterWithFields<Fields>
   | EntryOrderFilterWithFields<Fields>
-  | ExistenceFilter<Fields, 'fields'>
-  | EqualityFilter<Fields, 'fields'>
-  | InequalityFilter<Fields, 'fields'>
-  | FullTextSearchFilters<Fields, 'fields'>
-  | SubsetFilters<Fields, 'fields'>
-  | SetFilter<Fields, 'fields'>
+  | EntryFieldsExistenceFilter<Fields, 'fields'>
+  | EntryFieldsEqualityFilter<Fields, 'fields'>
+  | EntryFieldsInequalityFilter<Fields, 'fields'>
+  | EntryFieldsFullTextSearchFilters<Fields, 'fields'>
+  | EntryFieldsSubsetFilters<Fields, 'fields'>
+  | EntryFieldsSetFilter<Fields, 'fields'>
   | LocationSearchFilters<Fields, 'fields'>
-  | RangeFilters<Fields, 'fields'>
+  | EntryFieldsRangeFilters<Fields, 'fields'>
   | ReferenceSearchFilters<Fields, 'fields'>
 
 export type EntryContentTypeQuery<T extends string> = {

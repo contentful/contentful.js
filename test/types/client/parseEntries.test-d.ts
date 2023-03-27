@@ -1,5 +1,11 @@
 import { expectType } from 'tsd'
-import { createClient, EntryCollection, EntrySys, EntrySkeletonType, Link } from '../../../lib'
+import {
+  createClient,
+  EntryCollection,
+  EntrySys,
+  EntrySkeletonType,
+  EntryFieldTypes,
+} from '../../../lib'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -7,9 +13,9 @@ const client = createClient({
 })
 
 type Fields = {
-  title: string
-  link: { sys: Link<'Entry'> }
-  moreLinks: { sys: Link<'Entry'> }[]
+  title: EntryFieldTypes.Symbol
+  link: EntryFieldTypes.EntryLink<EntrySkeletonType>
+  moreLinks: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<EntrySkeletonType>>
 }
 
 type EntrySkeleton = EntrySkeletonType<Fields>
