@@ -15,7 +15,6 @@ import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
 import { EntryFieldsSetFilter } from '../../../lib/types/query/set'
 import { EntryFieldTypes } from '../../../lib'
 
-// we can’t tell dates from text fields so the [all] operator is included here
 expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>>({})
 
 expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
