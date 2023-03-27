@@ -26,4 +26,10 @@ export type ExistenceFilter<
 export type EntryFieldsExistenceFilter<
   Fields extends FieldsType,
   Prefix extends string
-> = ConditionalFixedQueries<Fields, EntryFieldType<EntrySkeletonType>, boolean, Prefix, '[exists]'>
+> = ConditionalFixedQueries<
+  Fields,
+  EntryFieldType<EntrySkeletonType> | undefined,
+  boolean,
+  Prefix,
+  '[exists]'
+>

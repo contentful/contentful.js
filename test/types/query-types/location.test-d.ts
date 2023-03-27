@@ -28,15 +28,15 @@ expectAssignable<
 >({})
 
 expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Location }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Location }, 'fields'>>>(
-  {
-    'fields.testField[exists]': mocks.booleanValue,
-  }
-)
+expectType<
+  Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Location }, 'fields'>>
+>({
+  'fields.testField[exists]': mocks.booleanValue,
+})
 
 expectAssignable<LocationSearchFilters<{ testField: EntryFieldTypes.Location }, 'fields'>>({})
 expectAssignable<
-  Required<LocationSearchFilters<{ testField: EntryFieldTypes.Location }, 'fields'>>
+  Required<LocationSearchFilters<{ testField?: EntryFieldTypes.Location }, 'fields'>>
 >({
   'fields.testField[near]': mocks.nearLocationValue,
   'fields.testField[within]': mocks.withinCircleLocationValue,
@@ -69,12 +69,12 @@ expectAssignable<
 >({})
 
 expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Number }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Location }>>>({
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Location }>>>({
   order: ['fields.testField', '-fields.testField'],
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Location }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Location }>>>({
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Location }>>>({
   select: ['fields.testField'],
 })
 

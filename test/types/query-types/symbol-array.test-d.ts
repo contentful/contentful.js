@@ -20,7 +20,7 @@ expectAssignable<
 >({})
 expectType<
   Required<
-    EntryFieldsSetFilter<{ testField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }, 'fields'>
+    EntryFieldsSetFilter<{ testField?: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }, 'fields'>
   >
 >({
   'fields.testField[all]': mocks.stringArrayValue,
@@ -32,7 +32,7 @@ expectAssignable<
 expectType<
   Required<
     EntryFieldsEqualityFilter<
-      { testField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
+      { testField?: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
       'fields'
     >
   >
@@ -49,7 +49,7 @@ expectAssignable<
 expectType<
   Required<
     EntryFieldsInequalityFilter<
-      { testField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
+      { testField?: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
       'fields'
     >
   >
@@ -63,7 +63,7 @@ expectAssignable<
 expectType<
   Required<
     EntryFieldsExistenceFilter<
-      { testField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
+      { testField?: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
       'fields'
     >
   >
@@ -92,7 +92,7 @@ expectAssignable<
 expectType<
   Required<
     EntryFieldsFullTextSearchFilters<
-      { testField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
+      { testField?: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
       'fields'
     >
   >
@@ -122,7 +122,10 @@ expectAssignable<
 >({})
 expectType<
   Required<
-    EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }, 'fields'>
+    EntryFieldsSubsetFilters<
+      { testField?: EntryFieldTypes.Array<EntryFieldTypes.Symbol> },
+      'fields'
+    >
   >
 >({
   'fields.testField[in]': mocks.stringArrayValue,

@@ -20,21 +20,23 @@ expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Bool
 )
 
 expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
-expectType<Required<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>({
+expectType<Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Boolean }, 'fields'>>>({
   'fields.testField': mocks.booleanValue,
 })
 
 expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
-expectType<Required<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>(
-  {
-    'fields.testField[ne]': mocks.booleanValue,
-  }
-)
+expectType<
+  Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Boolean }, 'fields'>>
+>({
+  'fields.testField[ne]': mocks.booleanValue,
+})
 
 expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>({
-  'fields.testField[exists]': mocks.booleanValue,
-})
+expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Boolean }, 'fields'>>>(
+  {
+    'fields.testField[exists]': mocks.booleanValue,
+  }
+)
 
 expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>(
   {}
@@ -49,17 +51,17 @@ expectAssignable<
 >({})
 
 expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>>({
+expectAssignable<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Boolean }>>>({
   order: ['fields.testField', '-fields.testField'],
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Boolean }>>>({
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Boolean }>>>({
   select: ['fields.testField'],
 })
 
 expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>({})
-expectType<Required<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Boolean }, 'fields'>>>({
+expectType<Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Boolean }, 'fields'>>>({
   'fields.testField[in]': mocks.booleanArrayValue,
   'fields.testField[nin]': mocks.booleanArrayValue,
 })

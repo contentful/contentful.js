@@ -28,7 +28,7 @@ expectAssignable<
 >({})
 
 expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Object }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Object }, 'fields'>>>({
+expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Object }, 'fields'>>>({
   'fields.testField[exists]': mocks.booleanValue,
 })
 
@@ -49,7 +49,7 @@ expectNotAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Obje
 })
 
 expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Object }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Object }>>>({
+expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Object }>>>({
   select: ['fields.testField'],
 })
 
