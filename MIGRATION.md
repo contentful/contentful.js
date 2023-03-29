@@ -59,15 +59,15 @@ Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a 
 **Configuration** 
 
 - Using `resolveLinks` as a client config option or as a query parameter are no longer supported for `getEntries`, `getEntry`, `parseEntries`, or initial `sync` calls. 
-  Instead, you should use the client modifier `withoutLinkResolution` to achieve the same result.
+  Instead, you should use the client chain modifier `withoutLinkResolution` to achieve the same result.
   See [response modifiers](#response-modifiers) for migration instructions.
 
 - Using `removeUnresolved` as a client config option is no longer supported for `getEntries` and `getEntry`, `parseEntries`, or initial `sync` calls.
-  Instead, you should use the client modifier `withoutUnresolvableLinks` to achieve the same result.
+  Instead, you should use the client chain modifier `withoutUnresolvableLinks` to achieve the same result.
   See [response modifiers](#response-modifiers) for migration instructions.
  
 - Similarly, `getEntries`, `getEntry`, `getAssets`, and `getAsset` no longer support setting the query parameter `locale` to `*`.
-  In order to fetch entries in all locales, you should use the client modifier `withAllLocales` to achieve the same result.
+  In order to fetch entries in all locales, you should use the client chain modifier `withAllLocales` to achieve the same result.
 - See [response modifiers](#response-modifiers) for migration instructions.
 
 ### Version compatibility
@@ -90,9 +90,9 @@ Calls to `getEntries` and `getEntry` no longer support the `resolveLinks` and `r
 
 The default behavior is as before: Linked entities are by default resolved, and, if unresolvable, represented as a Link object. In order to change these defaults, do the following:
 
-:warning: Instead of `resolveLinks: false`, please use the client chain `withoutLinkResolution`.
+:warning: Instead of `resolveLinks: false`, please use the client chain modifier `withoutLinkResolution`.
 
-:warning: Instead of `removeUnresolved: true`, please use the client chain `withoutUnresolvableLinks`
+:warning: Instead of `removeUnresolved: true`, please use the client chain modifier `withoutUnresolvableLinks`
 
 **Previously:**
 
@@ -128,7 +128,7 @@ The default behavior is as before: Linked entities are by default resolved, and,
 #### Query param `locale='*'`
 Calls to `getEntries` and `getEntry` no longer support setting the `locale` parameter to `'*'`. If you want to fetch entries in all locales, you should use one of the [chained clients](README.md#chained-clients) to achieve the same result.
 
-:warning: Instead of `locale: '*'`, please use the client chain `withAllLocales`.
+:warning: Instead of `locale: '*'`, please use the client chain modifier `withAllLocales`.
 
 **Previously:**
   ```js
