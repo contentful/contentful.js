@@ -97,7 +97,7 @@ To calculate dynamic keys, we have to provide the shape of the entries:
 ```typescript
 import * as contentful from 'contentful'
 
-type CategoryEntryFields = { 
+type CategoryEntrySkeleton = { 
     contentTypeId: 'category',
     fields: {
         categoryName: contentful.EntryFieldTypes.Text,
@@ -110,7 +110,7 @@ type ExampleEntrySkeleton = {
     productName: contentful.EntryFieldTypes.Text
     image: contentful.EntryFieldTypes.AssetLink
     price: contentful.EntryFieldTypes.Number
-    categories: contentful.EntryFieldTypes.Array<contentful.EntryFieldTypes.EntryLink<CategoryEntryFields>>
+    categories: contentful.EntryFieldTypes.Array<contentful.EntryFieldTypes.EntryLink<CategoryEntrySkeleton>>
     location: contentful.EntryFieldTypes.Location
   }
 }
@@ -235,7 +235,7 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSqueleton = {
+type ProductSkeleton = {
   contentTypeId: 'product'
   fields: {
     productName: contentful.EntryFieldTypes.Text
@@ -245,7 +245,7 @@ type ProductSqueleton = {
 }
 
 type ReferencedProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSqueleton> },
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSkeleton> },
   contentTypeId: 'referencedProduct'
 }
 type Locales = 'en-US' | 'de-DE'
@@ -280,7 +280,7 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSqueleton = {
+type ProductSkeleton = {
   contentTypeId: 'product'
   fields: {
     productName: contentful.EntryFieldTypes.Text
@@ -290,7 +290,7 @@ type ProductSqueleton = {
 }
 
 type ReferencedProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSqueleton> },
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSkeleton> },
   contentTypeId: 'referencedProduct'
 }
 type Locales = 'en-US' | 'de-DE'
