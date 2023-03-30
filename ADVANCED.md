@@ -122,18 +122,20 @@ Please see the notes below for link resolution prior to v.10.0.0 and v.7.0.0.
 
 #### Note: link resolution for versions older than 10.0.0
 
-Please note that for versions older than 10.0.0, disabling link resolution needs to be done via [Chained Clients](README.md#chained-clients).
-To disable it, you can use the chain modifier `withoutLinkResolution` on the Contentful client. Like so:
+Please note that for versions older than 10.0.0, disabling link resolution needs to be done via [configuration options](README.md#response-configuration-options) during client creation.
+To disable it, set `resolveLinks` to `false` when creating the Contentful client. Like so:
 
 ```js
 const contentful = require("contentful");
 const client = contentful.createClient({
   accessToken: "<you-access-token>",
-  space: "<your-space-id>"
-}).withoutLinkResolution;
+  space: "<your-space-id>",
+  resolveLinks: false
+});
 ```
 
-If you want to completely remove fields which could not be resolved, you can use the chain modifier `withoutUnresolvableLinks` on the Contentful client.
+If you want to completely remove fields which could not be resolved, set `removeUnresolved` to `true` in the configuration options.
+
 
 #### Note: link resolution for versions older than 7.0.0
 

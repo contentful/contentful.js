@@ -117,16 +117,14 @@ getEntries<ExampleEntrySkeleton>({
 })
 ```
 
-#### Limitations
+#### Limitation
 
-- Due to the limitation with recursive types, we can only calculate keys on the root level of your content type.
-There is currently no way to calculate keys for nested (recursive) content types.
 - To limit the complexity of query types we use a simple type definition for [search on references](https://contentful.atlassian.net/wiki/spaces/PROD/pages/4169466000/Known+limitations+of+contentful.js+TypeScript+support#:~:text=search%20on%20references). 
 We only check that prefix of the form `fields.reference.` matches a reference field called reference. The rest of the parameter is not evaluated and thus does not provide autocomplete functionality.
 
 #### Breaking Change
 
-Query types that can accept an array of values, which were send by using  one string of coma-separated values are now no longer supported.
+Query types that accept an array of values used to accept them as a comma-separated string which is no longer supported.
 The user must instead provide the original array.
 
 The list of query filters that only accept arrays from now on:
