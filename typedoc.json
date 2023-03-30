@@ -1,7 +1,7 @@
 {
   "entryPoints": ["lib/index.ts"],
   "out": "./out",
-  "readme": "README.md",
+  "readme": "DOCS.md",
   "name": "contentful.js",
   "exclude": [],
   "includeVersion": false,
