@@ -100,6 +100,13 @@ for a more accurate typescript autofill support on your IDE
 ```typescript
 import * as contentful from 'contentful'
 
+type CategoryEntryFields = { 
+    contentTypeId: 'category',
+    fields: {
+        categoryName: contentful.EntryFieldTypes.Text,
+    }
+}
+
 type ExampleEntrySkeleton = {
   contentTypeId: 'product',
   fields: {
@@ -115,7 +122,14 @@ type ExampleEntrySkeleton = {
 We can then pass this shape to our `getEntries` call. This gives us the relevant information needed to calculate the dynamic keys and their possible value types.
 
 ```typescript
-getEntries<ExampleEntrySkeleton>({
+const client = contentful.createClient({
+  space: '<space-id>',
+  accessToken: '<content-delivery-token>',
+})
+
+// content_type query parameter is required when filtering on any field
+client.getEntries<ExampleEntrySkeleton>({
+  content_type: 'product',
   'fields.price[gt]': 100,
 })
 ```
@@ -142,7 +156,8 @@ The list of query filters that only accept arrays from now on:
 Example of the new usage:
 
 ```typescript
-getEntries<ExampleEntrySkeleton>({
+client.getEntries<ExampleEntrySkeleton>({
+  content_type: 'product',
   'fields.location[near]': [10,20,30],
 })
 ```
@@ -166,7 +181,7 @@ const client = contentful.createClient({
 })
 
 type ProductSkeleton = {
-  fields: { productName: contentful.EntryFieldTypess.Text },
+  fields: { productName: contentful.EntryFieldTypes.Text },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
@@ -223,13 +238,22 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypess.EntryLink<ExampleEntrySqueleton> },
+type ProductSqueleton = {
   contentTypeId: 'product'
+  fields: {
+    productName: contentful.EntryFieldTypes.Text
+    image: contentful.EntryFieldTypes.AssetLink
+    price: contentful.EntryFieldTypes.Number
+  }
+}
+
+type ReferencedProductSkeleton = {
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSqueleton> },
+  contentTypeId: 'referencedProduct'
 }
 type Locales = 'en-US' | 'de-DE'
 // Chaining withAllLocales to be able to add the Locale type
-const entry = client.withoutLinkResolution.withAllLocales.getEntry<ProductSkeleton, Locales>('some-entry-id')
+const entry = client.withoutLinkResolution.withAllLocales.getEntry<ReferencedProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -260,13 +284,22 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypess.EntryLink<ExampleEntrySqueleton> },
+type ProductSqueleton = {
   contentTypeId: 'product'
+  fields: {
+    productName: contentful.EntryFieldTypes.Text
+    image: contentful.EntryFieldTypes.AssetLink
+    price: contentful.EntryFieldTypes.Number
+  }
+}
+
+type ReferencedProductSkeleton = {
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSqueleton> },
+  contentTypeId: 'referencedProduct'
 }
 type Locales = 'en-US' | 'de-DE'
 // Chaining withAllLocales to be able to add the Locale type
-const entry = client.withoutUnresolvableLinks.withAllLocales.getEntry<ProductSkeleton, Locales>('some-entry-id')
+const entry = client.withoutUnresolvableLinks.withAllLocales.getEntry<ReferencedProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
