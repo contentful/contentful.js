@@ -218,7 +218,7 @@ The `createClient` method supports several options you may set to achieve the ex
 
 ```js
 contentful.createClient({
-  ...your config here ...
+  ...your config here...
 })
 ```
 
@@ -249,7 +249,7 @@ The configuration options belong to two categories: request config and response 
 
 ##### Response configuration options
 
-> :warning: **Response config options** are have been **removed** in `v10.0.0` in favor of the new [Chained Clients](#chained-clients) approach.
+> :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [Chained Clients](#chained-clients) approach.
 
 ### Chained Clients
 
@@ -412,7 +412,7 @@ const data = {
           locale: 'en-US',
         },
         fields: {
-          name: 'Pig,
+          name: 'Pig',
           friend: { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } },
         },
       },
