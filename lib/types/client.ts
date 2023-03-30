@@ -1,18 +1,35 @@
-import { AddChainModifier, ChainModifiers } from '../utils/client-helpers'
 import { ContentType, ContentTypeCollection } from './content-type'
 import { Space } from './space'
 import { LocaleCode, LocaleCollection } from './locale'
-import { AssetQueries, EntriesQueries, EntrySkeletonType, TagQueries } from './query'
+import { AssetsQueries, EntriesQueries, EntrySkeletonType, TagQueries } from './query'
 import { SyncCollection, SyncQuery } from './sync'
 import { Tag, TagCollection } from './tag'
 import { AssetKey } from './asset-key'
-import { EntryQueries, LocaleOption } from './query/query'
+import { AssetQueries, EntryQueries } from './query/query'
 import { Entry, EntryCollection } from './entry'
 import { Asset, AssetCollection, AssetFields } from './asset'
 
-interface BaseClient {
-  version: string
+/**
+ * Client chain modifiers used in all types that depend on the client configuration.
+ * @category Client
+ */
+export type ChainModifiers =
+  | 'WITH_ALL_LOCALES'
+  | 'WITHOUT_LINK_RESOLUTION'
+  | 'WITHOUT_UNRESOLVABLE_LINKS'
+  | undefined
 
+type AddChainModifier<
+  Modifiers extends ChainModifiers,
+  AddedModifiers extends Exclude<ChainModifiers, undefined>
+> = undefined extends Modifiers ? AddedModifiers : Modifiers | AddedModifiers
+
+/**
+ * Contentful Delivery API Client. Contains methods which allow access to the different kinds of entities present in Contentful (Entries, Assets, etc).
+ * @category Client
+ * @typeParam Modifiers The chain modifiers used to configure the client.
+ */
+export type ContentfulClientApi<Modifiers extends ChainModifiers> = {
   /**
    * Gets a Content Type
    * @category API
@@ -167,78 +184,160 @@ interface BaseClient {
    * console.log(assetKey)
    */
   createAssetKey(expiresAt: number): Promise<AssetKey>
-}
 
-type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
+  /**
+   * Gets an Entry
+   * @param id - The entry’s ID
+   * @param query - Object with search parameters. In this method it's only useful for `locale`.
+   * @return Promise for an Entry
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const entry = await client.getEntry('<entry_id>')
+   * console.log(entry)
+   */
   getEntry<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
     id: string,
-    query?: EntryQueries
+    query?: EntryQueries<Modifiers>
   ): Promise<Entry<EntrySkeleton, Modifiers, Locales>>
 
+  /**
+   * Gets a collection of Entries
+   * @param query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
+   * @return Promise for a collection of Entries
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getEntries()
+   * console.log(response.items)
+   */
   getEntries<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
-    query?: EntriesQueries<EntrySkeleton>
+    query?: EntriesQueries<EntrySkeleton, Modifiers>
   ): Promise<EntryCollection<EntrySkeleton, Modifiers, Locales>>
 
-  parseEntries<
+  /**
+   * Parse raw json data into collection of entry objects.Links will be resolved also
+   * @param data json data
+   * @example
+   * let data = {items: [
+   *    {
+   *    sys: {type: 'Entry', locale: 'en-US'},
+   *    fields: {
+   *      animal: {sys: {type: 'Link', linkType: 'Animal', id: 'oink'}},
+   *      anotheranimal: {sys: {type: 'Link', linkType: 'Animal', id: 'middle-parrot'}}
+   *    }
+   *  }
+   * ],
+   * includes: {
+   *  Animal: [
+   *    {
+   *      sys: {type: 'Animal', id: 'oink', locale: 'en-US'},
+   *      fields: {
+   *        name: 'Pig',
+   *        friend: {sys: {type: 'Link', linkType: 'Animal', id: 'groundhog'}}
+   *      }
+   *    }
+   *   ]
+   *  }
+   * }
+   * console.log( data.items[0].fields.foo ); // undefined
+   * let parsedData = client.parseEntries(data);
+   * console.log( parsedData.items[0].fields.foo ); // foo
+   */
+  parseEntries: <
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
-    data: EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
-  ): EntryCollection<EntrySkeleton, Modifiers, Locales>
+    data: EntryCollection<
+      EntrySkeleton,
+      AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>,
+      Locales
+    >
+  ) => EntryCollection<EntrySkeleton, Modifiers, Locales>
 
+  /**
+   * Gets an Asset
+   * @param id
+   * @param query - Object with search parameters. In this method it's only useful for `locale`.
+   * @return Promise for an Asset
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const asset = await client.getAsset('<asset_id>')
+   * console.log(asset)
+   */
   getAsset<Locales extends LocaleCode = LocaleCode>(
-    id: string
-  ): Promise<Asset<'WITH_ALL_LOCALES', Locales>>
-
-  getAssets<Locales extends LocaleCode = LocaleCode>(
-    query?: AssetQueries<AssetFields>
-  ): Promise<AssetCollection<'WITH_ALL_LOCALES', Locales>>
-}
-
-type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
-  withAllLocales: ContentfulClientApi<AddChainModifier<Modifiers, 'WITH_ALL_LOCALES'>>
-  getEntry<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     id: string,
-    query?: EntryQueries & LocaleOption
-  ): Promise<Entry<EntrySkeleton, Modifiers>>
+    query?: AssetQueries<Modifiers>
+  ): Promise<Asset<Modifiers, Locales>>
 
-  getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    query?: EntriesQueries<EntrySkeleton> & LocaleOption
-  ): Promise<EntryCollection<EntrySkeleton, Modifiers>>
+  /**
+   * Gets a collection of Assets
+   * @param query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
+   * @return Promise for a collection of Assets
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getAssets()
+   * console.log(response.items)
+   */
+  getAssets<Locales extends LocaleCode = LocaleCode>(
+    query?: AssetsQueries<AssetFields, Modifiers>
+  ): Promise<AssetCollection<Modifiers, Locales>>
 
-  parseEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    data: EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>
-  ): EntryCollection<EntrySkeleton, Modifiers>
+  /**
+   * A client that will fetch all locales. Only available if not already enabled.
+   */
+  withAllLocales: 'WITH_ALL_LOCALES' extends Modifiers
+    ? never
+    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITH_ALL_LOCALES'>>
 
-  getAsset(id: string, query?: LocaleOption): Promise<Asset<undefined>>
-
-  getAssets(query?: AssetQueries<AssetFields> & LocaleOption): Promise<AssetCollection<undefined>>
-}
-
-/**
- * @category Client
- */
-export type ContentfulClientApi<Modifiers extends ChainModifiers> = BaseClient &
-  ('WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
+  /**
+   * A client that will not resolve links. Only available if not already disabled.
+   */
+  withoutLinkResolution: 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+    ? never
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
-    : {
-        withoutLinkResolution: ContentfulClientApi<
-          AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>
-        >
-        withoutUnresolvableLinks: ContentfulClientApi<
-          AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>
-        >
-      }) &
-  ('WITH_ALL_LOCALES' extends Modifiers
-    ? ClientMethodsWithAllLocales<Modifiers>
-    : ClientMethodsWithoutAllLocales<Modifiers>)
+    ? never
+    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>>
+
+  /**
+   * A client that will remove unresolvable links. Only available if not already disabled.
+   */
+  withoutUnresolvableLinks: 'WITHOUT_LINK_RESOLUTION' extends Modifiers
+    ? never
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+    ? never
+    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>>
+
+  /**
+   * The current Contentful.js version
+   */
+  version: string
+}

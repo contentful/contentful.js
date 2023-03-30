@@ -4,10 +4,16 @@
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
 
-import { Asset, AssetCollection, AssetDetails, AssetFields, AssetFile } from '../../lib'
+import {
+  Asset,
+  AssetCollection,
+  AssetDetails,
+  AssetFields,
+  AssetFile,
+  ChainModifiers,
+} from '../../lib'
 // @ts-ignore
 import * as mocks from './mocks'
-import { ChainModifiers } from '../../lib/utils/client-helpers'
 
 type AssetLocales = 'US' | 'DE'
 

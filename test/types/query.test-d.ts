@@ -141,7 +141,8 @@ expectAssignable<
     EntrySkeletonType<{
       stringField: EntryFieldTypes.Symbol
       numberField: EntryFieldTypes.Number
-    }>
+    }>,
+    undefined
   >
 >({
   content_type: 'id',

@@ -1,13 +1,4 @@
-export type ChainModifiers =
-  | 'WITH_ALL_LOCALES'
-  | 'WITHOUT_LINK_RESOLUTION'
-  | 'WITHOUT_UNRESOLVABLE_LINKS'
-  | undefined
-
-export type AddChainModifier<
-  Modifiers extends ChainModifiers,
-  AddedModifiers extends Exclude<ChainModifiers, undefined>
-> = undefined extends Modifiers ? AddedModifiers : Modifiers | AddedModifiers
+import { ChainModifiers } from '../types/client'
 
 export type ChainOption<Modifiers extends ChainModifiers = ChainModifiers> = {
   withoutLinkResolution: ChainModifiers extends Modifiers
