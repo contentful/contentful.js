@@ -281,6 +281,9 @@ export interface CreateContentfulApiParams {
   getGlobalOptions: GetGlobalOptions
 }
 
+/**
+ * @category Client
+ */
 export type ContentfulClientApi = DefaultClient
 
 class NotFoundError extends Error {

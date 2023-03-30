@@ -13,6 +13,9 @@ export interface GlobalOptionsParams {
   environmentBaseUrl?: string
 }
 
+/**
+ * @category Client
+ */
 export type GetGlobalOptions = (
   globalOptions?: GlobalOptionsParams
 ) => Required<GlobalOptionsParams>

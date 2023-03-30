@@ -10,11 +10,17 @@ import { ChainModifiers } from '../utils/client-helpers'
 import { JsonArray, JsonObject } from 'type-fest'
 import { ResourceLink } from './resource-link'
 
+/**
+ * @category Entry
+ */
 export interface EntrySys extends EntitySys {
   contentType: { sys: ContentTypeLink }
   type: 'Entry'
 }
 
+/**
+ * @category Entry
+ */
 export declare namespace EntryFieldTypes {
   type Symbol = { type: 'Symbol' }
   type Text = { type: 'Text' }
@@ -47,6 +53,9 @@ export declare namespace EntryFieldTypes {
   }
 }
 
+/**
+ * @category Entry
+ */
 export declare namespace EntryFields {
   type Symbol = string
   type Text = string
@@ -68,6 +77,9 @@ export declare namespace EntryFields {
   type RichText = RichTextDocument
 }
 
+/**
+ * @category Entry
+ */
 export type EntryFieldType<EntrySkeleton extends EntrySkeletonType> =
   | EntryFieldTypes.Symbol
   | EntryFieldTypes.Text
@@ -86,6 +98,9 @@ export type EntryFieldType<EntrySkeleton extends EntrySkeletonType> =
   | EntryFieldTypes.Array<EntryFieldTypes.EntryLink<EntrySkeleton>>
   | EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<EntrySkeleton>>
 
+/**
+ * @category Entry
+ */
 export type EntryField<EntrySkeleton extends EntrySkeletonType> =
   | EntryFields.Symbol
   | EntryFields.Text
@@ -102,11 +117,17 @@ export type EntryField<EntrySkeleton extends EntrySkeletonType> =
   | EntryFields.Array<EntryFields.AssetLink>
   | EntryFields.Array<EntryFields.EntryLink<EntrySkeleton>>
 
+/**
+ * @category Entry
+ */
 export type BaseEntry = {
   sys: EntrySys
   metadata: Metadata
 }
 
+/**
+ * @category Entry
+ */
 export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
   Field extends EntryFieldTypes.Symbol
     ? EntryFields.Symbol
@@ -172,6 +193,9 @@ type ResolvedLink<
   ? ResolvedAssetLink<Modifiers>
   : BaseFieldMap<Field>
 
+/**
+ * @category Entry
+ */
 export type ResolvedField<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers,
@@ -180,6 +204,9 @@ export type ResolvedField<
   ? Array<ResolvedLink<Item, Modifiers, Locales>>
   : ResolvedLink<Field, Modifiers, Locales>
 
+/**
+ * @category Entry
+ */
 export type Entry<
   EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
@@ -223,6 +250,9 @@ export type Entry<
       }
 }
 
+/**
+ * @category Entry
+ */
 export type EntryCollection<
   EntrySkeleton extends EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,

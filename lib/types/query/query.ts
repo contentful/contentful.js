@@ -77,6 +77,9 @@ export type EntryContentTypeQuery<T extends string> = {
   content_type: T
 }
 
+/**
+ * @category Query
+ */
 export type EntriesQueries<EntrySkeleton extends EntrySkeletonType> =
   | (EntryFieldsQueries<EntrySkeleton['fields']> &
       EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
@@ -115,6 +118,9 @@ export type AssetFieldsFileDetailsQueries = ExistenceFilter<
   RangeFilters<Pick<AssetDetails, 'size'>, 'fields.file.details'> &
   SubsetFilters<Pick<AssetDetails, 'size'>, 'fields.file.details'>
 
+/**
+ * @category Query
+ */
 export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields> &
   AssetFieldsFileQueries &
   AssetFieldsFileDetailsQueries &
@@ -132,6 +138,9 @@ export type TagNameFilters = {
   'name[nin]'?: string[]
 }
 
+/**
+ * @category Query
+ */
 export type TagQueries = TagNameFilters &
   SysQueries<Pick<TagSys, 'createdAt' | 'updatedAt' | 'visibility' | 'id' | 'type'>> &
   TagOrderFilter &

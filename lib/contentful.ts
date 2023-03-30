@@ -11,9 +11,13 @@ import { makeClient } from './make-client'
 import type { AxiosAdapter, AxiosRequestConfig } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 
+/**
+ * @category Client
+ */
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string
 
 /**
+ * @category Client
  * Client initialization parameters
  */
 export interface CreateClientParams {
@@ -100,6 +104,7 @@ export interface CreateClientParams {
 }
 
 /**
+ * @category Client
  * Create a client instance
  * @param params Client initialization parameters
  * @example
