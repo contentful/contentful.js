@@ -94,9 +94,6 @@ Dynamic query keys are based on the given shape of the expected entries' content
 
 To calculate dynamic keys, we have to provide the shape of the entries:
 
-:warning: Please use `contentful.EntryFieldTypes` instead of `contentful.EntryFields` when defining your entry squeleton types
-for a more accurate typescript autofill support on your IDE
-
 ```typescript
 import * as contentful from 'contentful'
 
@@ -252,7 +249,6 @@ type ReferencedProductSkeleton = {
   contentTypeId: 'referencedProduct'
 }
 type Locales = 'en-US' | 'de-DE'
-// Chaining withAllLocales to be able to add the Locale type
 const entry = client.withoutLinkResolution.withAllLocales.getEntry<ReferencedProductSkeleton, Locales>('some-entry-id')
 ```
 
@@ -298,7 +294,6 @@ type ReferencedProductSkeleton = {
   contentTypeId: 'referencedProduct'
 }
 type Locales = 'en-US' | 'de-DE'
-// Chaining withAllLocales to be able to add the Locale type
 const entry = client.withoutUnresolvableLinks.withAllLocales.getEntry<ReferencedProductSkeleton, Locales>('some-entry-id')
 ```
 
