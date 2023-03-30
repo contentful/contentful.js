@@ -5,11 +5,11 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 import { makeClient } from './make-client'
 import type { AxiosAdapter, AxiosRequestConfig } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
+import { ContentfulClientApi } from './types'
 
 /**
  * @category Client
@@ -114,7 +114,7 @@ export interface CreateClientParams {
  *   space: 'mySpaceId'
  * })
  */
-export function createClient(params: CreateClientParams): ContentfulClientApi {
+export function createClient(params: CreateClientParams): ContentfulClientApi<undefined> {
   if (!params.accessToken) {
     throw new TypeError('Expected parameter accessToken')
   }

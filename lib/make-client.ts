@@ -1,19 +1,16 @@
-import createContentfulApi, {
-  Client,
-  ContentfulClientApi,
-  CreateContentfulApiParams,
-} from './create-contentful-api'
+import createContentfulApi, { CreateContentfulApiParams } from './create-contentful-api'
 import {
   ChainOptions,
   DefaultChainOption,
   ChainOption,
   ModifiersFromOptions,
 } from './utils/client-helpers'
+import { ContentfulClientApi } from './types'
 
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options: OptionsType,
-  makeInnerClient: (options: OptionsType) => Client<ModifiersFromOptions<OptionsType>>
+  makeInnerClient: (options: OptionsType) => ContentfulClientApi<ModifiersFromOptions<OptionsType>>
 ) {
   const client = createContentfulApi<OptionsType>(
     {
@@ -32,16 +29,16 @@ function create<OptionsType extends ChainOptions>(
   Object.defineProperty(response, 'withoutUnresolvableLinks', {
     get: () => makeInnerClient({ ...options, withoutUnresolvableLinks: true }),
   })
-  return Object.create(response) as Client<ModifiersFromOptions<OptionsType>>
+  return Object.create(response) as ContentfulClientApi<ModifiersFromOptions<OptionsType>>
 }
 
 export const makeClient = ({
   http,
   getGlobalOptions,
-}: CreateContentfulApiParams): ContentfulClientApi => {
+}: CreateContentfulApiParams): ContentfulClientApi<undefined> => {
   function makeInnerClient<Options extends ChainOptions>(
     options: Options
-  ): Client<ModifiersFromOptions<Options>> {
+  ): ContentfulClientApi<ModifiersFromOptions<Options>> {
     return create<Options>({ http, getGlobalOptions }, options, makeInnerClient)
   }
 

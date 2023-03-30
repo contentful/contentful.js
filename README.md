@@ -261,7 +261,7 @@ In order to provide type support for each configuration, we provide the possibil
 
 This way, we make developing with `contentful.js` much more predictable and safer.
 
-When initialising a client, you will receive an instance of the [`DefaultClient`](lib/create-contentful-api.ts#L91) shape.
+When initialising a client, you will receive an instance of the [`ContentfulClientApi`](lib/create-contentful-api.ts#L91) shape.
 
 #### Entries
 

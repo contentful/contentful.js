@@ -35,7 +35,7 @@
 
 - contentful
   - {@link createClient | createClient}
-- ContentfulClientAPI
+- {@link ContentfulClientApi | ContentfulClientApi }
   - {@link createAssetKey | createAssetKey }
   - {@link getAsset | getAsset }
   - {@link getAssets | getAssets }

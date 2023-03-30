@@ -10,35 +10,27 @@ import pagedSync from './paged-sync'
 import {
   Asset,
   AssetCollection,
-  AssetFields,
   AssetKey,
-  AssetQueries,
+  ContentfulClientApi,
   ContentType,
   ContentTypeCollection,
   EntriesQueries,
   LocaleCollection,
   LocaleCode,
   Space,
-  SyncCollection,
   Tag,
   TagCollection,
-  Entry,
   EntryCollection,
   SyncQuery,
   SyncOptions,
   EntrySkeletonType,
 } from './types'
-import { EntryQueries, LocaleOption, TagQueries } from './types/query/query'
+import { EntryQueries, LocaleOption } from './types/query/query'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
 import validateTimestamp from './utils/validate-timestamp'
-import {
-  AddChainModifier,
-  ChainModifiers,
-  ChainOptions,
-  ModifiersFromOptions,
-} from './utils/client-helpers'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import {
   validateLocaleParam,
   validateRemoveUnresolvedParam,
@@ -48,243 +40,10 @@ import validateSearchParameters from './utils/validate-search-parameters'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
-type ClientMethodsWithAllLocales<Modifiers extends ChainModifiers> = {
-  getEntry<
-    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Locales extends LocaleCode = LocaleCode
-  >(
-    id: string,
-    query?: EntryQueries
-  ): Promise<Entry<EntrySkeleton, Modifiers, Locales>>
-
-  getEntries<
-    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Locales extends LocaleCode = LocaleCode
-  >(
-    query?: EntriesQueries<EntrySkeleton>
-  ): Promise<EntryCollection<EntrySkeleton, Modifiers, Locales>>
-
-  parseEntries<
-    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Locales extends LocaleCode = LocaleCode
-  >(
-    data: EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>
-  ): EntryCollection<EntrySkeleton, Modifiers, Locales>
-
-  getAsset<Locales extends LocaleCode = LocaleCode>(
-    id: string
-  ): Promise<Asset<'WITH_ALL_LOCALES', Locales>>
-
-  getAssets<Locales extends LocaleCode = LocaleCode>(
-    query?: AssetQueries<AssetFields>
-  ): Promise<AssetCollection<'WITH_ALL_LOCALES', Locales>>
-}
-
-type ClientMethodsWithoutAllLocales<Modifiers extends ChainModifiers> = {
-  withAllLocales: Client<AddChainModifier<Modifiers, 'WITH_ALL_LOCALES'>>
-  getEntry<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    id: string,
-    query?: EntryQueries & LocaleOption
-  ): Promise<Entry<EntrySkeleton, Modifiers>>
-
-  getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    query?: EntriesQueries<EntrySkeleton> & LocaleOption
-  ): Promise<EntryCollection<EntrySkeleton, Modifiers>>
-
-  parseEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    data: EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>
-  ): EntryCollection<EntrySkeleton, Modifiers>
-
-  getAsset(id: string, query?: LocaleOption): Promise<Asset<undefined>>
-
-  getAssets(query?: AssetQueries<AssetFields> & LocaleOption): Promise<AssetCollection<undefined>>
-}
-
-export type Client<Modifiers extends ChainModifiers> = BaseClient &
-  ('WITHOUT_LINK_RESOLUTION' extends Modifiers
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
-    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
-    : {
-        withoutLinkResolution: Client<AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>>
-        withoutUnresolvableLinks: Client<AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>>
-      }) &
-  ('WITH_ALL_LOCALES' extends Modifiers
-    ? ClientMethodsWithAllLocales<Modifiers>
-    : ClientMethodsWithoutAllLocales<Modifiers>)
-
-export type DefaultClient = Client<undefined>
-
-interface BaseClient {
-  version: string
-
-  /**
-   * Gets a Content Type
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const contentType = await client.getContentType('<content_type_id>')
-   * console.log(contentType)
-   * ```
-   */
-  getContentType(id: string): Promise<ContentType>
-
-  /**
-   * Gets a collection of Content Types
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getContentTypes()
-   * console.log(response.items)
-   * ```
-   */
-  getContentTypes(query?: { query?: string }): Promise<ContentTypeCollection>
-
-  /**
-   * Gets the Space which the client is currently configured to use
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   * // returns the space object with the above <space-id>
-   * const space = await client.getSpace()
-   * console.log(space)
-   * ```
-   */
-  getSpace(): Promise<Space>
-
-  /**
-   * Gets a collection of Locales
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getLocales()
-   * console.log(response.items)
-   * ```
-   */
-
-  getLocales(): Promise<LocaleCollection>
-
-  /**
-   * Synchronizes either all the content or only new content since last sync
-   * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
-   * <strong> Important note: </strong> The the sync api endpoint does not support include or link resolution.
-   * However contentful.js is doing link resolution client side if you only make an initial sync.
-   * For the delta sync (using nextSyncToken) it is not possible since the sdk wont have access to all the data to make such an operation.
-   * @category API
-   * @example
-   * ```javascript
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.sync({
-   *   initial: true
-   * })
-   * console.log({
-   *   entries: response.entries,
-   *   assets: response.assets,
-   *   nextSyncToken: response.nextSyncToken
-   * })
-   * ```
-   */
-  sync<
-    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Modifiers extends ChainModifiers = ChainModifiers,
-    Locales extends LocaleCode = LocaleCode
-  >(
-    query: SyncQuery
-  ): Promise<SyncCollection<EntrySkeleton, Modifiers, Locales>>
-
-  /**
-   * Gets a Tag
-   * @category API
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const tag = await client.getTag('<asset_id>')
-   * console.log(tag)
-   */
-  getTag(id: string): Promise<Tag>
-
-  /**
-   * Gets a collection of Tags
-   * @category API
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const response = await client.getTags()
-   * console.log(response.items)
-   */
-  getTags(query?: TagQueries): Promise<TagCollection>
-
-  /**
-   * Creates an asset key for signing asset URLs (Embargoed Assets)
-   * @category API
-   * @example
-   * const contentful = require('contentful')
-   *
-   * const client = contentful.createClient({
-   *   space: '<space_id>',
-   *   accessToken: '<content_delivery_api_key>'
-   * })
-   *
-   * const assetKey = await client.getAssetKey(<UNIX timestamp>)
-   * console.log(assetKey)
-   */
-  createAssetKey(expiresAt: number): Promise<AssetKey>
-}
-
 export interface CreateContentfulApiParams {
   http: AxiosInstance
   getGlobalOptions: GetGlobalOptions
 }
-
-/**
- * @category Client
- */
-export type ContentfulClientApi = DefaultClient
 
 class NotFoundError extends Error {
   public readonly sys: { id: string; type: string }
@@ -308,7 +67,7 @@ class NotFoundError extends Error {
 export default function createContentfulApi<OptionType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options?: OptionType
-): DefaultClient {
+): ContentfulClientApi<undefined> {
   const notFoundError = (id = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
   }
@@ -702,5 +461,5 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     getEntries,
 
     createAssetKey,
-  } as unknown as DefaultClient
+  } as unknown as ContentfulClientApi<undefined>
 }
