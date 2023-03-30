@@ -1,12 +1,41 @@
+<!-- shared header  START --> 
+
+<p align="center">
+  <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
+    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="150">
+  </a>
+</p>
+
+<h1 align='center'>Content Delivery API</h1>
+
+<h3 align="center">Migration</h3>
+
+<p align="center">
+  <a href="README.md">Readme</a> · 
+  <a href="MIGRATION.md">Migration</a> · 
+  <a href="ADVANCED.md">Advanced</a> · 
+  <a href="TYPESCRIPT.md">TypeScript</a> · 
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
+
+<p align="center">
+  <a href="https://www.contentful.com/slack/">
+    <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
+  </a>
+</p>
+
+<!-- shared header  END --> 
+
 # Migration information
 
 - [Migration information](#migration-information)
-  - [Migration from contentful.js 9.x](#migration-from-contentfuljs-9x)
-  - [Migration from contentful.js 8.x](#migration-from-contentfuljs-8x)
-  - [Migration from contentful.js 7.x](#migration-from-contentfuljs-7x)
-  - [Migration from contentful.js 5.x](#migration-from-contentfuljs-5x)
-  - [Migration from contentful.js 4.x](#migration-from-contentfuljs-4x)
-  - [Migration from contentful.js 3.x](#migration-from-contentfuljs-3x)
+  - [Migration to contentful.js 10.x](#migration-to-contentfuljs-10x)
+  - [Migration to contentful.js 9.x](#migration-to-contentfuljs-9x)
+  - [Migration to contentful.js 8.x](#migration-to-contentfuljs-8x)
+  - [Migration to contentful.js 7.x](#migration-to-contentfuljs-7x)
+  - [Migration to contentful.js 6.x](#migration-to-contentfuljs-6x)
+  - [Migration to contentful.js 5.x](#migration-to-contentfuljs-5x)
+  - [Migration to contentful.js 4.x](#migration-to-contentfuljs-4x)
   - [Migration to contentful.js 3.x from previous versions](#migration-to-contentfuljs-3x-from-previous-versions)
     - [Method renaming](#method-renaming)
     - [Format of collection replies](#format-of-collection-replies)
@@ -19,7 +48,106 @@ From version 3.0.0 onwards, you can access documentation for a specific version 
 
 You can upgrade to a major version using `npm update contentful`
 
-## Migration from contentful.js 9.x
+## Migration to contentful.js 10.x
+Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a new concept of [chained clients](README.md#chained-clients). 
+
+### Breaking changes
+
+**Browser support**
+- We completely dropped support for old IE browsers (no `legacy` bundle). See [version compatibility](#version-compatibility) for more info.
+
+**Configuration** 
+
+- Using `resolveLinks` as a client config option or as a query parameter are no longer supported for `getEntries`, `getEntry`, `parseEntries`, or initial `sync` calls. 
+  Instead, you should use the client chain modifier `withoutLinkResolution` to achieve the same result.
+  See [response modifiers](#response-modifiers) for migration instructions.
+
+- Using `removeUnresolved` as a client config option is no longer supported for `getEntries` and `getEntry`, `parseEntries`, or initial `sync` calls.
+  Instead, you should use the client chain modifier `withoutUnresolvableLinks` to achieve the same result.
+  See [response modifiers](#response-modifiers) for migration instructions.
+ 
+- Similarly, `getEntries`, `getEntry`, `getAssets`, and `getAsset` no longer support setting the query parameter `locale` to `*`.
+  In order to fetch entries in all locales, you should use the client chain modifier `withAllLocales` to achieve the same result.
+- See [response modifiers](#response-modifiers) for migration instructions.
+
+### Version compatibility
+- Node: >= 12 (LTS)
+- Chrome: >= 80,
+- Edge >= 80,
+- Firefox >= 75,
+- Safari >= 13,
+
+We completely dropped support for old IE browsers (no `legacy` bundle)
+> You can always find the supported browsers in our shared [browserlist-config](https://github.com/contentful/browserslist-config/blob/master/index.js)
+
+### Response modifiers
+
+_Response modifiers were introduced to provide better type support when using contentful.js in TypeScript projects (or using TypeScript-based [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) in a JavaScript project), supporting each of the six response shapes that entries can have. See [Response Types](TYPESCRIPT.md#response-types) to learn more about response type support._
+
+#### Query params `resolveLinks` and `removeUnresolved`
+
+Calls to `getEntries` and `getEntry` no longer support the `resolveLinks` and `removeUnresolved` parameters. Instead, you should use one of the [chained clients](README.md#chained-clients) to achieve the same result.
+
+The default behavior is as before: Linked entities are by default resolved, and, if unresolvable, represented as a Link object. In order to change these defaults, do the following:
+
+:warning: Instead of `resolveLinks: false`, please use the client chain modifier `withoutLinkResolution`.
+
+:warning: Instead of `removeUnresolved: true`, please use the client chain modifier `withoutUnresolvableLinks`
+
+**Previously:**
+
+  ```js
+  // config options
+  const client = contentful.createClient({
+    accessToken: "<you-access-token>",
+    space: "<your-space-id>",
+    resolveLinks: false, // resolveLinks no longer supported
+    removeUnresolved: true // removeUnresolved no longer supported
+  });
+
+  // query params
+  const entries = client.getEntries({
+    resolveLinks: false // resolveLinks no longer supported
+  })
+  ```
+
+  **Now:**
+  ```js
+  const client = contentful.createClient({
+    accessToken: "<you-access-token>",
+    space: "<your-space-id>",
+  });
+
+  // get entries without link resolution (previously `resolveLinks: false`)
+  const entries = client.withoutLinkResolution.getEntries()
+
+  // get entries without unresolvable links (previoulsy `removeUnresolved: true`)
+  const entries = client.withoutUnresolvableLinks.getEntries()
+  ```
+
+#### Query param `locale='*'`
+Calls to `getEntries` and `getEntry` no longer support setting the `locale` parameter to `'*'`. If you want to fetch entries in all locales, you should use one of the [chained clients](README.md#chained-clients) to achieve the same result.
+
+:warning: Instead of `locale: '*'`, please use the client chain modifier `withAllLocales`.
+
+**Previously:**
+  ```js
+  const entries = client.getEntries({
+    locale: '*' // locale='*' no longer supported
+  })
+  ```
+
+  **Now:**
+  ```js
+    // get entries with all locales (previously `locale: '*'`)
+  const entries = client.withAllLocales.getEntries()
+  ```
+Setting the `locale` parameter to a specific language (e.g. `locale: 'en-US'`) still works as before.
+
+### TypeScript
+We have completely reworked the underlying type definitions, to give more accurate types based on your query/request. Read more about the new types [here](TYPESCRIPT.md).
+
+## Migration to contentful.js 9.x
 
 We introduced a new error handler that throws a better formed error with details from the server and obscured tokens.
 We also no longer send the axios error object as is for errors without data or response objects.
@@ -40,14 +168,14 @@ We also no longer send the axios error object as is for errors without data or r
 }
 ```
 
-## Migration from contentful.js 8.x
+## Migration to contentful.js 8.x
 
 We refactored the code, replacing promises with async/await.
 
 Some functions that used to throw synchronously for things like bad parameters now reject the promise.
 In many cases users may not have to do anything assuming the calls already happened within a promise chain, but in rare cases this may need some refactoring of error handling cases.
 
-## Migration from contentful.js 7.x
+## Migration to contentful.js 7.x
 
 We dropped support for Node v11 and older. Please ensure you are running Node v12 or newer.
 We also made browser support track https://github.com/contentful/browserslist-config
@@ -64,17 +192,17 @@ For all other browsers you will have to use the legacy bundle and possibly set u
 <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@latest/runtime.min.js"></script>
 ```
 
-## Migration from contentful.js 5.x
+## Migration to contentful.js 6.x
 
 We dropped support for Node v4 and older. Please ensure you are running Node v5 or newer.
 
-## Migration from contentful.js 4.x
+## Migration to contentful.js 5.x
 
 The bundle for browsers is now called `contentful.browser.min.js` to mark it clearly as browser only bundle. If you need to support IE 11 or other old browsers, you may use the `contentful.legacy.min.js`. Node will automatically use the `contentful.node.min.js` while bundlers like Webpack will resolve to the new ES-modules version of the library.
 
 No changes to the API of the library were made.
 
-## Migration from contentful.js 3.x
+## Migration to contentful.js 4.x
 
 From version 4.0.0 and up contentful.js is exported as a single `umd` bundle the cdn distribution has changed, there is no more `browser-dist`. the new link format is https://unpkg.com/contentful@version/dist/contentful.min.js instead of https://unpkg.com/contentful@version/browser-dist/contentful.min.js. to access version 3 you can still use https://unpkg.com/contentful@3.0.0/browser-dist/contentful.min.js
 

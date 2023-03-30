@@ -1,0 +1,16 @@
+{
+  "name": "contentful-js-browser-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "jest ./test --forceExit"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "jest-puppeteer": "^6.1.0",
+    "puppeteer": "^13.2.0"
+  }
+}

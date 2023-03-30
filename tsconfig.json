@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/module",
+    "rootDir": "./lib",
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "declarationDir": "dist/types",
+    "declaration": true,
+    "strict": true,
+    "importHelpers": true,
+    "isolatedModules": false,
+    "esModuleInterop": true,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "./lib/**/*",
+    "types"
+  ],
+  "exclude": [
+    "./node_modules/**/*",
+    "test"
+  ]
+}

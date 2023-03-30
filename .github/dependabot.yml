@@ -2,22 +2,26 @@ version: 2
 
 updates:
   - package-ecosystem: npm
-    directory: "/"
+    directory: '/'
     schedule:
       interval: daily
-      time: "00:00"
+      time: '00:00'
       timezone: UTC
     open-pull-requests-limit: 10
     ignore:
-    - dependency-name: husky
-      versions:
-      - ">=5.0.0"
-    - dependency-name: "fast-copy"
-      versions:
-      - ">=3.0.0"
-    - dependency-name: "eslint-plugin-promise"
-      versions:
-        - ">=6.0.0"
+      - dependency-name: husky
+        versions:
+          - '>=5.0.0'
+    commit-message:
+      prefix: build
+      include: scope
+  - package-ecosystem: npm
+    directory: '/test/output-integration/browser'
+    schedule:
+      interval: daily
+      time: '00:00'
+      timezone: UTC
+    open-pull-requests-limit: 10
     commit-message:
       prefix: build
       include: scope
@@ -30,13 +34,5 @@ updates:
       timezone: UTC
     open-pull-requests-limit: 10
     commit-message:
-      prefix: build-beta
+      prefix: beta-build
       include: scope
-    ignore:
-      - dependency-name: "fast-copy"
-        versions:
-          - ">=3.0.0"
-      - dependency-name: "eslint-plugin-promise"
-        versions:
-          - ">=6.0.0"
-
