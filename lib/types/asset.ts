@@ -1,8 +1,3 @@
-/**
- * @packageDocumentation
- * @module Constants
- */
-
 import { ChainModifiers } from '../utils/client-helpers'
 import { ContentfulCollection } from './collection'
 import { LocaleCode } from './locale'
