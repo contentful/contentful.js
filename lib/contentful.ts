@@ -11,8 +11,14 @@ import { makeClient } from './make-client'
 import type { AxiosRequestConfig } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 
+/**
+ * @category Client
+ */
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string
 
+/**
+ * @category Client
+ */
 export interface CreateClientParams {
   space: string
   accessToken: string
@@ -33,6 +39,9 @@ export interface CreateClientParams {
   retryLimit?: number
 }
 
+/**
+ * @category Client
+ */
 export function createClient(params: CreateClientParams): ContentfulClientApi {
   if (!params.accessToken) {
     throw new TypeError('Expected parameter accessToken')

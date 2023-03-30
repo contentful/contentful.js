@@ -1,9 +1,17 @@
+/**
+ * @packageDocumentation
+ * @module Constants
+ */
+
 import { ChainModifiers } from '../utils/client-helpers'
 import { ContentfulCollection } from './collection'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntitySys } from './sys'
 
+/**
+ * @module Asset
+ */
 export interface AssetDetails {
   size: number
   image?: {
@@ -12,6 +20,9 @@ export interface AssetDetails {
   }
 }
 
+/**
+ * @category Asset
+ */
 export interface AssetFile {
   url: string
   details: AssetDetails
@@ -19,6 +30,9 @@ export interface AssetFile {
   contentType: string
 }
 
+/**
+ * @category Asset
+ */
 export interface AssetFields {
   title?: string
   description?: string
@@ -26,7 +40,7 @@ export interface AssetFields {
 }
 
 /**
- * @category Entities
+ * @category Asset
  */
 export interface Asset<
   Modifiers extends ChainModifiers = ChainModifiers,
@@ -47,6 +61,9 @@ export interface Asset<
   metadata: Metadata
 }
 
+/**
+ * @category Asset
+ */
 export type AssetMimeType =
   | 'attachment'
   | 'plaintext'
@@ -61,10 +78,17 @@ export type AssetMimeType =
   | 'code'
   | 'markup'
 
+/**
+ * @category Asset
+ */
 export type AssetCollection<
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
 > = ContentfulCollection<Asset<Modifiers, Locales>>
+
+/**
+ * @category Asset
+ */
 export type AssetSys = EntitySys & {
   type: 'Asset'
 }

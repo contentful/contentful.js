@@ -15,6 +15,9 @@ export interface EntitySys extends BaseSys {
   locale?: string
 }
 
+/**
+ * @category Tag
+ */
 export interface TagSys extends BaseSys {
   createdAt: EntryFields.Date
   updatedAt: EntryFields.Date

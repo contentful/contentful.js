@@ -1,8 +1,14 @@
 import { ConditionalPick } from 'type-fest'
 import { BaseFieldMap, EntryFieldType, EntryFieldTypes } from '../entry'
 
+/**
+ * @category Entity
+ */
 export type FieldsType = Record<string, any>
 
+/**
+ * @category Entry
+ */
 export type EntrySkeletonType<Fields extends FieldsType = FieldsType, Id = string> = {
   fields: Fields
   contentTypeId: Id

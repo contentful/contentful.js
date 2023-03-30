@@ -5,10 +5,16 @@ import { EntrySkeletonType } from './query'
 import { LocaleCode } from './locale'
 import { ChainModifiers } from '../utils/client-helpers'
 
+/**
+ * @category Sync
+ */
 export type SyncOptions = {
   paginate?: boolean
 }
 
+/**
+ * @category Sync
+ */
 export type SyncQuery = {
   initial?: true
   limit?: number
@@ -19,30 +25,51 @@ export type SyncQuery = {
   | { type?: 'Asset' | 'Entry' | 'Deletion' | 'DeletedAsset' | 'DeletedEntry' }
 )
 
+/**
+ * @category Sync
+ */
 export type SyncPageQuery = SyncQuery & { sync_token?: string }
 
+/**
+ * @category Sync
+ */
 export type SyncResponse = {
   nextPageUrl?: string
   nextSyncUrl?: string
   items: SyncEntities[]
 }
 
+/**
+ * @category Sync
+ */
 export type SyncPageResponse = {
   nextPageToken?: string
   nextSyncToken?: string
   items: SyncEntities[]
 }
 
+/**
+ * @category Sync
+ */
 export type DeletedEntry = {
   sys: EntitySys & { type: 'DeletedEntry' }
 }
 
+/**
+ * @category Sync
+ */
 export type DeletedAsset = {
   sys: EntitySys & { type: 'DeletedAsset' }
 }
 
+/**
+ * @category Sync
+ */
 export type SyncEntities = Entry<EntrySkeletonType> | Asset | DeletedEntry | DeletedAsset
 
+/**
+ * @category Sync
+ */
 export interface SyncCollection<
   EntrySkeleton extends EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,

@@ -3,6 +3,9 @@ import { EntryFields } from './entry'
 import { SpaceLink, EnvironmentLink } from './link'
 import { BaseSys } from './sys'
 
+/**
+ * @category ContentType
+ */
 export interface ContentTypeSys extends BaseSys {
   createdAt: EntryFields.Date
   updatedAt: EntryFields.Date
@@ -11,6 +14,9 @@ export interface ContentTypeSys extends BaseSys {
   environment: { sys: EnvironmentLink }
 }
 
+/**
+ * @category ContentType
+ */
 export interface ContentTypeField {
   disabled: boolean
   id: string
@@ -31,6 +37,9 @@ interface ContentTypeAllowedResources {
   contentTypes: string[]
 }
 
+/**
+ * @category ContentType
+ */
 export type ContentTypeFieldType =
   | 'Symbol'
   | 'Text'
@@ -45,6 +54,9 @@ export type ContentTypeFieldType =
   | 'RichText'
   | 'ResourceLink'
 
+/**
+ * @category ContentType
+ */
 export interface ContentTypeFieldValidation {
   unique?: boolean
   size?: {
@@ -66,6 +78,9 @@ export interface ContentTypeFieldValidation {
   enabledNodeTypes?: string[]
 }
 
+/**
+ * @category ContentType
+ */
 export interface FieldItem {
   type: 'Link' | 'Symbol' | 'ResourceLink'
   validations: ContentTypeFieldValidation[]
@@ -73,7 +88,7 @@ export interface FieldItem {
 }
 
 /**
- * @category Entities
+ * @category ContentType
  */
 export interface ContentType {
   sys: ContentTypeSys
@@ -83,4 +98,7 @@ export interface ContentType {
   fields: Array<ContentTypeField>
 }
 
+/**
+ * @category ContentType
+ */
 export type ContentTypeCollection = ContentfulCollection<ContentType>

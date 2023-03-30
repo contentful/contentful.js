@@ -4,7 +4,7 @@
   "readme": "README.md",
   "name": "contentful.js",
   "exclude": [],
-  "includeVersion": true,
+  "includeVersion": false,
   "hideGenerator": true,
   "excludePrivate": true,
   "categorizeByGroup": false
