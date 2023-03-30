@@ -8,7 +8,7 @@ import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import { ContentfulClientApi } from './create-contentful-api'
 import createGlobalOptions from './create-global-options'
 import { makeClient } from './make-client'
-import type { AxiosRequestConfig } from 'axios'
+import type { AxiosAdapter, AxiosRequestConfig } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string
@@ -63,11 +63,11 @@ export interface CreateClientParams {
   /**
    * Optional additional headers
    */
-  headers?: any
+  headers?: Record<string, string>
   /**
    * Optional axios request adapter (see <a href="https://github.com/mzabriskie/axios#request-config"> axios docs </a>)
    */
-  adapter?: any
+  adapter?: AxiosAdapter
   /**
    * Application name and version e.g myApp/version
    */
@@ -82,13 +82,12 @@ export interface CreateClientParams {
    */
   retryOnError?: boolean
   /**
-   * A log handler function to process given log messages & errors.
-   * Receives the log level (error, warning & info) and the actual log data (Error object or string).
+   * A log handler function to process given log messages and errors.
    * (The default can be found at: https://github.com/contentful/contentful-sdk-core/blob/master/src/create-http-client.ts)
-   * @param level
-   * @param data
+   * @param level Log level, e.g. error, warning, or info
+   * @param data Log data
    */
-  logHandler?: (level: ClientLogLevel, data?: any) => void
+  logHandler?: (level: ClientLogLevel, data?: Record<string, any> | string) => void
   /**
    * connection timeout in milliseconds (default:30000)
    */
