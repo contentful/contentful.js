@@ -94,17 +94,20 @@ Dynamic query keys are based on the given shape of the expected entries' content
 
 To calculate dynamic keys, we have to provide the shape of the entries:
 
+:warning: Please use `contentful.EntryFieldTypes` instead of `contentful.EntryFields` when defining your entry squeleton types
+for a more accurate typescript autofill support on your IDE
+
 ```typescript
 import * as contentful from 'contentful'
 
 type ExampleEntrySkeleton = {
   contentTypeId: 'product',
   fields: {
-    productName: contentful.EntryFields.Text
-    image: contentful.Asset
-    price: contentful.EntryFields.Number
-    categories: contentful.Entry<CategoryEntryFields>[]
-    location: contentful.EntryFields.Location
+    productName: contentful.EntryFieldTypes.Text
+    image: contentful.EntryFieldTypes.AssetLink
+    price: contentful.EntryFieldTypes.Number
+    categories: contentful.EntryFieldTypes.Array<contentful.EntryFieldTypes.EntryLink<CategoryEntryFields>>
+    location: contentful.EntryFieldTypes.Location
   }
 }
 ```
@@ -163,7 +166,7 @@ const client = contentful.createClient({
 })
 
 type ProductSkeleton = {
-  fields: { productName: contentful.EntryFields.Text },
+  fields: { productName: contentful.EntryFieldTypess.Text },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
@@ -221,11 +224,12 @@ const client = contentful.createClient({
 })
 
 type ProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFields.Entry },
+  fields: { relatedProduct: contentful.EntryFieldTypess.EntryLink<ExampleEntrySqueleton> },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutLinkResolution.getEntry<ProductSkeleton, Locales>('some-entry-id')
+// Chaining withAllLocales to be able to add the Locale type
+const entry = client.withoutLinkResolution.withAllLocales.getEntry<ProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -257,11 +261,12 @@ const client = contentful.createClient({
 })
 
 type ProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFields.Entry },
+  fields: { relatedProduct: contentful.EntryFieldTypess.EntryLink<ExampleEntrySqueleton> },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutUnresolvableLinks.getEntry<ProductSkeleton, Locales>('some-entry-id')
+// Chaining withAllLocales to be able to add the Locale type
+const entry = client.withoutUnresolvableLinks.withAllLocales.getEntry<ProductSkeleton, Locales>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
