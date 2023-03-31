@@ -260,7 +260,7 @@ export type ContentfulClientApi<Modifiers extends ChainModifiers> = {
    * let parsedData = client.parseEntries(data);
    * console.log( parsedData.items[0].fields.foo ); // foo
    */
-  parseEntries: <
+  parseEntries<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Locales extends LocaleCode = LocaleCode
   >(
@@ -269,7 +269,7 @@ export type ContentfulClientApi<Modifiers extends ChainModifiers> = {
       AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>,
       Locales
     >
-  ) => EntryCollection<EntrySkeleton, Modifiers, Locales>
+  ): EntryCollection<EntrySkeleton, Modifiers, Locales>
 
   /**
    * Gets an Asset
