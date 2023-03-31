@@ -4,7 +4,9 @@ import { SpaceLink, EnvironmentLink } from './link'
 import { BaseSys } from './sys'
 
 /**
+ * System managed metadata for content type
  * @category ContentType
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes | CDA documentation on common attributes}
  */
 export interface ContentTypeSys extends BaseSys {
   createdAt: EntryFields.Date
@@ -15,7 +17,9 @@ export interface ContentTypeSys extends BaseSys {
 }
 
 /**
+ * Definition of a content type field
  * @category ContentType
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types/content-type | CDA documentation on Content Type}
  */
 export interface ContentTypeField {
   disabled: boolean
@@ -55,6 +59,8 @@ export type ContentTypeFieldType =
   | 'ResourceLink'
 
 /**
+ * Definition of a single validation rule applied
+ * to the related content type field
  * @category ContentType
  */
 export interface ContentTypeFieldValidation {
@@ -79,6 +85,7 @@ export interface ContentTypeFieldValidation {
 }
 
 /**
+ * @TODO
  * @category ContentType
  */
 export interface FieldItem {
@@ -88,7 +95,9 @@ export interface FieldItem {
 }
 
 /**
+ * Definition of a content type
  * @category ContentType
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types | CDA documentation on Content Types}
  */
 export interface ContentType {
   sys: ContentTypeSys
@@ -99,6 +108,7 @@ export interface ContentType {
 }
 
 /**
+ * Collection of content types
  * @category ContentType
  */
 export type ContentTypeCollection = ContentfulCollection<ContentType>
