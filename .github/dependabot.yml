@@ -36,3 +36,7 @@ updates:
     commit-message:
       prefix: beta-build
       include: scope
+    ignore:
+      - dependency-name: 'semantic-release'
+        versions:
+          - '>=20.0.0'
