@@ -104,7 +104,7 @@ type CategoryEntrySkeleton = {
     }
 }
 
-type ExampleEntrySkeleton = {
+type ProductEntrySkeleton = {
   contentTypeId: 'product',
   fields: {
     productName: contentful.EntryFieldTypes.Text
@@ -125,7 +125,7 @@ const client = contentful.createClient({
 })
 
 // content_type query parameter is required when filtering on any field
-client.getEntries<ExampleEntrySkeleton>({
+client.getEntries<ProductEntrySkeleton>({
   content_type: 'product',
   'fields.price[gt]': 100,
 })
@@ -153,7 +153,7 @@ The list of query filters that only accept arrays from now on:
 Example of the new usage:
 
 ```typescript
-client.getEntries<ExampleEntrySkeleton>({
+client.getEntries<ProductEntrySkeleton>({
   content_type: 'product',
   'fields.location[near]': [10,20,30],
 })
@@ -177,12 +177,12 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSkeleton = {
+type ProductEntrySkeleton = {
   fields: { productName: contentful.EntryFieldTypes.Text },
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
-const entry = client.withAllLocales.getEntry<ProductSkeleton, Locales>('some-entry-id')
+const entry = client.withAllLocales.getEntry<ProductEntrySkeleton, Locales>('some-entry-id')
 ```
 
 The return type of the `getEntry` is matching the `fields` shape
@@ -235,7 +235,7 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSkeleton = {
+type ProductEntrySkeleton = {
   contentTypeId: 'product'
   fields: {
     productName: contentful.EntryFieldTypes.Text
@@ -244,12 +244,11 @@ type ProductSkeleton = {
   }
 }
 
-type ReferencedProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSkeleton> },
+type ReferencedProductEntrySkeleton = {
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductEntrySkeleton> },
   contentTypeId: 'referencedProduct'
 }
-type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutLinkResolution.withAllLocales.getEntry<ReferencedProductSkeleton, Locales>('some-entry-id')
+const entry = client.withoutLinkResolution.getEntry<ReferencedProductEntrySkeleton>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -280,7 +279,7 @@ const client = contentful.createClient({
   accessToken: '<content-delivery-token>',
 })
 
-type ProductSkeleton = {
+type ProductEntrySkeleton = {
   contentTypeId: 'product'
   fields: {
     productName: contentful.EntryFieldTypes.Text
@@ -289,12 +288,11 @@ type ProductSkeleton = {
   }
 }
 
-type ReferencedProductSkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductSkeleton> },
+type ReferencedProductEntrySkeleton = {
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductEntrySkeleton> },
   contentTypeId: 'referencedProduct'
 }
-type Locales = 'en-US' | 'de-DE'
-const entry = client.withoutUnresolvableLinks.withAllLocales.getEntry<ReferencedProductSkeleton, Locales>('some-entry-id')
+const entry = client.withoutUnresolvableLinks.getEntry<ReferencedProductEntrySkeleton>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
