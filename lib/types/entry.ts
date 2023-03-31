@@ -6,9 +6,9 @@ import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntrySkeletonType } from './query'
 import { EntitySys } from './sys'
-import { ChainModifiers } from '../utils/client-helpers'
 import { JsonArray, JsonObject } from 'type-fest'
 import { ResourceLink } from './resource-link'
+import { ChainModifiers } from './client'
 
 /**
  * @category Entry

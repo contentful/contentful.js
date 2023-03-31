@@ -14,7 +14,6 @@ import {
   ContentfulClientApi,
   ContentType,
   ContentTypeCollection,
-  EntriesQueries,
   LocaleCollection,
   LocaleCode,
   Space,
@@ -25,7 +24,6 @@ import {
   SyncOptions,
   EntrySkeletonType,
 } from './types'
-import { EntryQueries, LocaleOption } from './types/query/query'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
@@ -139,17 +137,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
-  async function getEntry<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    id: string,
-    query: EntryQueries & LocaleOption = {}
-  ) {
-    return makeGetEntry<EntrySkeleton>(id, query, options)
+  async function getEntry(id, query = {}) {
+    return makeGetEntry(id, query, options)
   }
 
-  async function getEntries<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
-    query: EntriesQueries<EntrySkeleton> & LocaleOption = {}
-  ) {
-    return makeGetEntries<EntrySkeleton>(query, options)
+  async function getEntries(query = {}) {
+    return makeGetEntries(query, options)
   }
 
   async function makeGetEntry<EntrySkeleton extends EntrySkeletonType>(

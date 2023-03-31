@@ -3,7 +3,7 @@ import { Entry } from './entry'
 import { EntitySys } from './sys'
 import { EntrySkeletonType } from './query'
 import { LocaleCode } from './locale'
-import { ChainModifiers } from '../utils/client-helpers'
+import { ChainModifiers } from './client'
 
 /**
  * @category Sync

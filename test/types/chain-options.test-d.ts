@@ -1,5 +1,6 @@
 import { expectAssignable, expectNotAssignable, expectNotType, expectType } from 'tsd'
-import { ChainModifiers, ChainOption, ChainOptions } from '../../lib/utils/client-helpers'
+import { ChainOption, ChainOptions } from '../../lib/utils/client-helpers'
+import { ChainModifiers } from '../../lib'
 
 expectNotAssignable<ChainModifiers>('ANY_STRING')
 

@@ -29,6 +29,7 @@ import {
   TagOrderFilter,
 } from './order'
 import { EntryFieldsSetFilter } from './set'
+import { ChainModifiers } from '../client'
 
 type FixedPagedOptions = {
   skip?: number
@@ -80,18 +81,25 @@ export type EntryContentTypeQuery<T extends string> = {
 /**
  * @category Query
  */
-export type EntriesQueries<EntrySkeleton extends EntrySkeletonType> =
+export type EntriesQueries<
+  EntrySkeleton extends EntrySkeletonType,
+  Modifiers extends ChainModifiers
+> =
   | (EntryFieldsQueries<EntrySkeleton['fields']> &
       EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
-  | (SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+  | ((SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
       EntrySelectFilter &
       EntryOrderFilter &
       FixedQueryOptions &
       FixedPagedOptions &
-      FixedLinkOptions)
+      FixedLinkOptions) &
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption))
 
-export type EntryQueries = Omit<FixedQueryOptions, 'query'>
+export type EntryQueries<Modifiers extends ChainModifiers> = Omit<FixedQueryOptions, 'query'> &
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption)
 
 export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fields, 'fields'> &
   EqualityFilter<Fields, 'fields'> &
@@ -121,13 +129,23 @@ export type AssetFieldsFileDetailsQueries = ExistenceFilter<
 /**
  * @category Query
  */
-export type AssetQueries<Fields extends FieldsType> = AssetFieldsQueries<Fields> &
+export type AssetsQueries<
+  Fields extends FieldsType,
+  Modifiers extends ChainModifiers
+> = AssetFieldsQueries<Fields> &
   AssetFieldsFileQueries &
   AssetFieldsFileDetailsQueries &
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
   MetadataTagsQueries &
   FixedQueryOptions &
-  FixedPagedOptions & { mimetype_group?: AssetMimeType }
+  FixedPagedOptions & { mimetype_group?: AssetMimeType } & ('WITH_ALL_LOCALES' extends Modifiers
+    ? // eslint-disable-next-line @typescript-eslint/ban-types
+      {}
+    : LocaleOption)
+
+export type AssetQueries<Modifiers extends ChainModifiers> = 'WITH_ALL_LOCALES' extends Modifiers
+  ? never
+  : LocaleOption
 
 export type TagNameFilters = {
   'name[exists]'?: boolean
