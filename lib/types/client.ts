@@ -1,11 +1,17 @@
 import { ContentType, ContentTypeCollection } from './content-type'
 import { Space } from './space'
 import { LocaleCode, LocaleCollection } from './locale'
-import { AssetsQueries, EntriesQueries, EntrySkeletonType, TagQueries } from './query'
+import {
+  AssetQueries,
+  AssetsQueries,
+  EntriesQueries,
+  EntryQueries,
+  EntrySkeletonType,
+  TagQueries,
+} from './query'
 import { SyncCollection, SyncQuery } from './sync'
 import { Tag, TagCollection } from './tag'
 import { AssetKey } from './asset-key'
-import { AssetQueries, EntryQueries } from './query/query'
 import { Entry, EntryCollection } from './entry'
 import { Asset, AssetCollection, AssetFields } from './asset'
 
