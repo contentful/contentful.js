@@ -169,7 +169,7 @@ client.getEntries<ProductEntrySkeleton>({
 
 ## Response types
 
-With version `10.0.0` we introduce [client chain modifiers](./README.md#chained-clients) to make better assumptions on response types.
+With version `10.0.0` we introduce [client chain modifiers](README.md#client-chain-modifiers) to make better assumptions on response types.
 Entries can be returned in six different response shapes. Thanks to the three client modifiers below, the expected return shape can be identified, making it safer to work with the returned data.
 
 ### `withAllLocales`

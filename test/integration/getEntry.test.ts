@@ -11,7 +11,7 @@ const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
-describe('getEntry via chained clients', () => {
+describe('getEntry via client chain modifiers', () => {
   const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
   const entryWithResolvableLink = 'nyancat'
 

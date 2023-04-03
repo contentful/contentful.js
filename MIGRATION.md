@@ -54,7 +54,7 @@ You can upgrade to a major version using `npm update contentful`
 
 ## Migration to contentful.js 10.x
 
-Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a new concept of [chained clients](README.md#chained-clients).
+Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a new concept of [client chain modifiers](README.md#client-chain-modifiers).
 
 ### Breaking changes
 
@@ -90,7 +90,7 @@ _Response modifiers were introduced to provide better type support when using co
 
 #### Query params `resolveLinks` and `removeUnresolved`
 
-Calls to `getEntries`, `getEntry`, `parseEntries` and initial `sync` calls no longer support the `resolveLinks` and `removeUnresolved` parameters. Instead, you should use one of the [client chain modifiers](README.md#chained-clients) to achieve the same result.
+Calls to `getEntries`, `getEntry`, `parseEntries` and initial `sync` calls no longer support the `resolveLinks` and `removeUnresolved` parameters. Instead, you should use one of the [client chain modifiers](README.md#client-chain-modifiers) to achieve the same result.
 
 The default behavior is as before: linked entities are by default resolved, and, if unresolvable, represented as a `Link` object. In order to change these defaults, do the following:
 
@@ -132,7 +132,7 @@ const entries = client.withoutUnresolvableLinks.getEntries()
 
 #### Query param `locale='*'`
 
-Calls to `getEntries`, `getEntry`, `getAssets`, `getAsset` and initial `sync` calls no longer support setting the `locale` parameter to `'*'`. If you want to fetch entries in all locales, you should use one of the [chained clients](README.md#chained-clients) to achieve the same result.
+Calls to `getEntries`, `getEntry`, `getAssets`, `getAsset` and initial `sync` calls no longer support setting the `locale` parameter to `'*'`. If you want to fetch entries in all locales, you should use one of the [client chain modifiers](README.md#client-chain-modifiers) to achieve the same result.
 
 :warning: Instead of `locale: '*'`, please use the client chain modifier `withAllLocales`.
 

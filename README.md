@@ -70,7 +70,7 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
     - [Authentication](#authentication)
   - [Documentation & References](#documentation--references)
     - [Configuration](#configuration)
-    - [Chained clients](#chained-clients)
+    - [Client chain modifiers](#client-chain-modifiers)
     - [Reference documentation](#reference-documentation)
     - [Tutorials & other resources](#tutorials--other-resources)
     - [Troubleshooting](#troubleshooting)
@@ -200,7 +200,7 @@ For more information, check the [Contentful REST API reference on Authentication
 ## Documentation & References
 
 - [Configuration](#configuration)
-- [Chained clients](#chained-clients)
+- [Client chain modifiers](#client-chain-modifiers)
 - [Reference documentation](#reference-documentation)
 - [Tutorials & other resources](#tutorials--other-resources)
 - [Troubleshooting](#troubleshooting)
@@ -247,9 +247,9 @@ The configuration options belong to two categories: request config and response 
 
 ##### Response configuration options
 
-> :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [chained clients](#chained-clients) approach.
+> :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [client chain modifiers](#client-chain-modifiers) approach.
 
-### Chained clients
+### Client chain modifiers
 
 > Introduced in `v10.0.0`.
 

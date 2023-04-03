@@ -10,7 +10,7 @@ if (process.env.API_INTEGRATION_TESTS) {
 const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 
-describe('getEntries via chained clients', () => {
+describe('getEntries via client chain modifiers', () => {
   const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
   const entryWithResolvableLink = 'nyancat'
 

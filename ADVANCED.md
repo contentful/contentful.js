@@ -111,7 +111,7 @@ This makes parsing the response easier, and you don't need to manually extract e
 
 The link resolution is applied to one level deep by default. If you need it to be applied deeper, you may specify the `include` parameter when fetching your entries as follows `client.getEntries( { include: <value> })`. The `include` parameter can be set to a number up to 10, which would represent a ten layers deep link resolution.
 
-**We resolve links by default**. If this behaviour is not what you want, you can use the chain modifier `withoutLinkResolution` on the Contentful client to keep the link objects instead of the inlined entries in your response object. See [chained clients](README.md#chained-clients).
+**We resolve links by default**. If this behaviour is not what you want, you can use the chain modifier `withoutLinkResolution` on the Contentful client to keep the link objects instead of the inlined entries in your response object. See [client chain modifiers](README.md#client-chain-modifiers).
 
 **Links which could not get resolved will be kept by default**. If you want to completely remove fields which could not be resolved, you can use the chain modifier `withoutUnresolvableLinks`.
 
