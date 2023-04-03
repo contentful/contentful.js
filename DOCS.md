@@ -34,18 +34,18 @@
 ## Namespaces
 
 - contentful
-  - {@link createClient | createClient}
-- {@link ContentfulClientApi | ContentfulClientApi }
-  - {@link createAssetKey | createAssetKey }
-  - {@link getAsset | getAsset }
-  - {@link getAssets | getAssets }
-  - {@link getContentType | getContentType }
-  - {@link getContentTypes | getContentTypes }
-  - {@link getEntries | getEntries }
-  - {@link getEntry | getEntry }
-  - {@link getLocales | getLocales }
-  - {@link getSpace | getSpace }
-  - {@link getTag | getTag }
-  - {@link getTags | getTags }
-  - {@link parseEntries | parseEntries }
-  - {@link sync | sync }
+  - {@link createClient}
+- {@link ContentfulClientApi}
+  - {@link ContentfulClientApi.createAssetKey}
+  - {@link ContentfulClientApi.getAsset}
+  - {@link ContentfulClientApi.getAssets}
+  - {@link ContentfulClientApi.getContentType}
+  - {@link ContentfulClientApi.getContentTypes}
+  - {@link ContentfulClientApi.getEntries}
+  - {@link ContentfulClientApi.getEntry}
+  - {@link ContentfulClientApi.getLocales}
+  - {@link ContentfulClientApi.getSpace}
+  - {@link ContentfulClientApi.getTag}
+  - {@link ContentfulClientApi.getTags}
+  - {@link ContentfulClientApi.parseEntries}
+  - {@link ContentfulClientApi.sync}
