@@ -46,13 +46,11 @@
     <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
   </a>
 
-JavaScript library for the
-Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your content stored in Contentful with your JavaScript applications.
+JavaScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your content stored in Contentful with your JavaScript applications.
 
 **What is Contentful?**
 
-[Contentful](https://www.contentful.com/) provides content infrastructure for digital teams to power websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for
-structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship their products faster.
+[Contentful](https://www.contentful.com/) provides content infrastructure for digital teams to power websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enables developers and content creators to ship their products faster.
 
 <details>
 <summary>Table of contents</summary>
@@ -61,10 +59,10 @@ structured content, powerful management and delivery APIs, and a customizable we
 
 - [contentful.js - Contentful JavaScript Delivery library](#contentfuljs---contentful-javascript-delivery-library)
   - [Core Features](#core-features)
-    - [Supported browsers and Node.js versions:](#supported-browsers-and-nodejs-versions)
+    - [Supported browsers and Node.js versions](#supported-browsers-and-nodejs-versions)
   - [Getting started](#getting-started)
     - [Installation](#installation)
-      - [Using it directly in the browser:](#using-it-directly-in-the-browser)
+      - [Using it directly in the browser](#using-it-directly-in-the-browser)
       - [Legacy browsers:](#legacy-browsers)
       - [React Native & Server Side Rendering:](#react-native--server-side-rendering)
     - [Your first request](#your-first-request)
@@ -100,7 +98,7 @@ structured content, powerful management and delivery APIs, and a customizable we
 - Built in rate limiting with recovery procedures
 - Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/) (since `v6.0.0`)
 
-### Supported browsers and Node.js versions:
+### Supported browsers and Node.js versions
 
 - Chrome
 - Firefox
@@ -111,7 +109,7 @@ structured content, powerful management and delivery APIs, and a customizable we
 > See list of min supported browser version here [@contentful/browserslist-config
 > ](https://github.com/contentful/browserslist-config/blob/master/index.js)
 
-The default export is an `es9` compliant module. in order to import the `commonJS` bundle, please use:
+The default export is an `es9` compliant module. In order to import the `commonJS` bundle, please use:
 
 ```js
 const contentful = require('contentful/contentful.node')
@@ -133,9 +131,9 @@ In order to get started with the Contentful JS library you'll need not only to i
 npm install contentful
 ```
 
-#### Using it directly in the browser:
+#### Using it directly in the browser
 
-For browsers, we recommend to download the library via npm or yarn to ensure 100% availability.
+For browsers, we recommend downloading the library via npm or yarn to ensure 100% availability.
 
 If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentful), under the `dist` directory:
 
@@ -165,7 +163,7 @@ const client = contentful.createClient({
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
   accessToken: '0b7f6x59a0',
 })
-// This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
+// This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token
 client
   .getEntry('5PeGS2SoZGSa4GuiQsigQu')
   .then((entry) => console.log(entry))
@@ -187,8 +185,7 @@ const client = contentful.createClient({
 })
 ```
 
-You can find all available methods of our client in
-our [reference documentation](https://contentful.github.io/contentful.js)
+You can find all available methods of our client in our [reference documentation](https://contentful.github.io/contentful.js).
 
 ### Authentication
 
@@ -198,16 +195,17 @@ You can create API keys using the [Contentful web interface](https://app.content
 
 Don't forget to also get your Space ID.
 
-For more information, check the [Contentful REST API reference on Authentication](https://www.contentful.com/developers/docs/references/authentication/)
-.
+For more information, check the [Contentful REST API reference on Authentication](https://www.contentful.com/developers/docs/references/authentication/).
 
 ## Documentation & References
 
 - [Configuration](#configuration)
+- [Chained clients](#chained-clients)
 - [Reference documentation](#reference-documentation)
 - [Tutorials & other resources](#tutorials--other-resources)
 - [Troubleshooting](#troubleshooting)
-- [Advanced Concepts](#advanced-concepts)
+- [TypeScript](#typescript)
+- [Advanced concepts](#advanced-concepts)
 - [Migration](#migration)
 
 To help you get the most out of this library, we've prepared all available client configuration options, a reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
@@ -233,11 +231,11 @@ The configuration options belong to two categories: request config and response 
 | `environment`    | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                              |
 | `host`           | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                    |
 | `basePath`       | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                            |
-| `httpAgent`      | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                 |
-| `httpsAgent`     | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                                |
-| `adapter`        | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/mzabriskie/axios#request-config).                                                                                                                                          |
+| `httpAgent`      | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                      |
+| `httpsAgent`     | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                     |
+| `adapter`        | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                               |
 | `headers`        | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.management.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
-| `proxy`          | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/mzabriskie/axios#request-config) for further information about the supported values.                                                                                                                                  |
+| `proxy`          | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/axios/axios#request-config) for further information about the supported values.                                                                                                                                       |
 | `retryOnError`   | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                    |
 | `application`    | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                  |
 | `integration`    | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                  |
@@ -249,9 +247,9 @@ The configuration options belong to two categories: request config and response 
 
 ##### Response configuration options
 
-> :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [Chained Clients](#chained-clients) approach.
+> :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [chained clients](#chained-clients) approach.
 
-### Chained Clients
+### Chained clients
 
 > Introduced in `v10.0.0`.
 
@@ -492,38 +490,35 @@ const { createClient } = require('contentful/dist/contentful.browser.min.js')
 
 ### TypeScript
 
-This library is 100% written in TypeScript. Type definitions are bundled. Find out more about the advantages of using this library in conjunction with TypeScript in the [TYPESCRIPT.md](TYPESCRIPT.md) document.
+This library is 100% written in TypeScript. Type definitions are bundled. Find out more about the advantages of using this library in conjunction with TypeScript in the [TYPESCRIPT](TYPESCRIPT.md) document.
 
-### Advanced Concepts
+### Advanced concepts
 
-More information about how to use the library in advanced or special ways can be found in the [ADVANCED.md](ADVANCED.md) document.
+More information about how to use the library in advanced or special ways can be found in the [ADVANCED](ADVANCED.md) document.
 
 ### Migration
 
-We gathered all information related to migrating from older versions of the library in our [MIGRATION.md](MIGRATION.md) document.
+We gathered all information related to migrating from older versions of the library in our [MIGRATION](MIGRATION.md) document.
 
 ## Reach out to us
 
 ### You have questions about how to use this library?
 
-- Reach out to our community
-  forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
-- Jump into our community slack
-  channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
+- Reach out to our community forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
+- Jump into our community Slack channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
 
 ### You found a bug or want to propose a feature?
 
-- File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new).
+- File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new)
   Make sure to remove any credential from your code before sharing it.
 
 ### You need to share confidential information or have other questions?
 
-- File a support ticket at our Contentful Customer
-  Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
+- File a support ticket at our Contentful Customer Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
 
 ## Get involved
 
-We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING.md](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
+We appreciate any help on our repositories. For more details about how to contribute see our [CONTRIBUTING](https://github.com/contentful/contentful.js/blob/master/CONTRIBUTING.md) document.
 
 ## License
 
