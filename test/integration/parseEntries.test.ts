@@ -435,7 +435,7 @@ beforeEach(() => {
   }
 })
 
-describe('parseEntries via chained clients', () => {
+describe('parseEntries via client chain modifiers', () => {
   describe('default client', () => {
     test('client', () => {
       const response = client.parseEntries(dataWithResolvableLink)

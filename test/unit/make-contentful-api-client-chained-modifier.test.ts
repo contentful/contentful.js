@@ -36,7 +36,7 @@ function setupWithData({
   }
 }
 
-describe('Contentful API client chained modifier', () => {
+describe('Contentful API client chain modifiers', () => {
   const resolveCircularMock = jest.fn()
   // @ts-ignore
   resolveCircular.default = resolveCircularMock

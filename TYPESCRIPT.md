@@ -26,18 +26,6 @@
 
 <!-- shared header  END -->
 
-## Table of contents
-
-- [Introduction](#introduction)
-- [Query types](#query-types)
-  - [Static query types](#static-query-keys)
-  - [Dynamic query types](#dynamic-field-query-keys)
-- [Response types](#response-types)
-  - [withAllLocales](#withalllocales)
-  - [withoutLinkResolution](#withoutlinkresolution)
-  - [withoutUnresolvableLinks](#withoutunresolvablelinks)
-- [Generating type definitions](#generating-type-definitions-for-content-types)
-
 ## Introduction
 
 <a href="LICENSE">
@@ -60,6 +48,22 @@
 
 With version `10.0.0`, we have completely rewritten the client to give the user more support on types.
 
+<details>
+<summary>Table of contents</summary>
+<!-- TOC -->
+
+- [Query types](#query-types)
+  - [Static query types](#static-query-keys)
+  - [Dynamic query types](#dynamic-field-query-keys)
+- [Response types](#response-types)
+  - [withAllLocales](#withalllocales)
+  - [withoutLinkResolution](#withoutlinkresolution)
+  - [withoutUnresolvableLinks](#withoutunresolvablelinks)
+- [Generating type definitions](#generating-type-definitions-for-content-types)
+
+<!-- /TOC -->
+</details>
+
 ## Query types
 
 When querying for entries and assets, you get full type support for keys and values.
@@ -69,6 +73,8 @@ This applies to:
 - `getEntries`
 - `getAsset`
 - `getAssets`
+- `parseEntries`
+- initial `sync` calls
 
 We have 2 levels of support:
 
@@ -80,9 +86,9 @@ Static query keys are not influenced by the shape of the entries or assets you'r
 
 ```js
 getEntries({
-    'skip': 10,
-    'limit': 20,
-    'include': 5
+  skip: 10,
+  limit: 20,
+  include: 5,
 })
 ```
 
@@ -97,20 +103,22 @@ To calculate dynamic keys, we have to provide the shape of the entries:
 ```typescript
 import * as contentful from 'contentful'
 
-type CategoryEntrySkeleton = { 
-    contentTypeId: 'category',
-    fields: {
-        categoryName: contentful.EntryFieldTypes.Text,
-    }
+type CategoryEntrySkeleton = {
+  contentTypeId: 'category'
+  fields: {
+    categoryName: contentful.EntryFieldTypes.Text
+  }
 }
 
 type ProductEntrySkeleton = {
-  contentTypeId: 'product',
+  contentTypeId: 'product'
   fields: {
     productName: contentful.EntryFieldTypes.Text
     image: contentful.EntryFieldTypes.AssetLink
     price: contentful.EntryFieldTypes.Number
-    categories: contentful.EntryFieldTypes.Array<contentful.EntryFieldTypes.EntryLink<CategoryEntrySkeleton>>
+    categories: contentful.EntryFieldTypes.Array<
+      contentful.EntryFieldTypes.EntryLink<CategoryEntrySkeleton>
+    >
     location: contentful.EntryFieldTypes.Location
   }
 }
@@ -133,8 +141,8 @@ client.getEntries<ProductEntrySkeleton>({
 
 #### Limitation
 
-- To limit the complexity of query types we use a simple type definition for [search on references](https://contentful.atlassian.net/wiki/spaces/PROD/pages/4169466000/Known+limitations+of+contentful.js+TypeScript+support#:~:text=search%20on%20references). 
-We only check that prefix of the form `fields.reference.` matches a reference field called reference. The rest of the parameter is not evaluated and thus does not provide autocomplete functionality.
+- To limit the complexity of query types we use a simple type definition for [search on references](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/search-on-references).
+  We only check that prefix of the form `fields.reference` matches a reference field called "reference". The rest of the parameter is not evaluated and thus does not provide autocomplete functionality.
 
 #### Breaking Change
 
@@ -155,14 +163,14 @@ Example of the new usage:
 ```typescript
 client.getEntries<ProductEntrySkeleton>({
   content_type: 'product',
-  'fields.location[near]': [10,20,30],
+  'fields.location[near]': [10, 20, 30],
 })
 ```
 
 ## Response types
 
-With version `10.0.0` we introduce [chained clients](./README.md#chained-clients) to make better assumptions on response types.
-Entries can be returned in six different response shapes. Thanks to the three client chains below, the expected return shape can be identified, making it safer to work with the returned data.
+With version `10.0.0` we introduce [client chain modifiers](README.md#client-chain-modifiers) to make better assumptions on response types.
+Entries can be returned in six different response shapes. Thanks to the three client modifiers below, the expected return shape can be identified, making it safer to work with the returned data.
 
 ### `withAllLocales`
 
@@ -178,7 +186,7 @@ const client = contentful.createClient({
 })
 
 type ProductEntrySkeleton = {
-  fields: { productName: contentful.EntryFieldTypes.Text },
+  fields: { productName: contentful.EntryFieldTypes.Text }
   contentTypeId: 'product'
 }
 type Locales = 'en-US' | 'de-DE'
@@ -245,7 +253,7 @@ type ProductEntrySkeleton = {
 }
 
 type ReferencedProductEntrySkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductEntrySkeleton> },
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductEntrySkeleton> }
   contentTypeId: 'referencedProduct'
 }
 const entry = client.withoutLinkResolution.getEntry<ReferencedProductEntrySkeleton>('some-entry-id')
@@ -289,10 +297,11 @@ type ProductEntrySkeleton = {
 }
 
 type ReferencedProductEntrySkeleton = {
-  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductEntrySkeleton> },
+  fields: { relatedProduct: contentful.EntryFieldTypes.EntryLink<ProductEntrySkeleton> }
   contentTypeId: 'referencedProduct'
 }
-const entry = client.withoutUnresolvableLinks.getEntry<ReferencedProductEntrySkeleton>('some-entry-id')
+const entry =
+  client.withoutUnresolvableLinks.getEntry<ReferencedProductEntrySkeleton>('some-entry-id')
 ```
 
 The return type of `getEntry` is matching the `fields` shape
@@ -302,10 +311,6 @@ The return type of `getEntry` is matching the `fields` shape
   "fields": {}
 }
 ```
-
-#### Limitation
-
-The different response types are determined based on [client chains](./README.md#chained-clients). So far, these are implemented for `sync`, `parseEntries`, `getEntries`, `getEntry`, `getAssets` and `getAsset`. Other methods returning entries or methods that can have localized responses still rely on the previous implementation, and might not always have correct response types.
 
 ## Generating type definitions for content types
 
