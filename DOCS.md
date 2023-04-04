@@ -29,7 +29,12 @@
   <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
 </a>
 
-[TODO: write few sentences]
+Contentful.js is a JavaScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
+
+Code is documented using TypeDoc and these pages are auto-generated and published with each new version.
+
+- For API and client documentation, please refer to the list below.
+- For type definitions and descriptions, please refer to the list in the sidebar.
 
 ## Namespaces
 
