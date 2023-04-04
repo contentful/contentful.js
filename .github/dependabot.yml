@@ -39,4 +39,7 @@ updates:
       - dependency-name: "eslint-plugin-promise"
         versions:
           - ">=6.0.0"
+      - dependency-name: "semantic-release"
+        versions:
+          - ">=20.0.0"
 
