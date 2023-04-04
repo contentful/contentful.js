@@ -62,7 +62,7 @@
     "print-beta-v10-message.js"
   ],
   "dependencies": {
-    "axios": "^0.27.0",
+    "axios": "^1.3.4",
     "contentful-resolve-response": "^1.3.12",
     "contentful-sdk-core": "^7.0.5",
     "fast-copy": "^2.1.7",
