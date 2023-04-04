@@ -2,36 +2,39 @@ version: 2.1
 
 orbs:
   vault: contentful/vault@1
+  node: circleci/node@5.1.0
 
 jobs:
   unit:
     docker:
-      - image: cimg/node:16.11
+      - image: 'cimg/base:stable'
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - node/install:
+          node-version: '18.15'
+      - node/install-packages
       - run: npm run build
       - run: npm run test:cover
   integration:
     docker:
-      - image: cimg/node:16.11
+      - image: 'cimg/base:stable'
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - node/install:
+          node-version: '18.15'
+      - node/install-packages
       - run: npm run build
       - run: npm run test:integration
   release:
     docker:
-      - image: cimg/node:16.11
+      - image: 'cimg/base:stable'
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
-      - run: npm install
+      - node/install:
+          node-version: '18.15'
+      - node/install-packages
       - run: npm run build
       - run: npm run semantic-release
 workflows:
