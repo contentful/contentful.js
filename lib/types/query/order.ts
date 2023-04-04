@@ -29,8 +29,9 @@ type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
   | `-${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
 
 /**
- * @desc order for entries
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order for provided fields in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type EntryOrderFilterWithFields<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>
@@ -47,8 +48,9 @@ export type EntryOrderFilterWithFields<
 }
 
 /**
- * @desc order for entries
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type EntryOrderFilter = {
   order?: (
@@ -59,8 +61,9 @@ export type EntryOrderFilter = {
 }
 
 /**
- * @desc order for assets
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order in an asset
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type AssetOrderFilter = {
   order?: (
@@ -77,8 +80,9 @@ export type AssetOrderFilter = {
 }
 
 /**
- * @desc order for tags
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order in a tag
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type TagOrderFilter = {
   order?: (OrderFilterPaths<TagSys, 'sys'> | 'name' | '-name')[]

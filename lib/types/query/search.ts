@@ -16,8 +16,9 @@ type SupportedEntryFieldTypes =
   | undefined
 
 /**
- * @desc match - full text search
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/full-text-search}
+ * match - full text search in provided fields
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/full-text-search | Documentation}
+ * @internal
  */
 export type FullTextSearchFilters<
   Fields extends FieldsType,
@@ -25,8 +26,9 @@ export type FullTextSearchFilters<
 > = ConditionalFixedQueries<Fields, SupportedTypes, string, Prefix, '[match]'>
 
 /**
- * @desc match - full text search
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/full-text-search}
+ * match - full text search in provided fields of an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/full-text-search | Documentation}
+ * @internal
  */
 export type EntryFieldsFullTextSearchFilters<
   Fields extends FieldsType,

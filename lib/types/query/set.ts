@@ -8,8 +8,9 @@ type SupportedTypes =
   | undefined
 
 /**
- * @desc match multiple values
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/array-with-multiple-values}
+ * Match multiple values in provided fields of an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/array-with-multiple-values | Documentation}
+ * @internal
  */
 export type EntryFieldsSetFilter<
   Fields extends Record<string, EntryFieldType<any>>,

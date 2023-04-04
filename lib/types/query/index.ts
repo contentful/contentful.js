@@ -7,7 +7,11 @@ export type {
   EntryFieldsInequalityFilter,
 } from './equality'
 export type { ExistenceFilter, EntryFieldsExistenceFilter } from './existence'
-export type { ProximitySearchFilter, LocationSearchFilters } from './location'
+export type {
+  BoundingObjectSearchFilter,
+  ProximitySearchFilter,
+  LocationSearchFilters,
+} from './location'
 export type {
   EntryOrderFilterWithFields,
   EntryOrderFilter,

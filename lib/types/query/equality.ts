@@ -22,8 +22,9 @@ type SupportedEntryFieldTypes =
   | undefined
 
 /**
- * @desc equality - search for exact matches
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/equality-operator}
+ * Equality filters in provided fields - search for exact matches
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/equality-operator | Documentation}
+ * @internal
  */
 export type EqualityFilter<Fields, Prefix extends string> = ConditionalQueries<
   Fields,
@@ -33,8 +34,9 @@ export type EqualityFilter<Fields, Prefix extends string> = ConditionalQueries<
 >
 
 /**
- * @desc equality - search for exact matches
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/equality-operator}
+ * Equality filters in provided fields of an entry - search for exact matches
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/equality-operator | Documentation}
+ * @internal
  */
 export type EntryFieldsEqualityFilter<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,
@@ -42,8 +44,9 @@ export type EntryFieldsEqualityFilter<
 > = EntryFieldsConditionalQueries<Fields, SupportedEntryFieldTypes, Prefix, ''>
 
 /**
- * @desc inequality - exclude matching items
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inequality-operator}
+ * Inequality filters in provided fields - exclude matching items
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inequality-operator | Documentation}
+ * @internal
  */
 export type InequalityFilter<Fields, Prefix extends string> = ConditionalQueries<
   Fields,
@@ -53,8 +56,9 @@ export type InequalityFilter<Fields, Prefix extends string> = ConditionalQueries
 >
 
 /**
- * @desc inequality - exclude matching items
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inequality-operator}
+ * Inequality filters in provided fields of an entry - exclude matching items
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inequality-operator | Documentation}
+ * @internal
  */
 export type EntryFieldsInequalityFilter<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,

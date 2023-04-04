@@ -3,9 +3,9 @@ import { ConditionalFixedQueries, FieldsType, EntrySkeletonType } from './util'
 import { AssetDetails, AssetFile } from '../asset'
 
 /**
- * @name exists
- * @desc check for existence
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/existence}
+ * Check for existence in provided fields
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/existence | Documentation}
+ * @internal
  */
 export type ExistenceFilter<
   Fields extends FieldsType,
@@ -19,9 +19,9 @@ export type ExistenceFilter<
 >
 
 /**
- * @name exists
- * @desc check for existence
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/existence}
+ * Check for existence in provided fields of an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/existence | Documentation}
+ * @internal
  */
 export type EntryFieldsExistenceFilter<
   Fields extends FieldsType,
