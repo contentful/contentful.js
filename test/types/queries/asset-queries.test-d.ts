@@ -1,9 +1,9 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { AssetFields, AssetQueries } from '../../../lib'
+import { AssetFields, AssetsQueries } from '../../../lib'
 // @ts-ignore
 import * as mocks from '../mocks'
 
-type DefaultAssetQueries = AssetQueries<AssetFields>
+type DefaultAssetQueries = AssetsQueries<AssetFields, undefined>
 
 // all operator
 
@@ -186,3 +186,8 @@ expectNotAssignable<DefaultAssetQueries>({ select: ['sys.unknownProperty'] })
 expectAssignable<DefaultAssetQueries>({ select: ['fields'] })
 expectAssignable<DefaultAssetQueries>({ select: ['fields.title'] })
 expectNotAssignable<DefaultAssetQueries>({ select: ['fields.unknownField'] })
+
+// locale option
+
+expectAssignable<AssetsQueries<AssetFields, undefined>>({ locale: mocks.stringValue })
+expectNotAssignable<AssetsQueries<AssetFields, 'WITH_ALL_LOCALES'>>({ locale: mocks.anyValue })

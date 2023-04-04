@@ -2,17 +2,15 @@ version: 2.1
 
 orbs:
   vault: contentful/vault@1
+  node: circleci/node@5.1.0
 
 jobs:
   lint:
     docker:
-      - image: cimg/node:16.13.2-browsers
-
+      - image: 'cimg/node:18.15-browsers'
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm ci
+      - node/install-packages
       - run: npm run lint
       - run: npm run prettier:check
       - run: npm run build
@@ -21,32 +19,32 @@ jobs:
 
   unit:
     docker:
-      - image: cimg/node:16.13.2
+      - image: 'cimg/base:stable'
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm ci
+      - node/install:
+          node-version: '18.15'
+      - node/install-packages
       - run: npm run test:unit
 
   integration:
     docker:
-      - image: cimg/node:16.13.2
+      - image: 'cimg/base:stable'
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm ci
+      - node/install:
+          node-version: '18.15'
+      - node/install-packages
       - run: npm run test:integration
 
   release:
     docker:
-      - image: cimg/node:16.13.2-browsers
+      - image: 'cimg/node:18.15-browsers'
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
-      - run: npm ci
+      - node/install-packages
       - run: npm run build
       - run: npm run semantic-release
 

@@ -1,6 +1,6 @@
 export * from './asset'
 export * from './asset-key'
-export { ContentfulClientApi } from './client'
+export { AddChainModifier, ChainModifiers, ContentfulClientApi } from './client'
 export * from './collection'
 export * from './content-type'
 export * from './entry'

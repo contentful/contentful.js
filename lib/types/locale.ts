@@ -7,6 +7,7 @@ import { BaseSys } from './sys'
 export type LocaleCode = string
 
 /**
+ * System managed metadata for locale
  * @category Entity
  */
 export interface LocaleSys extends BaseSys {
@@ -15,6 +16,7 @@ export interface LocaleSys extends BaseSys {
 }
 
 /**
+ * Properties for a single locale definition
  * @category Entity
  */
 export interface Locale {
@@ -26,6 +28,7 @@ export interface Locale {
 }
 
 /**
+ * Collection of locales
  * @category Entity
  */
 export type LocaleCollection = ContentfulCollection<Locale>
