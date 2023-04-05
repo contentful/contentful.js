@@ -13,6 +13,7 @@ import {
   ChainModifiers,
 } from '../../lib'
 
+// @ts-ignore
 import * as mocks from './mocks'
 
 type AssetLocales = 'US' | 'DE'

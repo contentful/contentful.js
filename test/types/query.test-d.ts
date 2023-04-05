@@ -1,6 +1,7 @@
 import { expectAssignable } from 'tsd'
 import { EntriesQueries, EntryFieldTypes, EntrySkeletonType } from '../../lib'
 import { EntryFieldsQueries } from '../../lib/types/query/query'
+// @ts-ignore
 import * as mocks from './mocks'
 
 /*

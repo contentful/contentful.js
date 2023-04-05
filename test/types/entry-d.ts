@@ -4,6 +4,7 @@
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { Entry, EntrySkeletonType, EntryFieldTypes } from '../../lib'
+// @ts-ignore
 import * as mocks from './mocks'
 
 /**

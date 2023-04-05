@@ -162,7 +162,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
     Locales extends LocaleCode = LocaleCode
   >(
     query: SyncQuery,
-    syncOptions: SyncOptions
+    syncOptions?: SyncOptions
   ): Promise<SyncCollection<EntrySkeleton, Modifiers, Locales>>
 
   /**
