@@ -9,7 +9,6 @@ import { EntryFieldsRangeFilters } from '../../../lib/types/query/range'
 import { EntryFieldsFullTextSearchFilters } from '../../../lib/types/query/search'
 import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { EntryFieldsSubsetFilters } from '../../../lib/types/query/subset'
-// @ts-ignore
 import * as mocks from '../mocks'
 import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
 import { EntryFieldsSetFilter } from '../../../lib/types/query/set'

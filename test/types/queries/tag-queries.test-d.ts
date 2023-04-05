@@ -1,6 +1,5 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { TagQueries } from '../../../lib'
-// @ts-ignore
 import * as mocks from '../mocks'
 
 // equality operator

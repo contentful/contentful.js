@@ -12,7 +12,6 @@ import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
 import { EntryFieldsSubsetFilters } from '../../../lib/types/query/subset'
 import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
 import { EntryFieldsSetFilter } from '../../../lib/types/query/set'
-// @ts-ignore
 import * as mocks from '../mocks'
 
 expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Object }, 'fields'>>>(

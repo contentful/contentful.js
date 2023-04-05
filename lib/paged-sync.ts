@@ -1,6 +1,5 @@
 /**
  * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
- * @namespace Sync
  */
 import resolveResponse from 'contentful-resolve-response'
 import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'

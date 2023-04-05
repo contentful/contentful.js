@@ -39,13 +39,13 @@ export type AddChainModifier<
 /**
  * Contentful Delivery API Client. Contains methods which allow access to the different kinds of entities present in Contentful (Entries, Assets, etc).
  * @category Client
- * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  */
 export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   /**
    * Fetches a content type
-   * @param id The content type’s ID
-   * @return Promise for a content type
+   * @param id - The content type’s ID
+   * @returns Promise for a content type
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -63,7 +63,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Fetches a collection of content types
-   * @return Promise for a collection of content types
+   * @returns Promise for a collection of content types
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -81,7 +81,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Fetches the space which the client is currently configured to use
-   * @return Promise for the space
+   * @returns Promise for the space
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -99,7 +99,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Fetches a collection of locales
-   * @return Promise for a collection of locales
+   * @returns Promise for a collection of locales
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -151,8 +151,8 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Fetches a tag
-   * @param id The tag’s ID
-   * @return Promise for a tag
+   * @param id - The tag’s ID
+   * @returns Promise for a tag
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -170,7 +170,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Gets a collection of Tags
-   * @return Promise for a collection of tags
+   * @returns Promise for a collection of tags
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -188,7 +188,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Creates an asset key for signing asset URLs (Embargoed Assets)
-   * @return Promise for an asset key
+   * @returns Promise for an asset key
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -208,7 +208,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * Fetches an entry
    * @param id - The entry’s ID
    * @param query - Object with search parameters. In this method it's only used for `locale` when querying.
-   * @return Promise for an entry
+   * @returns Promise for an entry
    * @example
    * ```typescript
    * const contentful = require('contentful')
@@ -233,7 +233,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   /**
    * Fetches a collection of Entries
    * @param query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
-   * @return Promise for a collection of Entries
+   * @returns Promise for a collection of Entries
    * @example
    * ```typescript
    * const contentful = require('contentful')
@@ -256,7 +256,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Parse raw json data into a collection of entries. objects.Links will be resolved also
-   * @param data json data
+   * @param data - json data
    * @example
    * ```typescript
    * const data = {items: [
@@ -300,7 +300,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * Fetches an asset
    * @param id
    * @param query - Object with search parameters. In this method it's only useful for `locale`.
-   * @return Promise for an asset
+   * @returns Promise for an asset
    * @example
    * const contentful = require('contentful')
    *
@@ -320,7 +320,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   /**
    * Fetches a collection of assets
    * @param query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
-   * @return Promise for a collection of Assets
+   * @returns Promise for a collection of Assets
    * @example
    * const contentful = require('contentful')
    *

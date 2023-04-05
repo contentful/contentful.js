@@ -4,7 +4,6 @@
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntryFieldTypes, EntrySkeletonType, ResolvedField } from '../../lib'
-// @ts-ignore
 import * as mocks from './mocks'
 
 type SimpleEntryFields = { title: EntryFieldTypes.Symbol }

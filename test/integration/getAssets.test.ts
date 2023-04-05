@@ -1,5 +1,4 @@
 import * as contentful from '../../lib/contentful'
-// @ts-ignore
 import { params } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {

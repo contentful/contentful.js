@@ -5,7 +5,7 @@ import { EntitySys } from './sys'
 import { ChainModifiers } from './client'
 
 /**
- * @module Asset
+ * @category Asset
  */
 export interface AssetDetails {
   size: number

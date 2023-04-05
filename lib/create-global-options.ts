@@ -18,7 +18,6 @@ export type GetGlobalOptions = (
 /**
  * @param globalSettings - Global library settings
  * @returns getGlobalSettings - Method returning client settings
- * @internal
  * @category Client
  */
 export function createGlobalOptions(
