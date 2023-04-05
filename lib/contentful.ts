@@ -5,7 +5,7 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import createGlobalOptions from './create-global-options'
+import { createGlobalOptions } from './create-global-options'
 import { makeClient } from './make-client'
 import type { AxiosAdapter, AxiosRequestConfig } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'

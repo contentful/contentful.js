@@ -1,5 +1,5 @@
 import { makeClient } from '../../lib/make-client'
-import createGlobalOptions from '../../lib/create-global-options'
+import { createGlobalOptions } from '../../lib/create-global-options'
 import { EntrySys, EntryCollection, EntrySkeletonType, EntryFieldTypes } from '../../lib/types'
 
 interface AnimalTypeFields {
