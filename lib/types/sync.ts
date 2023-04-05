@@ -9,6 +9,9 @@ import { ChainModifiers } from './client'
  * @category Sync
  */
 export type SyncOptions = {
+  /**
+   * @defaultValue true
+   */
   paginate?: boolean
 }
 
@@ -49,6 +52,7 @@ export type SyncPageResponse = {
 }
 
 /**
+ * System managed metadata for deleted entries
  * @category Sync
  */
 export type DeletedEntry = {
@@ -56,6 +60,7 @@ export type DeletedEntry = {
 }
 
 /**
+ * System managed metadata for deleted assets
  * @category Sync
  */
 export type DeletedAsset = {

@@ -108,11 +108,13 @@ export interface CreateClientParams {
  * @param params - Client initialization parameters
  * @category Client
  * @example
+ * ```typescript
  * const contentful = require('contentful')
  * const client = contentful.createClient({
  *   accessToken: 'myAccessToken',
  *   space: 'mySpaceId'
  * })
+ * ```
  */
 export function createClient(params: CreateClientParams): ContentfulClientApi<undefined> {
   if (!params.accessToken) {

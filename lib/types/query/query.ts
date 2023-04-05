@@ -69,7 +69,7 @@ export type MetadataTagsQueries =
 
 /**
  * All queries appliable to entry fields
- * @typeParam Fields Shape of entry fields used to calculate dynamic keys
+ * @typeParam Fields - Shape of entry fields used to calculate dynamic keys
  */
 export type EntryFieldsQueries<Fields extends FieldsType> =
   | EntrySelectFilterWithFields<Fields>
@@ -90,8 +90,8 @@ export type EntryContentTypeQuery<T extends string> = {
 
 /**
  * Search parameters for entry collection methods
- * @typeParam EntrySkeleton Shape of an entry used to calculate dynamic keys
- * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam EntrySkeleton - Shape of an entry used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
  */
 export type EntriesQueries<
@@ -112,7 +112,7 @@ export type EntriesQueries<
 
 /**
  * Search parameters for a single entry methods
- * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
  */
 export type EntryQueries<Modifiers extends ChainModifiers> = Omit<FixedQueryOptions, 'query'> &
@@ -121,7 +121,7 @@ export type EntryQueries<Modifiers extends ChainModifiers> = Omit<FixedQueryOpti
 
 /**
  * All queries appliable to asset fields
- * @typeParam Fields Shape of asset fields used to calculate dynamic keys
+ * @typeParam Fields - Shape of asset fields used to calculate dynamic keys
  * @category Query
  */
 export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fields, 'fields'> &
@@ -135,7 +135,7 @@ export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fiel
 
 /**
  * All queries appliable to asset file fields
- * @typeParam Fields Shape of asset fields used to calculate dynamic keys
+ * @typeParam Fields - Shape of asset fields used to calculate dynamic keys
  * @category Query
  */
 export type AssetFieldsFileQueries = ExistenceFilter<AssetFile, 'fields.file'> &
@@ -147,7 +147,7 @@ export type AssetFieldsFileQueries = ExistenceFilter<AssetFile, 'fields.file'> &
 
 /**
  * All queries appliable to asset file details fields
- * @typeParam Fields Shape of asset fields used to calculate dynamic keys
+ * @typeParam Fields - Shape of asset fields used to calculate dynamic keys
  * @category Query
  */
 export type AssetFieldsFileDetailsQueries = ExistenceFilter<

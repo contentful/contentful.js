@@ -2,7 +2,7 @@ import { EntryFields } from './entry'
 import { SpaceLink, EnvironmentLink, UserLink } from './link'
 
 /**
- * Definition for common part of system managed metadata
+ * Definition of common part of system managed metadata
  */
 export interface BaseSys {
   type: string

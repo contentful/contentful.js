@@ -9,7 +9,7 @@ import {
   EntrySkeletonType,
   TagQueries,
 } from './query'
-import { SyncCollection, SyncQuery } from './sync'
+import { SyncCollection, SyncOptions, SyncQuery } from './sync'
 import { Tag, TagCollection } from './tag'
 import { AssetKey } from './asset-key'
 import { Entry, EntryCollection } from './entry'
@@ -118,10 +118,25 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Synchronizes either all the content or only new content since last sync.
-   * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Sync API</a> for more information.
    * <strong> Important note: </strong> The Sync API endpoint does not support include or link resolution.
-   * However, contentful.js is can do link resolution on the client side for the initial sync.
+   * However, contentful.js can do link resolution on the client side for the initial sync.
    * For the delta sync (using nextSyncToken) link resolution is not possible since the sdk won’t have access to all linked entities.
+   * @param query - Query object
+   * @param query.initial - Optional, unless first sync call
+   * @param query.limit - Optional, sets the page size for the number of retrieved entries
+   * @param query.nextSyncToken - Optional, used in subsequent sync calls
+   * @param query.nextPageToken - Optional, used in subsequent sync calls
+   * @param query.type - Optional, query for specific entities
+   * @param query.content_type - Query for specific content types; optional,
+   * unless `query.type` is defined as `Entry`
+   * @param syncOptions
+   * @param syncOptions.paginate - Configures the client to call the sync API recursively,
+   * collecting all items from responses into one collection
+   * @typeParam EntrySkeleton - Shape of entity fields used to calculate dynamic keys
+   * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+   * @see {@link https://www.contentful.com/developers/docs/concepts/sync/ | Documentation}
+   * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-the-sync-api-with-js/ | Tutorial for using sync API}
    * @example
    * ```typescript
    * import * as contentful from 'contentful'
@@ -146,7 +161,8 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
     Modifiers extends ChainModifiers = ChainModifiers,
     Locales extends LocaleCode = LocaleCode
   >(
-    query: SyncQuery
+    query: SyncQuery,
+    syncOptions: SyncOptions
   ): Promise<SyncCollection<EntrySkeleton, Modifiers, Locales>>
 
   /**
@@ -209,6 +225,8 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * @param id - The entry’s ID
    * @param query - Object with search parameters. In this method it's only used for `locale` when querying.
    * @returns Promise for an entry
+   * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @example
    * ```typescript
    * const contentful = require('contentful')
@@ -232,8 +250,12 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Fetches a collection of Entries
-   * @param query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
+   * @param query - Object with search parameters
    * @returns Promise for a collection of Entries
+   * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+   * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters | JS SDK tutorial}
+   * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters | REST API reference}
    * @example
    * ```typescript
    * const contentful = require('contentful')
@@ -257,6 +279,8 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   /**
    * Parse raw json data into a collection of entries. objects.Links will be resolved also
    * @param data - json data
+   * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @example
    * ```typescript
    * const data = {items: [
@@ -301,6 +325,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * @param id
    * @param query - Object with search parameters. In this method it's only useful for `locale`.
    * @returns Promise for an asset
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @example
    * const contentful = require('contentful')
    *
@@ -319,8 +344,11 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
 
   /**
    * Fetches a collection of assets
-   * @param query - Object with search parameters. Check the <a href="https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters">JS SDK tutorial</a> and the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters">REST API reference</a> for more details.
+   * @param query - Object with search parameters
+   * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters | JS SDK tutorial}
+   * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters | REST API reference}
    * @returns Promise for a collection of Assets
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @example
    * const contentful = require('contentful')
    *
