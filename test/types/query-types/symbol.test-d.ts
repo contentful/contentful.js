@@ -1,19 +1,20 @@
 import { expectAssignable, expectType } from 'tsd'
-import { EntryFieldTypes } from '../../../lib'
 import {
+  EntryFieldTypes,
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
-} from '../../../lib/types/query/equality'
-import { EntryFieldsExistenceFilter } from '../../../lib/types/query/existence'
-import { LocationSearchFilters } from '../../../lib/types/query/location'
-import { EntryFieldsRangeFilters } from '../../../lib/types/query/range'
-import { EntryFieldsFullTextSearchFilters } from '../../../lib/types/query/search'
-import { EntrySelectFilterWithFields } from '../../../lib/types/query/select'
-import { EntryFieldsSubsetFilters } from '../../../lib/types/query/subset'
+  EntryFieldsExistenceFilter,
+  LocationSearchFilters,
+  EntryFieldsRangeFilters,
+  EntryFieldsFullTextSearchFilters,
+  EntrySelectFilterWithFields,
+  EntryFieldsSubsetFilters,
+  EntryOrderFilterWithFields,
+  EntryFieldsSetFilter,
+} from '../../../lib'
+
 // @ts-ignore
 import * as mocks from '../mocks'
-import { EntryOrderFilterWithFields } from '../../../lib/types/query/order'
-import { EntryFieldsSetFilter } from '../../../lib/types/query/set'
 
 expectAssignable<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
 expectType<Required<EntryFieldsSetFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>({

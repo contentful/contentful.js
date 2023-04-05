@@ -11,13 +11,11 @@ import {
   EntrySys,
   FieldsType,
   Link,
-} from '../../lib'
-import {
   BoundingBoxSearchFilterInput,
   BoundingCircleSearchFilterInput,
   ProximitySearchFilterInput,
-} from '../../lib/types/query/location'
-import { ResourceLink } from '../../lib/types/resource-link'
+  ResourceLink,
+} from '../../lib'
 
 export const anyValue = '' as any
 export const stringValue = ''

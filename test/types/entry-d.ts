@@ -4,12 +4,12 @@
 /// <reference path="../../lib/global.d.ts" />
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { Entry, EntrySkeletonType, EntryFieldTypes } from '../../lib'
+
 // @ts-ignore
 import * as mocks from './mocks'
 
 /**
- * @namespace: Typescript - type test
- * @description: A simple Entry with generic fields
+ * A simple Entry with generic fields
  */
 expectAssignable<Entry<EntrySkeletonType<Record<string, any>>>>({
   ...mocks.entryBasics,
@@ -20,8 +20,7 @@ expectAssignable<Entry<EntrySkeletonType<Record<string, any>>>>({
 })
 
 /**
- * @namespace: Typescript - type test
- * @description: A simple Entry generic
+ * A simple Entry generic
  */
 expectAssignable<Entry<EntrySkeletonType<{ stringField: EntryFieldTypes.Text }>>>({
   ...mocks.entryBasics,
@@ -31,8 +30,7 @@ expectAssignable<Entry<EntrySkeletonType<{ stringField: EntryFieldTypes.Text }>>
 })
 
 /**
- * @namespace: Typescript - type test
- * @description: A simple Entry generic with a referenced fields wildcard
+ * A simple Entry generic with a referenced fields wildcard
  */
 expectAssignable<
   Entry<
@@ -53,8 +51,7 @@ expectAssignable<
 })
 
 /**
- * @namespace: Typescript - type test
- * @description: EntryWithoutLinkResolution linked entities are all rendered as links
+ * EntryWithoutLinkResolution linked entities are all rendered as links
  */
 expectAssignable<
   Entry<
@@ -124,8 +121,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: [mocks.asset] }))
 
 /**
- * @namespace: Typescript - type test
- * @description: EntryWithLinkResolutionAndWithUnresolvableLinks referenced entities can be either resolved or unresolved.
+ * EntryWithLinkResolutionAndWithUnresolvableLinks referenced entities can be either resolved or unresolved.
  * unresolved entities are referenced as links. Fields with multiple references can have resolved and unresolved mixed.
  */
 expectAssignable<
@@ -197,8 +193,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: [undefined] }))
 
 /**
- * @namespace: Typescript - type test
- * @description: EntryWithAllLocalesAndWithoutLinkResolution All fields are mapped to the given set of locales.
+ * EntryWithAllLocalesAndWithoutLinkResolution All fields are mapped to the given set of locales.
  * linked entites are all rendered as links.
  */
 expectAssignable<
@@ -294,8 +289,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [mocks.asset] } }))
 
 /**
- * @namespace: Typescript - type test
- * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
+ * EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
  * linked entities are all rendered as inlined references, or if not resolvable, as links. multi reference fields can have mixed content.
  */
 expectAssignable<
@@ -378,9 +372,8 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: { US: [undefined] } }))
 
 /**
- * @namespace: Typescript - type test
- * @description: EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entities are present.
-> * unresolvable links are completely removed.
+ * EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entities are present.
+ * unresolvable links are completely removed.
  */
 expectAssignable<
   Entry<
@@ -454,8 +447,7 @@ expectNotAssignable<
 >(mocks.getEntry({ referenceField: [mocks.assetLink] }))
 
 /**
- * @namespace: Typescript - type test
- * @description: EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
+ * EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
  */
 expectAssignable<
   Entry<

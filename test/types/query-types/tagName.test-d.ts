@@ -1,5 +1,6 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { TagNameFilters } from '../../../lib/types/query/query'
+import { TagNameFilters } from '../../../lib'
+
 // @ts-ignore
 import * as mocks from '../mocks'
 
