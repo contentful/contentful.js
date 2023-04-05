@@ -35,7 +35,7 @@ export interface ContentTypeField {
   allowedResources?: ContentTypeAllowedResources[]
 }
 
-interface ContentTypeAllowedResources {
+export interface ContentTypeAllowedResources {
   type: string
   source: string
   contentTypes: string[]

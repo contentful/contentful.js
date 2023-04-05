@@ -169,7 +169,7 @@ export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
  * @typeParam LinkedEntry - Shape of the linked entry used to calculate dynamic keys
  * @internal
  */
-type ResolvedEntryLink<
+export type ResolvedEntryLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType
@@ -193,7 +193,7 @@ type ResolvedEntryLink<
  * @typeParam LinkedEntry - Shape of the linked entry used to calculate dynamic keys
  * @internal
  */
-type ResolvedEntryResourceLink<
+export type ResolvedEntryResourceLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType
@@ -215,7 +215,7 @@ type ResolvedEntryResourceLink<
  * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @internal
  */
-type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extends Modifiers
+export type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extends Modifiers
   ? Asset | { sys: AssetLink } | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
   ? { sys: AssetLink }
@@ -231,7 +231,7 @@ type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extend
  * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
  * @internal
  */
-type ResolvedLink<
+export type ResolvedLink<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode

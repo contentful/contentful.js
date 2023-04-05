@@ -4,7 +4,7 @@ import { AssetSys } from '../asset'
 import { ConditionalPick } from 'type-fest'
 import { TagSys } from '../tag'
 
-type SupportedTypes =
+export type SupportedTypes =
   | EntryFields.Symbol
   | EntryFields.Integer
   | EntryFields.Number
@@ -13,7 +13,7 @@ type SupportedTypes =
   | EntryFields.Location
   | undefined
 
-type SupportedEntryFieldTypes =
+export type SupportedEntryFieldTypes =
   | EntryFieldTypes.Symbol
   | EntryFieldTypes.Integer
   | EntryFieldTypes.Number
@@ -22,9 +22,12 @@ type SupportedEntryFieldTypes =
   | EntryFieldTypes.Location
   | undefined
 
-type SupportedLinkTypes = EntryFieldTypes.AssetLink | EntryFieldTypes.EntryLink<any> | undefined
+export type SupportedLinkTypes =
+  | EntryFieldTypes.AssetLink
+  | EntryFieldTypes.EntryLink<any>
+  | undefined
 
-type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
+export type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
   | `${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
   | `-${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
 

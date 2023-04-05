@@ -19,7 +19,7 @@ import {
   EntrySkeletonType,
 } from './util'
 import { ReferenceSearchFilters } from './reference'
-import { TagSys } from '../sys'
+import { TagSys } from '../tag'
 import { Metadata } from '../metadata'
 import { TagLink } from '../link'
 import {
@@ -31,17 +31,17 @@ import {
 import { EntryFieldsSetFilter } from './set'
 import { ChainModifiers } from '../client'
 
-type FixedPagedOptions = {
+export type FixedPagedOptions = {
   skip?: number
   limit?: number
 }
 
-type FixedQueryOptions = {
+export type FixedQueryOptions = {
   include?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   query?: string
 }
 
-type FixedLinkOptions = {
+export type FixedLinkOptions = {
   links_to_asset?: string
   links_to_entry?: string
 }
