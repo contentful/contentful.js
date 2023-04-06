@@ -134,7 +134,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * collecting all items from responses into one collection
    * @typeParam EntrySkeleton - Shape of entity fields used to calculate dynamic keys
    * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
-   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entity field values.
    * @see {@link https://www.contentful.com/developers/docs/concepts/sync/ | Documentation}
    * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-the-sync-api-with-js/ | Tutorial for using sync API}
    * @example
@@ -225,7 +225,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * @param id - The entry’s ID
    * @param query - Object with search parameters. In this method it's only used for `locale` when querying.
    * @returns Promise for an entry
-   * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+   * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
    * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @example
    * ```typescript
@@ -252,7 +252,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * Fetches a collection of Entries
    * @param query - Object with search parameters
    * @returns Promise for a collection of Entries
-   * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+   * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
    * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters | JS SDK tutorial}
    * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters | REST API reference}
@@ -279,7 +279,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   /**
    * Parse raw json data into a collection of entries. objects.Links will be resolved also
    * @param data - json data
-   * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+   * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
    * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
    * @example
    * ```typescript
@@ -325,7 +325,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * @param id
    * @param query - Object with search parameters. In this method it's only useful for `locale`.
    * @returns Promise for an asset
-   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for asset field values.
    * @example
    * const contentful = require('contentful')
    *
@@ -348,7 +348,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters | JS SDK tutorial}
    * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters | REST API reference}
    * @returns Promise for a collection of Assets
-   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for asset field values.
    * @example
    * const contentful = require('contentful')
    *

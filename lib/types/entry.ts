@@ -262,7 +262,7 @@ export type ResolvedField<
 /**
  * Entry represents anything defined as a Content Type in a space
  * @category Entry
- * @typeParam EntrySkeleton - Shape of asset fields used to calculate dynamic keys
+ * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
  * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
  * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries | Documentation}
@@ -313,7 +313,7 @@ export type Entry<
 /**
  * A collection of entries
  * @category Entry
- * @typeParam EntrySkeleton - Shape of an entry used to calculate dynamic keys
+ * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
  * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
  * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries | Documentation}
