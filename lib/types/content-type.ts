@@ -19,7 +19,7 @@ export interface ContentTypeSys extends BaseSys {
 /**
  * Definition of a content type field
  * @category ContentType
- * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types/content-type | CDA documentation on Content Type}
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types/content-type | Documentation}
  */
 export interface ContentTypeField {
   disabled: boolean
@@ -35,7 +35,7 @@ export interface ContentTypeField {
   allowedResources?: ContentTypeAllowedResources[]
 }
 
-interface ContentTypeAllowedResources {
+export interface ContentTypeAllowedResources {
   type: string
   source: string
   contentTypes: string[]
@@ -85,7 +85,7 @@ export interface ContentTypeFieldValidation {
 }
 
 /**
- * @TODO
+ * Definition of an item belonging to the content type field
  * @category ContentType
  */
 export interface FieldItem {
@@ -97,7 +97,7 @@ export interface FieldItem {
 /**
  * Definition of a content type
  * @category ContentType
- * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types | CDA documentation on Content Types}
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types | Documentation}
  */
 export interface ContentType {
   sys: ContentTypeSys

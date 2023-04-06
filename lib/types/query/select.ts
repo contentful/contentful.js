@@ -8,8 +8,9 @@ export type SelectFilterPaths<
 > = `${Prefix}.${keyof Fields & string}`
 
 /**
- * @desc select for entries
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
+ * Select fields from provided fields in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator | Documentation}
+ * @internal
  */
 export type EntrySelectFilterWithFields<Fields extends FieldsType> = {
   select?: (
@@ -21,16 +22,18 @@ export type EntrySelectFilterWithFields<Fields extends FieldsType> = {
 }
 
 /**
- * @desc select for entries
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
+ * Select fields in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator | Documentation}
+ * @internal
  */
 export type EntrySelectFilter = {
   select?: ('sys' | 'fields' | SelectFilterPaths<EntrySys, 'sys'>)[]
 }
 
 /**
- * @desc select for assets
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
+ * Select fields in an asset
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator | Documentation}
+ * @internal
  */
 export type AssetSelectFilter<Fields extends FieldsType> = {
   select?: (

@@ -12,12 +12,9 @@ type SupportedEntryFieldTypes =
   | undefined
 
 /**
- * @desc Range operators are available that you can apply to date and number fields
- * {string} lt: Less than.
- * {string} lte: Less than or equal to.
- * {string} gt: Greater than.
- * {string} gte: Greater than or equal to.
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
+ * Range operators appliable to date and number fields
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/ranges | Documentation}
+ * @internal
  */
 export type RangeFilters<Fields, Prefix extends string> = ConditionalQueries<
   Fields,
@@ -27,12 +24,9 @@ export type RangeFilters<Fields, Prefix extends string> = ConditionalQueries<
 >
 
 /**
- * @desc Range operators are available that you can apply to date and number fields
- * {string} lt: Less than.
- * {string} lte: Less than or equal to.
- * {string} gt: Greater than.
- * {string} gte: Greater than or equal to.
- * @see [Documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/select-operator}
+ * Range operators appliable to date and number fields in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/ranges | Documentation}
+ * @internal
  */
 export type EntryFieldsRangeFilters<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,

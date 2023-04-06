@@ -4,7 +4,7 @@ import { AssetSys } from '../asset'
 import { ConditionalPick } from 'type-fest'
 import { TagSys } from '../tag'
 
-type SupportedTypes =
+export type SupportedTypes =
   | EntryFields.Symbol
   | EntryFields.Integer
   | EntryFields.Number
@@ -13,7 +13,7 @@ type SupportedTypes =
   | EntryFields.Location
   | undefined
 
-type SupportedEntryFieldTypes =
+export type SupportedEntryFieldTypes =
   | EntryFieldTypes.Symbol
   | EntryFieldTypes.Integer
   | EntryFieldTypes.Number
@@ -22,15 +22,19 @@ type SupportedEntryFieldTypes =
   | EntryFieldTypes.Location
   | undefined
 
-type SupportedLinkTypes = EntryFieldTypes.AssetLink | EntryFieldTypes.EntryLink<any> | undefined
+export type SupportedLinkTypes =
+  | EntryFieldTypes.AssetLink
+  | EntryFieldTypes.EntryLink<any>
+  | undefined
 
-type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
+export type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
   | `${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
   | `-${Prefix}.${keyof ConditionalPick<Fields, SupportedTypes> & string}`
 
 /**
- * @desc order for entries
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order for provided fields in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type EntryOrderFilterWithFields<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>
@@ -47,8 +51,9 @@ export type EntryOrderFilterWithFields<
 }
 
 /**
- * @desc order for entries
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order in an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type EntryOrderFilter = {
   order?: (
@@ -59,8 +64,9 @@ export type EntryOrderFilter = {
 }
 
 /**
- * @desc order for assets
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order in an asset
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type AssetOrderFilter = {
   order?: (
@@ -77,8 +83,9 @@ export type AssetOrderFilter = {
 }
 
 /**
- * @desc order for tags
- * @see [documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order}
+ * Order in a tag
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/order | Documentation}
+ * @internal
  */
 export type TagOrderFilter = {
   order?: (OrderFilterPaths<TagSys, 'sys'> | 'name' | '-name')[]

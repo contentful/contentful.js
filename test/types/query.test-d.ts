@@ -1,12 +1,9 @@
 import { expectAssignable } from 'tsd'
-import { EntriesQueries, EntryFieldTypes, EntrySkeletonType } from '../../lib'
-import { EntryFieldsQueries } from '../../lib/types/query/query'
-// @ts-ignore
-import * as mocks from '../mocks'
+import { EntriesQueries, EntryFieldTypes, EntrySkeletonType, EntryFieldsQueries } from '../../lib'
 
-/*
- * EntryFieldTypes: Type Text
- */
+// @ts-ignore
+import * as mocks from './mocks'
+
 expectAssignable<Required<EntryFieldsQueries<{ stringField: EntryFieldTypes.Text }>>>({
   select: ['fields.stringField'],
   'fields.stringField[exists]': mocks.booleanValue,
@@ -17,9 +14,6 @@ expectAssignable<Required<EntryFieldsQueries<{ stringField: EntryFieldTypes.Text
   'fields.stringField[match]': mocks.stringValue,
 })
 
-/*
- * EntryFieldTypes: Type Number
- */
 expectAssignable<Required<EntryFieldsQueries<{ numberField: EntryFieldTypes.Number }>>>({
   select: ['fields.numberField'],
   'fields.numberField[exists]': mocks.booleanValue,
@@ -33,9 +27,6 @@ expectAssignable<Required<EntryFieldsQueries<{ numberField: EntryFieldTypes.Numb
   'fields.numberField[gte]': mocks.numberValue,
 })
 
-/*
- * EntryFieldTypes: Type Integer
- */
 expectAssignable<Required<EntryFieldsQueries<{ integerField: EntryFieldTypes.Integer }>>>({
   select: ['fields.integerField'],
   'fields.integerField[exists]': mocks.booleanValue,
@@ -49,9 +40,6 @@ expectAssignable<Required<EntryFieldsQueries<{ integerField: EntryFieldTypes.Int
   'fields.integerField[gte]': mocks.numberValue,
 })
 
-/*
- * EntryFieldTypes: Type Symbol
- */
 expectAssignable<Required<EntryFieldsQueries<{ symbolField: EntryFieldTypes.Symbol }>>>({
   select: ['fields.symbolField'],
   'fields.symbolField[exists]': mocks.booleanValue,
@@ -62,9 +50,6 @@ expectAssignable<Required<EntryFieldsQueries<{ symbolField: EntryFieldTypes.Symb
   'fields.symbolField[match]': mocks.stringValue,
 })
 
-/*
- * EntryFieldTypes: Type Date
- */
 expectAssignable<Required<EntryFieldsQueries<{ dateField: EntryFieldTypes.Date }>>>({
   select: ['fields.dateField'],
   'fields.dateField[exists]': mocks.booleanValue,
@@ -79,9 +64,6 @@ expectAssignable<Required<EntryFieldsQueries<{ dateField: EntryFieldTypes.Date }
   'fields.dateField[gte]': mocks.dateValue,
 })
 
-/*
- * EntryFieldTypes: Type Location
- */
 expectAssignable<Required<EntryFieldsQueries<{ locationField: EntryFieldTypes.Location }>>>({
   select: ['fields.locationField'],
   'fields.locationField[exists]': mocks.booleanValue,
@@ -89,26 +71,17 @@ expectAssignable<Required<EntryFieldsQueries<{ locationField: EntryFieldTypes.Lo
   'fields.locationField[within]': [34, 35, 37, 38],
 })
 
-/*
- * EntryFieldTypes: Type Object
- */
 expectAssignable<Required<EntryFieldsQueries<{ objectField: EntryFieldTypes.Object }>>>({
   select: ['fields.objectField'],
   'fields.objectField[exists]': mocks.booleanValue,
 })
 
-/*
- * EntryFieldTypes: Type RichText
- */
 expectAssignable<Required<EntryFieldsQueries<{ richTextField: EntryFieldTypes.RichText }>>>({
   select: ['fields.richTextField'],
   'fields.richTextField[exists]': mocks.booleanValue,
   'fields.richTextField[match]': mocks.stringValue,
 })
 
-/*
- * EntryFieldTypes: Type Array of strings
- */
 expectAssignable<
   Required<EntryFieldsQueries<{ arrayStringField: EntryFieldTypes.Array<EntryFieldTypes.Symbol> }>>
 >({
@@ -121,9 +94,6 @@ expectAssignable<
   'fields.arrayStringField[match]': mocks.stringValue,
 })
 
-/*
- * EntryFieldTypes: Type Reference
- */
 expectAssignable<
   Required<EntryFieldsQueries<{ referenceField: EntryFieldTypes.EntryLink<EntrySkeletonType> }>>
 >({
@@ -133,9 +103,6 @@ expectAssignable<
   'fields.referenceField.fields.numberField': mocks.numberValue,
 })
 
-/*
- * Entry
- */
 expectAssignable<
   EntriesQueries<
     EntrySkeletonType<{

@@ -5,7 +5,7 @@
 
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import createGlobalOptions from './create-global-options'
+import { createGlobalOptions } from './create-global-options'
 import { makeClient } from './make-client'
 import type { AxiosAdapter, AxiosRequestConfig } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
@@ -17,8 +17,8 @@ import { ContentfulClientApi } from './types'
 export type ClientLogLevel = 'error' | 'warning' | 'info' | string
 
 /**
- * @category Client
  * Client initialization parameters
+ * @category Client
  */
 export interface CreateClientParams {
   /**
@@ -88,8 +88,8 @@ export interface CreateClientParams {
   /**
    * A log handler function to process given log messages and errors.
    * (The default can be found at: https://github.com/contentful/contentful-sdk-core/blob/master/src/create-http-client.ts)
-   * @param level Log level, e.g. error, warning, or info
-   * @param data Log data
+   * @param level - Log level, e.g. error, warning, or info
+   * @param data - Log data
    */
   logHandler?: (level: ClientLogLevel, data?: Record<string, any> | string) => void
   /**
@@ -104,15 +104,17 @@ export interface CreateClientParams {
 }
 
 /**
- * @category Client
  * Create a client instance
- * @param params Client initialization parameters
+ * @param params - Client initialization parameters
+ * @category Client
  * @example
+ * ```typescript
  * const contentful = require('contentful')
  * const client = contentful.createClient({
  *   accessToken: 'myAccessToken',
  *   space: 'mySpaceId'
  * })
+ * ```
  */
 export function createClient(params: CreateClientParams): ContentfulClientApi<undefined> {
   if (!params.accessToken) {

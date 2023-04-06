@@ -11,6 +11,7 @@ import { ResourceLink } from './resource-link'
 import { ChainModifiers } from './client'
 
 /**
+ * System managed metadata for entries
  * @category Entry
  */
 export interface EntrySys extends EntitySys {
@@ -19,6 +20,8 @@ export interface EntrySys extends EntitySys {
 }
 
 /**
+ * Definition of abstract entry field types with additional type properties
+ * Introduced to properly distinguish all fields to create consistent query types
  * @category Entry
  */
 export declare namespace EntryFieldTypes {
@@ -54,6 +57,7 @@ export declare namespace EntryFieldTypes {
 }
 
 /**
+ * Definition of entry fields
  * @category Entry
  */
 export declare namespace EntryFields {
@@ -78,6 +82,7 @@ export declare namespace EntryFields {
 }
 
 /**
+ * All possible values for entry field types with additional type properties
  * @category Entry
  */
 export type EntryFieldType<EntrySkeleton extends EntrySkeletonType> =
@@ -99,6 +104,7 @@ export type EntryFieldType<EntrySkeleton extends EntrySkeletonType> =
   | EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<EntrySkeleton>>
 
 /**
+ * All possible values for entry field types
  * @category Entry
  */
 export type EntryField<EntrySkeleton extends EntrySkeletonType> =
@@ -126,6 +132,8 @@ export type BaseEntry = {
 }
 
 /**
+ * Mapping between abstract entry field types with additional type information
+ * and entry field types
  * @category Entry
  */
 export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
@@ -149,7 +157,19 @@ export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
     ? EntryFields.Object<Data>
     : never
 
-type ResolvedEntryLink<
+/**
+ * A single resolved link to another entry in the same space
+ * If the current client configuration includes `withoutLinkResolution` chain option,
+ * the returned type will not resolve linked entities, but keep them as objects
+ * If the current client configuration includes `withoutUnresolvableLinks` chain option,
+ * the returned type will not include non-resolvable linked entities
+ * @category Entry
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @typeParam LinkedEntry - Shape of the linked entry used to calculate dynamic keys
+ * @internal
+ */
+export type ResolvedEntryLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType
@@ -161,7 +181,19 @@ type ResolvedEntryLink<
   ? Entry<LinkedEntry, Modifiers, Locales> | undefined
   : Entry<LinkedEntry, Modifiers, Locales> | { sys: Link<'Entry'> }
 
-type ResolvedEntryResourceLink<
+/**
+ * A single resolved reference link to another entry in a different space
+ * If the current client configuration includes `withoutLinkResolution` chain option,
+ * the returned type will not resolve linked entities, but keep them as objects
+ * If the current client configuration includes `withoutUnresolvableLinks` chain option,
+ * the returned type will not include non-resolvable linked entities
+ * @category Entry
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @typeParam LinkedEntry - Shape of the linked entry used to calculate dynamic keys
+ * @internal
+ */
+export type ResolvedEntryResourceLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType
@@ -173,7 +205,17 @@ type ResolvedEntryResourceLink<
   ? Entry<LinkedEntry, Modifiers, Locales> | undefined
   : Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink }
 
-type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extends Modifiers
+/**
+ * A single resolved link to another asset
+ * If the current client configuration includes `withoutLinkResolution` chain option,
+ * the returned type will not resolve linked entities, but keep them as objects
+ * If the current client configuration includes `withoutUnresolvableLinks` chain option,
+ * the returned type will not include non-resolvable linked entities
+ * @category Entry
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @internal
+ */
+export type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extends Modifiers
   ? Asset | { sys: AssetLink } | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
   ? { sys: AssetLink }
@@ -181,7 +223,15 @@ type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extend
   ? Asset | undefined
   : Asset | { sys: AssetLink }
 
-type ResolvedLink<
+/**
+ * A single resolved link to another resource
+ * @category Entry
+ * @typeParam Field - Shape of an entry used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @internal
+ */
+export type ResolvedLink<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode
@@ -194,7 +244,12 @@ type ResolvedLink<
   : BaseFieldMap<Field>
 
 /**
+ * A collection or single resolved link to another resource
  * @category Entry
+ * @typeParam Field - Shape of an entry used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @see {@link https://www.contentful.com/developers/docs/concepts/links/ | Documentation}
  */
 export type ResolvedField<
   Field extends EntryFieldType<EntrySkeletonType>,
@@ -205,7 +260,12 @@ export type ResolvedField<
   : ResolvedLink<Field, Modifiers, Locales>
 
 /**
+ * Entry represents anything defined as a Content Type in a space
  * @category Entry
+ * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries | Documentation}
  */
 export type Entry<
   EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
@@ -251,7 +311,12 @@ export type Entry<
 }
 
 /**
+ * A collection of entries
  * @category Entry
+ * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries | Documentation}
  */
 export type EntryCollection<
   EntrySkeleton extends EntrySkeletonType,

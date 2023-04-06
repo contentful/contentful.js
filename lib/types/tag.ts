@@ -8,9 +8,8 @@ import { UserLink } from './link'
  * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes | CDA documentation on common attributes}
  */
 export interface TagSys extends Omit<EntitySys, 'locale' | 'revision'> {
-  type: 'Tag'
   version: number
-  visibility: 'public'
+  visibility: string
   createdBy: { sys: UserLink }
   updatedBy: { sys: UserLink }
 }

@@ -30,6 +30,7 @@ expectType<EntryCollection<EntrySkeleton, undefined>>(await client.getEntries<En
 expectType<EntryCollection<EntrySkeleton, undefined>>(
   await client.getEntries<EntrySkeleton>({ content_type: 'content-type-id' })
 )
+
 expectError(await client.getEntries<EntrySkeleton>({ content_type: 'unexpected' }))
 expectType<EntryCollection<EntrySkeleton | LinkedSkeleton, undefined>>(
   await client.getEntries<EntrySkeleton | LinkedSkeleton>({

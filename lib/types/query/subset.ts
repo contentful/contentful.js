@@ -24,9 +24,10 @@ type SupportedEntryFieldTypes =
   | undefined
 
 /**
- * @desc inclusion & exclusion
- * @see [inclusion documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inclusion}
- * @see [exclusion documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/exclusion}
+ * Subset filters for inclusion & exclusion in provided fields
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inclusion | Inclusion documentation}
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/exclusion | Exclusion documentation}
+ * @internal
  */
 export type SubsetFilters<Fields, Prefix extends string> = ConditionalListQueries<
   Fields,
@@ -36,9 +37,10 @@ export type SubsetFilters<Fields, Prefix extends string> = ConditionalListQuerie
 >
 
 /**
- * @desc inclusion & exclusion
- * @see [inclusion documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inclusion}
- * @see [exclusion documentation]{@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/exclusion}
+ * Subset filters for inclusion & exclusion in provided fields of an entry
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/inclusion | Inclusion documentation}
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/exclusion | Exclusion documentation}
+ * @internal
  */
 export type EntryFieldsSubsetFilters<
   Fields extends Record<string, EntryFieldType<any>>,

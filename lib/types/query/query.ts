@@ -19,7 +19,7 @@ import {
   EntrySkeletonType,
 } from './util'
 import { ReferenceSearchFilters } from './reference'
-import { TagSys } from '../sys'
+import { TagSys } from '../tag'
 import { Metadata } from '../metadata'
 import { TagLink } from '../link'
 import {
@@ -31,17 +31,17 @@ import {
 import { EntryFieldsSetFilter } from './set'
 import { ChainModifiers } from '../client'
 
-type FixedPagedOptions = {
+export type FixedPagedOptions = {
   skip?: number
   limit?: number
 }
 
-type FixedQueryOptions = {
+export type FixedQueryOptions = {
   include?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   query?: string
 }
 
-type FixedLinkOptions = {
+export type FixedLinkOptions = {
   links_to_asset?: string
   links_to_entry?: string
 }
@@ -50,17 +50,27 @@ export type LocaleOption = {
   locale?: string
 }
 
+/**
+ * All queries appliable to sys fields
+ */
 export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   EqualityFilter<Sys, 'sys'> &
   InequalityFilter<Sys, 'sys'> &
   SubsetFilters<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'>
 
+/**
+ * All queries appliable to metadata fields
+ */
 export type MetadataTagsQueries =
   | ConditionalFixedQueries<Pick<Metadata, 'tags'>, any, boolean, 'metadata', '[exists]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[all]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[in]'>
 
+/**
+ * All queries appliable to entry fields
+ * @typeParam Fields - Shape of entry fields used to calculate dynamic keys
+ */
 export type EntryFieldsQueries<Fields extends FieldsType> =
   | EntrySelectFilterWithFields<Fields>
   | EntryOrderFilterWithFields<Fields>
@@ -79,6 +89,9 @@ export type EntryContentTypeQuery<T extends string> = {
 }
 
 /**
+ * Search parameters for entry collection methods
+ * @typeParam EntrySkeleton - Shape of an entry used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
  */
 export type EntriesQueries<
@@ -97,10 +110,20 @@ export type EntriesQueries<
       // eslint-disable-next-line @typescript-eslint/ban-types
       ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption))
 
+/**
+ * Search parameters for a single entry methods
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @category Query
+ */
 export type EntryQueries<Modifiers extends ChainModifiers> = Omit<FixedQueryOptions, 'query'> &
   // eslint-disable-next-line @typescript-eslint/ban-types
   ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption)
 
+/**
+ * All queries appliable to asset fields
+ * @typeParam Fields - Shape of asset fields used to calculate dynamic keys
+ * @category Query
+ */
 export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fields, 'fields'> &
   EqualityFilter<Fields, 'fields'> &
   InequalityFilter<Fields, 'fields'> &
@@ -110,6 +133,11 @@ export type AssetFieldsQueries<Fields extends FieldsType> = ExistenceFilter<Fiel
   RangeFilters<Fields, 'fields'> &
   SubsetFilters<Fields, 'fields'>
 
+/**
+ * All queries appliable to asset file fields
+ * @typeParam Fields - Shape of asset fields used to calculate dynamic keys
+ * @category Query
+ */
 export type AssetFieldsFileQueries = ExistenceFilter<AssetFile, 'fields.file'> &
   EqualityFilter<AssetFile, 'fields.file'> &
   InequalityFilter<AssetFile, 'fields.file'> &
@@ -117,6 +145,11 @@ export type AssetFieldsFileQueries = ExistenceFilter<AssetFile, 'fields.file'> &
   RangeFilters<AssetFile, 'fields.file'> &
   SubsetFilters<AssetFile, 'fields.file'>
 
+/**
+ * All queries appliable to asset file details fields
+ * @typeParam Fields - Shape of asset fields used to calculate dynamic keys
+ * @category Query
+ */
 export type AssetFieldsFileDetailsQueries = ExistenceFilter<
   Pick<AssetDetails, 'size'>,
   'fields.file.details'
@@ -127,6 +160,9 @@ export type AssetFieldsFileDetailsQueries = ExistenceFilter<
   SubsetFilters<Pick<AssetDetails, 'size'>, 'fields.file.details'>
 
 /**
+ * Search parameters for asset collection methods
+ * @typeParam EntrySkeleton Shape of an asset used to calculate dynamic keys
+ * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
  */
 export type AssetsQueries<
@@ -143,6 +179,11 @@ export type AssetsQueries<
       {}
     : LocaleOption)
 
+/**
+ * Search parameters for a single asset methods
+ * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @category Query
+ */
 export type AssetQueries<Modifiers extends ChainModifiers> = 'WITH_ALL_LOCALES' extends Modifiers
   ? never
   : LocaleOption
@@ -157,6 +198,8 @@ export type TagNameFilters = {
 }
 
 /**
+ * Search parameters for a tag methods
+ * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
  */
 export type TagQueries = TagNameFilters &

@@ -1,7 +1,3 @@
-/**
- * See <a href="https://www.contentful.com/developers/docs/concepts/sync/">Synchronization</a> for more information.
- * @namespace Sync
- */
 import resolveResponse from 'contentful-resolve-response'
 import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import mixinStringifySafe from './mixins/stringify-safe'
@@ -19,13 +15,7 @@ import {
 import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 
 /**
- * This module retrieves all the available pages for a sync operation
- * @private
- * @param {AxiosInstance} http - HTTP client
- * @param {SyncQuery} query - Query object
- * @param {SyncOptions} options - Sync options object
- * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
- * @return {Promise<SyncCollection>}
+ * Retrieves all the available pages for a sync operation
  */
 export default async function pagedSync<
   EntrySkeleton extends EntrySkeletonType,
@@ -85,8 +75,8 @@ export default async function pagedSync<
 
 /**
  * @private
- * @param {Array<Entry|Array|DeletedEntry|DeletedAsset>} items
- * @return {Object} Entities mapped to an object for each entity type
+ * @param items
+ * @returns Entities mapped to an object for each entity type
  */
 function mapResponseItems(items): any {
   const reducer = (type) => {
@@ -128,14 +118,7 @@ function createRequestQuery(originalQuery: SyncPageQuery): SyncPageQuery {
  * Otherwise, if the response contains a nextSyncUrl, extracts the sync token
  * and returns it.
  * On each call of this function, any retrieved items are collected in the
- * supplied items array, which gets returned in the end
- * @private
- * @param {AxiosInstance} http
- * @param {Array<Entry|Asset|DeletedEntry|DeletedAsset>} items
- * @param {SyncPageQuery} query
- * @param {SyncOptions} options - Sync page options object
- * @param {boolean} [options.paginate = true] - If further sync pages should automatically be crawled
- * @return {Promise<SyncPageResponse>}
+ * supplied items array, which gets returned in the end.
  */
 async function getSyncPage(
   http: AxiosInstance,

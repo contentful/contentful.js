@@ -13,7 +13,7 @@ function createEntry(id, deleted = false) {
   return entry
 }
 
-function createLinkedEntry(id) {
+function createLinkedEntry() {
   const entry = copy(entryWithLinkMock)
   return entry
 }
@@ -100,7 +100,7 @@ describe('paged-sync', () => {
   })
 
   test('Initial sync with one page', async () => {
-    const entryWithLink = createLinkedEntry('1')
+    const entryWithLink = createLinkedEntry()
 
     http.get.mockResolvedValue({
       data: {

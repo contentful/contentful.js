@@ -1,6 +1,5 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
 import { EntriesQueries, EntrySkeletonType, EntryFieldTypes } from '../../../lib'
-// @ts-ignore
 import * as mocks from '../mocks'
 
 // all operator

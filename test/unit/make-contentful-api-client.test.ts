@@ -1,5 +1,5 @@
 import { HeadersDefaults } from 'axios'
-import createGlobalOptions from '../../lib/create-global-options'
+import { createGlobalOptions } from '../../lib/create-global-options'
 import { makeClient } from '../../lib/make-client'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
 // @ts-ignore

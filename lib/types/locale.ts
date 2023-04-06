@@ -16,7 +16,7 @@ export interface LocaleSys extends BaseSys {
 }
 
 /**
- * Properties for a single locale definition
+ * Properties of a single locale definition
  * @category Entity
  */
 export interface Locale {

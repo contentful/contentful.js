@@ -12,6 +12,7 @@ import {
   AssetFile,
   ChainModifiers,
 } from '../../lib'
+
 // @ts-ignore
 import * as mocks from './mocks'
 
