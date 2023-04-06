@@ -13,8 +13,8 @@
 <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
 </a>
-<a href="https://travis-ci.org/contentful/contentful.js">
-  <img src="https://travis-ci.org/contentful/contentful.js.svg?branch=master" alt="Build Status">
+<a href="https://circleci.com/gh/contentful/contentful.js">
+  <img src="https://circleci.com/gh/contentful/contentful.js.svg?style=svg" alt="Build Status">
 </a>
 <a href="https://www.npmjs.com/package/contentful">
   <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">

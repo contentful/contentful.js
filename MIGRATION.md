@@ -72,6 +72,10 @@ Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a 
 
 See [response modifiers](#response-modifiers) for migration instructions.
 
+**Query filters**
+
+- Query filters that accept a string of comma-separated array of values now only accept Arrays. For more details check the [breaking change section](TYPESCRIPT.md#breaking-change) of Dynamic (field) query keys.
+
 ### Version compatibility
 
 - Node: >= 12 (LTS)
