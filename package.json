@@ -112,7 +112,7 @@
     "nodemon": "^2.0.2",
     "regenerator-runtime": "^0.13.7",
     "require-all": "^3.0.0",
-    "rimraf": "^4.0.2",
+    "rimraf": "^5.0.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "semantic-release": "^21.0.1",
     "sinon": "^15.0.0",
