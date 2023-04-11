@@ -42,4 +42,7 @@ updates:
       - dependency-name: "semantic-release"
         versions:
           - ">=20.0.0"
+      - dependency-name: "axios"
+        versions:
+          - ">=1.0.0"
 
