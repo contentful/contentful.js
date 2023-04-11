@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
-    <img alt="Contentful Logo" title="Contentful" src="../images/contentful-icon.png" width="150">
+    <img alt="Contentful Logo" title="Contentful" src="media://contentful-icon.png" width="150">
   </a>
 </p>
 
