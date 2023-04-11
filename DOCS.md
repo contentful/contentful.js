@@ -4,9 +4,9 @@
   </a>
 </p>
 
-<h1 align='center'>Content Delivery API</h1>
+<h1 align='center'>contentful.js</h1>
 
-<h3 align="center">TypeScript type documentation</h3>
+<h3 align="center">Contentful JavaScript Content Delivery Library</h3>
 
 ## Introduction
 
@@ -29,17 +29,19 @@
   <img src="https://img.badgesize.io/https://unpkg.com/contentful/dist/contentful.browser.min.js?compression=gzip" alt="GZIP bundle size">
 </a>
 
-Contentful.js is a JavaScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
+Contentful.js is a JavaScript and TypeScript library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
 
-Code is documented using TypeDoc and these pages are auto-generated and published with each new version.
+The code is documented using TypeDoc and these pages are auto-generated and published with each new version.
 
 - For API and client documentation, please refer to the list below.
-- For type definitions and descriptions, please refer to the list in the sidebar.
+- For all type definitions and descriptions, please refer to the list in the sidebar.
 
-## Namespaces
+## API Overview
 
-- contentful
+- Contentful Namespace
   - {@link createClient}
+  - {@link EntryFields}
+  - {@link EntryFieldTypes}
 - {@link ContentfulClientApi}
   - {@link ContentfulClientApi.createAssetKey}
   - {@link ContentfulClientApi.getAsset}
