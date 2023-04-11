@@ -7,5 +7,6 @@
   "includeVersion": false,
   "hideGenerator": true,
   "excludePrivate": true,
-  "categorizeByGroup": false
+  "categorizeByGroup": false,
+  "media": "./images"
 }
