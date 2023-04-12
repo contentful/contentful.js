@@ -18,31 +18,10 @@ updates:
     - dependency-name: "eslint-plugin-promise"
       versions:
         - ">=6.0.0"
+    - dependency-name: "axios"
+      versions:
+        - ">=1.0.0"
     commit-message:
       prefix: build
       include: scope
-  - package-ecosystem: npm
-    target-branch: "beta-v10"
-    directory: '/'
-    schedule:
-      interval: daily
-      time: '00:00'
-      timezone: UTC
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: build-beta
-      include: scope
-    ignore:
-      - dependency-name: "fast-copy"
-        versions:
-          - ">=3.0.0"
-      - dependency-name: "eslint-plugin-promise"
-        versions:
-          - ">=6.0.0"
-      - dependency-name: "semantic-release"
-        versions:
-          - ">=20.0.0"
-      - dependency-name: "axios"
-        versions:
-          - ">=1.0.0"
 
