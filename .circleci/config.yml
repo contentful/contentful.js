@@ -5,6 +5,18 @@ orbs:
   node: circleci/node@5.1.0
 
 jobs:
+  lint:
+    docker:
+      - image: 'cimg/node:18.15-browsers'
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run lint
+      - run: npm run prettier:check
+      - run: npm run build
+      - run: npm run test:size
+      - run: npm run test:types
+
   unit:
     docker:
       - image: 'cimg/base:stable'
@@ -13,8 +25,8 @@ jobs:
       - node/install:
           node-version: '18.15'
       - node/install-packages
-      - run: npm run build
-      - run: npm run test:cover
+      - run: npm run test:unit
+
   integration:
     docker:
       - image: 'cimg/base:stable'
@@ -23,24 +35,24 @@ jobs:
       - node/install:
           node-version: '18.15'
       - node/install-packages
-      - run: npm run build
       - run: npm run test:integration
+
   release:
     docker:
-      - image: 'cimg/base:stable'
+      - image: 'cimg/node:18.15-browsers'
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
-      - node/install:
-          node-version: '18.15'
       - node/install-packages
       - run: npm run build
       - run: npm run semantic-release
+
 workflows:
   version: 2
   build_and_test:
     jobs:
+      - lint
       - unit
       - integration
       - release:
