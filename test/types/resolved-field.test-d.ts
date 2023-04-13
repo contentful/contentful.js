@@ -12,15 +12,39 @@ type SimpleEntryFields = { title: EntryFieldTypes.Symbol }
 type SimpleEntryWithContentTypeId = EntrySkeletonType<SimpleEntryFields>
 
 expectAssignable<ResolvedField<EntryFieldTypes.Symbol, undefined>>(mocks.stringValue)
+expectAssignable<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('a')
+expectAssignable<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('b')
+expectNotAssignable<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('c')
+
 expectAssignable<ResolvedField<EntryFieldTypes.Text, undefined>>(mocks.stringValue)
+expectAssignable<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('a')
+expectAssignable<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('b')
+expectNotAssignable<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('c')
+
 expectAssignable<ResolvedField<EntryFieldTypes.Integer, undefined>>(mocks.numberValue)
+expectAssignable<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(1)
+expectAssignable<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(2)
+expectNotAssignable<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(3)
+
 expectAssignable<ResolvedField<EntryFieldTypes.Number, undefined>>(mocks.numberValue)
+expectAssignable<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(1)
+expectAssignable<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(2)
+expectNotAssignable<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(3)
+
 expectAssignable<ResolvedField<EntryFieldTypes.Date, undefined>>(mocks.dateValue)
 expectAssignable<ResolvedField<EntryFieldTypes.Boolean, undefined>>(mocks.booleanValue)
 expectAssignable<ResolvedField<EntryFieldTypes.Location, undefined>>(mocks.locationValue)
+
 expectAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol>, undefined>>([
   mocks.stringValue,
 ])
+expectAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol<'a' | 'b'>>, undefined>
+>(['a', 'b'])
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol<'a' | 'b'>>, undefined>
+>(['c'])
+
 expectAssignable<ResolvedField<EntryFieldTypes.Object, undefined>>(mocks.jsonValue)
 
 // entries in links
