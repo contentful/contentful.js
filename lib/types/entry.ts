@@ -25,10 +25,10 @@ export interface EntrySys extends EntitySys {
  * @category Entry
  */
 export declare namespace EntryFieldTypes {
-  type Symbol = { type: 'Symbol' }
-  type Text = { type: 'Text' }
-  type Integer = { type: 'Integer' }
-  type Number = { type: 'Number' }
+  type Symbol<Values extends string = string> = { type: 'Symbol'; values: Values }
+  type Text<Values extends string = string> = { type: 'Text'; values: Values }
+  type Integer<Values extends number = number> = { type: 'Integer'; values: Values }
+  type Number<Values extends number = number> = { type: 'Number'; values: Values }
   type Date = { type: 'Date' }
   type Boolean = { type: 'Boolean' }
   type Location = { type: 'Location' }
@@ -61,10 +61,10 @@ export declare namespace EntryFieldTypes {
  * @category Entry
  */
 export declare namespace EntryFields {
-  type Symbol = string
-  type Text = string
-  type Integer = number
-  type Number = number
+  type Symbol<Values extends string = string> = Values
+  type Text<Values extends string = string> = Values
+  type Integer<Values extends number = number> = Values
+  type Number<Values extends number = number> = Values
   type Date = `${number}-${number}-${number}T${number}:${number}:${number}Z`
   type Boolean = boolean
 
@@ -137,14 +137,14 @@ export type BaseEntry = {
  * @category Entry
  */
 export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
-  Field extends EntryFieldTypes.Symbol
-    ? EntryFields.Symbol
-    : Field extends EntryFieldTypes.Text
-    ? EntryFields.Text
-    : Field extends EntryFieldTypes.Integer
-    ? EntryFields.Integer
-    : Field extends EntryFieldTypes.Number
-    ? EntryFields.Number
+  Field extends EntryFieldTypes.Symbol<infer Values>
+    ? EntryFields.Symbol<Values>
+    : Field extends EntryFieldTypes.Text<infer Values>
+    ? EntryFields.Text<Values>
+    : Field extends EntryFieldTypes.Integer<infer Values>
+    ? EntryFields.Integer<Values>
+    : Field extends EntryFieldTypes.Number<infer Values>
+    ? EntryFields.Number<Values>
     : Field extends EntryFieldTypes.Date
     ? EntryFields.Date
     : Field extends EntryFieldTypes.Boolean
