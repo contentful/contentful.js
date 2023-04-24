@@ -215,13 +215,16 @@ export type ResolvedEntryResourceLink<
  * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @internal
  */
-export type ResolvedAssetLink<Modifiers extends ChainModifiers> = ChainModifiers extends Modifiers
-  ? Asset | { sys: AssetLink } | undefined
+export type ResolvedAssetLink<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode
+> = ChainModifiers extends Modifiers
+  ? Asset<Modifiers, Locales> | { sys: AssetLink } | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
   ? { sys: AssetLink }
   : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-  ? Asset | undefined
-  : Asset | { sys: AssetLink }
+  ? Asset<Modifiers, Locales> | undefined
+  : Asset<Modifiers, Locales> | { sys: AssetLink }
 
 /**
  * A single resolved link to another resource
@@ -240,7 +243,7 @@ export type ResolvedLink<
   : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedEntry>
   ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
   : Field extends EntryFieldTypes.AssetLink
-  ? ResolvedAssetLink<Modifiers>
+  ? ResolvedAssetLink<Modifiers, Locales>
   : BaseFieldMap<Field>
 
 /**

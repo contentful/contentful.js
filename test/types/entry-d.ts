@@ -328,13 +328,13 @@ expectAssignable<
       DE: [mocks.localizedEntry, mocks.entryLink],
       US: [mocks.localizedEntry, mocks.entryLink],
     },
-    resolvableAssetReferenceField: { DE: mocks.asset, US: mocks.asset },
+    resolvableAssetReferenceField: { DE: mocks.localizedAsset, US: mocks.localizedAsset },
     unresolvableAssetReferenceField: { US: mocks.assetLink, DE: mocks.assetLink },
-    resolvableMultiAssetReferenceField: { DE: [mocks.asset], US: [mocks.asset] },
+    resolvableMultiAssetReferenceField: { DE: [mocks.localizedAsset], US: [mocks.localizedAsset] },
     unresolvableMultiAssetReferenceField: { DE: [mocks.assetLink], US: [mocks.assetLink] },
     mixedMultiAssetReferenceField: {
-      DE: [mocks.asset, mocks.assetLink],
-      US: [mocks.asset, mocks.assetLink],
+      DE: [mocks.localizedAsset, mocks.assetLink],
+      US: [mocks.localizedAsset, mocks.assetLink],
     },
   },
 })
@@ -484,11 +484,14 @@ expectAssignable<
       US: [mocks.localizedEntry, undefined],
       DE: [mocks.localizedEntry, undefined],
     },
-    resolvableAssetReferenceField: { US: mocks.asset, DE: mocks.asset },
+    resolvableAssetReferenceField: { US: mocks.localizedAsset, DE: mocks.localizedAsset },
     unresolvableAssetReferenceField: { US: undefined, DE: undefined },
-    resolvableMultiAssetReferenceField: { US: [mocks.asset], DE: [mocks.asset] },
+    resolvableMultiAssetReferenceField: { US: [mocks.localizedAsset], DE: [mocks.localizedAsset] },
     unresolvableMultiAssetReferenceField: { US: [undefined], DE: [undefined] },
-    mixedMultiAssetReferenceField: { US: [mocks.asset, undefined], DE: [mocks.asset, undefined] },
+    mixedMultiAssetReferenceField: {
+      US: [mocks.localizedAsset, undefined],
+      DE: [mocks.localizedAsset, undefined],
+    },
   })
 )
 
