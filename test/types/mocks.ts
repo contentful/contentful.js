@@ -139,4 +139,12 @@ export const assetFields: AssetFields = {
   file: assetFile,
 }
 
-export const asset: Asset = { ...assetBasics, fields: assetFields }
+export const localizedAssetFields = {
+  title: { US: stringValue, DE: stringValue },
+  description: { US: stringValue, DE: stringValue },
+  file: { US: assetFile, DE: assetFile },
+}
+
+export const asset = { ...assetBasics, fields: assetFields }
+
+export const localizedAsset = { ...assetBasics, fields: localizedAssetFields }

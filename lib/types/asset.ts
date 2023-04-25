@@ -48,14 +48,10 @@ export interface Asset<
   sys: AssetSys
   fields: ChainModifiers extends Modifiers
     ?
-        | {
-            [LocaleName in Locales]?: AssetFields
-          }
+        | { [FieldName in keyof AssetFields]: { [LocaleName in Locales]?: AssetFields[FieldName] } }
         | AssetFields
     : 'WITH_ALL_LOCALES' extends Modifiers
-    ? {
-        [LocaleName in Locales]?: AssetFields
-      }
+    ? { [FieldName in keyof AssetFields]: { [LocaleName in Locales]?: AssetFields[FieldName] } }
     : AssetFields
   metadata: Metadata
 }
