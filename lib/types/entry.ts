@@ -179,7 +179,7 @@ export type ResolvedEntryLink<
   ? { sys: Link<'Entry'> }
   : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
   ? Entry<LinkedEntry, Modifiers, Locales> | undefined
-  : Entry<LinkedEntry, Modifiers, Locales> | { sys: Link<'Entry'> }
+  : Entry<LinkedEntry, Modifiers, Locales>
 
 /**
  * A single resolved reference link to another entry in a different space
