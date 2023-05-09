@@ -113,7 +113,7 @@ The link resolution is applied to one level deep by default. If you need it to b
 
 **We resolve links by default**. If this behaviour is not what you want, you can use the chain modifier `withoutLinkResolution` on the Contentful client to keep the link objects instead of the inlined entries in your response object. See [client chain modifiers](README.md#client-chain-modifiers).
 
-**Links which could not get resolved will be kept by default**. If you want to completely remove fields which could not be resolved, you can use the chain modifier `withoutUnresolvableLinks`.
+**Links which could not get resolved will be kept by default** as `UnresolvedLink`. If you want to completely remove fields which could not be resolved, you can use the chain modifier `withoutUnresolvableLinks`.
 
 Please see the notes below for link resolution prior to v.10.0.0 and v.7.0.0.
 

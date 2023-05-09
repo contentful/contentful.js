@@ -1,7 +1,7 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { AssetLink, ContentTypeLink, Link } from './link'
+import { AssetLink, ContentTypeLink, UnresolvedLink } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntrySkeletonType } from './query'
@@ -174,12 +174,12 @@ export type ResolvedEntryLink<
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType
 > = ChainModifiers extends Modifiers
-  ? Entry<LinkedEntry, Modifiers, Locales> | { sys: Link<'Entry'> } | undefined
+  ? Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'> | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-  ? { sys: Link<'Entry'> }
+  ? UnresolvedLink<'Entry'>
   : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
   ? Entry<LinkedEntry, Modifiers, Locales> | undefined
-  : Entry<LinkedEntry, Modifiers, Locales> | { sys: Link<'Entry'> }
+  : Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'>
 
 /**
  * A single resolved reference link to another entry in a different space
@@ -219,12 +219,12 @@ export type ResolvedAssetLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode
 > = ChainModifiers extends Modifiers
-  ? Asset<Modifiers, Locales> | { sys: AssetLink } | undefined
+  ? Asset<Modifiers, Locales> | UnresolvedLink<'Asset'> | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-  ? { sys: AssetLink }
+  ? UnresolvedLink<'Asset'>
   : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
   ? Asset<Modifiers, Locales> | undefined
-  : Asset<Modifiers, Locales> | { sys: AssetLink }
+  : Asset<Modifiers, Locales> | UnresolvedLink<'Asset'>
 
 /**
  * A single resolved link to another resource
