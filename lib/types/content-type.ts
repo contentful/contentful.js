@@ -2,7 +2,7 @@ import { ContentfulCollection } from './collection'
 import { EntryFields } from './entry'
 import { SpaceLink, EnvironmentLink } from './link'
 import { BaseSys } from './sys'
-import { BLOCKS, INLINES } from '@contentful/rich-text-types'
+import type { BLOCKS, INLINES } from '@contentful/rich-text-types'
 
 /**
  * System managed metadata for content type
