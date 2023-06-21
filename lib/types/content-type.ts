@@ -2,6 +2,7 @@ import { ContentfulCollection } from './collection'
 import { EntryFields } from './entry'
 import { SpaceLink, EnvironmentLink } from './link'
 import { BaseSys } from './sys'
+import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 
 /**
  * System managed metadata for content type
@@ -77,11 +78,26 @@ export interface ContentTypeFieldValidation {
   linkContentType?: string[]
   message?: string
   nodes?: {
-    'entry-hyperlink'?: ContentTypeFieldValidation[]
-    'embedded-entry-block'?: ContentTypeFieldValidation[]
-    'embedded-entry-inline'?: ContentTypeFieldValidation[]
+    [BLOCKS.EMBEDDED_ENTRY]?: Pick<
+      ContentTypeFieldValidation,
+      'size' | 'linkContentType' | 'message'
+    >[]
+    [INLINES.EMBEDDED_ENTRY]?: Pick<
+      ContentTypeFieldValidation,
+      'size' | 'linkContentType' | 'message'
+    >[]
+    [INLINES.ENTRY_HYPERLINK]?: Pick<
+      ContentTypeFieldValidation,
+      'size' | 'linkContentType' | 'message'
+    >[]
+    [BLOCKS.EMBEDDED_ASSET]?: Pick<ContentTypeFieldValidation, 'size' | 'message'>[]
+    [INLINES.ASSET_HYPERLINK]?: Pick<ContentTypeFieldValidation, 'size' | 'message'>[]
+    [BLOCKS.EMBEDDED_RESOURCE]?: {
+      validations: Pick<ContentTypeFieldValidation, 'size' | 'message'>[]
+      allowedResources: ContentTypeAllowedResources[]
+    }
   }
-  enabledNodeTypes?: string[]
+  enabledNodeTypes?: (`${BLOCKS}` | `${INLINES}`)[]
 }
 
 /**
