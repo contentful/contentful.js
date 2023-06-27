@@ -7,7 +7,10 @@
   "browser": "./dist/contentful.browser.min.js",
   "types": "./dist/types/index.d.ts",
   "browserslist": [
-    "extends @contentful/browserslist-config"
+    "Chrome >= 79",
+    "Edge >= 79",
+    "Firefox >= 73",
+    "Safari >= 13"
   ],
   "tsd": {
     "directory": "test/types",
@@ -75,7 +78,6 @@
     "type-fest": "^3.1.0"
   },
   "devDependencies": {
-    "@contentful/browserslist-config": "^3.0.0",
     "@semantic-release/changelog": "^6.0.1",
     "@types/jest": "^27.0.2",
     "@types/json-stringify-safe": "^5.0.0",
