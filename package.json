@@ -7,8 +7,9 @@
   "browser": "./dist/contentful.browser.min.js",
   "types": "./dist/types/index.d.ts",
   "browserslist": [
-    "Chrome >= 79",
-    "Edge >= 79",
+    ">0.3%",
+    "Chrome >= 75",
+    "Edge >= 74",
     "Firefox >= 73",
     "Safari >= 13"
   ],
