@@ -76,7 +76,7 @@ export interface ContentTypeFieldValidation {
   linkMimetypeGroup?: string[]
   in?: string[]
   linkContentType?: string[]
-  message?: string
+  message?: string | null
   nodes?: {
     [BLOCKS.EMBEDDED_ENTRY]?: Pick<
       ContentTypeFieldValidation,
