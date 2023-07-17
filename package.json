@@ -68,7 +68,8 @@
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
     "precommit": "npm run lint && npm run prettier:check",
-    "prepush": "npm run test:prepush"
+    "prepush": "npm run test:prepush",
+    "prepare": "relative-deps"
   },
   "dependencies": {
     "@contentful/rich-text-types": "^16.0.2",
@@ -77,6 +78,9 @@
     "contentful-sdk-core": "^8.1.0",
     "json-stringify-safe": "^5.0.1",
     "type-fest": "^4.0.0"
+  },
+  "relativeDependencies": {
+    "contentful-sdk-core": "../contentful-sdk-core"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
@@ -107,6 +111,7 @@
     "mkdirp": "^3.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^2.2.1",
+    "relative-deps": "^1.0.7",
     "rimraf": "^5.0.0",
     "semantic-release": "^21.0.1",
     "ts-jest": "^27.1.3",
