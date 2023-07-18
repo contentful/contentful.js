@@ -6,4 +6,7 @@ module.exports = {
   globals: {
     __VERSION__: require('./package.json').version,
   },
+  moduleNameMapper: {
+    axios: 'axios/dist/node/axios.cjs',
+  },
 }
