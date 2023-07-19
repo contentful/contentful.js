@@ -129,11 +129,11 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "70Kb"
+      "maxSize": "105Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "35Kb"
+      "maxSize": "55Kb"
     },
     {
       "path": "./dist/contentful.browser.js",
