@@ -74,7 +74,7 @@
     "@contentful/rich-text-types": "^16.0.2",
     "axios": "^0.26.1",
     "contentful-resolve-response": "^1.3.6",
-    "contentful-sdk-core": "^7.0.2",
+    "contentful-sdk-core": "^8.1.0",
     "json-stringify-safe": "^5.0.1",
     "type-fest": "^4.0.0"
   },
