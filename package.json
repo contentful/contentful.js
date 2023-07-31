@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-types": "^16.0.2",
-    "axios": "^0.26.1",
+    "axios": "^1.4.0",
     "contentful-resolve-response": "^1.3.6",
     "contentful-sdk-core": "^8.1.0",
     "json-stringify-safe": "^5.0.1",
@@ -129,11 +129,11 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.node.js",
-      "maxSize": "70Kb"
+      "maxSize": "105Kb"
     },
     {
       "path": "./dist/contentful.node.min.js",
-      "maxSize": "35Kb"
+      "maxSize": "55Kb"
     },
     {
       "path": "./dist/contentful.browser.js",

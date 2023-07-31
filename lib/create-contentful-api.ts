@@ -3,7 +3,6 @@
  * different kinds of entities present in Contentful (Entries, Assets, etc).
  */
 
-import { AxiosError } from 'axios'
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
@@ -104,7 +103,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const response = await http.get(baseUrl + path, config)
       return response.data
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
   }
 
@@ -114,7 +113,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const response = await http.post(baseUrl + path, data, config)
       return response.data
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
   }
 
@@ -187,7 +186,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         throw notFoundError(id)
       }
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
   }
 
@@ -239,7 +238,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         removeUnresolved: withoutUnresolvableLinks ?? false,
       })
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
   }
 
@@ -280,7 +279,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         config: createRequestConfig({ query: normalizeSelect(query) }),
       })
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
   }
 
@@ -313,7 +312,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
       })
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
   }
 
@@ -340,7 +339,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const currentMaxLifetime = now + ASSET_KEY_MAX_LIFETIME
       validateTimestamp('expiresAt', expiresAt, { maximum: currentMaxLifetime, now })
     } catch (error) {
-      errorHandler(error as AxiosError)
+      errorHandler(error)
     }
 
     return post<AssetKey>({
