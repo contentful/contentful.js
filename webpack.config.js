@@ -2,7 +2,6 @@ const path = require('path')
 const copy = require('fast-copy')
 const webpack = require('webpack')
 const __VERSION__ = require('./package.json').version
-
 const PROD = process.env.NODE_ENV === 'production'
 const baseFileName = 'contentful'
 
@@ -23,10 +22,16 @@ if (PROD) {
 }
 
 const defaultTsLoader = {
-  test: /\.ts?$/,
+  test: /\.ts$/,
   exclude: /node_modules/,
-  loader: 'ts-loader',
-  options: {},
+  use: [
+    {
+      loader: 'babel-loader',
+    },
+    {
+      loader: 'ts-loader',
+    },
+  ],
 }
 
 const baseBundleConfig = {
