@@ -1,6 +1,7 @@
 import { FieldsType } from './util'
 import { EntrySys } from '../entry'
 import { AssetSys } from '../asset'
+import { Metadata } from '../metadata'
 
 export type SelectFilterPaths<
   Fields extends FieldsType,
@@ -16,8 +17,10 @@ export type EntrySelectFilterWithFields<Fields extends FieldsType> = {
   select?: (
     | 'sys'
     | 'fields'
+    | 'metadata'
     | SelectFilterPaths<EntrySys, 'sys'>
     | SelectFilterPaths<Fields, 'fields'>
+    | SelectFilterPaths<Metadata, 'metadata'>
   )[]
 }
 
@@ -27,7 +30,13 @@ export type EntrySelectFilterWithFields<Fields extends FieldsType> = {
  * @internal
  */
 export type EntrySelectFilter = {
-  select?: ('sys' | 'fields' | SelectFilterPaths<EntrySys, 'sys'>)[]
+  select?: (
+    | 'sys'
+    | 'fields'
+    | 'metadata'
+    | SelectFilterPaths<EntrySys, 'sys'>
+    | SelectFilterPaths<Metadata, 'metadata'>
+  )[]
 }
 
 /**
@@ -41,5 +50,7 @@ export type AssetSelectFilter<Fields extends FieldsType> = {
     | SelectFilterPaths<AssetSys, 'sys'>
     | 'fields'
     | SelectFilterPaths<Fields, 'fields'>
+    | 'metadata'
+    | SelectFilterPaths<Metadata, 'metadata'>
   )[]
 }
