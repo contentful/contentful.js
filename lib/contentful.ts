@@ -7,7 +7,7 @@ import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import { createGlobalOptions } from './create-global-options'
 import { makeClient } from './make-client'
-import type { AxiosAdapter, AxiosRequestConfig } from 'axios'
+import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 import { ContentfulClientApi } from './types'
 
@@ -101,6 +101,14 @@ export interface CreateClientParams {
    * @defaultValue 5
    */
   retryLimit?: number
+  /**
+   * Interceptor called on every request. Takes Axios request config as an arg.
+   */
+  requestLogger?: (request: AxiosRequestConfig | Error) => unknown
+  /**
+   * Interceptor called on every response. Takes Axios response object as an arg.
+   */
+  responseLogger?: (response: AxiosResponse<any> | Error) => unknown
 }
 
 /**
