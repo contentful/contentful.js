@@ -468,7 +468,7 @@ describe('parseEntries via client chain modifiers', () => {
 
     test('client.withAllLocales.withoutLinkResolution', () => {
       const response = client.withAllLocales.withoutLinkResolution.parseEntries(
-        dataWithResolvableLinkAndAllLocales
+        dataWithResolvableLinkAndAllLocales,
       )
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
@@ -478,7 +478,7 @@ describe('parseEntries via client chain modifiers', () => {
 
     test('client.withAllLocales.withoutUnresolvableLinks', () => {
       const response = client.withAllLocales.withoutUnresolvableLinks.parseEntries(
-        dataWithUnresolvableLinkAndAllLocales
+        dataWithUnresolvableLinkAndAllLocales,
       )
 
       expect(response.items[0].fields).toBeDefined()

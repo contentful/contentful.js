@@ -10,14 +10,14 @@ import { ContentfulClientApi } from './types'
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options: OptionsType,
-  makeInnerClient: (options: OptionsType) => ContentfulClientApi<ModifiersFromOptions<OptionsType>>
+  makeInnerClient: (options: OptionsType) => ContentfulClientApi<ModifiersFromOptions<OptionsType>>,
 ) {
   const client = createContentfulApi<OptionsType>(
     {
       http,
       getGlobalOptions,
     },
-    options
+    options,
   )
   const response: any = client
   Object.defineProperty(response, 'withAllLocales', {
@@ -37,7 +37,7 @@ export const makeClient = ({
   getGlobalOptions,
 }: CreateContentfulApiParams): ContentfulClientApi<undefined> => {
   function makeInnerClient<Options extends ChainOptions>(
-    options: Options
+    options: Options,
   ): ContentfulClientApi<ModifiersFromOptions<Options>> {
     return create<Options>({ http, getGlobalOptions }, options, makeInnerClient)
   }
@@ -48,7 +48,7 @@ export const makeClient = ({
       withoutLinkResolution: false,
       withAllLocales: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   )
 
   return {

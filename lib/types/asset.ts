@@ -43,7 +43,7 @@ export interface AssetFields {
  */
 export interface Asset<
   Modifiers extends ChainModifiers = ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > {
   sys: AssetSys
   fields: ChainModifiers extends Modifiers
@@ -51,8 +51,8 @@ export interface Asset<
         | { [FieldName in keyof AssetFields]: { [LocaleName in Locales]?: AssetFields[FieldName] } }
         | AssetFields
     : 'WITH_ALL_LOCALES' extends Modifiers
-    ? { [FieldName in keyof AssetFields]: { [LocaleName in Locales]?: AssetFields[FieldName] } }
-    : AssetFields
+      ? { [FieldName in keyof AssetFields]: { [LocaleName in Locales]?: AssetFields[FieldName] } }
+      : AssetFields
   metadata: Metadata
 }
 
@@ -82,7 +82,7 @@ export type AssetMimeType =
  */
 export type AssetCollection<
   Modifiers extends ChainModifiers = ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > = ContentfulCollection<Asset<Modifiers, Locales>>
 
 /**

@@ -12,7 +12,7 @@ type BaseLocationFilter<
   SupportedTypes,
   ValueType,
   Prefix extends string,
-  QueryFilter extends string = ''
+  QueryFilter extends string = '',
 > = NonNullable<{
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}[${QueryFilter}]`]?: ValueType

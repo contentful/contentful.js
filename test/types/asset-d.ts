@@ -52,34 +52,34 @@ expectNotAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.asset)
 expectAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.localizedAsset)
 
 expectNotAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  mocks.asset
+  mocks.asset,
 )
 expectAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  mocks.localizedAsset
+  mocks.localizedAsset,
 )
 
 expectNotAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  mocks.asset
+  mocks.asset,
 )
 expectAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  mocks.localizedAsset
+  mocks.localizedAsset,
 )
 
 expectNotAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollection)
 expectAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
 
 expectNotAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  assetCollection
+  assetCollection,
 )
 expectAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  assetCollectionWithAllLocales
+  assetCollectionWithAllLocales,
 )
 
 expectNotAssignable<
   AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
 >(assetCollection)
 expectAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  assetCollectionWithAllLocales
+  assetCollectionWithAllLocales,
 )
 
 expectAssignable<Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(mocks.asset)
@@ -93,7 +93,7 @@ expectNotAssignable<Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(mocks.loc
 
 expectAssignable<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(assetCollection)
 expectNotAssignable<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  assetCollectionWithAllLocales
+  assetCollectionWithAllLocales,
 )
 
 expectAssignable<AssetCollection<undefined, AssetLocales>>(assetCollection)
@@ -101,5 +101,5 @@ expectNotAssignable<AssetCollection<undefined, AssetLocales>>(assetCollectionWit
 
 expectAssignable<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(assetCollection)
 expectNotAssignable<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  assetCollectionWithAllLocales
+  assetCollectionWithAllLocales,
 )

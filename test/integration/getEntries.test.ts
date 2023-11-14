@@ -117,7 +117,7 @@ describe('getEntries via client chain modifiers', () => {
       const response = await client.getEntries({ 'sys.id[ne]': entryWithResolvableLink })
       expect(response.total).toBeGreaterThan(0)
       expect(response.items.filter((item) => item.sys.id === entryWithResolvableLink)).toHaveLength(
-        0
+        0,
       )
     })
 
@@ -247,7 +247,7 @@ describe('getEntries via client chain modifiers', () => {
       })
 
       expect(new Date(response.items[0].sys.createdAt).getTime()).toBeLessThan(
-        new Date(response.items[1].sys.createdAt).getTime()
+        new Date(response.items[1].sys.createdAt).getTime(),
       )
     })
 
@@ -257,7 +257,7 @@ describe('getEntries via client chain modifiers', () => {
       })
 
       expect(new Date(response.items[0].sys.createdAt).getTime()).toBeGreaterThan(
-        new Date(response.items[1].sys.createdAt).getTime()
+        new Date(response.items[1].sys.createdAt).getTime(),
       )
     })
 

@@ -72,7 +72,7 @@ describe('Contentful API client chain modifiers', () => {
         it('throws an error when locale=* is passed to the options', async () => {
           await expect(
             // @ts-ignore
-            api.getEntries({ locale: '*' })
+            api.getEntries({ locale: '*' }),
           ).rejects.toThrow(ValidationError)
         })
 
@@ -92,7 +92,7 @@ describe('Contentful API client chain modifiers', () => {
             api.getEntry('id', {
               // @ts-ignore
               locale: '*',
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
 
@@ -110,7 +110,7 @@ describe('Contentful API client chain modifiers', () => {
             api.withAllLocales.getEntries({
               // @ts-ignore
               locale: 'en-US',
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
 
@@ -119,7 +119,7 @@ describe('Contentful API client chain modifiers', () => {
             api.withAllLocales.withoutLinkResolution.getEntries({
               // @ts-ignore
               locale: 'en-US',
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
         it('throws error when resolveLinks parameter is passed to client.withoutLinkResolution', async () => {
@@ -127,13 +127,13 @@ describe('Contentful API client chain modifiers', () => {
             api.withoutLinkResolution.getEntries({
               // @ts-ignore
               resolveLinks: false,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
           await expect(
             api.withoutLinkResolution.getEntries({
               // @ts-ignore
               resolveLinks: true,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
         it('throws error when resolveLinks parameter is passed to client.withoutLinkResolution.withAllLocales', async () => {
@@ -141,13 +141,13 @@ describe('Contentful API client chain modifiers', () => {
             api.withAllLocales.withoutLinkResolution.getEntries({
               // @ts-ignore
               resolveLinks: false,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
           await expect(
             api.withAllLocales.withoutLinkResolution.getEntries({
               // @ts-ignore
               resolveLinks: true,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
       })
@@ -158,7 +158,7 @@ describe('Contentful API client chain modifiers', () => {
             api.withAllLocales.getEntry('id', {
               // @ts-ignore
               locale: 'en-US',
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
 
@@ -167,7 +167,7 @@ describe('Contentful API client chain modifiers', () => {
             api.withAllLocales.withoutLinkResolution.getEntry('id', {
               // @ts-ignore
               locale: 'en-US',
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
 
@@ -176,13 +176,13 @@ describe('Contentful API client chain modifiers', () => {
             api.withoutLinkResolution.getEntry('id', {
               // @ts-ignore
               resolveLinks: false,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
           await expect(
             api.withoutLinkResolution.getEntry('id', {
               // @ts-ignore
               resolveLinks: true,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
         it('throws error when resolveLinks parameter is passed to client.withoutLinkResolution.withAllLocales', async () => {
@@ -190,13 +190,13 @@ describe('Contentful API client chain modifiers', () => {
             api.withAllLocales.withoutLinkResolution.getEntry('id', {
               // @ts-ignore
               resolveLinks: false,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
           await expect(
             api.withAllLocales.withoutLinkResolution.getEntry('id', {
               // @ts-ignore
               resolveLinks: true,
-            })
+            }),
           ).rejects.toThrow(ValidationError)
         })
       })

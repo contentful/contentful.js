@@ -63,7 +63,7 @@ class NotFoundError extends Error {
 
 export default function createContentfulApi<OptionType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
-  options?: OptionType
+  options?: OptionType,
 ): ContentfulClientApi<undefined> {
   const notFoundError = (id = 'unknown') => {
     return new NotFoundError(id, getGlobalOptions().environment, getGlobalOptions().space)
@@ -151,7 +151,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   ) {
     const { withAllLocales } = options
 
@@ -163,14 +163,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return internalGetEntry<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       id,
       withAllLocales ? { ...query, locale: '*' } : query,
-      options
+      options,
     )
   }
 
   async function internalGetEntry<
     EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
-    Options extends ChainOptions
+    Options extends ChainOptions,
   >(id: string, query, options: Options) {
     if (!id) {
       throw notFoundError(id)
@@ -178,7 +178,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
         { 'sys.id': id, ...query },
-        options
+        options,
       )
       if (response.items.length > 0) {
         return response.items[0]
@@ -196,7 +196,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   ) {
     const { withAllLocales } = options
 
@@ -212,17 +212,17 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
             locale: '*',
           }
         : query,
-      options
+      options,
     )
   }
 
   async function internalGetEntries<
     EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
-    Options extends ChainOptions
+    Options extends ChainOptions,
   >(
     query: Record<string, any>,
-    options: Options
+    options: Options,
   ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
@@ -256,7 +256,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   ) {
     const { withAllLocales } = options
 
@@ -270,7 +270,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
     id: string,
-    query: Record<string, any>
+    query: Record<string, any>,
   ): Promise<Asset<ModifiersFromOptions<Options>, Locales>> {
     try {
       return get({
@@ -290,7 +290,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   ) {
     const { withAllLocales } = options
 
@@ -303,7 +303,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(
-    query: Record<string, any>
+    query: Record<string, any>,
   ): Promise<AssetCollection<ModifiersFromOptions<Options>, Locales>> {
     try {
       return get({
@@ -361,7 +361,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   async function sync<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     query: SyncQuery,
-    syncOptions: SyncOptions = { paginate: true }
+    syncOptions: SyncOptions = { paginate: true },
   ) {
     return makePagedSync<EntrySkeleton>(query, syncOptions, options)
   }
@@ -373,7 +373,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   ) {
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
@@ -386,7 +386,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return pagedSync<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       http,
       query,
-      combinedOptions
+      combinedOptions,
     )
   }
 
@@ -400,21 +400,21 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
-    }
+    },
   ) {
     return internalParseEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       data,
-      options
+      options,
     )
   }
 
   function internalParseEntries<
     EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
-    Options extends ChainOptions
+    Options extends ChainOptions,
   >(
     data: unknown,
-    options: Options
+    options: Options,
   ): EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 

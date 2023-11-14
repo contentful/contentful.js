@@ -39,11 +39,11 @@ expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Tex
 expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>>({})
 
 expectAssignable<Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Text }, 'fields'>>(
-  {}
+  {},
 )
 expectType<
   Required<EntryFieldsFullTextSearchFilters<{ testField?: EntryFieldTypes.Text }, 'fields'>>

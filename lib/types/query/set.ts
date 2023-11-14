@@ -14,5 +14,5 @@ type SupportedTypes =
  */
 export type EntryFieldsSetFilter<
   Fields extends Record<string, EntryFieldType<any>>,
-  Prefix extends string
+  Prefix extends string,
 > = EntryFieldsConditionalListQueries<Fields, SupportedTypes, Prefix, `[all]`>

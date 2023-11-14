@@ -18,11 +18,11 @@ test('validateTimestamp fails if timestamp is greater than expected maximum', ()
   const maximum = now() + 60
   const timestamp = now() + 120
   const expectedErrorMessage = new RegExp(
-    `value \\(${timestamp}\\) cannot be further in the future than expected maximum \\(${maximum}\\)`
+    `value \\(${timestamp}\\) cannot be further in the future than expected maximum \\(${maximum}\\)`,
   )
 
   expect(() => validateTimestamp('testTimestamp', timestamp, { maximum })).toThrow(
-    expectedErrorMessage
+    expectedErrorMessage,
   )
 })
 
@@ -30,10 +30,10 @@ test('validateTimestamp fails if timestamp is in the past', () => {
   const current = now()
   const timestamp = now() - 120
   const expectedErrorMessage = new RegExp(
-    `value \\(${timestamp}\\) cannot be in the past, current time was ${current}`
+    `value \\(${timestamp}\\) cannot be in the past, current time was ${current}`,
   )
 
   expect(() => validateTimestamp('testTimestamp', timestamp, { now: current })).toThrow(
-    expectedErrorMessage
+    expectedErrorMessage,
   )
 })

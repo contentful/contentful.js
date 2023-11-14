@@ -44,7 +44,7 @@ export type SubsetFilters<Fields, Prefix extends string> = ConditionalListQuerie
  */
 export type EntryFieldsSubsetFilters<
   Fields extends Record<string, EntryFieldType<any>>,
-  Prefix extends string
+  Prefix extends string,
 > = EntryFieldsConditionalListQueries<
   Fields,
   SupportedEntryFieldTypes,

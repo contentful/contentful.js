@@ -5,7 +5,7 @@ import { Metadata } from '../metadata'
 
 export type SelectFilterPaths<
   Fields extends FieldsType,
-  Prefix extends string
+  Prefix extends string,
 > = `${Prefix}.${keyof Fields & string}`
 
 /**

@@ -33,7 +33,7 @@ export type ChainModifiers =
  */
 export type AddChainModifier<
   Modifiers extends ChainModifiers,
-  AddedModifier extends Exclude<ChainModifiers, undefined>
+  AddedModifier extends Exclude<ChainModifiers, undefined>,
 > = undefined extends Modifiers ? AddedModifier : Modifiers | AddedModifier
 
 /**
@@ -159,10 +159,10 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   sync<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
     Modifiers extends ChainModifiers = ChainModifiers,
-    Locales extends LocaleCode = LocaleCode
+    Locales extends LocaleCode = LocaleCode,
   >(
     query: SyncQuery,
-    syncOptions?: SyncOptions
+    syncOptions?: SyncOptions,
   ): Promise<SyncCollection<EntrySkeleton, Modifiers, Locales>>
 
   /**
@@ -242,10 +242,10 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    */
   getEntry<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Locales extends LocaleCode = LocaleCode
+    Locales extends LocaleCode = LocaleCode,
   >(
     id: string,
-    query?: EntryQueries<Modifiers>
+    query?: EntryQueries<Modifiers>,
   ): Promise<Entry<EntrySkeleton, Modifiers, Locales>>
 
   /**
@@ -271,9 +271,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    */
   getEntries<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Locales extends LocaleCode = LocaleCode
+    Locales extends LocaleCode = LocaleCode,
   >(
-    query?: EntriesQueries<EntrySkeleton, Modifiers>
+    query?: EntriesQueries<EntrySkeleton, Modifiers>,
   ): Promise<EntryCollection<EntrySkeleton, Modifiers, Locales>>
 
   /**
@@ -311,13 +311,13 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    */
   parseEntries<
     EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
-    Locales extends LocaleCode = LocaleCode
+    Locales extends LocaleCode = LocaleCode,
   >(
     data: EntryCollection<
       EntrySkeleton,
       AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>,
       Locales
-    >
+    >,
   ): EntryCollection<EntrySkeleton, Modifiers, Locales>
 
   /**
@@ -339,7 +339,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    */
   getAsset<Locales extends LocaleCode = LocaleCode>(
     id: string,
-    query?: AssetQueries<Modifiers>
+    query?: AssetQueries<Modifiers>,
   ): Promise<Asset<Modifiers, Locales>>
 
   /**
@@ -361,7 +361,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(response.items)
    */
   getAssets<Locales extends LocaleCode = LocaleCode>(
-    query?: AssetsQueries<AssetFields, Modifiers>
+    query?: AssetsQueries<AssetFields, Modifiers>,
   ): Promise<AssetCollection<Modifiers, Locales>>
 
   /**
@@ -377,8 +377,8 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   withoutLinkResolution: 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? never
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? never
-    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>>
+      ? never
+      : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_LINK_RESOLUTION'>>
 
   /**
    * A client that will remove unresolvable links from entries. Only available if not already disabled.
@@ -386,8 +386,8 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   withoutUnresolvableLinks: 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? never
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-    ? never
-    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>>
+      ? never
+      : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>>
 
   /**
    * The current Contentful.js version

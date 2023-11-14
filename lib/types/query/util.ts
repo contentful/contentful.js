@@ -24,7 +24,7 @@ export type ConditionalFixedQueries<
   SupportedTypes,
   ValueType,
   Prefix extends string,
-  QueryFilter extends string = ''
+  QueryFilter extends string = '',
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}${QueryFilter}`]?: ValueType
@@ -34,7 +34,7 @@ export type ConditionalListQueries<
   Fields,
   SupportedTypes,
   Prefix extends string,
-  QueryFilter extends string = ''
+  QueryFilter extends string = '',
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}${QueryFilter}`]?: NonNullable<BaseOrArrayType<Fields[FieldName]>>[]
@@ -44,7 +44,7 @@ export type EntryFieldsConditionalListQueries<
   Fields extends Record<string, EntryFieldType<any>>,
   SupportedTypes,
   Prefix extends string,
-  QueryFilter extends string = ''
+  QueryFilter extends string = '',
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}${QueryFilter}`]?: NonNullable<
@@ -56,7 +56,7 @@ export type ConditionalQueries<
   Fields,
   SupportedTypes,
   Prefix extends string,
-  QueryFilter extends string = ''
+  QueryFilter extends string = '',
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}${QueryFilter}`]?: Fields[FieldName] extends Array<infer T> ? T : Fields[FieldName]
@@ -66,7 +66,7 @@ export type EntryFieldsConditionalQueries<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,
   SupportedTypes extends EntryFieldType<EntrySkeletonType> | undefined,
   Prefix extends string,
-  QueryFilter extends string = ''
+  QueryFilter extends string = '',
 > = {
   [FieldName in keyof ConditionalPick<Fields, SupportedTypes> as `${Prefix}.${string &
     FieldName}${QueryFilter}`]?: BaseFieldMap<EntryFieldBaseOrArrayType<Fields[FieldName]>>

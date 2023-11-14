@@ -17,7 +17,7 @@ import {
 import * as mocks from '../mocks'
 
 expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
@@ -29,7 +29,7 @@ expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Number
 expectType<Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>>(
   {
     'fields.testField[ne]': mocks.numberValue,
-  }
+  },
 )
 
 expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})

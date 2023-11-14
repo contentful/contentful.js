@@ -92,7 +92,7 @@ export const localizedEntry = {
 }
 
 export const getEntry = <Fields extends FieldsType>(
-  fields: Fields
+  fields: Fields,
 ): BaseEntry & { fields: Fields } => ({ ...entryBasics, fields })
 
 export const assetLink: { sys: AssetLink } = {

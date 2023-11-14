@@ -151,7 +151,7 @@ export function createClient(params: CreateClientParams): ContentfulClientApi<un
   const userAgentHeader = getUserAgentHeader(
     `contentful.js/${__VERSION__}`,
     config.application,
-    config.integration
+    config.integration,
   )
   config.headers = {
     ...config.headers,

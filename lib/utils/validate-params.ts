@@ -5,7 +5,7 @@ function checkLocaleParamIsAll(query) {
     throw new ValidationError(
       'locale',
       `The use of locale='*' is no longer supported.To fetch an entry in all existing locales, 
-      use client.withAllLocales instead of the locale='*' parameter.`
+      use client.withAllLocales instead of the locale='*' parameter.`,
     )
   }
 }
@@ -30,7 +30,7 @@ export function validateResolveLinksParam(query) {
     throw new ValidationError(
       'resolveLinks',
       `The use of the 'resolveLinks' parameter is no longer supported. By default, links are resolved. 
-      If you do not want to resolve links, use client.withoutLinkResolution.`
+      If you do not want to resolve links, use client.withoutLinkResolution.`,
     )
   }
   return
@@ -41,7 +41,7 @@ export function validateRemoveUnresolvedParam(query) {
     throw new ValidationError(
       'removeUnresolved',
       `The use of the 'removeUnresolved' parameter is no longer supported. By default, unresolved links are kept as link objects.
-      If you do not want to include unresolved links, use client.withoutUnresolvableLinks.`
+      If you do not want to include unresolved links, use client.withoutUnresolvableLinks.`,
     )
   }
   return

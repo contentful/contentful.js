@@ -40,7 +40,7 @@ export type EqualityFilter<Fields, Prefix extends string> = ConditionalQueries<
  */
 export type EntryFieldsEqualityFilter<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,
-  Prefix extends string
+  Prefix extends string,
 > = EntryFieldsConditionalQueries<Fields, SupportedEntryFieldTypes, Prefix, ''>
 
 /**
@@ -62,5 +62,5 @@ export type InequalityFilter<Fields, Prefix extends string> = ConditionalQueries
  */
 export type EntryFieldsInequalityFilter<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,
-  Prefix extends string
+  Prefix extends string,
 > = EntryFieldsConditionalQueries<Fields, SupportedEntryFieldTypes, Prefix, '[ne]'>

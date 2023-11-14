@@ -31,7 +31,7 @@ describe('getEntry via client chain modifiers', () => {
         entryWithResolvableLink,
         {
           locale: 'tlh',
-        }
+        },
       )
       expect(entry.sys.locale).toBe('tlh')
     })
@@ -98,7 +98,7 @@ describe('getEntry via client chain modifiers', () => {
         entryWithUnresolvableLink,
         {
           include: 2,
-        }
+        },
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
@@ -129,7 +129,7 @@ describe('getEntry via client chain modifiers', () => {
         entryWithResolvableLink,
         {
           include: 2,
-        }
+        },
       )
       expect(response.fields.color).toHaveProperty('en-US')
       expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
@@ -140,7 +140,7 @@ describe('getEntry via client chain modifiers', () => {
         entryWithUnresolvableLink,
         {
           include: 2,
-        }
+        },
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
@@ -156,9 +156,8 @@ describe('getEntry via client chain modifiers', () => {
     })
 
     test('client.withoutLinkResolution.withAllLocales', async () => {
-      const response = await client.withoutLinkResolution.withAllLocales.getEntry(
-        entryWithResolvableLink
-      )
+      const response =
+        await client.withoutLinkResolution.withAllLocales.getEntry(entryWithResolvableLink)
 
       expect(response.fields.color).toHaveProperty('en-US')
       expect(response.fields.bestFriend).toHaveProperty('[en-US]sys.type', 'Link')

@@ -30,7 +30,7 @@ expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Symbol
 expectType<Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>(
   {
     'fields.testField[ne]': mocks.stringValue,
-  }
+  },
 )
 
 expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
@@ -39,7 +39,7 @@ expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Sym
 })
 
 expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<
@@ -47,7 +47,7 @@ expectAssignable<
 >({})
 
 expectAssignable<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>(
-  {}
+  {},
 )
 expectType<
   Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>

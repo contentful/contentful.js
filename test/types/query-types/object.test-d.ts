@@ -17,7 +17,7 @@ import {
 import * as mocks from '../mocks'
 
 expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Object }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<
@@ -34,7 +34,7 @@ expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Obj
 })
 
 expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Object }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<

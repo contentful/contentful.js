@@ -17,7 +17,7 @@ import {
 import * as mocks from '../mocks'
 
 expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})
@@ -36,11 +36,11 @@ expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Integer
 expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Integer }, 'fields'>>>(
   {
     'fields.testField[exists]': mocks.booleanValue,
-  }
+  },
 )
 
 expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>>(
-  {}
+  {},
 )
 
 expectAssignable<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Integer }, 'fields'>>({})

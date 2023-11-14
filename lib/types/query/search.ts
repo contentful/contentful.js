@@ -22,7 +22,7 @@ type SupportedEntryFieldTypes =
  */
 export type FullTextSearchFilters<
   Fields extends FieldsType,
-  Prefix extends string
+  Prefix extends string,
 > = ConditionalFixedQueries<Fields, SupportedTypes, string, Prefix, '[match]'>
 
 /**
@@ -32,5 +32,5 @@ export type FullTextSearchFilters<
  */
 export type EntryFieldsFullTextSearchFilters<
   Fields extends FieldsType,
-  Prefix extends string
+  Prefix extends string,
 > = ConditionalFixedQueries<Fields, SupportedEntryFieldTypes, string, Prefix, '[match]'>

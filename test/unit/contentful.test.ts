@@ -100,7 +100,7 @@ describe('contentful', () => {
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
     expect(callConfig[0].http.defaults.baseURL).toEqual(
-      'http://some-base-url.com/environments/master'
+      'http://some-base-url.com/environments/master',
     )
   })
 
@@ -113,7 +113,7 @@ describe('contentful', () => {
     })
     const callConfig = createContentfulApiMock.mock.calls[0]
     expect(callConfig[0].http.defaults.baseURL).toEqual(
-      'http://some-base-url.com/environments/stage'
+      'http://some-base-url.com/environments/stage',
     )
   })
 })

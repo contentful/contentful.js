@@ -37,7 +37,7 @@ export type OrderFilterPaths<Fields extends FieldsType, Prefix extends string> =
  * @internal
  */
 export type EntryOrderFilterWithFields<
-  Fields extends Record<string, EntryFieldType<EntrySkeletonType>>
+  Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,
 > = {
   order?: (
     | `fields.${keyof ConditionalPick<Fields, SupportedEntryFieldTypes> & string}`
