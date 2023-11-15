@@ -17,5 +17,5 @@ expectType<Asset<'WITH_ALL_LOCALES', Locale>>(await client.withAllLocales.getAss
 
 expectType<AssetCollection<'WITH_ALL_LOCALES'>>(await client.withAllLocales.getAssets())
 expectType<AssetCollection<'WITH_ALL_LOCALES', Locale>>(
-  await client.withAllLocales.getAssets<Locale>()
+  await client.withAllLocales.getAssets<Locale>(),
 )

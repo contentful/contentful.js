@@ -9,7 +9,7 @@ import { AssetDetails, AssetFile } from '../asset'
  */
 export type ExistenceFilter<
   Fields extends FieldsType,
-  Prefix extends string
+  Prefix extends string,
 > = ConditionalFixedQueries<
   Fields,
   EntryField<EntrySkeletonType<Fields>> | AssetFile | AssetDetails | undefined,
@@ -25,7 +25,7 @@ export type ExistenceFilter<
  */
 export type EntryFieldsExistenceFilter<
   Fields extends FieldsType,
-  Prefix extends string
+  Prefix extends string,
 > = ConditionalFixedQueries<
   Fields,
   EntryFieldType<EntrySkeletonType> | undefined,

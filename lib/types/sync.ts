@@ -78,7 +78,7 @@ export type SyncEntities = Entry<EntrySkeletonType> | Asset | DeletedEntry | Del
 export interface SyncCollection<
   EntrySkeleton extends EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > {
   entries: Array<
     Entry<

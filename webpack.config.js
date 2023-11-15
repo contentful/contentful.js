@@ -18,7 +18,7 @@ if (PROD) {
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
-    })
+    }),
   )
 }
 

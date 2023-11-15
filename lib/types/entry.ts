@@ -48,7 +48,7 @@ export declare namespace EntryFieldTypes {
       | EntryFieldTypes.Symbol
       | EntryFieldTypes.AssetLink
       | EntryFieldTypes.EntryLink<EntrySkeletonType>
-      | EntryFieldTypes.EntryResourceLink<EntrySkeletonType>
+      | EntryFieldTypes.EntryResourceLink<EntrySkeletonType>,
   > = { type: 'Array'; item: Item }
   type Object<Data extends JsonObject | JsonArray | null = JsonObject | JsonArray | null> = {
     type: 'Object'
@@ -140,22 +140,22 @@ export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
   Field extends EntryFieldTypes.Symbol<infer Values>
     ? EntryFields.Symbol<Values>
     : Field extends EntryFieldTypes.Text<infer Values>
-    ? EntryFields.Text<Values>
-    : Field extends EntryFieldTypes.Integer<infer Values>
-    ? EntryFields.Integer<Values>
-    : Field extends EntryFieldTypes.Number<infer Values>
-    ? EntryFields.Number<Values>
-    : Field extends EntryFieldTypes.Date
-    ? EntryFields.Date
-    : Field extends EntryFieldTypes.Boolean
-    ? EntryFields.Boolean
-    : Field extends EntryFieldTypes.Location
-    ? EntryFields.Location
-    : Field extends EntryFieldTypes.RichText
-    ? EntryFields.RichText
-    : Field extends EntryFieldTypes.Object<infer Data>
-    ? EntryFields.Object<Data>
-    : never
+      ? EntryFields.Text<Values>
+      : Field extends EntryFieldTypes.Integer<infer Values>
+        ? EntryFields.Integer<Values>
+        : Field extends EntryFieldTypes.Number<infer Values>
+          ? EntryFields.Number<Values>
+          : Field extends EntryFieldTypes.Date
+            ? EntryFields.Date
+            : Field extends EntryFieldTypes.Boolean
+              ? EntryFields.Boolean
+              : Field extends EntryFieldTypes.Location
+                ? EntryFields.Location
+                : Field extends EntryFieldTypes.RichText
+                  ? EntryFields.RichText
+                  : Field extends EntryFieldTypes.Object<infer Data>
+                    ? EntryFields.Object<Data>
+                    : never
 
 /**
  * A single resolved link to another entry in the same space
@@ -172,14 +172,14 @@ export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
 export type ResolvedEntryLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
-  LinkedEntry extends EntrySkeletonType
+  LinkedEntry extends EntrySkeletonType,
 > = ChainModifiers extends Modifiers
   ? Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'> | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-  ? UnresolvedLink<'Entry'>
-  : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-  ? Entry<LinkedEntry, Modifiers, Locales> | undefined
-  : Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'>
+    ? UnresolvedLink<'Entry'>
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+      ? Entry<LinkedEntry, Modifiers, Locales> | undefined
+      : Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'>
 
 /**
  * A single resolved reference link to another entry in a different space
@@ -196,14 +196,14 @@ export type ResolvedEntryLink<
 export type ResolvedEntryResourceLink<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
-  LinkedEntry extends EntrySkeletonType
+  LinkedEntry extends EntrySkeletonType,
 > = ChainModifiers extends Modifiers
   ? Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink } | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-  ? { sys: ResourceLink }
-  : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-  ? Entry<LinkedEntry, Modifiers, Locales> | undefined
-  : Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink }
+    ? { sys: ResourceLink }
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+      ? Entry<LinkedEntry, Modifiers, Locales> | undefined
+      : Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink }
 
 /**
  * A single resolved link to another asset
@@ -217,14 +217,14 @@ export type ResolvedEntryResourceLink<
  */
 export type ResolvedAssetLink<
   Modifiers extends ChainModifiers,
-  Locales extends LocaleCode
+  Locales extends LocaleCode,
 > = ChainModifiers extends Modifiers
   ? Asset<Modifiers, Locales> | UnresolvedLink<'Asset'> | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
-  ? UnresolvedLink<'Asset'>
-  : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-  ? Asset<Modifiers, Locales> | undefined
-  : Asset<Modifiers, Locales> | UnresolvedLink<'Asset'>
+    ? UnresolvedLink<'Asset'>
+    : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
+      ? Asset<Modifiers, Locales> | undefined
+      : Asset<Modifiers, Locales> | UnresolvedLink<'Asset'>
 
 /**
  * A single resolved link to another resource
@@ -237,14 +237,14 @@ export type ResolvedAssetLink<
 export type ResolvedLink<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > = Field extends EntryFieldTypes.EntryLink<infer LinkedEntry>
   ? ResolvedEntryLink<Modifiers, Locales, LinkedEntry>
   : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedEntry>
-  ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
-  : Field extends EntryFieldTypes.AssetLink
-  ? ResolvedAssetLink<Modifiers, Locales>
-  : BaseFieldMap<Field>
+    ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
+    : Field extends EntryFieldTypes.AssetLink
+      ? ResolvedAssetLink<Modifiers, Locales>
+      : BaseFieldMap<Field>
 
 /**
  * A collection or single resolved link to another resource
@@ -257,7 +257,7 @@ export type ResolvedLink<
 export type ResolvedField<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > = Field extends EntryFieldTypes.Array<infer Item>
   ? Array<ResolvedLink<Item, Modifiers, Locales>>
   : ResolvedLink<Field, Modifiers, Locales>
@@ -273,7 +273,7 @@ export type ResolvedField<
 export type Entry<
   EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > = BaseEntry & {
   sys: { contentType: { sys: { id: EntrySkeleton['contentTypeId'] } } }
   fields: ChainModifiers extends Modifiers
@@ -295,22 +295,22 @@ export type Entry<
             >
           }
     : 'WITH_ALL_LOCALES' extends Modifiers
-    ? {
-        [FieldName in keyof EntrySkeleton['fields']]: {
-          [LocaleName in Locales]?: ResolvedField<
+      ? {
+          [FieldName in keyof EntrySkeleton['fields']]: {
+            [LocaleName in Locales]?: ResolvedField<
+              EntrySkeleton['fields'][FieldName],
+              Modifiers,
+              Locales
+            >
+          }
+        }
+      : {
+          [FieldName in keyof EntrySkeleton['fields']]: ResolvedField<
             EntrySkeleton['fields'][FieldName],
             Modifiers,
             Locales
           >
         }
-      }
-    : {
-        [FieldName in keyof EntrySkeleton['fields']]: ResolvedField<
-          EntrySkeleton['fields'][FieldName],
-          Modifiers,
-          Locales
-        >
-      }
 }
 
 /**
@@ -324,7 +324,7 @@ export type Entry<
 export type EntryCollection<
   EntrySkeleton extends EntrySkeletonType,
   Modifiers extends ChainModifiers = ChainModifiers,
-  Locales extends LocaleCode = LocaleCode
+  Locales extends LocaleCode = LocaleCode,
 > = ContentfulCollection<Entry<EntrySkeleton, Modifiers, Locales>> & {
   errors?: Array<any>
   includes?: {

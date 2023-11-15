@@ -107,51 +107,51 @@ expectType<EntryCollection<EntrySkeleton, undefined>>(client.parseEntries(data))
 expectType<EntryCollection<EntrySkeleton, undefined>>(client.parseEntries<EntrySkeleton>(data))
 
 expectType<EntryCollection<EntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  client.withoutUnresolvableLinks.parseEntries(data)
+  client.withoutUnresolvableLinks.parseEntries(data),
 )
 expectType<EntryCollection<EntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  client.withoutUnresolvableLinks.parseEntries<EntrySkeleton>(data)
+  client.withoutUnresolvableLinks.parseEntries<EntrySkeleton>(data),
 )
 
 expectType<EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
-  client.withoutLinkResolution.parseEntries(data)
+  client.withoutLinkResolution.parseEntries(data),
 )
 expectType<EntryCollection<EntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
-  client.withoutLinkResolution.parseEntries<EntrySkeleton>(data)
+  client.withoutLinkResolution.parseEntries<EntrySkeleton>(data),
 )
 
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES', Locales>>(
-  client.withAllLocales.parseEntries(dataWithAllLocales)
+  client.withAllLocales.parseEntries(dataWithAllLocales),
 )
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES'>>(
-  client.withAllLocales.parseEntries<EntrySkeleton>(dataWithAllLocales)
+  client.withAllLocales.parseEntries<EntrySkeleton>(dataWithAllLocales),
 )
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES', Locales>>(
-  client.withAllLocales.parseEntries<EntrySkeleton, Locales>(dataWithAllLocales)
+  client.withAllLocales.parseEntries<EntrySkeleton, Locales>(dataWithAllLocales),
 )
 
 expectType<
   EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
 >(client.withAllLocales.withoutUnresolvableLinks.parseEntries(dataWithAllLocales))
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  client.withAllLocales.withoutUnresolvableLinks.parseEntries<EntrySkeleton>(dataWithAllLocales)
+  client.withAllLocales.withoutUnresolvableLinks.parseEntries<EntrySkeleton>(dataWithAllLocales),
 )
 expectType<
   EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locales>
 >(
   client.withAllLocales.withoutUnresolvableLinks.parseEntries<EntrySkeleton, Locales>(
-    dataWithAllLocales
-  )
+    dataWithAllLocales,
+  ),
 )
 
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>(
-  client.withAllLocales.withoutLinkResolution.parseEntries(dataWithAllLocales)
+  client.withAllLocales.withoutLinkResolution.parseEntries(dataWithAllLocales),
 )
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
-  client.withAllLocales.withoutLinkResolution.parseEntries<EntrySkeleton>(dataWithAllLocales)
+  client.withAllLocales.withoutLinkResolution.parseEntries<EntrySkeleton>(dataWithAllLocales),
 )
 expectType<EntryCollection<EntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locales>>(
   client.withAllLocales.withoutLinkResolution.parseEntries<EntrySkeleton, Locales>(
-    dataWithAllLocales
-  )
+    dataWithAllLocales,
+  ),
 )

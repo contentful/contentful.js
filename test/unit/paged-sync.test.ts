@@ -41,8 +41,8 @@ describe('paged-sync', () => {
   test('Rejects with no parameters', async () => {
     await expect(pagedSync(http, {})).rejects.toEqual(
       new Error(
-        'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
-      )
+        'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing',
+      ),
     )
   })
 
@@ -56,12 +56,12 @@ describe('paged-sync', () => {
           // @ts-ignore
           type: 'ContentType',
         },
-        { resolveLinks: true }
-      )
+        { resolveLinks: true },
+      ),
     ).rejects.toEqual(
       new Error(
-        'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.'
-      )
+        'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.',
+      ),
     )
   })
 
@@ -186,7 +186,7 @@ describe('paged-sync', () => {
             items: [createEntry('1'), createEntry('2')],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1',
           },
-        })
+        }),
       )
 
       .calledWith('sync', { params: { sync_token: 'nextpage1' } })
@@ -201,7 +201,7 @@ describe('paged-sync', () => {
             ],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2',
           },
-        })
+        }),
       )
 
       .calledWith('sync', { params: { sync_token: 'nextpage2' } })
@@ -211,7 +211,7 @@ describe('paged-sync', () => {
             items: [createAsset('2'), createAsset('3'), createAsset('3', true)],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        })
+        }),
       )
 
     const response = await pagedSync(http, { initial: true, type: 'Entry' })
@@ -238,7 +238,7 @@ describe('paged-sync', () => {
             items: [createEntry('1'), createEntry('2')],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1',
           },
-        })
+        }),
       )
 
       .calledWith('sync', { params: { sync_token: 'nextpage1' } })
@@ -253,7 +253,7 @@ describe('paged-sync', () => {
             ],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2',
           },
-        })
+        }),
       )
 
       .calledWith('sync', { params: { sync_token: 'nextpage2' } })
@@ -263,7 +263,7 @@ describe('paged-sync', () => {
             items: [createAsset('2'), createAsset('3'), createAsset('3', true)],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        })
+        }),
       )
 
     const response = await pagedSync(http, { initial: true, limit: 10, type: 'Entry' })
@@ -296,7 +296,7 @@ describe('paged-sync', () => {
             ],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        })
+        }),
       )
 
     const response = await pagedSync(http, { nextSyncToken: 'nextsynctoken' })
@@ -317,7 +317,7 @@ describe('paged-sync', () => {
             items: [createEntry('1'), createEntry('2')],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1',
           },
-        })
+        }),
       )
 
       .calledWith('sync', { params: { sync_token: 'nextpage1' } })
@@ -332,7 +332,7 @@ describe('paged-sync', () => {
             ],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2',
           },
-        })
+        }),
       )
 
       .calledWith('sync', { params: { sync_token: 'nextpage2' } })
@@ -342,7 +342,7 @@ describe('paged-sync', () => {
             items: [createAsset('2'), createAsset('3'), createAsset('3', true)],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        })
+        }),
       )
 
     const response = await pagedSync(http, { initial: true, type: 'Entry' }, { paginate: false })
@@ -360,7 +360,7 @@ describe('paged-sync', () => {
     const response2 = await pagedSync(
       http,
       { nextPageToken: response.nextPageToken },
-      { paginate: false }
+      { paginate: false },
     )
     expect(http.get).toHaveBeenCalledTimes(2)
     expect(http.get.mock.calls[1][1].params.initial).toBeUndefined()
@@ -371,7 +371,7 @@ describe('paged-sync', () => {
     const response3 = await pagedSync(
       http,
       { nextPageToken: response2.nextPageToken },
-      { paginate: false }
+      { paginate: false },
     )
     expect(http.get).toHaveBeenCalledTimes(3)
     expect(http.get.mock.calls[2][1].params.initial).toBeUndefined()

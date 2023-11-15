@@ -73,7 +73,7 @@ expectAssignable<
     multiEntryReferenceField: [mocks.entryLink, mocks.entryLink],
     assetReferenceField: mocks.assetLink,
     multiAssetReferenceField: [mocks.assetLink, mocks.assetLink],
-  })
+  }),
 )
 
 expectNotAssignable<
@@ -160,7 +160,7 @@ expectAssignable<
     resolvableMultiAssetReferenceField: [mocks.asset],
     unresolvableMultiAssetReferenceField: [mocks.assetLink],
     mixedMultiAssetReferenceField: [mocks.asset, mocks.assetLink],
-  })
+  }),
 )
 
 expectNotAssignable<
@@ -217,7 +217,7 @@ expectAssignable<
     multiEntryReferenceField: { DE: [mocks.entryLink], US: [mocks.entryLink] },
     assetReferenceField: { DE: mocks.assetLink, US: mocks.assetLink },
     multiAssetReferenceField: { DE: [mocks.assetLink], US: [mocks.assetLink] },
-  })
+  }),
 )
 
 /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
@@ -231,7 +231,10 @@ expectAssignable<
     'US' | 'DE'
   >
 >(
-  mocks.getEntry({ entryReferenceField: { US: undefined }, assetReferenceField: { US: undefined } })
+  mocks.getEntry({
+    entryReferenceField: { US: undefined },
+    assetReferenceField: { US: undefined },
+  }),
 )
 
 expectNotAssignable<
@@ -350,7 +353,10 @@ expectAssignable<
     'US' | 'DE'
   >
 >(
-  mocks.getEntry({ entryReferenceField: { US: undefined }, assetReferenceField: { US: undefined } })
+  mocks.getEntry({
+    entryReferenceField: { US: undefined },
+    assetReferenceField: { US: undefined },
+  }),
 )
 
 expectNotAssignable<
@@ -411,7 +417,7 @@ expectAssignable<
     resolvableMultiAssetReferenceField: [mocks.asset],
     unresolvableMultiAssetReferenceField: [undefined],
     mixedMultiAssetReferenceField: [mocks.asset, undefined],
-  })
+  }),
 )
 
 expectNotAssignable<
@@ -492,7 +498,7 @@ expectAssignable<
       US: [mocks.localizedAsset, undefined],
       DE: [mocks.localizedAsset, undefined],
     },
-  })
+  }),
 )
 
 expectNotAssignable<

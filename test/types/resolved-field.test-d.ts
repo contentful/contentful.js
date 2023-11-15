@@ -50,10 +50,10 @@ expectAssignable<ResolvedField<EntryFieldTypes.Object, undefined>>(mocks.jsonVal
 // entries in links
 
 expectAssignable<ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>>(
-  mocks.entry
+  mocks.entry,
 )
 expectAssignable<ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>>(
-  mocks.entryLink
+  mocks.entryLink,
 )
 expectNotAssignable<
   ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
@@ -294,11 +294,11 @@ expectNotAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLin
 ])
 
 expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.asset
+  mocks.asset,
 )
 expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(undefined)
 expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.assetLink
+  mocks.assetLink,
 )
 expectAssignable<
   ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
@@ -320,10 +320,10 @@ expectNotAssignable<
 >([mocks.assetLink, mocks.asset, mocks.entryLink])
 
 expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.assetLink
+  mocks.assetLink,
 )
 expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.asset
+  mocks.asset,
 )
 expectAssignable<
   ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>

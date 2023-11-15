@@ -12,7 +12,7 @@ export interface GlobalOptionsParams {
  * @category Client
  */
 export type GetGlobalOptions = (
-  globalOptions?: GlobalOptionsParams
+  globalOptions?: GlobalOptionsParams,
 ) => Required<GlobalOptionsParams>
 
 /**
@@ -21,7 +21,7 @@ export type GetGlobalOptions = (
  * @category Client
  */
 export function createGlobalOptions(
-  globalSettings: Required<GlobalOptionsParams>
+  globalSettings: Required<GlobalOptionsParams>,
 ): GetGlobalOptions {
   /**
    * Method merging pre-configured global options and provided local parameters

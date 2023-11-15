@@ -96,7 +96,7 @@ export type EntryContentTypeQuery<T extends string> = {
  */
 export type EntriesQueries<
   EntrySkeleton extends EntrySkeletonType,
-  Modifiers extends ChainModifiers
+  Modifiers extends ChainModifiers,
 > =
   | (EntryFieldsQueries<EntrySkeleton['fields']> &
       EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
@@ -167,7 +167,7 @@ export type AssetFieldsFileDetailsQueries = ExistenceFilter<
  */
 export type AssetsQueries<
   Fields extends FieldsType,
-  Modifiers extends ChainModifiers
+  Modifiers extends ChainModifiers,
 > = AssetFieldsQueries<Fields> &
   AssetFieldsFileQueries &
   AssetFieldsFileDetailsQueries &

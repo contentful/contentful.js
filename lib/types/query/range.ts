@@ -30,5 +30,5 @@ export type RangeFilters<Fields, Prefix extends string> = ConditionalQueries<
  */
 export type EntryFieldsRangeFilters<
   Fields extends Record<string, EntryFieldType<EntrySkeletonType>>,
-  Prefix extends string
+  Prefix extends string,
 > = EntryFieldsConditionalQueries<Fields, SupportedEntryFieldTypes, Prefix, `[${RangeFilterTypes}]`>

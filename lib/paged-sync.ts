@@ -20,15 +20,15 @@ import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 export default async function pagedSync<
   EntrySkeleton extends EntrySkeletonType,
   Locales extends LocaleCode,
-  Options extends ChainOptions
+  Options extends ChainOptions,
 >(
   http: AxiosInstance,
   query: SyncQuery,
-  options?: SyncOptions | ChainOptions
+  options?: SyncOptions | ChainOptions,
 ): Promise<SyncCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
   if (!query || (!query.initial && !query.nextSyncToken && !query.nextPageToken)) {
     throw new Error(
-      'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing'
+      'Please provide one of `initial`, `nextSyncToken` or `nextPageToken` parameters for syncing',
     )
   }
 
@@ -36,7 +36,7 @@ export default async function pagedSync<
     query.type = 'Entry'
   } else if (query['content_type'] && query.type && query.type !== 'Entry') {
     throw new Error(
-      'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.'
+      'When using the `content_type` filter your `type` parameter cannot be different from `Entry`.',
     )
   }
 
@@ -124,13 +124,13 @@ async function getSyncPage(
   http: AxiosInstance,
   items: SyncEntities[],
   query: SyncPageQuery,
-  { paginate }: SyncOptions
+  { paginate }: SyncOptions,
 ): Promise<SyncPageResponse> {
   const requestQuery = createRequestQuery(query)
 
   const response = await http.get<SyncResponse>(
     'sync',
-    createRequestConfig({ query: requestQuery })
+    createRequestConfig({ query: requestQuery }),
   )
 
   const data = response.data || {}
