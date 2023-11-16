@@ -7,8 +7,8 @@ metadata:
   annotations:
     circleci.com/project-slug: github/contentful/contentful.js
     github.com/project-slug: contentful/contentful.js
-    contentful.com/ci-alert-slack: prd-phoenix-ci-alerts
+    contentful.com/ci-alert-slack: prd-extensibility-bots
 spec:
   type: library
   lifecycle: production
-  owner: group:team-phoenix
+  owner: group:team-developer-experience
