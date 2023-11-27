@@ -1,7 +1,7 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
 import { Asset } from './asset'
 import { ContentfulCollection } from './collection'
-import { AssetLink, ContentTypeLink, UnresolvedLink } from './link'
+import { ContentTypeLink, UnresolvedLink } from './link'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntrySkeletonType } from './query'
