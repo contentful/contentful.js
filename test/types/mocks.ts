@@ -1,5 +1,4 @@
 import {
-  Asset,
   AssetDetails,
   AssetFields,
   AssetFile,
