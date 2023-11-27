@@ -7,7 +7,7 @@ orbs:
 jobs:
   lint:
     docker:
-      - image: 'cimg/node:18.15-browsers'
+      - image: 'cimg/node:18.17.1-browsers'
     steps:
       - checkout
       - node/install-packages
@@ -23,7 +23,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '18.15'
+          node-version: '18.17'
       - node/install-packages
       - run: npm run test:unit
 
@@ -33,13 +33,13 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '18.15'
+          node-version: '18.17'
       - node/install-packages
       - run: npm run test:integration
 
   release:
     docker:
-      - image: 'cimg/node:18.15-browsers'
+      - image: 'cimg/node:18.17.1-browsers'
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
