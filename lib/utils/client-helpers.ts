@@ -22,8 +22,5 @@ export type DefaultChainOption = ChainOption<undefined>
 
 export type ChainOptions = ChainOption
 
-export type ModifiersFromOptions<Options extends ChainOption> = Options extends ChainOption<
-  infer Modifiers
->
-  ? Modifiers
-  : never
+export type ModifiersFromOptions<Options extends ChainOption> =
+  Options extends ChainOption<infer Modifiers> ? Modifiers : never

@@ -238,13 +238,14 @@ export type ResolvedLink<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
-> = Field extends EntryFieldTypes.EntryLink<infer LinkedEntry>
-  ? ResolvedEntryLink<Modifiers, Locales, LinkedEntry>
-  : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedEntry>
-    ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
-    : Field extends EntryFieldTypes.AssetLink
-      ? ResolvedAssetLink<Modifiers, Locales>
-      : BaseFieldMap<Field>
+> =
+  Field extends EntryFieldTypes.EntryLink<infer LinkedEntry>
+    ? ResolvedEntryLink<Modifiers, Locales, LinkedEntry>
+    : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedEntry>
+      ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
+      : Field extends EntryFieldTypes.AssetLink
+        ? ResolvedAssetLink<Modifiers, Locales>
+        : BaseFieldMap<Field>
 
 /**
  * A collection or single resolved link to another resource
@@ -258,9 +259,10 @@ export type ResolvedField<
   Field extends EntryFieldType<EntrySkeletonType>,
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
-> = Field extends EntryFieldTypes.Array<infer Item>
-  ? Array<ResolvedLink<Item, Modifiers, Locales>>
-  : ResolvedLink<Field, Modifiers, Locales>
+> =
+  Field extends EntryFieldTypes.Array<infer Item>
+    ? Array<ResolvedLink<Item, Modifiers, Locales>>
+    : ResolvedLink<Field, Modifiers, Locales>
 
 /**
  * Entry represents anything defined as a Content Type in a space
