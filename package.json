@@ -6,6 +6,9 @@
   "main": "./dist/contentful.node.min.js",
   "browser": "./dist/contentful.browser.min.js",
   "types": "./dist/types/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "browserslist": [
     ">0.3%",
     "Chrome >= 75",
@@ -117,9 +120,6 @@
     "typescript": "^4.8.4",
     "webpack": "^5.67.0",
     "webpack-cli": "^5.0.0"
-  },
-  "engines": {
-    "node": ">=12"
   },
   "config": {
     "commitizen": {
