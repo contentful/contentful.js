@@ -167,8 +167,8 @@
         "prerelease": true
       },
       {
-        "name": "v9",
-        "channel": "v9",
+        "name": "9.x",
+        "channel": "9.x",
         "prerelease": true
       }
     ],
