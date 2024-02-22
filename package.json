@@ -151,6 +151,7 @@
   "release": {
     "branches": [
       "master",
+      "9.x",
       {
         "name": "next",
         "channel": "next",
@@ -164,11 +165,6 @@
       {
         "name": "beta-resource-links",
         "channel": "beta-resource-links",
-        "prerelease": true
-      },
-      {
-        "name": "9.x",
-        "channel": "9.x",
         "prerelease": true
       }
     ],
