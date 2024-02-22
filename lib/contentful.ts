@@ -9,7 +9,10 @@ import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import { createGlobalOptions } from './create-global-options.js'
 import { makeClient } from './make-client.js'
-import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params.js'
+import {
+  validateRemoveUnresolvedParam,
+  validateResolveLinksParam,
+} from './utils/validate-params.js'
 import type { ContentfulClientApi } from './types/client.js'
 
 /**
