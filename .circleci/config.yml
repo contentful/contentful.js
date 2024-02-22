@@ -7,7 +7,7 @@ orbs:
 jobs:
   lint:
     docker:
-      - image: 'cimg/node:18-browsers'
+      - image: 'cimg/node:18.19-browsers'
     steps:
       - browser-tools/install-browser-tools
       - checkout
@@ -20,7 +20,7 @@ jobs:
 
   unit:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     steps:
       - checkout
       - node/install-packages
@@ -28,7 +28,7 @@ jobs:
 
   integration:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     steps:
       - checkout
       - node/install-packages
@@ -36,7 +36,7 @@ jobs:
 
   release:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
