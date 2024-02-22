@@ -118,7 +118,6 @@
     "mkdirp": "^3.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
-    "renamer": "^5.0.0",
     "rimraf": "^5.0.0",
     "semantic-release": "^22.0.8",
     "ts-jest": "^27.1.3",
