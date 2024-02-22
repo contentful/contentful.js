@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/module",
+    "outDir": "./dist/esm",
     "rootDir": "./lib",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "target": "esnext",
+    "lib": ["dom", "esnext"],
+    "target": "ES2017",
+    "module": "es2020",
     "moduleResolution": "node",
-    "allowJs": false,
+    "allowJs": true,
     "declarationDir": "dist/types",
     "declaration": true,
     "strict": true,
@@ -17,14 +15,8 @@
     "esModuleInterop": true,
     "noImplicitThis": false,
     "noImplicitAny": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
-  "include": [
-    "./lib/**/*",
-    "types"
-  ],
-  "exclude": [
-    "./node_modules/**/*",
-    "test"
-  ]
+  "include": ["./lib/**/*", "types"],
+  "exclude": ["./node_modules/**/*", "dist", "test"],
 }

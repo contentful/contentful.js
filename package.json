@@ -3,9 +3,14 @@
   "description": "Client for Contentful's Content Delivery API",
   "version": "0.0.0-determined-by-semantic-release",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
-  "main": "./dist/contentful.node.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "browser": "./dist/contentful.browser.min.js",
-  "types": "./dist/types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "engines": {
     "node": ">=18"
   },
@@ -43,13 +48,16 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && npm run build:dev && npm run build:prod",
-    "build:dev": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development webpack",
-    "build:prod": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production webpack",
-    "build:types": "tsc --declaration --emitDeclarationOnly",
-    "postbuild": "npm run check:browser && npm run check:node && npm run test:demo-projects",
-    "check:browser": "es-check es2018 --module ./dist/contentful.browser.js",
-    "check:node": "es-check es2018 ./dist/contentful.node.js",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:browser-bundle-dev && npm run build:browser-bundle-prod",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --target ES6 --outDir dist/cjs",
+    "build:browser-bundle-dev": "NODE_ENV=development webpack",
+    "build:browser-bundle-prod": "NODE_ENV=production webpack",
+    "postbuild": "npm run check && npm run test:demo-projects",
+    "check": "npm run check:cjs && npm run check:esm && npm run check:browser",
+    "check:browser": "es-check es2017 ./dist/contentful.browser.js",
+    "check:cjs": "es-check es6 './dist/cjs/*.js'",
+    "check:esm": "es-check es2017 --module './dist/esm/*.js'",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
@@ -110,6 +118,7 @@
     "mkdirp": "^3.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
+    "renamer": "^5.0.0",
     "rimraf": "^5.0.0",
     "semantic-release": "^22.0.8",
     "ts-jest": "^27.1.3",

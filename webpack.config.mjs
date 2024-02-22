@@ -1,7 +1,11 @@
-const path = require('path')
-const copy = require('fast-copy')
-const webpack = require('webpack')
-const __VERSION__ = require('./package.json').version
+import { fileURLToPath } from 'url'
+import path from 'path'
+import copy from 'fast-copy'
+import webpack from 'webpack'
+import pkg from './package.json' assert { type: 'json' }
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __VERSION__ = pkg.version
 
 const PROD = process.env.NODE_ENV === 'production'
 const baseFileName = 'contentful'
@@ -22,37 +26,14 @@ if (PROD) {
   )
 }
 
-const defaultTsLoader = {
-  test: /\.ts?$/,
-  exclude: /node_modules/,
-  loader: 'ts-loader',
-  options: {},
-}
-
 const baseBundleConfig = {
   mode: PROD ? 'production' : 'development',
-  context: path.join(__dirname, 'lib'),
-  entry: [`./index.ts`],
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
+  entry: [pkg.exports["."].import],
   output: {
     path: path.join(__dirname, 'dist'),
   },
-  module: {
-    rules: [defaultTsLoader],
-  },
   plugins,
 }
-
-const nodeBundle = copy(baseBundleConfig)
-nodeBundle.output.library = {
-  type: 'umd2',
-  name: 'contentful',
-}
-
-nodeBundle.target = 'node'
-nodeBundle.output.filename = `${baseFileName}.node${PROD ? '.min' : ''}.js`
 
 const browserBundle = copy(baseBundleConfig)
 browserBundle.output.library = {
@@ -63,4 +44,4 @@ browserBundle.output.library = {
 browserBundle.target = 'browserslist'
 browserBundle.output.filename = `${baseFileName}.browser${PROD ? '.min' : ''}.js`
 
-module.exports = [nodeBundle, browserBundle]
+export default browserBundle

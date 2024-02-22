@@ -4,9 +4,9 @@
  */
 
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
-import { GetGlobalOptions } from './create-global-options'
-import pagedSync from './paged-sync'
-import {
+import { GetGlobalOptions } from './create-global-options.js'
+import pagedSync from './paged-sync.js'
+import type {
   Asset,
   AssetCollection,
   AssetKey,
@@ -22,18 +22,18 @@ import {
   SyncQuery,
   SyncOptions,
   EntrySkeletonType,
-} from './types'
-import normalizeSearchParameters from './utils/normalize-search-parameters'
-import normalizeSelect from './utils/normalize-select'
-import resolveCircular from './utils/resolve-circular'
-import validateTimestamp from './utils/validate-timestamp'
-import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
+} from './types/index.js'
+import normalizeSearchParameters from './utils/normalize-search-parameters.js'
+import normalizeSelect from './utils/normalize-select.js'
+import resolveCircular from './utils/resolve-circular.js'
+import validateTimestamp from './utils/validate-timestamp.js'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 import {
   validateLocaleParam,
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
-} from './utils/validate-params'
-import validateSearchParameters from './utils/validate-search-parameters'
+} from './utils/validate-params.js'
+import validateSearchParameters from './utils/validate-search-parameters.js'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
