@@ -18,9 +18,6 @@ updates:
     - dependency-name: "eslint-plugin-promise"
       versions:
         - ">=6.0.0"
-    - dependency-name: "axios"
-      versions:
-        - ">=1.0.0"
     commit-message:
       prefix: build
       include: scope
