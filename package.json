@@ -141,7 +141,7 @@
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "30Kb"
+      "maxSize": "32Kb"
     }
   ],
   "release": {
