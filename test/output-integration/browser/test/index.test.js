@@ -11,6 +11,7 @@ beforeEach(async () => {
   })
   page = await browser.newPage()
   await page.goto(`file:${path.join(__dirname, '../public/index.html')}`)
+  await page.waitForTimeout(4000)
 })
 
 afterAll(async () => {
