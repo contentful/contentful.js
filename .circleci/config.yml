@@ -8,10 +8,8 @@ orbs:
 jobs:
   lint:
     docker:
-      - image: 'cimg/node:18.19-browsers'
+      - image: 'cimg/node:18.19'
     steps:
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
       - checkout
       - node/install-packages
       - run: npm run lint
@@ -38,8 +36,10 @@ jobs:
 
   release:
     docker:
-      - image: cimg/node:18.19
+      - image: cimg/node:18.19-browsers
     steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - checkout
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
