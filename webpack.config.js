@@ -36,13 +36,23 @@ const baseBundleConfig = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        exclude: /node_modules\/(?!axios)/,
         loader: 'babel-loader',
         options: {
-          presets: [['@babel/preset-env']],
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                useBuiltIns: 'usage',
+                corejs: 3,
+              },
+            ],
+          ],
         },
       },
       {
-        test: /\.ts?$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
         loader: 'ts-loader',
       },
