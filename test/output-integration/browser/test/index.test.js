@@ -1,18 +1,12 @@
 const puppeteer = require('puppeteer')
 const path = require('path')
-const { tmpdir } = require('os')
-const { randomUUID } = require('crypto')
 
 let browser, page
 
 jest.setTimeout(10000)
 
 beforeEach(async () => {
-  const puppeteerDir = path.join(tmpdir(), `puppeteer-${randomUUID()}`)
-  const userDataDir = path.join(puppeteerDir, 'profile')
-
   browser = await puppeteer.launch({
-    userDataDir,
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
