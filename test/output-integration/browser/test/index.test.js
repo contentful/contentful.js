@@ -13,7 +13,7 @@ beforeEach(async () => {
 
   browser = await puppeteer.launch({
     userDataDir,
-    headless: true,
+    headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
   page = await browser.newPage()
