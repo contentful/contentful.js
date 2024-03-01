@@ -10,7 +10,8 @@ jobs:
     docker:
       - image: 'cimg/node:18.19-browsers'
     steps:
-      - browser-tools/install-browser-tools
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - checkout
       - node/install-packages
       - run: npm run lint
