@@ -22,15 +22,9 @@ if (PROD) {
   )
 }
 
-const defaultTsLoader = {
-  test: /\.ts?$/,
-  exclude: /node_modules/,
-  loader: 'ts-loader',
-  options: {},
-}
-
 const baseBundleConfig = {
   mode: PROD ? 'production' : 'development',
+  devtool: PROD ? false : 'source-map',
   context: path.join(__dirname, 'lib'),
   entry: [`./index.ts`],
   resolve: {
@@ -40,7 +34,19 @@ const baseBundleConfig = {
     path: path.join(__dirname, 'dist'),
   },
   module: {
-    rules: [defaultTsLoader],
+    rules: [
+      {
+        loader: 'babel-loader',
+        options: {
+          presets: [['@babel/preset-env']],
+        },
+      },
+      {
+        test: /\.ts?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+      },
+    ],
   },
   plugins,
 }

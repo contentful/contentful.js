@@ -6,7 +6,7 @@
       "dom",
       "esnext"
     ],
-    "target": "esnext",
+    "target": "ES2017",
     "moduleResolution": "node",
     "allowJs": false,
     "declarationDir": "dist/types",
