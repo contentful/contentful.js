@@ -8,8 +8,10 @@ orbs:
 jobs:
   lint:
     docker:
-      - image: 'cimg/node:18.19'
+      - image: cimg/node:18.19-browsers
     steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - checkout
       - node/install-packages
       - run: npm run lint
