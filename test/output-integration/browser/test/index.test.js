@@ -7,7 +7,7 @@ jest.setTimeout(10000)
 
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: 'shell',
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
   page = await browser.newPage()
