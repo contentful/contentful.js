@@ -5,8 +5,13 @@ let browser, page
 
 jest.setTimeout(10000)
 
+
 beforeEach(async () => {
+  const puppeteerDir = path.join(TMP_FOLDER, `puppeteer-${randomUUID()}`)
+  const userDataDir = path.join(puppeteerDir, 'profile')
+
   browser = await puppeteer.launch({
+    userDataDir,
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
