@@ -10,9 +10,9 @@ jobs:
     docker:
       - image: cimg/node:18.19-browsers
     steps:
+      - checkout
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - checkout
       - node/install-packages
       - run: npm run lint
       - run: npm run prettier:check
@@ -40,9 +40,9 @@ jobs:
     docker:
       - image: cimg/node:18.19-browsers
     steps:
+      - checkout
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - checkout
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
       - node/install-packages
