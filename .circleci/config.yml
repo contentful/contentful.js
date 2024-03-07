@@ -2,14 +2,17 @@ version: 2.1
 
 orbs:
   vault: contentful/vault@1
-  node: circleci/node@5.1.0
+  node: circleci/node@5.2.0
+  browser-tools: circleci/browser-tools@1.4.8
 
 jobs:
   lint:
     docker:
-      - image: 'cimg/node:18.17.1-browsers'
+      - image: cimg/node:18.19-browsers
     steps:
       - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - node/install-packages
       - run: npm run lint
       - run: npm run prettier:check
@@ -19,29 +22,27 @@ jobs:
 
   unit:
     docker:
-      - image: 'cimg/base:stable'
+      - image: cimg/node:18.19
     steps:
       - checkout
-      - node/install:
-          node-version: '18.17'
       - node/install-packages
       - run: npm run test:unit
 
   integration:
     docker:
-      - image: 'cimg/base:stable'
+      - image: cimg/node:18.19
     steps:
       - checkout
-      - node/install:
-          node-version: '18.17'
       - node/install-packages
       - run: npm run test:integration
 
   release:
     docker:
-      - image: 'cimg/node:18.17.1-browsers'
+      - image: cimg/node:18.19-browsers
     steps:
       - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
       - node/install-packages
