@@ -1,4 +1,5 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   plugins: ['standard', 'promise'],
   env: {
     jest: true,

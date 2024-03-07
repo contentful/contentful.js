@@ -1,7 +1,7 @@
-export * from './contentful'
-export * from './create-global-options'
-export * from './mixins/stringify-safe'
-export * from './utils/normalize-select'
-export * from './utils/resolve-circular'
+export * from './contentful.js'
+export * from './create-global-options.js'
+export * from './mixins/stringify-safe.js'
+export * from './utils/normalize-select.js'
+export * from './utils/resolve-circular.js'
 
-export * from './types'
+export * from './types/index.js'
