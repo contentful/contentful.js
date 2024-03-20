@@ -4,6 +4,8 @@ import copy from 'fast-copy'
 import webpack from 'webpack'
 import pkg from './package.json' assert { type: 'json' }
 
+import { BundleStatsWebpackPlugin } from 'bundle-stats-webpack-plugin'
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const __VERSION__ = pkg.version
 
@@ -24,6 +26,9 @@ if (PROD) {
       debug: false,
     }),
   )
+    plugins.push(
+      new BundleStatsWebpackPlugin()
+    )
 }
 
 const baseBundleConfig = {
