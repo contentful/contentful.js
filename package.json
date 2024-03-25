@@ -49,15 +49,14 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:browser-bundle-dev && npm run build:browser-bundle-prod",
+    "build": "npm run clean && npm run build:esm && npm run build:bundles",
     "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --target ES6 --outDir dist/cjs",
-    "build:browser-bundle-dev": "NODE_ENV=development webpack",
-    "build:browser-bundle-prod": "NODE_ENV=production webpack",
+    "build:bundles": "NODE_ENV=production rollup -c",
     "postbuild": "npm run check && npm run test:demo-projects",
-    "check": "npm run check:cjs && npm run check:esm && npm run check:browser",
-    "check:browser": "es-check es2017 ./dist/contentful.browser.js",
-    "check:cjs": "es-check es6 './dist/cjs/*.js'",
+    "check": "npm run check:cjs && npm run check:esm && npm run check:browser && npm run check:browser-min",
+    "check:browser": "es-check es2018 ./dist/contentful.browser.js",
+    "check:browser-min": "es-check es2018 ./dist/contentful.browser.min.js",
+    "check:cjs": "es-check es2017 './dist/contentful.cjs.js'",
     "check:esm": "es-check es2017 --module './dist/esm/*.js'",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
@@ -84,18 +83,20 @@
   "dependencies": {
     "@contentful/rich-text-types": "^16.0.2",
     "axios": "^1.6.7",
-    "bundle-stats-webpack-plugin": "^4.12.1",
     "contentful-resolve-response": "^1.8.1",
     "contentful-sdk-core": "^8.1.0",
     "json-stringify-safe": "^5.0.1",
     "type-fest": "^4.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.24.3",
     "@optimize-lodash/rollup-plugin": "^4.0.4",
     "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
     "@semantic-release/changelog": "^6.0.1",
     "@types/jest": "^29.5.12",
@@ -133,9 +134,7 @@
     "tsd": "^0.30.0",
     "tslib": "^2.0.3",
     "typedoc": "^0.25.0",
-    "typescript": "^5.4.2",
-    "webpack": "^5.67.0",
-    "webpack-cli": "^5.0.0"
+    "typescript": "^5.4.2"
   },
   "config": {
     "commitizen": {

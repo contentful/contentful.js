@@ -1,7 +1,7 @@
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import pkg from './package.json' assert { type: 'json' }
 
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
@@ -9,18 +9,35 @@ import json from '@rollup/plugin-json'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import alias from '@rollup/plugin-alias'
 import terser from '@rollup/plugin-terser'
+import replace from '@rollup/plugin-replace'
+import babel from '@rollup/plugin-babel'
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const __VERSION__ = pkg.version
 
 const baseConfig = {
   input: 'dist/esm/index.js',
   output: {
-    file: 'dist-rollup/contentful.cjs.js',
+    file: 'dist/contentful.cjs.js',
     format: 'cjs',
   },
   plugins: [
-    commonjs(),
+    replace({
+      preventAssignment: true,
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      __VERSION__: JSON.stringify(__VERSION__),
+    }),
+    commonjs({
+      sourceMap: false,
+    }),
     nodeResolve({
       preferBuiltins: true,
+    }),
+    babel({
+      babelHelpers: 'bundled',
+      exclude: 'node_modules/**',
+      presets: [['@babel/preset-env', { targets: pkg.browserslist }]],
     }),
     json(),
     optimizeLodashImports(),
@@ -38,14 +55,14 @@ const cjsConfig = {
 const browserConfig = {
   ...baseConfig,
   output: {
-    file: 'dist-rollup/contentful.browser.js',
+    file: 'dist/contentful.browser.js',
     format: 'iife',
     name: 'contentful',
   },
   plugins: [
     ...baseConfig.plugins,
     nodePolyfills({
-      include: ["util"]
+      include: ['util'],
     }),
     alias({
       entries: [
@@ -62,16 +79,16 @@ const browserMinConfig = {
   ...browserConfig,
   output: {
     ...browserConfig.output,
-    file: 'dist-rollup/contentful.browser.min.js',
+    file: 'dist/contentful.browser.min.js',
   },
   plugins: [
     ...browserConfig.plugins,
     terser({
       compress: {
-        ecma: 2015, // Specify ECMAScript release: 5, 2015, 2016, etc.
+        ecma: 2017,
         module: true,
         toplevel: true,
-        drop_console: true, // Remove console logs for production
+        drop_console: true,
         drop_debugger: true,
         sequences: true,
         booleans: true,
@@ -83,14 +100,14 @@ const browserMinConfig = {
         collapse_vars: true,
         reduce_vars: true,
         pure_getters: true,
-        unsafe: true,
-        unsafe_comps: true,
-        unsafe_math: true,
-        unsafe_symbols: true,
-        unsafe_proto: true,
-        unsafe_undefined: true,
-        unsafe_methods: true,
-        unsafe_arrows: true,
+        // unsafe: true,
+        // unsafe_comps: true,
+        // unsafe_math: true,
+        // unsafe_symbols: true,
+        // unsafe_proto: true,
+        // unsafe_undefined: true,
+        // unsafe_methods: true,
+        // unsafe_arrows: true,
         passes: 3, // The maximum number of times to run compress.
       },
       mangle: {
