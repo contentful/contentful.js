@@ -3,8 +3,6 @@ const path = require('path')
 
 let browser, page
 
-jest.setTimeout(10000)
-
 beforeEach(async () => {
   browser = await puppeteer.launch()
   page = await browser.newPage()

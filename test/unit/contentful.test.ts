@@ -1,3 +1,4 @@
+import { MockedFunction, vi } from 'vitest'
 import { createClient } from '../../lib/contentful'
 import * as SdkCore from 'contentful-sdk-core'
 import * as CreateContentfulApi from '../../lib/create-contentful-api'
@@ -5,14 +6,14 @@ import * as CreateContentfulApi from '../../lib/create-contentful-api'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
 
-jest.mock('../../lib/create-contentful-api')
+vi.mock('../../lib/create-contentful-api')
 
 // @ts-ignore
-SdkCore.createHttpClient = jest.fn()
-const createHttpClientMock = <jest.Mock<typeof SdkCore.createHttpClient>>(
+SdkCore.createHttpClient = vi.fn()
+const createHttpClientMock = <MockedFunction<typeof SdkCore.createHttpClient>>(
   (<unknown>SdkCore.createHttpClient)
 )
-const createContentfulApiMock = <jest.Mock<typeof CreateContentfulApi.default>>(
+const createContentfulApiMock = <MockedFunction<typeof CreateContentfulApi.default>>(
   (<unknown>CreateContentfulApi.default)
 )
 
@@ -24,8 +25,9 @@ describe('contentful', () => {
         baseURL: 'http://some-base-url.com/',
       },
       interceptors: {
+        // @ts-ignore
         response: {
-          use: jest.fn(),
+          use: vi.fn(),
         },
       },
     })

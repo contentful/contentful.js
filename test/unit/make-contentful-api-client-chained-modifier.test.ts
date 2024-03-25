@@ -1,11 +1,16 @@
+import { MockedObject, vi } from 'vitest'
 import { AxiosRequestHeaders, HeadersDefaults } from 'axios'
 import { makeClient } from '../../lib/make-client'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
 import { ValidationError } from '../../lib/utils/validation-error'
 
+vi.mock('../../lib/utils/resolve-circular')
+
+const resolveCircularMock = <MockedObject<typeof resolveCircular>>(<unknown>resolveCircular)
+
 function setupWithData({
   promise,
-  getGlobalOptions = jest.fn().mockReturnValue({
+  getGlobalOptions = vi.fn().mockReturnValue({
     resolveLinks: true,
     removeUnresolved: false,
     spaceBaseUrl: 'spaceUrl',
@@ -13,14 +18,14 @@ function setupWithData({
     environmentBaseUrl: 'environmentUrl',
   }),
 }) {
-  const getStub = jest.fn()
-  const postStub = jest.fn()
+  const getStub = vi.fn()
+  const postStub = vi.fn()
   const api = makeClient({
     // @ts-ignore
     http: {
       defaults: {
         baseURL: 'baseURL',
-        logHandler: jest.fn(),
+        logHandler: vi.fn(),
         headers: {} as AxiosRequestHeaders & HeadersDefaults,
       },
       get: getStub.mockReturnValue(promise),
@@ -37,10 +42,6 @@ function setupWithData({
 }
 
 describe('Contentful API client chain modifiers', () => {
-  const resolveCircularMock = jest.fn()
-  // @ts-ignore
-  resolveCircular.default = resolveCircularMock
-
   const data = {
     items: [
       {
@@ -56,8 +57,8 @@ describe('Contentful API client chain modifiers', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    resolveCircularMock.mockImplementation((args) => {
+    vi.clearAllMocks()
+    resolveCircularMock.default.mockImplementation((args) => {
       return args
     })
   })

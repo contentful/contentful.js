@@ -1,8 +1,7 @@
-export default {
+module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['standard', 'promise'],
   env: {
-    jest: true,
     node: true,
   },
   globals: {
