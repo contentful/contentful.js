@@ -20,11 +20,13 @@ describe('Sync API', () => {
   })
 
   test('Sync space asset links are resolved', async () => {
-    const response = await client.sync({ initial: true })
+    const response = await client.sync<TypeCatSkeleton>({ initial: true })
     expect(response.entries).toBeDefined()
 
     const entryWithImageLink = response.entries.find((entry) => entry.fields && entry.fields.image)
-    expect(entryWithImageLink?.fields?.image).toHaveProperty(`[en-US]sys.type`, 'Asset')
+    expect(entryWithImageLink?.fields.image && entryWithImageLink?.fields.image['en-US'].sys.type).toBe(
+      'Asset',
+    )
   })
 
   test('Sync space with token', async () => {
@@ -92,6 +94,9 @@ describe('Sync API', () => {
     })
 
     expect(response.entries[0].fields).toBeDefined()
-    expect(response.entries[0].fields.bestFriend).toHaveProperty('[en-US]sys.type', 'Link')
+    expect(
+      response.entries[0].fields.bestFriend &&
+        response.entries[0].fields.bestFriend['en-US']?.sys.type,
+    ).toBe('Link')
   })
 })

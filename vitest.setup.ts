@@ -1,3 +1,3 @@
 import { version } from './package.json'
 
-global.__VERSION__ = JSON.stringify(version)
+global.__VERSION__ = version

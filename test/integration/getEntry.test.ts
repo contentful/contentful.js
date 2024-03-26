@@ -1,6 +1,7 @@
 import * as contentful from '../../lib/contentful'
 import { localeSpaceParams, params, previewParams } from './utils'
 import { EntryFields, EntrySkeletonType } from '../../lib'
+import { TypeCatSkeleton } from './parseEntries.test'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -11,13 +12,15 @@ const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
+type Locales = 'en-US'
+
 describe('getEntry via client chain modifiers', () => {
   const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
   const entryWithResolvableLink = 'nyancat'
 
   describe('default client', () => {
     test('Gets an entry with the correct ID', async () => {
-      const response = await client.getEntry(entryWithResolvableLink, {
+      const response = await client.getEntry<TypeCatSkeleton>(entryWithResolvableLink, {
         include: 2,
       })
 
@@ -116,23 +119,26 @@ describe('getEntry via client chain modifiers', () => {
 
   describe('client has withAllLocales modifier', () => {
     test('client.withAllLocales', async () => {
-      const response = await client.withAllLocales.getEntry(entryWithResolvableLink, {
+      const response = await client.withAllLocales.getEntry<TypeCatSkeleton, Locales>(entryWithResolvableLink, {
         include: 2,
       })
 
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).not.toHaveProperty('[en-US].sys.type', 'Link')
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']).toBeDefined()
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']?.sys.type).not.toBe('Link')
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']?.sys.type).toBe('Entry')
     })
 
     test('client.withAllLocales.withoutLinkResolution', async () => {
-      const response = await client.withAllLocales.withoutLinkResolution.getEntry(
-        entryWithResolvableLink,
-        {
-          include: 2,
-        },
-      )
+      const response = await client.withAllLocales.withoutLinkResolution.getEntry<
+        TypeCatSkeleton,
+        Locales
+      >(entryWithResolvableLink, {
+        include: 2,
+      })
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']).toBeDefined()
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']?.sys.type).toBe('Link')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
@@ -150,21 +156,30 @@ describe('getEntry via client chain modifiers', () => {
 
   describe('client has withoutLinkResolution modifier', () => {
     test('client.withoutLinkResolution', async () => {
-      const response = await client.withoutLinkResolution.getEntry(entryWithResolvableLink)
+      const response = await client.withoutLinkResolution.getEntry<
+        TypeCatSkeleton,
+        Locales
+      >(entryWithResolvableLink)
 
-      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Link')
+      expect(response.fields.bestFriend && response.fields.bestFriend.sys.type).toBe('Link')
     })
 
     test('client.withoutLinkResolution.withAllLocales', async () => {
       const response =
-        await client.withoutLinkResolution.withAllLocales.getEntry(entryWithResolvableLink)
+        await client.withoutLinkResolution.withAllLocales.getEntry<
+        TypeCatSkeleton,
+        Locales
+      >(entryWithResolvableLink)
 
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).toHaveProperty('[en-US]sys.type', 'Link')
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']?.sys.type).toBe('Link')
     })
 
     test('Gets entry with without link resolution but with includes', async () => {
-      const response = await client.withoutLinkResolution.getEntry(entryWithUnresolvableLink, {
+      const response = await client.withoutLinkResolution.getEntry<
+        TypeCatSkeleton,
+        Locales
+      >(entryWithUnresolvableLink, {
         include: 2,
       })
       expect(response.fields).toBeDefined()

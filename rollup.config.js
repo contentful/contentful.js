@@ -14,7 +14,6 @@ import babel from '@rollup/plugin-babel'
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const __VERSION__ = pkg.version
 
 const baseConfig = {
   input: 'dist/esm/index.js',
@@ -26,7 +25,7 @@ const baseConfig = {
     replace({
       preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      __VERSION__: JSON.stringify(__VERSION__),
+      __VERSION__: JSON.stringify(pkg.version),
     }),
     commonjs({
       sourceMap: false,
