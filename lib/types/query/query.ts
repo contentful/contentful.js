@@ -66,6 +66,7 @@ export type MetadataTagsQueries =
   | ConditionalFixedQueries<Pick<Metadata, 'tags'>, any, boolean, 'metadata', '[exists]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[all]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[in]'>
+  | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[nin]'>
 
 /**
  * All queries appliable to entry fields
