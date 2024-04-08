@@ -67,7 +67,7 @@ const browserConfig = {
         },
         {
           find: 'process',
-          replacement: import.meta.resolve('process/browser'),
+          replacement: resolve(__dirname, 'node_modules', 'process/browser'),
         },
       ],
     }),
