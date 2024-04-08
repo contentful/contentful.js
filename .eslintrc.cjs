@@ -3,6 +3,7 @@ module.exports = {
   plugins: ['standard', 'promise'],
   env: {
     node: true,
+    'vitest-globals/env': true,
   },
   globals: {
     __VERSION__: true,
@@ -12,6 +13,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
+    'plugin:vitest-globals/recommended',
   ],
   ignorePatterns: ['**/test/output-integration/**', '**/webpack.config.js'],
   rules: {

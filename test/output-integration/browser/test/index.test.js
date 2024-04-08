@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer')
 const path = require('path')
 
+jest.setTimeout(10 * 1000)
+
 let browser, page
 
 beforeEach(async () => {

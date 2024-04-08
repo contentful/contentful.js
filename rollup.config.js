@@ -6,19 +6,18 @@ import pkg from './package.json' assert { type: 'json' }
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
 import alias from '@rollup/plugin-alias'
 import terser from '@rollup/plugin-terser'
 import replace from '@rollup/plugin-replace'
-import babel from '@rollup/plugin-babel'
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const baseConfig = {
   input: 'dist/esm/index.js',
   output: {
-    file: 'dist/contentful.cjs.js',
+    file: 'dist/contentful.cjs.cjs',
     format: 'cjs',
   },
   plugins: [
@@ -29,14 +28,14 @@ const baseConfig = {
     }),
     commonjs({
       sourceMap: false,
+      transformMixedEsModules: true,
+      ignoreGlobal: true,
+      ignoreDynamicRequires: true,
+      requireReturnsDefault: 'auto',
     }),
     nodeResolve({
-      preferBuiltins: true,
-    }),
-    babel({
-      babelHelpers: 'bundled',
-      exclude: 'node_modules/**',
-      presets: [['@babel/preset-env', { targets: pkg.browserslist }]],
+      preferBuiltins: false,
+      browser: true,
     }),
     json(),
     optimizeLodashImports(),
@@ -57,20 +56,22 @@ const browserConfig = {
     file: 'dist/contentful.browser.js',
     format: 'iife',
     name: 'contentful',
+    // intro: 'const global = window;',
   },
   plugins: [
-    ...baseConfig.plugins,
-    nodePolyfills({
-      include: ['util'],
-    }),
     alias({
       entries: [
         {
           find: 'axios',
           replacement: resolve(__dirname, './node_modules/axios/dist/browser/axios.cjs'),
         },
+        {
+          find: 'process',
+          replacement: import.meta.resolve('process/browser'),
+        },
       ],
     }),
+    ...baseConfig.plugins,
   ],
 }
 
@@ -84,9 +85,8 @@ const browserMinConfig = {
     ...browserConfig.plugins,
     terser({
       compress: {
+        passes: 5,
         ecma: 2017,
-        module: true,
-        toplevel: true,
         drop_console: true,
         drop_debugger: true,
         sequences: true,
@@ -99,19 +99,18 @@ const browserMinConfig = {
         collapse_vars: true,
         reduce_vars: true,
         pure_getters: true,
-        // unsafe: true,
-        // unsafe_comps: true,
-        // unsafe_math: true,
-        // unsafe_symbols: true,
-        // unsafe_proto: true,
-        // unsafe_undefined: true,
-        // unsafe_methods: true,
-        // unsafe_arrows: true,
-        passes: 3, // The maximum number of times to run compress.
+        pure_new: true,
+        keep_classnames: false,
+        keep_fnames: false,
+        keep_fargs: false,
+        keep_infinity: false,
       },
       mangle: {
+        reserved: ['contentful'],
         toplevel: true,
+        module: true,
         properties: {
+          reserved: ['contentful'],
           regex: /^_/, // Only mangle properties that start with an underscore
         },
       },
@@ -119,10 +118,10 @@ const browserMinConfig = {
         comments: false, // Remove all comments
         beautify: false, // Minify output
       },
-      module: true,
-      toplevel: true,
-      keep_classnames: false,
-      keep_fnames: false,
+    }),
+    visualizer({
+      emitFile: true,
+      filename: 'stats.browser.min.html',
     }),
   ],
 }

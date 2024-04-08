@@ -24,9 +24,9 @@ describe('Sync API', () => {
     expect(response.entries).toBeDefined()
 
     const entryWithImageLink = response.entries.find((entry) => entry.fields && entry.fields.image)
-    expect(entryWithImageLink?.fields.image && entryWithImageLink?.fields.image['en-US'].sys.type).toBe(
-      'Asset',
-    )
+    expect(
+      entryWithImageLink?.fields.image && entryWithImageLink?.fields.image['en-US'].sys.type,
+    ).toBe('Asset')
   })
 
   test('Sync space with token', async () => {

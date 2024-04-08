@@ -9,9 +9,4 @@ export default defineConfig({
     },
     setupFiles: ['./vitest.setup.ts'],
   },
-  // resolve: {
-  //   alias: {
-  //     axios: 'axios/dist/node/axios.cjs',
-  //   },
-  // },
 })

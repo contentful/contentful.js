@@ -17,14 +17,19 @@ describe('getEntries via client chain modifiers', () => {
 
   describe('default client', () => {
     test('client', async () => {
-      const response = await client.getEntries<
-        TypeCatSkeleton
-      >({ 'sys.id': entryWithResolvableLink, include: 2 })
+      const response = await client.getEntries<TypeCatSkeleton>({
+        'sys.id': entryWithResolvableLink,
+        include: 2,
+      })
 
       expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.bestFriend && response.items[0].fields.bestFriend.sys.type).toBe('Entry')
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend.sys.type,
+      ).toBe('Entry')
       expect(response.items[0].fields.color).toBe('rainbow')
-      expect(response.items[0].fields.color && response.items[0].fields.color['en-US']).not.toBeDefined()
+      expect(
+        response.items[0].fields.color && response.items[0].fields.color['en-US'],
+      ).not.toBeDefined()
     })
 
     test('Gets entries with select', async () => {
@@ -332,16 +337,22 @@ describe('getEntries via client chain modifiers', () => {
     })
 
     test('client.withAllLocales.withoutLinkResolution', async () => {
-      const response = await client.withAllLocales.withoutLinkResolution.getEntries<
-        TypeCatSkeleton
-      >({
-        'sys.id': entryWithResolvableLink,
-        include: 2,
-      })
+      const response =
+        await client.withAllLocales.withoutLinkResolution.getEntries<TypeCatSkeleton>({
+          'sys.id': entryWithResolvableLink,
+          include: 2,
+        })
       expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.color && response.items[0].fields.color['en-US']).toBeDefined()
-      expect(response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US']).toBeDefined()
-      expect(response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US']?.sys.type).toBe('Link')
+      expect(
+        response.items[0].fields.color && response.items[0].fields.color['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend &&
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
+      ).toBe('Link')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
@@ -359,9 +370,7 @@ describe('getEntries via client chain modifiers', () => {
 
   describe('client has withoutLinkResolution modifier', () => {
     test('client.withoutLinkResolution', async () => {
-      const response = await client.withoutLinkResolution.getEntries<
-        TypeCatSkeleton
-      >({
+      const response = await client.withoutLinkResolution.getEntries<TypeCatSkeleton>({
         'sys.id': entryWithResolvableLink,
       })
 
@@ -372,17 +381,21 @@ describe('getEntries via client chain modifiers', () => {
     })
 
     test('client.withoutLinkResolution.withAllLocales', async () => {
-      const response = await client.withoutLinkResolution.withAllLocales.getEntries<
-        TypeCatSkeleton
-      >({
-        'sys.id': entryWithResolvableLink,
-      })
+      const response =
+        await client.withoutLinkResolution.withAllLocales.getEntries<TypeCatSkeleton>({
+          'sys.id': entryWithResolvableLink,
+        })
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US']).toBeDefined()
-      expect(response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US']?.sys.type).toBe('Link')
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend &&
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
+      ).toBe('Link')
     })
   })
 })

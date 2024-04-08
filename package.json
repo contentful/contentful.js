@@ -7,7 +7,7 @@
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/contentful.cjs.cjs"
     }
   },
   "browser": "./dist/contentful.browser.min.js",
@@ -52,11 +52,11 @@
     "build": "npm run clean && npm run build:esm && npm run build:bundles",
     "build:esm": "tsc",
     "build:bundles": "NODE_ENV=production rollup -c",
-    "postbuild": "npm run check && npm run test:demo-projects",
+    "postbuild": "npm run check && npm run test:size && npm run test:demo-projects",
     "check": "npm run check:cjs && npm run check:esm && npm run check:browser && npm run check:browser-min",
     "check:browser": "es-check es2018 ./dist/contentful.browser.js",
     "check:browser-min": "es-check es2018 ./dist/contentful.browser.min.js",
-    "check:cjs": "es-check es2017 './dist/contentful.cjs.js'",
+    "check:cjs": "es-check es2017 './dist/contentful.cjs.cjs'",
     "check:esm": "es-check es2017 --module './dist/esm/*.js'",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
@@ -71,7 +71,7 @@
     "test:integration": "vitest ./test/integration",
     "test:size": "bundlesize",
     "test:demo-projects": "npm run test:demo-node && npm run test:demo-browser",
-    "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && vitest ./test/output-integration/node",
+    "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && vitest --run ./test/output-integration/node",
     "test:demo-browser": "rimraf ./test/output-integration/browser/node-modules && npm --prefix ./test/output-integration/browser ci && npm --prefix ./test/output-integration/browser run test",
     "test:types": "./node_modules/.bin/tsd",
     "test:prepush": "npm run build && npm run test:unit && npm run test:size",
@@ -86,14 +86,12 @@
     "contentful-resolve-response": "^1.8.1",
     "contentful-sdk-core": "^8.1.0",
     "json-stringify-safe": "^5.0.1",
-    "type-fest": "^4.0.0",
-    "vitest": "^1.4.0"
+    "type-fest": "^4.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.3",
     "@optimize-lodash/rollup-plugin": "^4.0.4",
     "@rollup/plugin-alias": "^5.1.0",
-    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -105,7 +103,6 @@
     "@typescript-eslint/parser": "^7.3.1",
     "bundlesize": "^0.18.1",
     "contentful-sdk-jsdoc": "^3.0.0",
-    "core-js": "^3.2.1",
     "cz-conventional-changelog": "^3.3.0",
     "es-check": "^7.0.0",
     "eslint": "^8.57.0",
@@ -115,6 +112,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vitest-globals": "^1.5.0",
     "express": "^4.15.4",
     "husky": "^9.0.11",
     "in-publish": "^2.0.0",
@@ -123,15 +121,14 @@
     "mkdirp": "^3.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
+    "process": "^0.11.10",
     "rimraf": "^5.0.0",
     "rollup": "^4.13.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
+    "rollup-plugin-visualizer": "^5.12.0",
     "semantic-release": "^22.0.8",
-    "ts-loader": "^9.4.1",
-    "tsd": "^0.30.0",
-    "tslib": "^2.0.3",
     "typedoc": "^0.25.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "vitest": "^1.4.0"
   },
   "config": {
     "commitizen": {
@@ -141,11 +138,11 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "70Kb"
+      "maxSize": "60Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "30Kb"
+      "maxSize": "31Kb"
     }
   ],
   "release": {

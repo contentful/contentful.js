@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.test.js",
   "scripts": {
-    "test": "jest ./test --forceExit"
+    "test": "jest ./test --forceExit",
+    "preinstall": "cp ../../../dist/contentful.browser.min.js ./public/."
   },
   "author": "",
   "license": "ISC",
