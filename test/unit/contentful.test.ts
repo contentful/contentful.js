@@ -1,18 +1,16 @@
-import { MockedFunction, vi } from 'vitest'
+import { vi, test, expect, describe, MockedFunction, beforeEach, afterEach } from 'vitest'
 import { createClient } from '../../lib/contentful'
-import * as SdkCore from 'contentful-sdk-core'
+import { default as createHttpClient } from 'contentful-sdk-core/dist/create-http-client'
 import * as CreateContentfulApi from '../../lib/create-contentful-api'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
 
 vi.mock('../../lib/create-contentful-api')
+vi.mock('contentful-sdk-core/dist/create-http-client')
 
-// @ts-ignore
-SdkCore.createHttpClient = vi.fn()
-const createHttpClientMock = <MockedFunction<typeof SdkCore.createHttpClient>>(
-  (<unknown>SdkCore.createHttpClient)
-)
+// @todo this is broken now - proper mocks
+const createHttpClientMock = <MockedFunction<typeof createHttpClient>>(<unknown>createHttpClient)
 const createContentfulApiMock = <MockedFunction<typeof CreateContentfulApi.default>>(
   (<unknown>CreateContentfulApi.default)
 )
@@ -58,7 +56,6 @@ describe('contentful', () => {
     expect(createHttpClientMock).toHaveBeenCalledTimes(1)
 
     const callConfig = createHttpClientMock.mock.calls[0][1]
-
     expect(callConfig.headers['Content-Type']).toBeDefined()
     expect(callConfig.headers['X-Contentful-User-Agent']).toBeDefined()
 

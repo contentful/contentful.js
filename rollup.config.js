@@ -11,16 +11,18 @@ import terser from '@rollup/plugin-terser'
 import replace from '@rollup/plugin-replace'
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { babel } from '@rollup/plugin-babel'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const baseConfig = {
   input: 'dist/esm/index.js',
   output: {
-    file: 'dist/contentful.cjs.cjs',
+    file: 'dist/contentful.cjs',
     format: 'cjs',
   },
   plugins: [
+    optimizeLodashImports(),
     replace({
       preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -33,12 +35,7 @@ const baseConfig = {
       ignoreDynamicRequires: true,
       requireReturnsDefault: 'auto',
     }),
-    nodeResolve({
-      preferBuiltins: false,
-      browser: true,
-    }),
     json(),
-    optimizeLodashImports(),
   ],
 }
 
@@ -47,7 +44,33 @@ const cjsConfig = {
   output: {
     ...baseConfig.output,
   },
-  external: ['axios', '@contentful/rich-text-types', 'json-stringify-safe'],
+  plugins: [
+    ...baseConfig.plugins,
+    nodeResolve({
+      preferBuiltins: true,
+      browser: false,
+    }),
+    babel({
+      babelHelpers: 'bundled',
+      // exclude: 'node_modules/**',
+      presets: [
+        [
+          '@babel/preset-env',
+          // Please note: This is set to Node.js v8 in order to satisfy ECMA2017 requirements
+          // However, we cannot ensure it will operate without issues on Node.js v8
+          { targets: { node: 8 }, modules: false, bugfixes: true },
+        ],
+      ],
+    }),
+    alias({
+      entries: [
+        {
+          find: 'axios',
+          replacement: resolve(__dirname, './node_modules/axios/dist/node/axios.cjs'),
+        },
+      ],
+    }),
+  ],
 }
 
 const browserConfig = {
@@ -56,9 +79,12 @@ const browserConfig = {
     file: 'dist/contentful.browser.js',
     format: 'iife',
     name: 'contentful',
-    // intro: 'const global = window;',
   },
   plugins: [
+    nodeResolve({
+      preferBuiltins: false,
+      browser: true,
+    }),
     alias({
       entries: [
         {
@@ -72,6 +98,20 @@ const browserConfig = {
       ],
     }),
     ...baseConfig.plugins,
+    babel({
+      babelHelpers: 'bundled',
+      exclude: 'node_modules/**',
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: pkg.browserslist,
+            modules: false,
+            bugfixes: true,
+          },
+        ],
+      ],
+    }),
   ],
 }
 
@@ -84,9 +124,14 @@ const browserMinConfig = {
   plugins: [
     ...browserConfig.plugins,
     terser({
+      // sourceMap: {
+      //   content: 'inline',
+      //   includeSources: true,
+      //   url: 'inline'
+      // },
       compress: {
         passes: 5,
-        ecma: 2017,
+        ecma: 2018,
         drop_console: true,
         drop_debugger: true,
         sequences: true,
@@ -105,15 +150,6 @@ const browserMinConfig = {
         keep_fargs: false,
         keep_infinity: false,
       },
-      mangle: {
-        reserved: ['contentful'],
-        toplevel: true,
-        module: true,
-        properties: {
-          reserved: ['contentful'],
-          regex: /^_/, // Only mangle properties that start with an underscore
-        },
-      },
       format: {
         comments: false, // Remove all comments
         beautify: false, // Minify output
@@ -121,7 +157,7 @@ const browserMinConfig = {
     }),
     visualizer({
       emitFile: true,
-      filename: 'stats.browser.min.html',
+      filename: 'stats-browser-min.html',
     }),
   ],
 }

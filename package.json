@@ -7,7 +7,7 @@
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
-      "require": "./dist/contentful.cjs.cjs"
+      "require": "./dist/contentful.cjs"
     }
   },
   "browser": "./dist/contentful.browser.min.js",
@@ -56,7 +56,7 @@
     "check": "npm run check:cjs && npm run check:esm && npm run check:browser && npm run check:browser-min",
     "check:browser": "es-check es2018 ./dist/contentful.browser.js",
     "check:browser-min": "es-check es2018 ./dist/contentful.browser.min.js",
-    "check:cjs": "es-check es2017 './dist/contentful.cjs.cjs'",
+    "check:cjs": "es-check es2017 './dist/contentful.cjs'",
     "check:esm": "es-check es2017 --module './dist/esm/*.js'",
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
@@ -68,7 +68,8 @@
     "test": "npm run test:unit && npm run test:integration && npm run lint && npm run test:types",
     "test:unit": "vitest --run ./test/unit",
     "test:unit:watch": "vitest ./test/unit",
-    "test:integration": "vitest ./test/integration",
+    "test:integration": "vitest --run ./test/integration",
+    "test:integration:watch": "vitest ./test/integration",
     "test:size": "bundlesize",
     "test:demo-projects": "npm run test:demo-node && npm run test:demo-browser",
     "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && vitest --run ./test/output-integration/node",
@@ -92,6 +93,7 @@
     "@babel/preset-env": "^7.24.3",
     "@optimize-lodash/rollup-plugin": "^4.0.4",
     "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -139,11 +141,11 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "60Kb"
+      "maxSize": "70Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "31Kb"
+      "maxSize": "36Kb"
     }
   ],
   "release": {

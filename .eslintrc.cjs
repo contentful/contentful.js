@@ -3,7 +3,6 @@ module.exports = {
   plugins: ['standard', 'promise'],
   env: {
     node: true,
-    'vitest-globals/env': true,
   },
   globals: {
     __VERSION__: true,
