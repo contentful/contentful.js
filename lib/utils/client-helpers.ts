@@ -16,6 +16,11 @@ export type ChainOption<Modifiers extends ChainModifiers = ChainModifiers> = {
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
       ? true
       : false
+  alpha_withContentSourceMaps: ChainModifiers extends Modifiers
+    ? boolean
+    : 'ALPHA_WITH_CONTENT_SOURCE_MAPS' extends Modifiers
+      ? true
+      : false
 }
 
 export type DefaultChainOption = ChainOption<undefined>

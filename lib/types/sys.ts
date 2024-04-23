@@ -1,5 +1,5 @@
 import { EntryFields } from './entry'
-import { SpaceLink, EnvironmentLink } from './link'
+import { EnvironmentLink, SpaceLink } from './link'
 
 /**
  * Definition of common part of system managed metadata
@@ -21,4 +21,20 @@ export interface EntitySys extends BaseSys {
   space: { sys: SpaceLink }
   environment: { sys: EnvironmentLink }
   locale?: string
+  contentSourceMaps?: ContentSourceMaps
+}
+
+export type ContentSourceMaps = {
+  sys: {
+    type: 'ContentSourceMaps'
+  }
+  mappings: Record<
+    string,
+    {
+      source: {
+        fieldType: number
+        editorInterface: number
+      }
+    }
+  >
 }

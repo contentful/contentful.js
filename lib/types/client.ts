@@ -1,5 +1,7 @@
+import { Asset, AssetCollection, AssetFields } from './asset'
+import { AssetKey } from './asset-key'
 import { ContentType, ContentTypeCollection } from './content-type'
-import { Space } from './space'
+import { Entry, EntryCollection } from './entry'
 import { LocaleCode, LocaleCollection } from './locale'
 import {
   AssetQueries,
@@ -9,11 +11,9 @@ import {
   EntrySkeletonType,
   TagQueries,
 } from './query'
+import { Space } from './space'
 import { SyncCollection, SyncOptions, SyncQuery } from './sync'
 import { Tag, TagCollection } from './tag'
-import { AssetKey } from './asset-key'
-import { Entry, EntryCollection } from './entry'
-import { Asset, AssetCollection, AssetFields } from './asset'
 
 /**
  * Client chain modifiers used in all types that depend on the client configuration.
@@ -21,6 +21,7 @@ import { Asset, AssetCollection, AssetFields } from './asset'
  * @internal
  */
 export type ChainModifiers =
+  | 'ALPHA_WITH_CONTENT_SOURCE_MAPS'
   | 'WITH_ALL_LOCALES'
   | 'WITHOUT_LINK_RESOLUTION'
   | 'WITHOUT_UNRESOLVABLE_LINKS'
@@ -363,6 +364,13 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   getAssets<Locales extends LocaleCode = LocaleCode>(
     query?: AssetsQueries<AssetFields, Modifiers>,
   ): Promise<AssetCollection<Modifiers, Locales>>
+
+  /**
+   * A client that will fetch assets and entries with Content Source Maps. Only available if not already enabled.
+   */
+  alpha_withContentSourceMaps: 'ALPHA_WITH_CONTENT_SOURCE_MAPS' extends Modifiers
+    ? never
+    : ContentfulClientApi<AddChainModifier<Modifiers, 'ALPHA_WITH_CONTENT_SOURCE_MAPS'>>
 
   /**
    * A client that will fetch assets and entries with all locales. Only available if not already enabled.

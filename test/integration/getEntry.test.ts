@@ -1,6 +1,6 @@
+import { EntryFields, EntrySkeletonType } from '../../lib'
 import * as contentful from '../../lib/contentful'
 import { localeSpaceParams, params, previewParams } from './utils'
-import { EntryFields, EntrySkeletonType } from '../../lib'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -137,6 +137,41 @@ describe('getEntry via client chain modifiers', () => {
 
     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
       const response = await client.withAllLocales.withoutUnresolvableLinks.getEntry(
+        entryWithUnresolvableLink,
+        {
+          include: 2,
+        },
+      )
+
+      expect(response.fields.color).toHaveProperty('en-US')
+      expect(response.fields.bestFriend).toEqual({})
+    })
+  })
+
+  describe('client has alpha_withContentSourceMaps modifier', () => {
+    test.only('client.alpha_withContentSourceMaps', async () => {
+      const response = await client.alpha_withContentSourceMaps.getEntry(entryWithResolvableLink, {
+        include: 2,
+      })
+
+      console.log({ response })
+      expect(response.fields.color).toHaveProperty('en-US')
+      expect(response.fields.bestFriend).not.toHaveProperty('[en-US].sys.type', 'Link')
+    })
+
+    test('client.alpha_withContentSourceMaps.withoutLinkResolution', async () => {
+      const response = await client.alpha_withContentSourceMaps.withoutLinkResolution.getEntry(
+        entryWithResolvableLink,
+        {
+          include: 2,
+        },
+      )
+      expect(response.fields.color).toHaveProperty('en-US')
+      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+    })
+
+    test('client.alpha_withContentSourceMaps.withoutUnresolvableLinks', async () => {
+      const response = await client.alpha_withContentSourceMaps.withoutUnresolvableLinks.getEntry(
         entryWithUnresolvableLink,
         {
           include: 2,

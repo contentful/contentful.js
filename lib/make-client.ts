@@ -1,11 +1,11 @@
 import createContentfulApi, { CreateContentfulApiParams } from './create-contentful-api'
+import { ContentfulClientApi } from './types'
 import {
+  ChainOption,
   ChainOptions,
   DefaultChainOption,
-  ChainOption,
   ModifiersFromOptions,
 } from './utils/client-helpers'
-import { ContentfulClientApi } from './types'
 
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
@@ -29,6 +29,9 @@ function create<OptionsType extends ChainOptions>(
   Object.defineProperty(response, 'withoutUnresolvableLinks', {
     get: () => makeInnerClient({ ...options, withoutUnresolvableLinks: true }),
   })
+  Object.defineProperty(response, 'alpha_withContentSourceMaps', {
+    get: () => makeInnerClient({ ...options, alpha_withContentSourceMaps: true }),
+  })
   return Object.create(response) as ContentfulClientApi<ModifiersFromOptions<OptionsType>>
 }
 
@@ -48,6 +51,7 @@ export const makeClient = ({
       withoutLinkResolution: false,
       withAllLocales: false,
       withoutUnresolvableLinks: false,
+      alpha_withContentSourceMaps: false,
     },
   )
 
@@ -58,6 +62,7 @@ export const makeClient = ({
         withAllLocales: true,
         withoutLinkResolution: false,
         withoutUnresolvableLinks: false,
+        alpha_withContentSourceMaps: false,
       })
     },
     get withoutLinkResolution() {
@@ -65,6 +70,7 @@ export const makeClient = ({
         withAllLocales: false,
         withoutLinkResolution: true,
         withoutUnresolvableLinks: false,
+        alpha_withContentSourceMaps: false,
       })
     },
     get withoutUnresolvableLinks() {
@@ -72,6 +78,16 @@ export const makeClient = ({
         withAllLocales: false,
         withoutLinkResolution: false,
         withoutUnresolvableLinks: true,
+        alpha_withContentSourceMaps: false,
+      })
+    },
+    get alpha_withContentSourceMaps() {
+      console.log('alpha_withContentSourceMaps')
+      return makeInnerClient<ChainOption<'ALPHA_WITH_CONTENT_SOURCE_MAPS'>>({
+        withAllLocales: false,
+        withoutLinkResolution: false,
+        withoutUnresolvableLinks: false,
+        alpha_withContentSourceMaps: true,
       })
     },
   }

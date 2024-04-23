@@ -13,27 +13,27 @@ import {
   ContentfulClientApi,
   ContentType,
   ContentTypeCollection,
-  LocaleCollection,
+  EntryCollection,
+  EntrySkeletonType,
   LocaleCode,
+  LocaleCollection,
   Space,
+  SyncOptions,
+  SyncQuery,
   Tag,
   TagCollection,
-  EntryCollection,
-  SyncQuery,
-  SyncOptions,
-  EntrySkeletonType,
 } from './types'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
-import validateTimestamp from './utils/validate-timestamp'
-import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import {
   validateLocaleParam,
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
 } from './utils/validate-params'
 import validateSearchParameters from './utils/validate-search-parameters'
+import validateTimestamp from './utils/validate-timestamp'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -75,6 +75,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     context: Context
     path: string
     config?: any
+    queryParams?: string
   }
 
   interface PostConfig extends GetConfig {
@@ -96,11 +97,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return baseUrl
   }
 
-  async function get<T>({ context, path, config }: GetConfig): Promise<T> {
+  async function get<T>({ context, path, config, queryParams }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
+    const url = baseUrl + path + (queryParams ?? '')
+
+    console.log('get', { url, queryParams, config })
     try {
-      const response = await http.get(baseUrl + path, config)
+      const response = await http.get(url, config)
       return response.data
     } catch (error) {
       errorHandler(error)
@@ -148,6 +152,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     id: string,
     query,
     options: ChainOptions = {
+      alpha_withContentSourceMaps: false,
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
@@ -193,6 +198,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makeGetEntries<EntrySkeleton extends EntrySkeletonType>(
     query,
     options: ChainOptions = {
+      alpha_withContentSourceMaps: false,
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
@@ -224,13 +230,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query: Record<string, any>,
     options: Options,
   ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
-    const { withoutLinkResolution, withoutUnresolvableLinks } = options
+    const { withoutLinkResolution, withoutUnresolvableLinks, alpha_withContentSourceMaps } = options
 
     try {
       const entries = await get({
         context: 'environment',
         path: 'entries',
         config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
+        queryParams: alpha_withContentSourceMaps ? '?includeContentSourceMaps=true' : undefined,
       })
 
       return resolveCircular(entries, {
@@ -253,6 +260,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makeGetAssets(
     query: Record<string, any>,
     options: ChainOptions = {
+      alpha_withContentSourceMaps: false,
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
@@ -287,6 +295,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     id: string,
     query: Record<string, any>,
     options: ChainOptions = {
+      alpha_withContentSourceMaps: false,
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
@@ -369,7 +378,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makePagedSync<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     query: SyncQuery,
     syncOptions: SyncOptions,
-    options: ChainOptions = {
+    options: Omit<ChainOptions, 'alpha_withContentSourceMaps'> = {
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
@@ -397,6 +406,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   function makeParseEntries<EntrySkeleton extends EntrySkeletonType>(
     data,
     options: ChainOptions = {
+      alpha_withContentSourceMaps: false,
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
