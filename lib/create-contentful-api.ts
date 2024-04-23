@@ -75,7 +75,6 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     context: Context
     path: string
     config?: any
-    queryParams?: string
   }
 
   interface PostConfig extends GetConfig {
@@ -97,12 +96,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return baseUrl
   }
 
-  async function get<T>({ context, path, config, queryParams }: GetConfig): Promise<T> {
+  async function get<T>({ context, path, config }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
-    const url = baseUrl + path + (queryParams ?? '')
+    const url = baseUrl + path
 
-    console.log('get', { url, queryParams, config })
     try {
       const response = await http.get(url, config)
       return response.data
@@ -181,8 +179,16 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       throw notFoundError(id)
     }
     try {
+      const { alpha_withContentSourceMaps } = options
+
       const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
-        { 'sys.id': id, ...query },
+        {
+          'sys.id': id,
+          ...query,
+          ...(alpha_withContentSourceMaps && {
+            includeContentSourceMaps: true,
+          }),
+        },
         options,
       )
       if (response.items.length > 0) {
@@ -236,8 +242,16 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const entries = await get({
         context: 'environment',
         path: 'entries',
-        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
-        queryParams: alpha_withContentSourceMaps ? '?includeContentSourceMaps=true' : undefined,
+        config: createRequestConfig({
+          query: normalizeSearchParameters(
+            normalizeSelect({
+              ...query,
+              ...(alpha_withContentSourceMaps && {
+                includeContentSourceMaps: true,
+              }),
+            }),
+          ),
+        }),
       })
 
       return resolveCircular(entries, {

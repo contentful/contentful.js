@@ -154,7 +154,6 @@ describe('getEntry via client chain modifiers', () => {
         include: 2,
       })
 
-      console.log({ response })
       expect(response.fields.color).toHaveProperty('en-US')
       expect(response.fields.bestFriend).not.toHaveProperty('[en-US].sys.type', 'Link')
     })
