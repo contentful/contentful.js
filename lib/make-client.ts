@@ -7,6 +7,13 @@ import {
   ModifiersFromOptions,
 } from './utils/client-helpers'
 
+const defaultChainOptions: DefaultChainOption = {
+  withoutLinkResolution: false,
+  withAllLocales: false,
+  withoutUnresolvableLinks: false,
+  alpha_withContentSourceMaps: false,
+}
+
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
   options: OptionsType,
@@ -47,46 +54,33 @@ export const makeClient = ({
 
   const client = createContentfulApi<DefaultChainOption>(
     { http, getGlobalOptions },
-    {
-      withoutLinkResolution: false,
-      withAllLocales: false,
-      withoutUnresolvableLinks: false,
-      alpha_withContentSourceMaps: false,
-    },
+    defaultChainOptions,
   )
 
   return {
     ...client,
     get withAllLocales() {
       return makeInnerClient<ChainOption<'WITH_ALL_LOCALES'>>({
+        ...defaultChainOptions,
         withAllLocales: true,
-        withoutLinkResolution: false,
-        withoutUnresolvableLinks: false,
-        alpha_withContentSourceMaps: false,
       })
     },
     get withoutLinkResolution() {
       return makeInnerClient<ChainOption<'WITHOUT_LINK_RESOLUTION'>>({
-        withAllLocales: false,
+        ...defaultChainOptions,
         withoutLinkResolution: true,
-        withoutUnresolvableLinks: false,
-        alpha_withContentSourceMaps: false,
       })
     },
     get withoutUnresolvableLinks() {
       return makeInnerClient<ChainOption<'WITHOUT_UNRESOLVABLE_LINKS'>>({
-        withAllLocales: false,
-        withoutLinkResolution: false,
+        ...defaultChainOptions,
         withoutUnresolvableLinks: true,
-        alpha_withContentSourceMaps: false,
       })
     },
     get alpha_withContentSourceMaps() {
       console.log('alpha_withContentSourceMaps')
       return makeInnerClient<ChainOption<'ALPHA_WITH_CONTENT_SOURCE_MAPS'>>({
-        withAllLocales: false,
-        withoutLinkResolution: false,
-        withoutUnresolvableLinks: false,
+        ...defaultChainOptions,
         alpha_withContentSourceMaps: true,
       })
     },
