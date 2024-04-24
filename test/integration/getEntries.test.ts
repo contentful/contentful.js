@@ -370,6 +370,60 @@ describe('getEntries via client chain modifiers', () => {
     })
   })
 
+  describe('client has alpha_withContentSourceMaps modifier', () => {
+    test('client.alpha_withContentSourceMaps', async () => {
+      const response = await previewClient.alpha_withContentSourceMaps.getEntries({
+        include: 5,
+        'sys.id': entryWithResolvableLink,
+      })
+
+      assertCSMEntriesResponse(response)
+    })
+
+    test('alpha_withContentSourceMaps.withAllLocales', async () => {
+      const response = await previewClient.alpha_withContentSourceMaps.withAllLocales.getEntries({
+        include: 5,
+        'sys.id': entryWithResolvableLink,
+      })
+
+      assertLocalizedEntriesResponse(response)
+      // @ts-expect-error this isn't an error
+      expect(response?.sys.contentSourceMapsLookup).toBeDefined()
+    })
+
+    test('client.alpha_withContentSourceMaps.withAllLocales.withoutLinkResolution', async () => {
+      const response =
+        await previewClient.alpha_withContentSourceMaps.withAllLocales.withoutLinkResolution.getEntries<
+          EntrySkeletonType<{
+            bestFriend: EntryFieldTypes.EntryLink<EntrySkeletonType>
+            color: EntryFieldTypes.Symbol
+          }>
+        >({
+          'sys.id': entryWithResolvableLink,
+          include: 2,
+        })
+      expect(response.items[0].fields).toBeDefined()
+      expect(response.items[0].fields.color).toHaveProperty('en-US')
+      expect(response.items[0].fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+    })
+
+    test('alpha_withContentSourceMaps.withAllLocales.withoutUnresolvableLinks', async () => {
+      const response =
+        await previewClient.alpha_withContentSourceMaps.withAllLocales.withoutUnresolvableLinks.getEntries(
+          {
+            'sys.id': entryWithUnresolvableLink,
+            include: 2,
+          },
+        )
+
+      expect(response.items[0].fields).toBeDefined()
+      expect(response.items[0].fields.name).toHaveProperty('en-US')
+      expect(response.items[0].fields.color).toHaveProperty('en-US')
+      // @ts-expect-error this isn't an error
+      expect(response?.sys.contentSourceMapsLookup).toBeDefined()
+    })
+  })
+
   describe('client has withoutLinkResolution modifier', () => {
     test('client.withoutLinkResolution', async () => {
       const response = await client.withoutLinkResolution.getEntries<
@@ -410,7 +464,21 @@ function assertLocalizedEntriesResponse(response) {
   expect(response.includes!.Asset).toBeDefined()
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
+
   expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
   expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
   expect(response.items[0].metadata).toEqual({ tags: [] })
+}
+
+function assertCSMEntriesResponse(response) {
+  expect(response.includes).toBeDefined()
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  expect(response.includes!.Asset).toBeDefined()
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
+
+  expect(response.items[0].fields.bestFriend.fields).toBeDefined()
+  expect(response.items[0].fields.bestFriend.sys.type).toBe('Entry')
+  expect(response.items[0].metadata).toEqual({ tags: [] })
+  expect(response.sys.contentSourceMapsLookup).toBeDefined()
 }
