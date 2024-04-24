@@ -24,6 +24,7 @@ import {
   TagCollection,
 } from './types'
 import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
+import { defaultChainOptions } from './utils/constants'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
@@ -99,10 +100,8 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
-    const url = baseUrl + path
-
     try {
-      const response = await http.get(url, config)
+      const response = await http.get(baseUrl + path, config)
       return response.data
     } catch (error) {
       errorHandler(error)
@@ -149,12 +148,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makeGetEntry<EntrySkeleton extends EntrySkeletonType>(
     id: string,
     query,
-    options: ChainOptions = {
-      alpha_withContentSourceMaps: false,
-      withAllLocales: false,
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: false,
-    },
+    options: ChainOptions = defaultChainOptions,
   ) {
     const { withAllLocales } = options
 
@@ -203,12 +197,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   async function makeGetEntries<EntrySkeleton extends EntrySkeletonType>(
     query,
-    options: ChainOptions = {
-      alpha_withContentSourceMaps: false,
-      withAllLocales: false,
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: false,
-    },
+    options: ChainOptions = defaultChainOptions,
   ) {
     const { withAllLocales } = options
 
@@ -273,12 +262,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   async function makeGetAssets(
     query: Record<string, any>,
-    options: ChainOptions = {
-      alpha_withContentSourceMaps: false,
-      withAllLocales: false,
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: false,
-    },
+    options: ChainOptions = defaultChainOptions,
   ) {
     const { withAllLocales } = options
 
@@ -308,12 +292,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makeGetAsset(
     id: string,
     query: Record<string, any>,
-    options: ChainOptions = {
-      alpha_withContentSourceMaps: false,
-      withAllLocales: false,
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: false,
-    },
+    options: ChainOptions = defaultChainOptions,
   ) {
     const { withAllLocales } = options
 
@@ -392,11 +371,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function makePagedSync<EntrySkeleton extends EntrySkeletonType = EntrySkeletonType>(
     query: SyncQuery,
     syncOptions: SyncOptions,
-    options: Omit<ChainOptions, 'alpha_withContentSourceMaps'> = {
-      withAllLocales: false,
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: false,
-    },
+    options: ChainOptions = defaultChainOptions,
   ) {
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
@@ -419,12 +394,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
   function makeParseEntries<EntrySkeleton extends EntrySkeletonType>(
     data,
-    options: ChainOptions = {
-      alpha_withContentSourceMaps: false,
-      withAllLocales: false,
-      withoutLinkResolution: false,
-      withoutUnresolvableLinks: false,
-    },
+    options: ChainOptions = defaultChainOptions,
   ) {
     return internalParseEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       data,

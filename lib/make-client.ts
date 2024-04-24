@@ -6,13 +6,7 @@ import {
   DefaultChainOption,
   ModifiersFromOptions,
 } from './utils/client-helpers'
-
-const defaultChainOptions: DefaultChainOption = {
-  withoutLinkResolution: false,
-  withAllLocales: false,
-  withoutUnresolvableLinks: false,
-  alpha_withContentSourceMaps: false,
-}
+import { defaultChainOptions } from './utils/constants'
 
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
@@ -78,7 +72,6 @@ export const makeClient = ({
       })
     },
     get alpha_withContentSourceMaps() {
-      console.log('alpha_withContentSourceMaps')
       return makeInnerClient<ChainOption<'ALPHA_WITH_CONTENT_SOURCE_MAPS'>>({
         ...defaultChainOptions,
         alpha_withContentSourceMaps: true,

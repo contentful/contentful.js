@@ -14,7 +14,31 @@ const localeClient = contentful.createClient(localeSpaceParams)
 describe('getEntry via client chain modifiers', () => {
   const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
   const entryWithResolvableLink = 'nyancat'
-
+  const exampleCsm = {
+    sys: {
+      type: 'ContentSourceMaps',
+    },
+    mappings: {
+      '/fields/name': {
+        source: {
+          editorInterface: 0,
+          fieldType: 0,
+        },
+      },
+      '/fields/likes': {
+        source: {
+          editorInterface: 1,
+          fieldType: 1,
+        },
+      },
+      '/fields/color': {
+        source: {
+          editorInterface: 2,
+          fieldType: 2,
+        },
+      },
+    },
+  }
   describe('default client', () => {
     test('Gets an entry with the correct ID', async () => {
       const response = await client.getEntry(entryWithResolvableLink, {
@@ -149,36 +173,88 @@ describe('getEntry via client chain modifiers', () => {
   })
 
   describe('client has alpha_withContentSourceMaps modifier', () => {
-    test.only('client.alpha_withContentSourceMaps', async () => {
-      const response = await client.alpha_withContentSourceMaps.getEntry(entryWithResolvableLink, {
-        include: 2,
-      })
-
-      expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).not.toHaveProperty('[en-US].sys.type', 'Link')
-    })
-
-    test('client.alpha_withContentSourceMaps.withoutLinkResolution', async () => {
-      const response = await client.alpha_withContentSourceMaps.withoutLinkResolution.getEntry(
+    test('client.alpha_withContentSourceMaps', async () => {
+      const response = await previewClient.alpha_withContentSourceMaps.getEntry(
         entryWithResolvableLink,
         {
           include: 2,
         },
       )
-      expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('client.alpha_withContentSourceMaps.withoutLinkResolution', async () => {
+      const response =
+        await previewClient.alpha_withContentSourceMaps.withoutLinkResolution.getEntry(
+          entryWithResolvableLink,
+          {
+            include: 2,
+          },
+        )
+
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Link')
     })
 
     test('client.alpha_withContentSourceMaps.withoutUnresolvableLinks', async () => {
-      const response = await client.alpha_withContentSourceMaps.withoutUnresolvableLinks.getEntry(
-        entryWithUnresolvableLink,
+      const response =
+        await previewClient.alpha_withContentSourceMaps.withoutUnresolvableLinks.getEntry(
+          entryWithUnresolvableLink,
+          {
+            include: 2,
+          },
+        )
+
+      expect(response.fields.name).toBeDefined()
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Entry')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('client.alpha_withContentSourceMaps.withAllLocales', async () => {
+      const response = await previewClient.alpha_withContentSourceMaps.withAllLocales.getEntry(
+        entryWithResolvableLink,
         {
           include: 2,
         },
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).toEqual({})
+      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Entry')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('client.alpha_withContentSourceMaps.withAllLocales.withoutLinkResolution', async () => {
+      const response =
+        await previewClient.alpha_withContentSourceMaps.withAllLocales.withoutLinkResolution.getEntry(
+          entryWithResolvableLink,
+          {
+            include: 2,
+          },
+        )
+
+      expect(response.fields.color).toHaveProperty('en-US')
+      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('client.alpha_withContentSourceMaps.withAllLocales.withoutUnresolvableLinks', async () => {
+      const response =
+        await previewClient.alpha_withContentSourceMaps.withAllLocales.withoutUnresolvableLinks.getEntry(
+          entryWithUnresolvableLink,
+          {
+            include: 2,
+          },
+        )
+
+      expect(response.fields.name).toHaveProperty('en-US')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
     })
   })
 
@@ -201,6 +277,7 @@ describe('getEntry via client chain modifiers', () => {
       const response = await client.withoutLinkResolution.getEntry(entryWithUnresolvableLink, {
         include: 2,
       })
+
       expect(response.fields).toBeDefined()
       expect(response.fields.bestFriend).toMatchObject({
         sys: {
