@@ -150,16 +150,22 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query,
     options: ChainOptions = defaultChainOptions,
   ) {
-    const { withAllLocales } = options
+    const { withAllLocales, alpha_withContentSourceMaps } = options
 
     validateLocaleParam(query, withAllLocales as boolean)
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
     validateSearchParameters(query)
 
+    const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
+
+    const csmSpecificQuery = alpha_withContentSourceMaps
+      ? { ...localeSpecificQuery, includeContentSourceMaps: true }
+      : localeSpecificQuery
+
     return internalGetEntry<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
       id,
-      withAllLocales ? { ...query, locale: '*' } : query,
+      csmSpecificQuery,
       options,
     )
   }
@@ -175,13 +181,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       const { alpha_withContentSourceMaps } = options
 
+      const csmSpecificQuery = alpha_withContentSourceMaps
+        ? { ...query, includeContentSourceMaps: true }
+        : query
+
       const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
         {
           'sys.id': id,
-          ...query,
-          ...(alpha_withContentSourceMaps && {
-            includeContentSourceMaps: true,
-          }),
+          ...csmSpecificQuery,
         },
         options,
       )
@@ -199,20 +206,21 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query,
     options: ChainOptions = defaultChainOptions,
   ) {
-    const { withAllLocales } = options
+    const { withAllLocales, alpha_withContentSourceMaps } = options
 
     validateLocaleParam(query, withAllLocales)
     validateResolveLinksParam(query)
     validateRemoveUnresolvedParam(query)
     validateSearchParameters(query)
 
+    const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
+
+    const csmSpecificQuery = alpha_withContentSourceMaps
+      ? { ...localeSpecificQuery, includeContentSourceMaps: true }
+      : localeSpecificQuery
+
     return internalGetEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
-      withAllLocales
-        ? {
-            ...query,
-            locale: '*',
-          }
-        : query,
+      csmSpecificQuery,
       options,
     )
   }
@@ -225,21 +233,14 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query: Record<string, any>,
     options: Options,
   ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
-    const { withoutLinkResolution, withoutUnresolvableLinks, alpha_withContentSourceMaps } = options
+    const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     try {
       const entries = await get({
         context: 'environment',
         path: 'entries',
         config: createRequestConfig({
-          query: normalizeSearchParameters(
-            normalizeSelect({
-              ...query,
-              ...(alpha_withContentSourceMaps && {
-                includeContentSourceMaps: true,
-              }),
-            }),
-          ),
+          query: normalizeSearchParameters(normalizeSelect(query)),
         }),
       })
 
@@ -264,14 +265,18 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query: Record<string, any>,
     options: ChainOptions = defaultChainOptions,
   ) {
-    const { withAllLocales } = options
+    const { withAllLocales, alpha_withContentSourceMaps } = options
 
     validateLocaleParam(query, withAllLocales)
     validateSearchParameters(query)
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAssets<any, Extract<ChainOptions, typeof options>>(localeSpecificQuery)
+    const csmSpecificQuery = alpha_withContentSourceMaps
+      ? { ...localeSpecificQuery, includeContentSourceMaps: true }
+      : localeSpecificQuery
+
+    return internalGetAssets<any, Extract<ChainOptions, typeof options>>(csmSpecificQuery)
   }
 
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
@@ -294,14 +299,18 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query: Record<string, any>,
     options: ChainOptions = defaultChainOptions,
   ) {
-    const { withAllLocales } = options
+    const { withAllLocales, alpha_withContentSourceMaps } = options
 
     validateLocaleParam(query, withAllLocales)
     validateSearchParameters(query)
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(id, localeSpecificQuery)
+    const csmSpecificQuery = alpha_withContentSourceMaps
+      ? { ...localeSpecificQuery, includeContentSourceMaps: true }
+      : localeSpecificQuery
+
+    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(id, csmSpecificQuery)
   }
 
   async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(

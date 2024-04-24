@@ -22,6 +22,7 @@ export interface EntitySys extends BaseSys {
   environment: { sys: EnvironmentLink }
   locale?: string
   contentSourceMaps?: ContentSourceMaps
+  contentSourceMapsLookup?: ContentSourceMapsLookup
 }
 
 export type ContentSourceMaps = {
@@ -37,4 +38,14 @@ export type ContentSourceMaps = {
       }
     }
   >
+}
+
+export type ContentSourceMapsLookup = {
+  sys: {
+    type: 'ContentSourceMapsLookup'
+  }
+  fieldType: string[]
+  editorInterface: {
+    [key: string]: string
+  }[]
 }
