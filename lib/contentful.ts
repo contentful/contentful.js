@@ -109,6 +109,13 @@ export interface CreateClientParams {
    * Interceptor called on every response. Takes Axios response object as an arg.
    */
   responseLogger?: (response: AxiosResponse<any> | Error) => unknown
+
+  /**
+   * Enable alpha features.
+   */
+  alphaFeatures?: {
+    withContentSourceMaps?: boolean
+  }
 }
 
 /**

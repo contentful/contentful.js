@@ -1,4 +1,4 @@
-import { createClient } from '../../lib/contentful'
+import { createClient, CreateClientParams } from '../../lib/contentful'
 import * as SdkCore from 'contentful-sdk-core'
 import * as CreateContentfulApi from '../../lib/create-contentful-api'
 
@@ -102,6 +102,19 @@ describe('contentful', () => {
     expect(callConfig[0].http.defaults.baseURL).toEqual(
       'http://some-base-url.com/environments/master',
     )
+  })
+
+  test.only('Initializes API with alpha features', () => {
+    createClient({
+      accessToken: 'accessToken',
+      space: 'spaceId',
+      alphaFeatures: { withContentSourceMaps: true },
+    })
+    const callConfig = createContentfulApiMock.mock.calls[0]
+
+    const alphaFeatures = (callConfig[0].http.httpClientParams as any as CreateClientParams)
+      .alphaFeatures
+    expect(alphaFeatures).toEqual({ withContentSourceMaps: true })
   })
 
   // fails, not sure if it because of wrong mocking

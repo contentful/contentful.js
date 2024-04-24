@@ -21,4 +21,31 @@ export interface EntitySys extends BaseSys {
   space: { sys: SpaceLink }
   environment: { sys: EnvironmentLink }
   locale?: string
+  contentSourceMaps?: ContentSourceMaps
+  contentSourceMapsLookup?: ContentSourceMapsLookup
+}
+
+export type ContentSourceMaps = {
+  sys: {
+    type: 'ContentSourceMaps'
+  }
+  mappings: Record<
+    string,
+    {
+      source: {
+        fieldType: number
+        editorInterface: number
+      }
+    }
+  >
+}
+
+export type ContentSourceMapsLookup = {
+  sys: {
+    type: 'ContentSourceMapsLookup'
+  }
+  fieldType: string[]
+  editorInterface: {
+    [key: string]: string
+  }[]
 }

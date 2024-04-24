@@ -4,6 +4,7 @@
  */
 
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
+import { CreateClientParams } from './contentful'
 import { GetGlobalOptions } from './create-global-options'
 import pagedSync from './paged-sync'
 import {
@@ -13,27 +14,27 @@ import {
   ContentfulClientApi,
   ContentType,
   ContentTypeCollection,
-  LocaleCollection,
+  EntryCollection,
+  EntrySkeletonType,
   LocaleCode,
+  LocaleCollection,
   Space,
+  SyncOptions,
+  SyncQuery,
   Tag,
   TagCollection,
-  EntryCollection,
-  SyncQuery,
-  SyncOptions,
-  EntrySkeletonType,
 } from './types'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
 import resolveCircular from './utils/resolve-circular'
-import validateTimestamp from './utils/validate-timestamp'
-import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import {
   validateLocaleParam,
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
 } from './utils/validate-params'
 import validateSearchParameters from './utils/validate-search-parameters'
+import validateTimestamp from './utils/validate-timestamp'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -94,6 +95,15 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
 
     return baseUrl
+  }
+
+  const alphaFeatures = (http.httpClientParams as any as CreateClientParams).alphaFeatures
+
+  function maybeEnableSourceMaps(query: Record<string, any> = {}): Record<string, any> {
+    if (alphaFeatures?.withContentSourceMaps) {
+      query.withContentSourceMaps = true
+    }
+    return query
   }
 
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
@@ -177,7 +187,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
     try {
       const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
-        { 'sys.id': id, ...query },
+        { 'sys.id': id, ...maybeEnableSourceMaps(query) },
         options,
       )
       if (response.items.length > 0) {
@@ -276,7 +286,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return get({
         context: 'environment',
         path: `assets/${id}`,
-        config: createRequestConfig({ query: normalizeSelect(query) }),
+        config: createRequestConfig({ query: maybeEnableSourceMaps(normalizeSelect(query)) }),
       })
     } catch (error) {
       errorHandler(error)
@@ -309,7 +319,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return get({
         context: 'environment',
         path: 'assets',
-        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
+        config: createRequestConfig({
+          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+        }),
       })
     } catch (error) {
       errorHandler(error)
