@@ -14,3 +14,8 @@ export const previewParams = {
   accessToken: 'WwNjBWmjh5DJLhrpDuoDyFX-wTz80WLalpdyFQTMGns',
   space: 'ezs1swce23xe',
 }
+
+export const previewParamsWithCSM = {
+  ...previewParams,
+  alphaFeatures: { withContentSourceMaps: true },
+}
