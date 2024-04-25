@@ -97,11 +97,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return baseUrl
   }
 
-  const alphaFeatures = (http.httpClientParams as any as CreateClientParams).alphaFeatures
+  const alphaFeatures = (http.httpClientParams as any as CreateClientParams)?.alphaFeatures
 
   function maybeEnableSourceMaps(query: Record<string, any> = {}): Record<string, any> {
     if (alphaFeatures?.withContentSourceMaps) {
-      query.withContentSourceMaps = true
+      query.includeContentSourceMaps = true
     }
     return query
   }
