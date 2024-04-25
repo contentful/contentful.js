@@ -2,12 +2,13 @@ version: 2.1
 
 orbs:
   vault: contentful/vault@1
-  node: circleci/node@5.1.0
+  node: circleci/node@5.2.0
+  browser-tools: circleci/browser-tools@1.4.8
 
 jobs:
   lint:
     docker:
-      - image: 'cimg/node:18.17.1-browsers'
+      - image: cimg/node:18.19-browsers
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
@@ -23,7 +24,7 @@ jobs:
 
   unit:
     docker:
-      - image: 'cimg/base:stable'
+      - image: cimg/node:18.19
     steps:
       - checkout
       - node/install:
@@ -37,7 +38,7 @@ jobs:
 
   integration:
     docker:
-      - image: 'cimg/base:stable'
+      - image: cimg/node:18.19
     steps:
       - checkout
       - node/install:
@@ -51,9 +52,11 @@ jobs:
 
   release:
     docker:
-      - image: 'cimg/node:18.17.1-browsers'
+      - image: cimg/node:18.19-browsers
     steps:
       - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'semantic-release-ecosystem'
       - run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_WRITE_TOKEN}" > ~/.npmrc
