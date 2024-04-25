@@ -148,6 +148,7 @@ expectAssignable<DefaultAssetQueries>({
   'fields.file.fileName[nin]': mocks.stringArrayValue,
   'fields.file.url[nin]': mocks.stringArrayValue,
   'fields.title[nin]': mocks.stringArrayValue,
+  'metadata.tags.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
 expectNotAssignable<DefaultAssetQueries>({

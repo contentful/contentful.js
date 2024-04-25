@@ -379,6 +379,7 @@ expectAssignable<
     undefined
   >
 >({
+  'metadata.tags.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
 expectNotAssignable<
