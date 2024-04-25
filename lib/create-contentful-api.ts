@@ -240,7 +240,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const entries = await get({
         context: 'environment',
         path: 'entries',
-        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
+        config: createRequestConfig({
+          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+        }),
       })
 
       return resolveCircular(entries, {

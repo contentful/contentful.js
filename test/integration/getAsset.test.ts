@@ -26,21 +26,21 @@ describe('getAsset', () => {
     expect(typeof response.fields.title).toBe('object')
   })
 
-  test('preview client has alpha_withContentSourceMaps enabled', async () => {
+  test('preview client has (alpha) withContentSourceMaps enabled', async () => {
     const response = await previewClient.getAsset(asset)
 
     expect(response.fields).toBeDefined()
     expect(typeof response.fields.title).toBe('string')
     expect(response.sys.contentSourceMaps).toBeDefined()
-    expect(response.sys.contentSourceMapsLookup).toBeDefined()
+    expect(response.sys?.contentSourceMapsLookup).toBeDefined()
   })
 
-  test('preview client has alpha_withContentSourceMaps enabled + withAllLocales modifier', async () => {
+  test('preview client has (alpha) withContentSourceMaps enabled + withAllLocales modifier', async () => {
     const response = await previewClient.withAllLocales.getAsset(asset)
 
     expect(response.fields).toBeDefined()
     expect(typeof response.fields.title).toBe('object')
     expect(response.sys.contentSourceMaps).toBeDefined()
-    expect(response.sys.contentSourceMapsLookup).toBeDefined()
+    expect(response.sys?.contentSourceMapsLookup).toBeDefined()
   })
 })

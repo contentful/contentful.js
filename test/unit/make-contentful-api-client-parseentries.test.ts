@@ -1,6 +1,6 @@
-import { makeClient } from '../../lib/make-client'
 import { createGlobalOptions } from '../../lib/create-global-options'
-import { EntrySys, EntryCollection, EntrySkeletonType, EntryFieldTypes } from '../../lib/types'
+import { makeClient } from '../../lib/make-client'
+import { EntryCollection, EntryFieldTypes, EntrySkeletonType, EntrySys } from '../../lib/types'
 
 interface AnimalTypeFields {
   animal?: EntryFieldTypes.EntryLink<EntrySkeletonType>

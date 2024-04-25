@@ -1,8 +1,8 @@
+import { ChainModifiers } from './client'
 import { ContentfulCollection } from './collection'
 import { LocaleCode } from './locale'
 import { Metadata } from './metadata'
 import { EntitySys } from './sys'
-import { ChainModifiers } from './client'
 
 /**
  * @category Asset

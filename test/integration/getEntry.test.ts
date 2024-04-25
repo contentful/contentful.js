@@ -1,6 +1,6 @@
-import * as contentful from '../../lib/contentful'
-import { localeSpaceParams, params, previewParams } from './utils'
 import { EntryFields, EntrySkeletonType } from '../../lib'
+import * as contentful from '../../lib/contentful'
+import { localeSpaceParams, params, previewParamsWithCSM } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -8,13 +8,37 @@ if (process.env.API_INTEGRATION_TESTS) {
 }
 
 const client = contentful.createClient(params)
-const previewClient = contentful.createClient(previewParams)
+const previewClient = contentful.createClient(previewParamsWithCSM)
 const localeClient = contentful.createClient(localeSpaceParams)
 
 describe('getEntry via client chain modifiers', () => {
   const entryWithUnresolvableLink = '4SEhTg8sYJ1H3wDAinzhTp'
   const entryWithResolvableLink = 'nyancat'
-
+  const exampleCsm = {
+    sys: {
+      type: 'ContentSourceMaps',
+    },
+    mappings: {
+      '/fields/name': {
+        source: {
+          editorInterface: 0,
+          fieldType: 0,
+        },
+      },
+      '/fields/likes': {
+        source: {
+          editorInterface: 1,
+          fieldType: 1,
+        },
+      },
+      '/fields/color': {
+        source: {
+          editorInterface: 2,
+          fieldType: 2,
+        },
+      },
+    },
+  }
   describe('default client', () => {
     test('Gets an entry with the correct ID', async () => {
       const response = await client.getEntry(entryWithResolvableLink, {
@@ -148,6 +172,79 @@ describe('getEntry via client chain modifiers', () => {
     })
   })
 
+  describe('preview client has (alpha) withContentSourceMaps enabled', () => {
+    test('default', async () => {
+      const response = await previewClient.getEntry(entryWithResolvableLink, {
+        include: 2,
+      })
+
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('previewClient.withoutLinkResolution', async () => {
+      const response = await previewClient.withoutLinkResolution.getEntry(entryWithResolvableLink, {
+        include: 2,
+      })
+
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Link')
+    })
+
+    test('previewClient.withoutUnresolvableLinks', async () => {
+      const response = await previewClient.withoutUnresolvableLinks.getEntry(
+        entryWithUnresolvableLink,
+        {
+          include: 2,
+        },
+      )
+
+      expect(response.fields.name).toBeDefined()
+      expect(response.fields.bestFriend).toHaveProperty('sys.type', 'Entry')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('previewClient.withAllLocales', async () => {
+      const response = await previewClient.withAllLocales.getEntry(entryWithResolvableLink, {
+        include: 2,
+      })
+
+      expect(response.fields.color).toHaveProperty('en-US')
+      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Entry')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('previewClient.withAllLocales.withoutLinkResolution', async () => {
+      const response = await previewClient.withAllLocales.withoutLinkResolution.getEntry(
+        entryWithResolvableLink,
+        {
+          include: 2,
+        },
+      )
+
+      expect(response.fields.color).toHaveProperty('en-US')
+      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('previewClient.withAllLocales.withoutUnresolvableLinks', async () => {
+      const response = await previewClient.withAllLocales.withoutUnresolvableLinks.getEntry(
+        entryWithUnresolvableLink,
+        {
+          include: 2,
+        },
+      )
+
+      expect(response.fields.name).toHaveProperty('en-US')
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+  })
+
   describe('client has withoutLinkResolution modifier', () => {
     test('client.withoutLinkResolution', async () => {
       const response = await client.withoutLinkResolution.getEntry(entryWithResolvableLink)
@@ -167,6 +264,7 @@ describe('getEntry via client chain modifiers', () => {
       const response = await client.withoutLinkResolution.getEntry(entryWithUnresolvableLink, {
         include: 2,
       })
+
       expect(response.fields).toBeDefined()
       expect(response.fields.bestFriend).toMatchObject({
         sys: {
