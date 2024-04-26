@@ -114,6 +114,11 @@ export interface CreateClientParams {
    * Enable alpha features.
    */
   alphaFeatures?: {
+    /**
+     * Enable Content Source Maps.
+     * @remarks
+     * This feature is only available when using the Content Preview API.
+     */
     withContentSourceMaps?: boolean
   }
 }

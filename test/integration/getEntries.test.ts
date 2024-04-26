@@ -466,14 +466,14 @@ describe('getEntries via client chain modifiers', () => {
 // Assertion helpers
 function assertLocalizedEntriesResponse(response) {
   expect(response.includes).toBeDefined()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   expect(response.includes!.Asset).toBeDefined()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
 
-  expect(response.items[0].fields.bestFriend['en-US'].fields).toBeDefined()
-  expect(response.items[0].fields.bestFriend['en-US'].sys.type).toBe('Entry')
-  expect(response.items[0].metadata).toEqual({ tags: [] })
+  const entry = response.items[0]
+
+  expect(entry.fields.bestFriend['en-US'].fields).toBeDefined()
+  expect(entry.fields.bestFriend['en-US'].sys.type).toBe('Entry')
+  expect(entry.metadata).toEqual({ tags: [] })
 }
 
 function assertCSMEntriesResponse(response) {
