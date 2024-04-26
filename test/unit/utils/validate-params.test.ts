@@ -5,7 +5,7 @@ import {
 import { ValidationError } from '../../../lib/utils/validation-error'
 
 describe('checkIncludeContentSourceMapsParamIsValid', () => {
-  it('returns false if alphaFeatures is not provided', () => {
+  it('returns false if host/alphaFeatures is not provided', () => {
     expect(checkIncludeContentSourceMapsParamIsValid()).toBe(false)
   })
 

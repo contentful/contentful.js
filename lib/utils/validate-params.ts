@@ -67,7 +67,7 @@ export function checkIncludeContentSourceMapsParamIsValid(alphaFeatures?: Record
 }
 
 export function checkIncludeContentSourceMapsParamIsAllowed(
-  host: string,
+  host?: string,
   alphaFeatures?: Record<string, any>,
 ) {
   if (!alphaFeatures || Object.keys(alphaFeatures).length === 0) {
