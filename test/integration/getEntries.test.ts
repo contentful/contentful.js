@@ -384,7 +384,7 @@ describe('getEntries via client chain modifiers', () => {
     })
 
     test('preview client', async () => {
-      const response = await invalidClient.getEntries({
+      const response = await previewClient.getEntries({
         include: 5,
         'sys.id': entryWithResolvableLink,
       })

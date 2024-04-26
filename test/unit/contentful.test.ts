@@ -117,18 +117,15 @@ describe('contentful', () => {
     )
   })
 
-  describe.only('Initializes API with alpha features', () => {
-    test('valid withContentSourceMaps', () => {
-      createClient({
-        host: 'cdn.contentful.com',
-        accessToken: 'accessToken',
-        space: 'spaceId',
-        alphaFeatures: { withContentSourceMaps: true },
-      })
-      const callConfig = createHttpClientMock.mock.calls[0]
-
-      const alphaFeatures = callConfig[1].alphaFeatures
-      expect(alphaFeatures).toEqual({ withContentSourceMaps: true })
+  test('Initializes API with alpha features', () => {
+    createClient({
+      accessToken: 'accessToken',
+      space: 'spaceId',
+      alphaFeatures: { withContentSourceMaps: true },
     })
+    const callConfig = createHttpClientMock.mock.calls[0]
+
+    const alphaFeatures = callConfig[1].alphaFeatures
+    expect(alphaFeatures).toEqual({ withContentSourceMaps: true })
   })
 })

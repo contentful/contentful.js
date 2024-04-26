@@ -1,11 +1,11 @@
 import createContentfulApi, { CreateContentfulApiParams } from './create-contentful-api'
+import { ContentfulClientApi } from './types'
 import {
+  ChainOption,
   ChainOptions,
   DefaultChainOption,
-  ChainOption,
   ModifiersFromOptions,
 } from './utils/client-helpers'
-import { ContentfulClientApi } from './types'
 
 function create<OptionsType extends ChainOptions>(
   { http, getGlobalOptions }: CreateContentfulApiParams,
