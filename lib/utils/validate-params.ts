@@ -84,5 +84,5 @@ export function checkIncludeContentSourceMapsParamIsAllowed(
     )
   }
 
-  return true
+  return alphaFeatures.withContentSourceMaps as boolean
 }

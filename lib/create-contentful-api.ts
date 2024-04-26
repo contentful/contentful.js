@@ -103,9 +103,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     const host = http.httpClientParams?.host
 
-    const isAllowed = checkIncludeContentSourceMapsParamIsAllowed(host, alphaFeatures)
+    const areAllowed = checkIncludeContentSourceMapsParamIsAllowed(host, alphaFeatures)
 
-    if (isAllowed && alphaFeatures?.withContentSourceMaps) {
+    if (areAllowed) {
       query.includeContentSourceMaps = true
     }
 
