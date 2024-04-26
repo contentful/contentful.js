@@ -6,7 +6,9 @@ let browser, page
 jest.setTimeout(10000)
 
 beforeEach(async () => {
-  browser = await puppeteer.launch()
+  browser = await puppeteer.launch({
+    headless: 'new',
+  })
   page = await browser.newPage()
   await page.goto(`file:${path.join(__dirname, '../public/index.html')}`)
   await page.waitForTimeout(4000)
