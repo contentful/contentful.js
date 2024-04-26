@@ -1,5 +1,6 @@
 import { EntryFieldTypes, EntrySkeletonType } from '../../lib'
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validation-error'
 import { params, previewParamsWithCSM } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -8,6 +9,10 @@ if (process.env.API_INTEGRATION_TESTS) {
 }
 
 const client = contentful.createClient(params)
+const invalidClient = contentful.createClient({
+  ...params,
+  alphaFeatures: { withContentSourceMaps: true },
+})
 const previewClient = contentful.createClient(previewParamsWithCSM)
 
 describe('getEntries via client chain modifiers', () => {
@@ -370,9 +375,16 @@ describe('getEntries via client chain modifiers', () => {
     })
   })
 
-  describe('preview client with (alpha) withContentSourceMaps enabled', () => {
-    test('with no modifer', async () => {
-      const response = await previewClient.getEntries({
+  describe('has (alpha) withContentSourceMaps enabled', () => {
+    test('invalid client', async () => {
+      await expect(invalidClient.getEntries()).rejects.toThrow(
+        `The 'withContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+      )
+      await expect(invalidClient.getEntries()).rejects.toThrow(ValidationError)
+    })
+
+    test('preview client', async () => {
+      const response = await invalidClient.getEntries({
         include: 5,
         'sys.id': entryWithResolvableLink,
       })
@@ -466,13 +478,13 @@ function assertLocalizedEntriesResponse(response) {
 
 function assertCSMEntriesResponse(response) {
   expect(response.includes).toBeDefined()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   expect(response.includes!.Asset).toBeDefined()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
 
-  expect(response.items[0].fields.bestFriend.fields).toBeDefined()
-  expect(response.items[0].fields.bestFriend.sys.type).toBe('Entry')
-  expect(response.items[0].metadata).toEqual({ tags: [] })
+  const entry = response.items[0]
+
+  expect(entry.fields.bestFriend.fields).toBeDefined()
+  expect(entry.fields.bestFriend.sys.type).toBe('Entry')
+  expect(entry.metadata).toEqual({ tags: [] })
   expect(response.sys?.contentSourceMapsLookup).toBeDefined()
 }

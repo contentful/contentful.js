@@ -1,4 +1,5 @@
 import * as contentful from '../../lib/contentful'
+import { ValidationError } from '../../lib/utils/validation-error'
 import { params, previewParamsWithCSM } from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
@@ -7,6 +8,10 @@ if (process.env.API_INTEGRATION_TESTS) {
 }
 
 const client = contentful.createClient(params)
+const invalidClient = contentful.createClient({
+  ...params,
+  alphaFeatures: { withContentSourceMaps: true },
+})
 const previewClient = contentful.createClient(previewParamsWithCSM)
 
 describe('getAssets', () => {
@@ -34,31 +39,40 @@ describe('getAssets', () => {
     })
   })
 
-  test('preview client has (alpha) withContentSourceMaps enabled', async () => {
-    const response = await previewClient.getAssets()
-
-    expect(response.items).not.toHaveLength(0)
-
-    response.items.forEach((item) => {
-      expect(item.sys.type).toEqual('Asset')
-      expect(item.fields).toBeDefined()
-      expect(typeof item.fields.title).toBe('string')
+  describe('has (alpha) withContentSourceMaps enabled', () => {
+    test('cdn client', async () => {
+      await expect(invalidClient.getAssets()).rejects.toThrow(
+        `The 'withContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+      )
+      await expect(invalidClient.getAssets()).rejects.toThrow(ValidationError)
     })
 
-    expect(response.sys?.contentSourceMapsLookup).toBeDefined()
-  })
+    test('preview client', async () => {
+      const response = await previewClient.getAssets()
 
-  test('preview client has (alpha) withContentSourceMaps enabled withAllLocales modifier', async () => {
-    const response = await previewClient.withAllLocales.getAssets()
+      expect(response.items).not.toHaveLength(0)
 
-    expect(response.items).not.toHaveLength(0)
+      response.items.forEach((item) => {
+        expect(item.sys.type).toEqual('Asset')
+        expect(item.fields).toBeDefined()
+        expect(typeof item.fields.title).toBe('string')
+      })
 
-    response.items.forEach((item) => {
-      expect(item.sys.type).toEqual('Asset')
-      expect(item.fields).toBeDefined()
-      expect(typeof item.fields.title).toBe('object')
+      expect(response.sys?.contentSourceMapsLookup).toBeDefined()
     })
 
-    expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+    test('preview client withAllLocales modifier', async () => {
+      const response = await previewClient.withAllLocales.getAssets()
+
+      expect(response.items).not.toHaveLength(0)
+
+      response.items.forEach((item) => {
+        expect(item.sys.type).toEqual('Asset')
+        expect(item.fields).toBeDefined()
+        expect(typeof item.fields.title).toBe('object')
+      })
+
+      expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+    })
   })
 })
