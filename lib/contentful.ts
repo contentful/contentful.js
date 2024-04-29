@@ -3,13 +3,13 @@
  * with access to the Contentful Content Delivery API.
  */
 
+import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import { createGlobalOptions } from './create-global-options'
 import { makeClient } from './make-client'
-import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 import { ContentfulClientApi } from './types'
+import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
 
 /**
  * @category Client
@@ -109,6 +109,18 @@ export interface CreateClientParams {
    * Interceptor called on every response. Takes Axios response object as an arg.
    */
   responseLogger?: (response: AxiosResponse<any> | Error) => unknown
+
+  /**
+   * Enable alpha features.
+   */
+  alphaFeatures?: {
+    /**
+     * Enable Content Source Maps.
+     * @remarks
+     * This feature is only available when using the Content Preview API.
+     */
+    withContentSourceMaps?: boolean
+  }
 }
 
 /**
