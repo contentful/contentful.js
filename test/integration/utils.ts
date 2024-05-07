@@ -17,5 +17,5 @@ export const previewParams = {
 
 export const previewParamsWithCSM = {
   ...previewParams,
-  alphaFeatures: { withContentSourceMaps: true },
+  alphaFeatures: { includeContentSourceMaps: true },
 }

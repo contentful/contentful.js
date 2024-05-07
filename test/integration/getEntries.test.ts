@@ -11,7 +11,7 @@ if (process.env.API_INTEGRATION_TESTS) {
 const client = contentful.createClient(params)
 const invalidClient = contentful.createClient({
   ...params,
-  alphaFeatures: { withContentSourceMaps: true },
+  alphaFeatures: { includeContentSourceMaps: true },
 })
 const previewClient = contentful.createClient(previewParamsWithCSM)
 
@@ -375,10 +375,10 @@ describe('getEntries via client chain modifiers', () => {
     })
   })
 
-  describe('has (alpha) withContentSourceMaps enabled', () => {
+  describe('has (alpha) includeContentSourceMaps enabled', () => {
     test('invalid client', async () => {
       await expect(invalidClient.getEntries()).rejects.toThrow(
-        `The 'withContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
       )
       await expect(invalidClient.getEntries()).rejects.toThrow(ValidationError)
     })

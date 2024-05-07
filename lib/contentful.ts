@@ -119,7 +119,7 @@ export interface CreateClientParams {
      * @remarks
      * This feature is only available when using the Content Preview API.
      */
-    withContentSourceMaps?: boolean
+    includeContentSourceMaps?: boolean
   }
 }
 

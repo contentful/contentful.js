@@ -121,11 +121,11 @@ describe('contentful', () => {
     createClient({
       accessToken: 'accessToken',
       space: 'spaceId',
-      alphaFeatures: { withContentSourceMaps: true },
+      alphaFeatures: { includeContentSourceMaps: true },
     })
     const callConfig = createHttpClientMock.mock.calls[0]
 
     const alphaFeatures = callConfig[1].alphaFeatures
-    expect(alphaFeatures).toEqual({ withContentSourceMaps: true })
+    expect(alphaFeatures).toEqual({ includeContentSourceMaps: true })
   })
 })
