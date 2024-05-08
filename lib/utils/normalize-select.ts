@@ -1,3 +1,5 @@
+import getQuerySelectionSet from './query-selection-set'
+
 /*
  * sdk relies heavily on sys metadata
  * so we cannot omit the sys property on sdk level entirely
@@ -9,13 +11,7 @@ export default function normalizeSelect(query) {
     return query
   }
 
-  // The selection of fields for the query is limited
-  // Get the different parts that are listed for selection
-  const allSelects = Array.isArray(query.select)
-    ? query.select
-    : query.select.split(',').map((q) => q.trim())
-  // Move the parts into a set for easy access and deduplication
-  const selectedSet = new Set(allSelects)
+  const selectedSet = getQuerySelectionSet(query)
 
   // If we already select all of `sys` we can just return
   // since we're anyway fetching everything that is needed
