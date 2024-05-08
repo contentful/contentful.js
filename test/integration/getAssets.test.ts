@@ -62,7 +62,7 @@ describe('getAssets', () => {
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
       })
 
-      it('enforces selection of sys.contentSourceMaps*', async () => {
+      it('enforces selection of sys if query.select is present', async () => {
         const response = await previewClient.getAssets({
           select: ['fields.title', 'sys.id', 'sys.type'],
         })

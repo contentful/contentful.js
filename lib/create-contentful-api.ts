@@ -109,16 +109,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     if (areAllowed) {
       query.includeContentSourceMaps = true
 
-      // Ensure that content source maps related attributes are selected
+      // Ensure that content source maps and required attributes are selected
       if (query.select) {
         const selection = getQuerySelectionSet(query)
 
-        if (!selection.has('sys')) {
-          selection.add('sys.contentSourceMaps')
-          selection.add('sys.contentSourceMapsLookup')
-        }
+        selection.add('sys')
 
-        query.select = [...selection].join(',')
+        query.select = Array.from(selection).join(',')
       }
     }
 
