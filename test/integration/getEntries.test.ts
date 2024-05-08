@@ -392,6 +392,16 @@ describe('getEntries via client chain modifiers', () => {
       assertCSMEntriesResponse(response)
     })
 
+    test('enforces entry.sys when query.select is defined', async () => {
+      const response = await previewClient.getEntries({
+        include: 5,
+        'sys.id': entryWithResolvableLink,
+        select: ['fields'],
+      })
+
+      assertCSMEntriesResponse(response)
+    })
+
     test('withAllLocales modifier', async () => {
       const response = await previewClient.withAllLocales.getEntries({
         include: 5,
