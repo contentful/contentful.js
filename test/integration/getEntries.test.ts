@@ -396,7 +396,7 @@ describe('getEntries via client chain modifiers', () => {
       const response = await previewClient.getEntries({
         include: 5,
         'sys.id': entryWithResolvableLink,
-        select: ['fields'],
+        select: ['fields', 'metadata.tags'],
       })
 
       assertCSMEntriesResponse(response)
