@@ -47,32 +47,51 @@ describe('getAssets', () => {
       await expect(invalidClient.getAssets()).rejects.toThrow(ValidationError)
     })
 
-    test('preview client', async () => {
-      const response = await previewClient.getAssets()
+    describe('preview client', () => {
+      it('requests content source maps', async () => {
+        const response = await previewClient.getAssets()
 
-      expect(response.items).not.toHaveLength(0)
+        expect(response.items).not.toHaveLength(0)
 
-      response.items.forEach((item) => {
-        expect(item.sys.type).toEqual('Asset')
-        expect(item.fields).toBeDefined()
-        expect(typeof item.fields.title).toBe('string')
+        response.items.forEach((item) => {
+          expect(item.sys.type).toEqual('Asset')
+          expect(item.fields).toBeDefined()
+          expect(typeof item.fields.title).toBe('string')
+        })
+
+        expect(response.sys?.contentSourceMapsLookup).toBeDefined()
       })
 
-      expect(response.sys?.contentSourceMapsLookup).toBeDefined()
-    })
+      it('enforces selection of sys if query.select is present', async () => {
+        const response = await previewClient.getAssets({
+          select: ['fields.title', 'sys.id', 'sys.type'],
+        })
 
-    test('preview client withAllLocales modifier', async () => {
-      const response = await previewClient.withAllLocales.getAssets()
+        expect(response.items).not.toHaveLength(0)
 
-      expect(response.items).not.toHaveLength(0)
+        response.items.forEach((item) => {
+          expect(item.sys.type).toEqual('Asset')
+          expect(item.fields).toBeDefined()
+          expect(typeof item.fields.title).toBe('string')
+          expect(item.sys.contentSourceMaps).toBeDefined()
+        })
 
-      response.items.forEach((item) => {
-        expect(item.sys.type).toEqual('Asset')
-        expect(item.fields).toBeDefined()
-        expect(typeof item.fields.title).toBe('object')
+        expect(response.sys?.contentSourceMapsLookup).toBeDefined()
       })
 
-      expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+      it('works with withAllLocales modifier', async () => {
+        const response = await previewClient.withAllLocales.getAssets()
+
+        expect(response.items).not.toHaveLength(0)
+
+        response.items.forEach((item) => {
+          expect(item.sys.type).toEqual('Asset')
+          expect(item.fields).toBeDefined()
+          expect(typeof item.fields.title).toBe('object')
+        })
+
+        expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+      })
     })
   })
 })
