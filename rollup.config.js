@@ -16,7 +16,7 @@ import { babel } from '@rollup/plugin-babel'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const baseConfig = {
-  input: 'dist/esm/index.js',
+  input: 'dist/esm-raw/index.js',
   output: {
     file: 'dist/contentful.cjs',
     format: 'cjs',
@@ -36,6 +36,22 @@ const baseConfig = {
       requireReturnsDefault: 'auto',
     }),
     json(),
+  ],
+}
+
+const esmConfig = {
+  input: 'dist/esm-raw/index.js',
+  output: {
+    dir: 'dist/esm', // Output directory
+    format: 'esm', // Output module format
+    preserveModules: true, // Preserve module structure
+  },
+  plugins: [
+    replace({
+      preventAssignment: true,
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      __VERSION__: JSON.stringify(pkg.version),
+    }),
   ],
 }
 
@@ -162,4 +178,4 @@ const browserMinConfig = {
   ],
 }
 
-export default [cjsConfig, browserConfig, browserMinConfig]
+export default [esmConfig, cjsConfig, browserConfig, browserMinConfig]

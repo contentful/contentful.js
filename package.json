@@ -49,7 +49,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && npm run build:esm && npm run build:bundles",
+    "build": "npm run clean && npm run build:esm && npm run build:bundles && rm -rf dist/esm-raw",
     "build:esm": "tsc",
     "build:bundles": "NODE_ENV=production rollup -c",
     "postbuild": "npm run check && npm run test:demo-projects",

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/esm",
+    "outDir": "./dist/esm-raw",
     "rootDir": "./lib",
     "lib": ["dom", "esnext"],
     "target": "ES2017",
