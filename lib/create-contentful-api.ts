@@ -37,6 +37,7 @@ import {
 } from './utils/validate-params'
 import validateSearchParameters from './utils/validate-search-parameters'
 import validateTimestamp from './utils/validate-timestamp'
+import getQuerySelectionSet from './utils/query-selection-set'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -108,6 +109,15 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     if (areAllowed) {
       query.includeContentSourceMaps = true
+
+      // Ensure that content source maps and required attributes are selected
+      if (query.select) {
+        const selection = getQuerySelectionSet(query)
+
+        selection.add('sys')
+
+        query.select = Array.from(selection).join(',')
+      }
     }
 
     return query
