@@ -1,7 +1,7 @@
 import { EntryFieldTypes } from '../entry'
 import { ConditionalPick } from 'type-fest'
 
-type SupportedTypes = EntryFieldTypes.EntryLink<any> | undefined
+type SupportedTypes = EntryFieldTypes.EntryLink<any> | EntryFieldTypes.Array<EntryFieldTypes.EntryLink<any>> | undefined
 
 /**
  * Search on references in provided fields
