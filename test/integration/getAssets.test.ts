@@ -1,6 +1,12 @@
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validation-error'
-import { params, previewParamsWithCSM } from './utils'
+import {
+  assetMappingsCollection,
+  localisedAssetMappingsCollection,
+  params,
+  previewParamsWithCSM,
+  testEncodingDecoding,
+} from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -10,7 +16,7 @@ if (process.env.API_INTEGRATION_TESTS) {
 const client = contentful.createClient(params)
 const invalidClient = contentful.createClient({
   ...params,
-  alphaFeatures: { withContentSourceMaps: true },
+  alphaFeatures: { includeContentSourceMaps: true },
 })
 const previewClient = contentful.createClient(previewParamsWithCSM)
 
@@ -39,10 +45,10 @@ describe('getAssets', () => {
     })
   })
 
-  describe('has (alpha) withContentSourceMaps enabled', () => {
+  describe('has (alpha) includeContentSourceMaps enabled', () => {
     test('cdn client', async () => {
       await expect(invalidClient.getAssets()).rejects.toThrow(
-        `The 'withContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
       )
       await expect(invalidClient.getAssets()).rejects.toThrow(ValidationError)
     })
@@ -60,6 +66,7 @@ describe('getAssets', () => {
         })
 
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+        testEncodingDecoding(response, assetMappingsCollection)
       })
 
       it('enforces selection of sys if query.select is present', async () => {
@@ -77,6 +84,7 @@ describe('getAssets', () => {
         })
 
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+        testEncodingDecoding(response, assetMappingsCollection)
       })
 
       it('works with withAllLocales modifier', async () => {
@@ -91,6 +99,7 @@ describe('getAssets', () => {
         })
 
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+        testEncodingDecoding(response, localisedAssetMappingsCollection)
       })
     })
   })

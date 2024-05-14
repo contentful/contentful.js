@@ -9,14 +9,14 @@ describe('checkIncludeContentSourceMapsParamIsValid', () => {
     expect(checkIncludeContentSourceMapsParamIsValid()).toBe(false)
   })
 
-  it('throws ValidationError if withContentSourceMaps is not a boolean', () => {
+  it('throws ValidationError if includeContentSourceMaps is not a boolean', () => {
     expect(() =>
-      checkIncludeContentSourceMapsParamIsValid({ withContentSourceMaps: 'not a boolean' }),
+      checkIncludeContentSourceMapsParamIsValid({ includeContentSourceMaps: 'not a boolean' }),
     ).toThrow(ValidationError)
   })
 
-  it('returns true if withContentSourceMaps is a boolean', () => {
-    expect(checkIncludeContentSourceMapsParamIsValid({ withContentSourceMaps: true })).toBe(true)
+  it('returns true if includeContentSourceMaps is a boolean', () => {
+    expect(checkIncludeContentSourceMapsParamIsValid({ includeContentSourceMaps: true })).toBe(true)
   })
 })
 
@@ -26,18 +26,18 @@ describe('checkIncludeContentSourceMapsParamIsAllowed', () => {
     expect(checkIncludeContentSourceMapsParamIsAllowed('http://example.com', {})).toBe(false)
   })
 
-  it('throws ValidationError if withContentSourceMaps is valid but baseUrl does not include preview.contentful.com', () => {
+  it('throws ValidationError if includeContentSourceMaps is valid but baseUrl does not include preview.contentful.com', () => {
     expect(() =>
       checkIncludeContentSourceMapsParamIsAllowed('cdn.contentful.com', {
-        withContentSourceMaps: true,
+        includeContentSourceMaps: true,
       }),
     ).toThrow(ValidationError)
   })
 
-  it('returns true if withContentSourceMaps is valid and baseUrl includes preview.contentful.com', () => {
+  it('returns true if includeContentSourceMaps is valid and baseUrl includes preview.contentful.com', () => {
     expect(
       checkIncludeContentSourceMapsParamIsAllowed('preview.contentful.com', {
-        withContentSourceMaps: true,
+        includeContentSourceMaps: true,
       }),
     ).toBe(true)
   })

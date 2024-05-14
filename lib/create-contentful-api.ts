@@ -3,6 +3,7 @@
  * different kinds of entities present in Contentful (Entries, Assets, etc).
  */
 
+import { encodeCPAResponse } from '@contentful/content-source-maps'
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
 import { CreateClientParams } from './contentful'
 import { GetGlobalOptions } from './create-global-options'
@@ -27,6 +28,7 @@ import {
 import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
+import getQuerySelectionSet from './utils/query-selection-set'
 import resolveCircular from './utils/resolve-circular'
 import {
   checkIncludeContentSourceMapsParamIsAllowed,
@@ -36,7 +38,6 @@ import {
 } from './utils/validate-params'
 import validateSearchParameters from './utils/validate-search-parameters'
 import validateTimestamp from './utils/validate-timestamp'
-import getQuerySelectionSet from './utils/query-selection-set'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -122,12 +123,22 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return query
   }
 
+  function maybeEncodeCPAResponse(data: any, config: Record<string, any>): any {
+    const includeContentSourceMaps = config?.params?.includeContentSourceMaps as boolean
+
+    if (includeContentSourceMaps) {
+      return encodeCPAResponse(data)
+    }
+
+    return data
+  }
+
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
     try {
       const response = await http.get(baseUrl + path, config)
-      return response.data
+      return maybeEncodeCPAResponse(response.data, config)
     } catch (error) {
       errorHandler(error)
     }
