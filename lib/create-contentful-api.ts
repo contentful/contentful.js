@@ -28,6 +28,7 @@ import {
 import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
 import normalizeSearchParameters from './utils/normalize-search-parameters'
 import normalizeSelect from './utils/normalize-select'
+import getQuerySelectionSet from './utils/query-selection-set'
 import resolveCircular from './utils/resolve-circular'
 import {
   checkIncludeContentSourceMapsParamIsAllowed,
@@ -37,7 +38,6 @@ import {
 } from './utils/validate-params'
 import validateSearchParameters from './utils/validate-search-parameters'
 import validateTimestamp from './utils/validate-timestamp'
-import getQuerySelectionSet from './utils/query-selection-set'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -124,7 +124,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   function maybeEncodeCPAResponse(data: any, config: Record<string, any>): any {
-    const includeContentSourceMaps = config?.query?.includeContentSourceMaps as boolean
+    const includeContentSourceMaps = config?.params?.includeContentSourceMaps as boolean
 
     if (includeContentSourceMaps) {
       return encodeCPAResponse(data)

@@ -111,6 +111,7 @@
     "jest": "^27.5.1",
     "jest-when": "^3.0.1",
     "json": "^11.0.0",
+    "json-pointer": "^0.6.2",
     "mkdirp": "^3.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
