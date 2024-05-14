@@ -1,6 +1,12 @@
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validation-error'
-import { params, previewParamsWithCSM } from './utils'
+import {
+  assetMappingsCollection,
+  localisedAssetMappingsCollection,
+  params,
+  previewParamsWithCSM,
+  testEncodingDecoding,
+} from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -60,6 +66,7 @@ describe('getAssets', () => {
         })
 
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+        testEncodingDecoding(response, assetMappingsCollection)
       })
 
       it('enforces selection of sys if query.select is present', async () => {
@@ -77,6 +84,7 @@ describe('getAssets', () => {
         })
 
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+        testEncodingDecoding(response, assetMappingsCollection)
       })
 
       it('works with withAllLocales modifier', async () => {
@@ -91,6 +99,7 @@ describe('getAssets', () => {
         })
 
         expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+        testEncodingDecoding(response, localisedAssetMappingsCollection)
       })
     })
   })

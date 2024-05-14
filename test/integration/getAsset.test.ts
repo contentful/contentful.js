@@ -1,6 +1,12 @@
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validation-error'
-import { params, previewParamsWithCSM } from './utils'
+import {
+  assetMappings,
+  localisedAssetMappings,
+  params,
+  previewParamsWithCSM,
+  testEncodingDecoding,
+} from './utils'
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -46,6 +52,7 @@ describe('getAsset', () => {
       expect(typeof response.fields.title).toBe('string')
       expect(response.sys.contentSourceMaps).toBeDefined()
       expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+      testEncodingDecoding(response, assetMappings)
     })
 
     test('preview client withAllLocales modifier', async () => {
@@ -55,6 +62,7 @@ describe('getAsset', () => {
       expect(typeof response.fields.title).toBe('object')
       expect(response.sys.contentSourceMaps).toBeDefined()
       expect(response.sys?.contentSourceMapsLookup).toBeDefined()
+      testEncodingDecoding(response, localisedAssetMappings)
     })
   })
 })
