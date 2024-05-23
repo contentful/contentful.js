@@ -11,4 +11,4 @@ metadata:
 spec:
   type: library
   lifecycle: production
-  owner: group:team-developer-experience
+  owner: group:team-tundra
