@@ -11,7 +11,7 @@
       "types": "./dist/types/index.d.ts"
     }
   },
-  "browser": "./dist/contentful.browser.min.js",
+  "main": "./dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "engines": {
     "node": ">=18"
@@ -86,7 +86,7 @@
     "@contentful/rich-text-types": "^16.0.2",
     "axios": "^1.6.7",
     "contentful-resolve-response": "^1.8.1",
-    "contentful-sdk-core": "^8.1.0",
+    "contentful-sdk-core": "^9.0.0-alpha.0",
     "json-stringify-safe": "^5.0.1",
     "type-fest": "^4.0.0"
   },
