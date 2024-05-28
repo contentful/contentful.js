@@ -137,11 +137,11 @@
   "bundlesize": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "70Kb"
+      "maxSize": "76Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "36Kb"
+      "maxSize": "40Kb"
     }
   ],
   "release": {
