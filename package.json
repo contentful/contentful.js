@@ -116,6 +116,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vitest-globals": "^1.5.0",
+    "fast-copy": "^3.0.2",
     "husky": "^9.0.11",
     "prettier": "^3.1.0",
     "process": "^0.11.10",
@@ -170,8 +171,5 @@
       "@semantic-release/changelog",
       "@semantic-release/github"
     ]
-  },
-  "overrides": {
-    "fast-copy": "^3.0.2"
   }
 }
