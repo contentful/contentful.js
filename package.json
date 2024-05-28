@@ -1,7 +1,7 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
-  "version": "0.0.0-determined-by-semantic-release",
+  "version": "11.0.0-alpha.7",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "type": "module",
   "exports": {
@@ -86,7 +86,7 @@
     "@contentful/rich-text-types": "^16.0.2",
     "axios": "^1.6.7",
     "contentful-resolve-response": "^1.8.1",
-    "contentful-sdk-core": "^9.0.0-alpha.0",
+    "contentful-sdk-core": "^9.0.0-alpha.1",
     "json-stringify-safe": "^5.0.1",
     "type-fest": "^4.0.0"
   },
