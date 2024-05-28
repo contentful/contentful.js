@@ -1,7 +1,7 @@
 {
   "name": "contentful",
   "description": "Client for Contentful's Content Delivery API",
-  "version": "11.0.0-alpha.7",
+  "version": "11.0.0-alpha.8",
   "homepage": "https://www.contentful.com/developers/documentation/content-delivery-api/",
   "type": "module",
   "exports": {
