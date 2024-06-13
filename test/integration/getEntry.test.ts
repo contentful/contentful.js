@@ -24,19 +24,19 @@ describe('getEntry via client chain modifiers', () => {
       type: 'ContentSourceMaps',
     },
     mappings: {
-      '/fields/name': {
+      'fields/name': {
         source: {
           editorInterface: 0,
           fieldType: 0,
         },
       },
-      '/fields/likes': {
+      'fields/likes': {
         source: {
           editorInterface: 1,
           fieldType: 1,
         },
       },
-      '/fields/color': {
+      'fields/color': {
         source: {
           editorInterface: 2,
           fieldType: 2,
