@@ -75,7 +75,7 @@
     "prepush": "npm run test:prepush"
   },
   "dependencies": {
-    "@contentful/content-source-maps": "^0.5.0",
+    "@contentful/content-source-maps": "^0.6.0",
     "@contentful/rich-text-types": "^16.0.2",
     "axios": "~1.7.2",
     "contentful-resolve-response": "^1.8.1",
