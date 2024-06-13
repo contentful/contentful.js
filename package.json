@@ -77,7 +77,7 @@
   "dependencies": {
     "@contentful/content-source-maps": "^0.5.0",
     "@contentful/rich-text-types": "^16.0.2",
-    "axios": "~1.6.8",
+    "axios": "~1.7.2",
     "contentful-resolve-response": "^1.8.1",
     "contentful-sdk-core": "^8.1.0",
     "json-stringify-safe": "^5.0.1",
