@@ -6,6 +6,7 @@ registries:
     token: ${{secrets.NPM_REGISTRY_REGISTRY_GH_ORG_TOKEN}}
 updates:
   - package-ecosystem: npm
+    versioning-strategy: lockfile-only
     registries:
       - npm-github
     directory: "/"
