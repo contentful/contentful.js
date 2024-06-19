@@ -113,6 +113,18 @@ export interface CreateClientParams {
    * Interceptor called on every response. Takes Axios response object as an arg.
    */
   responseLogger?: (response: AxiosResponse<any> | Error) => unknown
+
+  /**
+   * Enable alpha features.
+   */
+  alphaFeatures?: {
+    /**
+     * Enable Content Source Maps.
+     * @remarks
+     * This feature is only available when using the Content Preview API.
+     */
+    includeContentSourceMaps?: boolean
+  }
 }
 
 /**

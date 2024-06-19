@@ -1,5 +1,6 @@
+import { ContentSourceMapsLookup, CPAContentSourceMaps } from '@contentful/content-source-maps'
 import { EntryFields } from './entry'
-import { SpaceLink, EnvironmentLink } from './link'
+import { EnvironmentLink, SpaceLink } from './link'
 
 /**
  * Definition of common part of system managed metadata
@@ -21,4 +22,6 @@ export interface EntitySys extends BaseSys {
   space: { sys: SpaceLink }
   environment: { sys: EnvironmentLink }
   locale?: string
+  contentSourceMaps?: CPAContentSourceMaps
+  contentSourceMapsLookup?: ContentSourceMapsLookup
 }

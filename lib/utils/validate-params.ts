@@ -4,7 +4,7 @@ function checkLocaleParamIsAll(query) {
   if (query.locale === '*') {
     throw new ValidationError(
       'locale',
-      `The use of locale='*' is no longer supported.To fetch an entry in all existing locales, 
+      `The use of locale='*' is no longer supported.To fetch an entry in all existing locales,
       use client.withAllLocales instead of the locale='*' parameter.`,
     )
   }
@@ -29,7 +29,7 @@ export function validateResolveLinksParam(query) {
   if ('resolveLinks' in query) {
     throw new ValidationError(
       'resolveLinks',
-      `The use of the 'resolveLinks' parameter is no longer supported. By default, links are resolved. 
+      `The use of the 'resolveLinks' parameter is no longer supported. By default, links are resolved.
       If you do not want to resolve links, use client.withoutLinkResolution.`,
     )
   }
@@ -45,4 +45,47 @@ export function validateRemoveUnresolvedParam(query) {
     )
   }
   return
+}
+
+export function checkIncludeContentSourceMapsParamIsValid(alphaFeatures?: Record<string, any>) {
+  if (!alphaFeatures) {
+    return false
+  }
+
+  const isValidIncludeContentSourceMaps =
+    'includeContentSourceMaps' in alphaFeatures &&
+    typeof alphaFeatures.includeContentSourceMaps === 'boolean'
+
+  if (!isValidIncludeContentSourceMaps) {
+    throw new ValidationError(
+      'includeContentSourceMaps',
+      `The 'includeContentSourceMaps' parameter must be a boolean.`,
+    )
+  }
+
+  return true
+}
+
+export function checkIncludeContentSourceMapsParamIsAllowed(
+  host?: string,
+  alphaFeatures?: Record<string, any>,
+) {
+  if (!alphaFeatures || Object.keys(alphaFeatures).length === 0) {
+    return false
+  }
+
+  const includeContentSourceMapsIsAllowed = host === 'preview.contentful.com'
+
+  if (
+    checkIncludeContentSourceMapsParamIsValid(alphaFeatures) &&
+    !includeContentSourceMapsIsAllowed
+  ) {
+    throw new ValidationError(
+      'includeContentSourceMaps',
+      `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.
+      `,
+    )
+  }
+
+  return alphaFeatures.includeContentSourceMaps as boolean
 }

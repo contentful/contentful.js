@@ -1,3 +1,6 @@
+import { AssetSys } from './asset'
+import { EntrySys } from './entry'
+
 /**
  * A wrapper object containing additional information for
  * a collection of Contentful resources
@@ -9,4 +12,5 @@ export interface ContentfulCollection<T> {
   skip: number
   limit: number
   items: Array<T>
+  sys?: AssetSys | EntrySys
 }

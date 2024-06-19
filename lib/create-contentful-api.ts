@@ -3,7 +3,9 @@
  * different kinds of entities present in Contentful (Entries, Assets, etc).
  */
 
+import { encodeCPAResponse } from '@contentful/content-source-maps'
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
+import { CreateClientParams } from './contentful'
 import { GetGlobalOptions } from './create-global-options.js'
 import pagedSync from './paged-sync.js'
 import type {
@@ -14,7 +16,6 @@ import type {
   ContentType,
   ContentTypeCollection,
   LocaleCollection,
-  LocaleCode,
   Space,
   Tag,
   TagCollection,
@@ -22,18 +23,21 @@ import type {
   SyncQuery,
   SyncOptions,
   EntrySkeletonType,
+  LocaleCode,
 } from './types/index.js'
 import normalizeSearchParameters from './utils/normalize-search-parameters.js'
 import normalizeSelect from './utils/normalize-select.js'
 import resolveCircular from './utils/resolve-circular.js'
+import getQuerySelectionSet from './utils/query-selection-set'
 import validateTimestamp from './utils/validate-timestamp.js'
 import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 import {
+  checkIncludeContentSourceMapsParamIsAllowed,
   validateLocaleParam,
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
-} from './utils/validate-params.js'
-import validateSearchParameters from './utils/validate-search-parameters.js'
+} from './utils/validate-params'
+import validateSearchParameters from './utils/validate-search-parameters'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -96,12 +100,45 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return baseUrl
   }
 
+  function maybeEnableSourceMaps(query: Record<string, any> = {}): Record<string, any> {
+    const alphaFeatures = (http.httpClientParams as any as CreateClientParams)?.alphaFeatures
+
+    const host = http.httpClientParams?.host
+
+    const areAllowed = checkIncludeContentSourceMapsParamIsAllowed(host, alphaFeatures)
+
+    if (areAllowed) {
+      query.includeContentSourceMaps = true
+
+      // Ensure that content source maps and required attributes are selected
+      if (query.select) {
+        const selection = getQuerySelectionSet(query)
+
+        selection.add('sys')
+
+        query.select = Array.from(selection).join(',')
+      }
+    }
+
+    return query
+  }
+
+  function maybeEncodeCPAResponse(data: any, config: Record<string, any>): any {
+    const includeContentSourceMaps = config?.params?.includeContentSourceMaps as boolean
+
+    if (includeContentSourceMaps) {
+      return encodeCPAResponse(data)
+    }
+
+    return data
+  }
+
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
     try {
       const response = await http.get(baseUrl + path, config)
-      return response.data
+      return maybeEncodeCPAResponse(response.data, config)
     } catch (error) {
       errorHandler(error)
     }
@@ -177,7 +214,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
     try {
       const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
-        { 'sys.id': id, ...query },
+        { 'sys.id': id, ...maybeEnableSourceMaps(query) },
         options,
       )
       if (response.items.length > 0) {
@@ -230,7 +267,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const entries = await get({
         context: 'environment',
         path: 'entries',
-        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
+        config: createRequestConfig({
+          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+        }),
       })
 
       return resolveCircular(entries, {
@@ -276,7 +315,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return get({
         context: 'environment',
         path: `assets/${id}`,
-        config: createRequestConfig({ query: normalizeSelect(query) }),
+        config: createRequestConfig({ query: maybeEnableSourceMaps(normalizeSelect(query)) }),
       })
     } catch (error) {
       errorHandler(error)
@@ -309,7 +348,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return get({
         context: 'environment',
         path: 'assets',
-        config: createRequestConfig({ query: normalizeSearchParameters(normalizeSelect(query)) }),
+        config: createRequestConfig({
+          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+        }),
       })
     } catch (error) {
       errorHandler(error)

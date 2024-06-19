@@ -39,6 +39,7 @@ describe('contentful', () => {
 
   afterEach(() => {
     createHttpClientMock.mockReset()
+    createContentfulApiMock.mockReset()
   })
 
   test('Throws if no accessToken is defined', () => {
@@ -115,8 +116,7 @@ describe('contentful', () => {
     )
   })
 
-  // fails, not sure if it because of wrong mocking
-  test.skip('Initializes API and attaches custom environment', () => {
+  test('Initializes API and attaches custom environment', () => {
     createClient({
       accessToken: 'accessToken',
       space: 'spaceId',
@@ -126,5 +126,17 @@ describe('contentful', () => {
     expect(callConfig[0].http.defaults.baseURL).toEqual(
       'http://some-base-url.com/environments/stage',
     )
+  })
+
+  test('Initializes API with alpha features', () => {
+    createClient({
+      accessToken: 'accessToken',
+      space: 'spaceId',
+      alphaFeatures: { includeContentSourceMaps: true },
+    })
+    const callConfig = createHttpClientMock.mock.calls[0]
+
+    const alphaFeatures = callConfig[1].alphaFeatures
+    expect(alphaFeatures).toEqual({ includeContentSourceMaps: true })
   })
 })

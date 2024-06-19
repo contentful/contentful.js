@@ -19,7 +19,8 @@ function create<OptionsType extends ChainOptions>(
     },
     options,
   )
-  const response: any = client
+  const response: any = client ? client : {}
+
   Object.defineProperty(response, 'withAllLocales', {
     get: () => makeInnerClient({ ...options, withAllLocales: true }),
   })
