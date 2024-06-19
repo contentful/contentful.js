@@ -1,4 +1,3 @@
-/* eslint-disable */
 async function run() {
   if (!contentful) {
     throw 'Contentful.js could not be loaded. Please check the build output.'

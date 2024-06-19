@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer')
 const path = require('path')
 
-let browser, page
+jest.setTimeout(10 * 1000)
 
-jest.setTimeout(10000)
+let browser, page
 
 beforeEach(async () => {
   browser = await puppeteer.launch({

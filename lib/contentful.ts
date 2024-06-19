@@ -3,13 +3,17 @@
  * with access to the Contentful Content Delivery API.
  */
 
-import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
+import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
+
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
-import { createGlobalOptions } from './create-global-options'
-import { makeClient } from './make-client'
-import { ContentfulClientApi } from './types'
-import { validateRemoveUnresolvedParam, validateResolveLinksParam } from './utils/validate-params'
+import { createGlobalOptions } from './create-global-options.js'
+import { makeClient } from './make-client.js'
+import {
+  validateRemoveUnresolvedParam,
+  validateResolveLinksParam,
+} from './utils/validate-params.js'
+import type { ContentfulClientApi } from './types/client.js'
 
 /**
  * @category Client
