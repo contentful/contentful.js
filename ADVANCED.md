@@ -157,6 +157,47 @@ client
   .catch((err) => console.log(err))
 ```
 
+### Links to other spaces
+
+As they are part of another space, resolving cross-space linked entities requires a special header to be passed named `x-contentful-resource-resolution`.
+
+To be able to create this header, you need to follow the instructions in this [subsection of our documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/resource-links:~:text=Extra%20header%20for%20cross%2Dspace%20resolution)
+
+Once you created the Base64 encoded token, you can pass the new header to your client as part of the `headers` option.
+
+When calling the `getEntries` method, The resolved cross space links will be available under the `Entry` array in the `includes` part of the response.
+
+#### Example
+
+```ts
+import { createClient } from 'contentful'
+const client = createClient({
+  accessToken: '<you-access-token>',
+  space: '<your-space-id>',
+  environment: '<your-environment-id>',
+  headers: {
+    'x-contentful-resource-resolution': '<your-base64-generated-header>'
+  }
+})
+// getting all Entries
+client
+  .getEntries()
+  .then((response) => {
+    // You should find the linked entries in the includes.Entry array
+    console.log(response.includes.Entry)
+  })
+  .catch((err) => console.log(err))
+
+// filtering on one entry
+client
+  .getEntries({ 'sys.id': '<entry-id>' })
+  .then((response) => {
+    // You should find the linked entries in the includes.Entry array
+    console.log(response.includes.Entry)
+  })
+  .catch((err) => console.log(err))
+```
+
 ## Sync
 
 The Sync API allows you to keep a local copy of all content in a space up-to-date via delta updates, meaning only changes that occurred since the last sync call.
