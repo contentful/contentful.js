@@ -51,7 +51,7 @@ describe('getEntry via client chain modifiers', () => {
   }
   describe('default client', () => {
     test('Gets an entry with the correct ID', async () => {
-      const response = await client.getEntry<TypeCatSkeleton>(entryWithResolvableLink, {
+      const response = await client.getEntry(entryWithResolvableLink, {
         include: 2,
       })
 
@@ -236,18 +236,7 @@ describe('getEntry via client chain modifiers', () => {
     })
 
     test('previewClient.withAllLocales', async () => {
-      const response = await previewClient.withAllLocales.getEntry(entryWithResolvableLink, {
-        include: 2,
-      })
-
-      expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Entry')
-      expect(response.sys.contentSourceMaps).toBeDefined()
-      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
-    })
-
-    test('previewClient.withAllLocales.withoutLinkResolution', async () => {
-      const response = await previewClient.withAllLocales.withoutLinkResolution.getEntry(
+      const response = await previewClient.withAllLocales.getEntry<TypeCatSkeleton, Locales>(
         entryWithResolvableLink,
         {
           include: 2,
@@ -255,7 +244,31 @@ describe('getEntry via client chain modifiers', () => {
       )
 
       expect(response.fields.color).toHaveProperty('en-US')
-      expect(response.fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']).toBeDefined()
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']?.sys.type).toBe(
+        'Entry',
+      )
+
+      expect(response.sys.contentSourceMaps).toBeDefined()
+      expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
+    })
+
+    test('previewClient.withAllLocales.withoutLinkResolution', async () => {
+      const response = await previewClient.withAllLocales.withoutLinkResolution.getEntry<
+        TypeCatSkeleton,
+        Locales
+      >(entryWithResolvableLink, {
+        include: 2,
+      })
+
+      expect(response.fields.color).toHaveProperty('en-US')
+
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']).toBeDefined()
+      expect(response.fields.bestFriend && response.fields.bestFriend['en-US']?.sys.type).toBe(
+        'Link',
+      )
+
       expect(response.sys.contentSourceMaps).toBeDefined()
       expect(response.sys.contentSourceMaps).toMatchObject(exampleCsm)
     })
