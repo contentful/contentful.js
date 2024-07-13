@@ -115,8 +115,7 @@ const browserConfig = {
     }),
     ...baseConfig.plugins,
     babel({
-      babelHelpers: 'bundled',
-      // exclude: 'node_modules/**',
+      babelHelpers: 'runtime',
       presets: [
         [
           '@babel/preset-env',
@@ -124,6 +123,14 @@ const browserConfig = {
             targets: pkg.browserslist,
             modules: false,
             bugfixes: true,
+          },
+        ],
+      ],
+      plugins: [
+        [
+          '@babel/plugin-transform-runtime',
+          {
+            regenerator: true,
           },
         ],
       ],
