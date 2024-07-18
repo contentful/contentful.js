@@ -6,30 +6,31 @@
 import { encodeCPAResponse } from '@contentful/content-source-maps'
 import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
 import { CreateClientParams } from './contentful'
-import { GetGlobalOptions } from './create-global-options'
-import pagedSync from './paged-sync'
-import {
+import { GetGlobalOptions } from './create-global-options.js'
+import pagedSync from './paged-sync.js'
+import type {
   Asset,
   AssetCollection,
   AssetKey,
   ContentfulClientApi,
   ContentType,
   ContentTypeCollection,
-  EntryCollection,
-  EntrySkeletonType,
-  LocaleCode,
   LocaleCollection,
   Space,
-  SyncOptions,
-  SyncQuery,
   Tag,
   TagCollection,
-} from './types'
-import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers'
-import normalizeSearchParameters from './utils/normalize-search-parameters'
-import normalizeSelect from './utils/normalize-select'
+  EntryCollection,
+  SyncQuery,
+  SyncOptions,
+  EntrySkeletonType,
+  LocaleCode,
+} from './types/index.js'
+import normalizeSearchParameters from './utils/normalize-search-parameters.js'
+import normalizeSelect from './utils/normalize-select.js'
+import resolveCircular from './utils/resolve-circular.js'
 import getQuerySelectionSet from './utils/query-selection-set'
-import resolveCircular from './utils/resolve-circular'
+import validateTimestamp from './utils/validate-timestamp.js'
+import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 import {
   checkIncludeContentSourceMapsParamIsAllowed,
   validateLocaleParam,
@@ -37,7 +38,6 @@ import {
   validateResolveLinksParam,
 } from './utils/validate-params'
 import validateSearchParameters from './utils/validate-search-parameters'
-import validateTimestamp from './utils/validate-timestamp'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 

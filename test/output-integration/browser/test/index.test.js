@@ -1,38 +1,23 @@
-const puppeteer = require('puppeteer')
-const path = require('path')
+import { describe, it, expect } from 'vitest'
+import { page } from './vitest.setup'
+import { version as packageVersion } from '../../../../package.json'
 
-let browser, page
-
-jest.setTimeout(10000)
-
-beforeEach(async () => {
-  browser = await puppeteer.launch({
-    headless: 'new',
+describe('Contentful.js Browser Test', () => {
+  it('Entry has been loaded successfully', async () => {
+    const text = await page.$eval('#content', (el) => el.innerHTML)
+    expect(text).toEqual('nyancat')
   })
-  page = await browser.newPage()
-  await page.goto(`file:${path.join(__dirname, '../public/index.html')}`)
-  await page.waitForTimeout(4000)
-})
 
-afterAll(async () => {
-  await browser.close()
-})
+  it('Has correct user agent version', async () => {
+    const clientVersion = await page.$eval('#version', (el) => el.innerHTML)
 
-test('Entry has been loaded successfully', async () => {
-  const text = await page.$eval('#content', (el) => el.innerHTML)
-  expect(text).toEqual('nyancat')
-})
-
-test('Has correct user agent version', async () => {
-  const version = require('../../../../package.json').version
-  const clientVersion = await page.$eval('#version', (el) => el.innerHTML)
-
-  // When we make a publish run, we need to ensure that semantic-release has set a valid package version
-  if (process.env.PUBLISH_RUN === 'true') {
-    expect(clientVersion).toEqual(expect.not.stringContaining('semantic-release'))
-    expect(clientVersion).toEqual(version)
-  } else {
-    expect(clientVersion).toEqual(version)
-  }
-  console.log(`Client version: ${clientVersion}`)
+    // When we make a publish run, we need to ensure that semantic-release has set a valid package version
+    if (process.env.PUBLISH_RUN === 'true') {
+      expect(clientVersion).toEqual(expect.not.stringContaining('semantic-release'))
+      expect(clientVersion).toEqual(packageVersion)
+    } else {
+      expect(clientVersion).toEqual(packageVersion)
+    }
+    console.log(`Client version: ${clientVersion}`)
+  })
 })

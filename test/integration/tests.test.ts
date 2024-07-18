@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validation-error'
 // @ts-ignore
@@ -15,8 +16,8 @@ const client = contentful.createClient(params)
 const previewClient = contentful.createClient(previewParams)
 const localeClient = contentful.createClient(localeSpaceParams)
 
-const responseLoggerStub = jest.fn()
-const requestLoggerStub = jest.fn()
+const responseLoggerStub = vi.fn()
+const requestLoggerStub = vi.fn()
 const clientWithLoggers = contentful.createClient({
   ...params,
   // @ts-ignore

@@ -1,7 +1,7 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   plugins: ['standard', 'promise'],
   env: {
-    jest: true,
     node: true,
   },
   globals: {
@@ -12,6 +12,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
+    'plugin:vitest-globals/recommended',
   ],
   ignorePatterns: ['**/test/output-integration/**', '**/webpack.config.js'],
   rules: {
