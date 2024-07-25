@@ -48,6 +48,13 @@ export const entryResourceLink: { sys: ResourceLink } = {
     urn: stringValue,
   },
 }
+export const externalResourceLink: { sys: ResourceLink<string> } = {
+  sys: {
+    type: 'ResourceLink',
+    linkType: 'Provider1:ResourceTypeA',
+    urn: stringValue,
+  },
+}
 
 export const entrySys: EntrySys = {
   contentType: { sys: { id: stringValue, type: 'Link', linkType: 'ContentType' } },

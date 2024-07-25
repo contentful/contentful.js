@@ -2,8 +2,8 @@
  * Definition of an external resource link
  * @category Link
  */
-export interface ResourceLink {
+export interface ResourceLink<LinkType extends string = 'Contentful:Entry'> {
   type: 'ResourceLink'
-  linkType: 'Contentful:Entry'
+  linkType: LinkType
   urn: string
 }

@@ -42,13 +42,17 @@ export declare namespace EntryFieldTypes {
     type: 'EntryResourceLink'
     entry: EntrySkeleton
   }
+  type ExternalResourceLink = {
+    type: 'ExternalResourceLink'
+  }
   type AssetLink = { type: 'AssetLink' }
   type Array<
     Item extends
       | EntryFieldTypes.Symbol
       | EntryFieldTypes.AssetLink
       | EntryFieldTypes.EntryLink<EntrySkeletonType>
-      | EntryFieldTypes.EntryResourceLink<EntrySkeletonType>,
+      | EntryFieldTypes.EntryResourceLink<EntrySkeletonType>
+      | EntryFieldTypes.ExternalResourceLink,
   > = { type: 'Array'; item: Item }
   type Object<Data extends JsonObject | JsonArray | null = JsonObject | JsonArray | null> = {
     type: 'Object'
@@ -97,11 +101,14 @@ export type EntryFieldType<EntrySkeleton extends EntrySkeletonType> =
   | EntryFieldTypes.Object
   | EntryFieldTypes.EntryLink<EntrySkeleton>
   | EntryFieldTypes.EntryResourceLink<EntrySkeleton>
+  | EntryFieldTypes.ExternalResourceLink
   | EntryFieldTypes.AssetLink
   | EntryFieldTypes.Array<EntryFieldTypes.Symbol>
   | EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
   | EntryFieldTypes.Array<EntryFieldTypes.EntryLink<EntrySkeleton>>
-  | EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<EntrySkeleton>>
+  | EntryFieldTypes.Array<
+      EntryFieldTypes.EntryResourceLink<EntrySkeleton> | EntryFieldTypes.ExternalResourceLink
+    >
 
 /**
  * All possible values for entry field types
@@ -243,9 +250,11 @@ export type ResolvedLink<
     ? ResolvedEntryLink<Modifiers, Locales, LinkedEntry>
     : Field extends EntryFieldTypes.EntryResourceLink<infer LinkedEntry>
       ? ResolvedEntryResourceLink<Modifiers, Locales, LinkedEntry>
-      : Field extends EntryFieldTypes.AssetLink
-        ? ResolvedAssetLink<Modifiers, Locales>
-        : BaseFieldMap<Field>
+      : Field extends EntryFieldTypes.ExternalResourceLink
+        ? { sys: ResourceLink<string> }
+        : Field extends EntryFieldTypes.AssetLink
+          ? ResolvedAssetLink<Modifiers, Locales>
+          : BaseFieldMap<Field>
 
 /**
  * A collection or single resolved link to another resource
