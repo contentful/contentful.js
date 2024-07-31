@@ -8,6 +8,9 @@ interface TypeCatFields {
   likes?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
   color?: EntryFieldTypes.Symbol
   bestFriend?: EntryFieldTypes.EntryLink<EntrySkeletonType>
+  otherFriends?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryResourceLink<EntrySkeletonType> | EntryFieldTypes.ExternalResourceLink
+  >
   birthday?: EntryFieldTypes.Date
   lifes?: EntryFieldTypes.Integer
   lives?: EntryFieldTypes.Integer
@@ -58,6 +61,7 @@ const resolvedHappyCatEntry = {
     likes: ['cheezburger'],
     color: 'gray',
     bestFriend: { sys: { type: 'Link', linkType: 'Entry', id: 'nyancat' } },
+    otherFriends: [],
     birthday: '2003-10-28T23:00:00+00:00',
     lives: 1,
     image: { sys: { type: 'Link', linkType: 'Asset', id: 'happycat' } },
@@ -93,6 +97,9 @@ const resolvedHappyCatEntryAllLocales = {
     },
     bestFriend: {
       'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'nyancat' } },
+    },
+    otherFriends: {
+      'en-US': [],
     },
     birthday: {
       'en-US': '2003-10-28T23:00:00+00:00',
@@ -250,6 +257,22 @@ beforeEach(() => {
           likes: ['rainbows', 'fish'],
           color: 'rainbow',
           bestFriend: { sys: { type: 'Link', linkType: 'Entry', id: 'happycat' } },
+          otherFriends: [
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:contentful:::content:spaces/ezs1swce23xe/entries/happycat',
+              },
+            },
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'AnotherProvider:SomeResourceType',
+                urn: 'external-id',
+              },
+            },
+          ],
           birthday: '2011-04-04T22:00:00Z',
           lives: 1337,
           image: { sys: { type: 'Link', linkType: 'Asset', id: 'nyancat' } },
@@ -303,6 +326,24 @@ beforeEach(() => {
               },
             },
           },
+          otherFriends: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'ResourceLink',
+                  linkType: 'Contentful:Entry',
+                  urn: 'crn:contentful:::content:spaces/ezs1swce23xe/entries/happycat',
+                },
+              },
+              {
+                sys: {
+                  type: 'ResourceLink',
+                  linkType: 'AnotherProvider:SomeResourceType',
+                  urn: 'external-id',
+                },
+              },
+            ],
+          },
           birthday: {
             'en-US': '2020-07-02T00:00:00Z',
           },
@@ -353,6 +394,22 @@ beforeEach(() => {
               id: '6SiPbntBPYYjnVHmipxJBF',
             },
           },
+          otherFriends: [
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'Contentful:Entry',
+                urn: 'crn:contentful:::content:spaces/ezs1swce23xe/entries/happycat',
+              },
+            },
+            {
+              sys: {
+                type: 'ResourceLink',
+                linkType: 'AnotherProvider:SomeResourceType',
+                urn: 'external-id',
+              },
+            },
+          ],
           birthday: '2020-07-02T00:00:00Z',
           lives: 9,
           image: { sys: { type: 'Link', linkType: 'Asset', id: 'happycat' } },
@@ -411,6 +468,24 @@ beforeEach(() => {
               },
             },
           },
+          otherFriends: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'ResourceLink',
+                  linkType: 'Contentful:Entry',
+                  urn: 'crn:contentful:::content:spaces/ezs1swce23xe/entries/happycat',
+                },
+              },
+              {
+                sys: {
+                  type: 'ResourceLink',
+                  linkType: 'AnotherProvider:SomeResourceType',
+                  urn: 'external-id',
+                },
+              },
+            ],
+          },
           birthday: {
             'en-US': '2020-07-02T00:00:00Z',
           },
@@ -442,6 +517,8 @@ describe('parseEntries via client chain modifiers', () => {
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend?.sys.type).toBe('Entry')
+      expect(response.items[0].fields.otherFriends?.[0]?.sys.type).toBe('Entry')
+      expect(response.items[0].fields.otherFriends?.[1]?.sys.type).toBe('ResourceLink')
       expect(response.items[0].fields.color).toBe('rainbow')
       expect(response.items[0].fields.color?.['en-US']).not.toBeDefined()
     })
@@ -453,6 +530,8 @@ describe('parseEntries via client chain modifiers', () => {
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend).toBeUndefined()
+      expect(response.items[0].fields.otherFriends).toHaveLength(1)
+      expect(response.items[0].fields.otherFriends?.[0]?.sys.type).toBe('ResourceLink')
     })
   })
 
@@ -463,7 +542,9 @@ describe('parseEntries via client chain modifiers', () => {
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.name).toHaveProperty('tlh')
-      expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).not.toBe('Link')
+      expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Entry')
+      expect(response.items[0].fields.otherFriends?.['en-US']?.[0]?.sys.type).toBe('Entry')
+      expect(response.items[0].fields.otherFriends?.['en-US']?.[1]?.sys.type).toBe('ResourceLink')
     })
 
     test('client.withAllLocales.withoutLinkResolution', () => {
@@ -474,6 +555,8 @@ describe('parseEntries via client chain modifiers', () => {
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.name).toHaveProperty('tlh')
       expect(response.items[0].fields.bestFriend?.['en-US']?.sys.type).toBe('Link')
+      expect(response.items[0].fields.otherFriends?.['en-US']?.[0]?.sys.type).toBe('ResourceLink')
+      expect(response.items[0].fields.otherFriends?.['en-US']?.[1]?.sys.type).toBe('ResourceLink')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', () => {
@@ -486,6 +569,8 @@ describe('parseEntries via client chain modifiers', () => {
       expect(response.items[0].fields.name).toHaveProperty('tlh')
       expect(response.items[0].fields.color).toHaveProperty('en-US')
       expect(response.items[0].fields.bestFriend).toEqual({})
+      expect(response.items[0].fields.otherFriends?.['en-US']).toHaveLength(1)
+      expect(response.items[0].fields.otherFriends?.['en-US']?.[0]?.sys.type).toBe('ResourceLink')
     })
   })
 
@@ -495,6 +580,8 @@ describe('parseEntries via client chain modifiers', () => {
 
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.bestFriend?.sys.type).toBe('Link')
+      expect(response.items[0].fields.otherFriends?.[0]?.sys.type).toBe('ResourceLink')
+      expect(response.items[0].fields.otherFriends?.[1]?.sys.type).toBe('ResourceLink')
     })
   })
 })
