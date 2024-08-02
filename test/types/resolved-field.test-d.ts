@@ -270,6 +270,223 @@ expectNotAssignable<
   >
 >(mocks.entry)
 
+// external resource links
+
+expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(
+  mocks.externalResourceLink,
+)
+// assignable because 'Contentful:Entry' is a subtype of string
+expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(
+  mocks.entryResourceLink,
+)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(mocks.entry)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(undefined)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(mocks.asset)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(mocks.assetLink)
+expectAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+>([mocks.externalResourceLink, mocks.entryResourceLink])
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+>([mocks.entry])
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+>([mocks.externalResourceLink, undefined])
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+>([mocks.externalResourceLink, mocks.asset])
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+>([mocks.externalResourceLink, mocks.assetLink])
+
+expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  mocks.externalResourceLink,
+)
+// assignable because 'Contentful:Entry' is a subtype of string
+expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  mocks.entryResourceLink,
+)
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(mocks.entry)
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(undefined)
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(mocks.asset)
+expectNotAssignable<
+  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+>(mocks.assetLink)
+expectAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.externalResourceLink, mocks.entryResourceLink])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.entry])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.externalResourceLink, undefined])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.externalResourceLink, mocks.asset])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.externalResourceLink, mocks.assetLink])
+
+expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.externalResourceLink,
+)
+// assignable because 'Contentful:Entry' is a subtype of string
+expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.entryResourceLink,
+)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.entry,
+)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+  undefined,
+)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.asset,
+)
+expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+  mocks.assetLink,
+)
+expectAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
+>([mocks.externalResourceLink, mocks.entryResourceLink])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
+>([mocks.entry])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
+>([undefined])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
+>([mocks.asset])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+    'WITHOUT_LINK_RESOLUTION'
+  >
+>([mocks.assetLink])
+
+// mixed resource links
+
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    undefined
+  >
+>(mocks.entry)
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    undefined
+  >
+>(mocks.entryResourceLink)
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    undefined
+  >
+>(mocks.externalResourceLink)
+expectNotAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    undefined
+  >
+>(undefined)
+expectAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink
+    >,
+    undefined
+  >
+>([mocks.entry, mocks.entryResourceLink, mocks.externalResourceLink])
+expectNotAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink
+    >,
+    undefined
+  >
+>([undefined])
+
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(mocks.entry)
+// assignable because 'Contentful:Entry' is a subtype of string
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(mocks.entryResourceLink)
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(mocks.externalResourceLink)
+expectAssignable<
+  ResolvedField<
+    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+    | EntryFieldTypes.ExternalResourceLink,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(undefined)
+expectAssignable<
+  ResolvedField<
+    EntryFieldTypes.Array<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink
+    >,
+    'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>([mocks.entry, mocks.entryResourceLink, mocks.externalResourceLink, undefined])
+
 // assets
 
 expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.asset)
