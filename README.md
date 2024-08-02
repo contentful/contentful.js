@@ -106,15 +106,17 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
 - Edge
 - Safari
 - node.js (LTS)
+- React Native (Metro bundler)
 
-> See list of min supported browser version here [@contentful/browserslist-config
-> ](https://github.com/contentful/browserslist-config/blob/master/index.js)
+> For the minimum supported browser versions, refer to the [package.json of this library.](https://github.com/contentful/contentful.js/blob/master/package.json#L12)
 
-The default export is an `es9` compliant module. In order to import the `commonJS` bundle, please use:
+To ensure compatibility across various JavaScript environments, this library is built as an ECMAScript Module (ESM) by default, using the `"type": "module"` declaration in `package.json`.
 
-```js
-const contentful = require('contentful/contentful.node')
-```
+We also offer a bundle for the legacy CommonJS (CJS) require syntax, allowing usage in environments that do not support ESM.
+
+Additionally, there is a bundle available for direct usage within browsers.
+
+For more details on the different variants of this library, see [Installation](#installation).
 
 ## Getting started
 
@@ -130,6 +132,26 @@ In order to get started with the Contentful JS library you'll need not only to i
 
 ```sh
 npm install contentful
+```
+
+In a modern environment, you can import this library using:
+
+```js
+import * as contentful from 'contentful'
+```
+
+#### Using in Legacy Environments Without ESM/Import Support
+
+Typically, your system will default to our CommonJS export when you use the require syntax:
+
+```js
+const contentful = require('contentful')
+```
+
+If this does not work, you can directly require the CJS-compatible code:
+
+```js
+const contentful = require('contentful/dist/contentful.cjs')
 ```
 
 #### Using it directly in the browser
