@@ -70,8 +70,8 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
   - [Authentication](#authentication)
 - [Documentation \& References](#documentation--references)
   - [Configuration](#configuration)
-      - [Request configuration options](#request-configuration-options)
-      - [Response configuration options](#response-configuration-options)
+    - [Request configuration options](#request-configuration-options)
+    - [Response configuration options](#response-configuration-options)
   - [Client chain modifiers](#client-chain-modifiers)
     - [Entries](#entries)
       - [Example](#example)
@@ -186,7 +186,7 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 The following code snippet is the most basic one you can use to get some content from Contentful with this library:
 
 ```js
-import * as contentful from "contentful"
+import * as contentful from 'contentful'
 const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
@@ -207,7 +207,7 @@ Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of 
 This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
-import * as contentful from "contentful"
+import * as contentful from 'contentful'
 const client = contentful.createClient({
   space: 'developer_bookshelf',
   accessToken: 'preview_0b7f6x59a0',
