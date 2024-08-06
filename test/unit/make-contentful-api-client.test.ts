@@ -1,8 +1,8 @@
+import { MockedObject, vi } from 'vitest'
 import { HeadersDefaults } from 'axios'
 import { createGlobalOptions } from '../../lib/create-global-options'
 import { makeClient } from '../../lib/make-client'
 import * as resolveCircular from '../../lib/utils/resolve-circular'
-// @ts-ignore
 import * as mocks from './mocks'
 
 class RejectError extends Error {
@@ -14,11 +14,15 @@ class RejectError extends Error {
   }
 }
 
+vi.mock('../../lib/utils/resolve-circular')
+
+const resolveCircularMock = <MockedObject<typeof resolveCircular>>(<unknown>resolveCircular)
+
 const now = () => Math.floor(Date.now() / 1000)
 
 function setupWithData({
   promise,
-  getGlobalOptions = jest.fn().mockReturnValue({
+  getGlobalOptions = vi.fn().mockReturnValue({
     resolveLinks: true,
     removeUnresolved: false,
     spaceBaseUrl: 'spaceUrl',
@@ -26,13 +30,12 @@ function setupWithData({
     environmentBaseUrl: 'environmentUrl',
   }),
 }) {
-  const getStub = jest.fn()
-  const postStub = jest.fn()
+  const getStub = vi.fn()
+  const postStub = vi.fn()
   const api = makeClient({
-    // @ts-ignore
     http: {
       // @ts-expect-error
-      defaults: { baseURL: 'baseURL', logHandler: jest.fn(), headers: {} as HeadersDefaults },
+      defaults: { baseURL: 'baseURL', logHandler: vi.fn(), headers: {} as HeadersDefaults },
       get: getStub.mockReturnValue(promise),
       post: postStub.mockReturnValue(promise),
     },
@@ -47,18 +50,14 @@ function setupWithData({
 }
 
 describe('make Contentful API client', () => {
-  const resolveCircularMock = jest.fn()
-  // @ts-ignore
-  resolveCircular.default = resolveCircularMock
-
   beforeEach(() => {
-    resolveCircularMock.mockImplementation((args) => {
+    resolveCircularMock.default.mockImplementation((args) => {
       return args
     })
   })
 
   afterEach(() => {
-    resolveCircularMock.mockReset()
+    resolveCircularMock.default.mockReset()
   })
 
   test('API call getSpace', async () => {
@@ -140,7 +139,7 @@ describe('make Contentful API client', () => {
     const { api } = setupWithData({
       promise: Promise.resolve({ data: mocks.entryMock }),
     })
-    api.getEntries = jest.fn().mockResolvedValue({ items: [mocks.entryMock] })
+    api.getEntries = vi.fn().mockResolvedValue({ items: [mocks.entryMock] })
     await expect(api.getEntry<mocks.EntrySkeleton>('eid')).resolves.toEqual(mocks.entryMock)
     expect(api.getEntries).toHaveBeenCalledTimes(1)
   })
@@ -182,7 +181,7 @@ describe('make Contentful API client', () => {
       promise: Promise.resolve({ data: data }),
     })
     await expect(api.getEntries()).resolves.toEqual(data)
-    expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeTruthy()
+    expect(resolveCircularMock.default.mock.calls[0][1].resolveLinks).toBeTruthy()
   })
 
   test('API call getEntries with link resolution disabled', async () => {
@@ -197,7 +196,7 @@ describe('make Contentful API client', () => {
     })
 
     await expect(api.withoutLinkResolution.getEntries()).resolves.toEqual(data)
-    expect(resolveCircularMock.mock.calls[0][1].resolveLinks).toBeFalsy()
+    expect(resolveCircularMock.default.mock.calls[0][1].resolveLinks).toBeFalsy()
   })
 
   test('API call getEntries fails', async () => {

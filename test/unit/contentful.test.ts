@@ -1,18 +1,23 @@
-import * as SdkCore from 'contentful-sdk-core'
+import { vi, test, expect, describe, MockedFunction, beforeEach, afterEach } from 'vitest'
 import { createClient } from '../../lib/contentful'
+import { createHttpClient } from 'contentful-sdk-core'
 import * as CreateContentfulApi from '../../lib/create-contentful-api'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require('../../package.json').version
 
-jest.mock('../../lib/create-contentful-api')
+vi.mock('../../lib/create-contentful-api')
+vi.mock('contentful-sdk-core', async (importOriginal) => {
+  const mod: object = await importOriginal()
 
-// @ts-ignore
-SdkCore.createHttpClient = jest.fn()
-const createHttpClientMock = <jest.Mock<typeof SdkCore.createHttpClient>>(
-  (<unknown>SdkCore.createHttpClient)
-)
-const createContentfulApiMock = <jest.Mock<typeof CreateContentfulApi.default>>(
+  return {
+    ...mod,
+    createHttpClient: vi.fn(),
+  }
+})
+
+const createHttpClientMock = <MockedFunction<typeof createHttpClient>>(<unknown>createHttpClient)
+const createContentfulApiMock = <MockedFunction<typeof CreateContentfulApi.default>>(
   (<unknown>CreateContentfulApi.default)
 )
 
@@ -24,8 +29,9 @@ describe('contentful', () => {
         baseURL: 'http://some-base-url.com/',
       },
       interceptors: {
+        // @ts-ignore
         response: {
-          use: jest.fn(),
+          use: vi.fn(),
         },
       },
     })
@@ -57,7 +63,9 @@ describe('contentful', () => {
     expect(createHttpClientMock).toHaveBeenCalledTimes(1)
 
     const callConfig = createHttpClientMock.mock.calls[0][1]
-
+    if (!callConfig.headers) {
+      throw new Error('httpClient was created without headers')
+    }
     expect(callConfig.headers['Content-Type']).toBeDefined()
     expect(callConfig.headers['X-Contentful-User-Agent']).toBeDefined()
 
@@ -74,6 +82,9 @@ describe('contentful', () => {
       space: 'spaceId',
     })
     const callConfig = createHttpClientMock.mock.calls[0][1]
+    if (!callConfig.headers) {
+      throw new Error('httpClient was created without headers')
+    }
     expect(callConfig.headers['Content-Type']).toBeDefined()
     expect(callConfig.headers['X-Contentful-User-Agent']).toBeDefined()
   })

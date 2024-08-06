@@ -1,5 +1,8 @@
+import { test, expect, describe } from 'vitest'
+
 import { EntryFieldTypes, EntrySkeletonType } from '../../lib'
 import * as contentful from '../../lib/contentful'
+import { TypeCatSkeleton } from './parseEntries.test'
 import { ValidationError } from '../../lib/utils/validation-error'
 import { params, previewParamsWithCSM } from './utils'
 
@@ -29,21 +32,16 @@ describe('getEntries via client chain modifiers', () => {
       >({ 'sys.id': entryWithResolvableLink, include: 2 })
 
       expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.bestFriend.sys.type).toBe('Entry')
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend.sys.type,
+      ).toBe('Entry')
       expect(response.items[0].fields.color).toBe('rainbow')
-      expect(response.items[0].fields.color['en-US']).not.toBeDefined()
+      expect(
+        response.items[0].fields.color && response.items[0].fields.color['en-US'],
+      ).not.toBeDefined()
     })
 
     test('Gets entries with select', async () => {
-      type TypeCatSkeleton = EntrySkeletonType<
-        {
-          name: string
-          likes: string
-          color: string
-        },
-        'cat'
-      >
-
       const response = await client.getEntries<TypeCatSkeleton>({
         select: ['fields.name', 'fields.likes'],
         content_type: 'cat',
@@ -358,8 +356,16 @@ describe('getEntries via client chain modifiers', () => {
         include: 2,
       })
       expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+      expect(
+        response.items[0].fields.color && response.items[0].fields.color['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend &&
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
+      ).toBe('Link')
     })
 
     test('client.withAllLocales.withoutUnresolvableLinks', async () => {
@@ -424,7 +430,13 @@ describe('getEntries via client chain modifiers', () => {
       })
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend &&
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
+      ).toBe('Link')
     })
 
     test('withAllLocales.withoutUnresolvableLinks', async () => {
@@ -451,7 +463,9 @@ describe('getEntries via client chain modifiers', () => {
       })
 
       expect(response.items[0].fields).toBeDefined()
-      expect(response.items[0].fields.bestFriend.sys.type).toBe('Link')
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend.sys.type,
+      ).toBe('Link')
     })
 
     test('client.withoutLinkResolution.withAllLocales', async () => {
@@ -468,7 +482,13 @@ describe('getEntries via client chain modifiers', () => {
       expect(response.items[0].fields).toBeDefined()
       expect(response.items[0].fields.name).toHaveProperty('en-US')
       expect(response.items[0].fields.color).toHaveProperty('en-US')
-      expect(response.items[0].fields.bestFriend).toHaveProperty('[en-US].sys.type', 'Link')
+      expect(
+        response.items[0].fields.bestFriend && response.items[0].fields.bestFriend['en-US'],
+      ).toBeDefined()
+      expect(
+        response.items[0].fields.bestFriend &&
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
+      ).toBe('Link')
     })
   })
 })

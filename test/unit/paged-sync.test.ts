@@ -1,5 +1,5 @@
+import { vi } from 'vitest'
 import copy from 'fast-copy'
-import { when } from 'jest-when'
 
 import pagedSync from '../../lib/paged-sync'
 import { assetMock, entryMock, entryWithLinkMock } from './mocks'
@@ -31,7 +31,7 @@ describe('paged-sync', () => {
   let http
 
   beforeEach(() => {
-    http = { get: jest.fn() }
+    http = { get: vi.fn() }
   })
 
   afterEach(() => {
@@ -178,20 +178,23 @@ describe('paged-sync', () => {
   })
 
   test('Initial sync with multiple pages', async () => {
-    when(http.get)
-      .calledWith('sync', { params: { initial: true, type: 'Entry' } })
-      .mockReturnValue(
-        Promise.resolve({
+    http.get.mockImplementation((...args) => {
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { initial: true, type: 'Entry' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [createEntry('1'), createEntry('2')],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1',
           },
-        }),
-      )
-
-      .calledWith('sync', { params: { sync_token: 'nextpage1' } })
-      .mockReturnValue(
-        Promise.resolve({
+        })
+      }
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextpage1' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [
               createEntry('3'),
@@ -201,18 +204,20 @@ describe('paged-sync', () => {
             ],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2',
           },
-        }),
-      )
-
-      .calledWith('sync', { params: { sync_token: 'nextpage2' } })
-      .mockReturnValue(
-        Promise.resolve({
+        })
+      }
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextpage2' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [createAsset('2'), createAsset('3'), createAsset('3', true)],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        }),
-      )
+        })
+      }
+    })
 
     const response = await pagedSync(http, { initial: true, type: 'Entry' })
 
@@ -230,20 +235,25 @@ describe('paged-sync', () => {
   })
 
   test('Initial sync with limit and multiple pages', async () => {
-    when(http.get)
-      .calledWith('sync', { params: { initial: true, limit: 10, type: 'Entry' } })
-      .mockReturnValue(
-        Promise.resolve({
+    http.get.mockImplementation((...args) => {
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) ===
+          JSON.stringify({ params: { initial: true, limit: 10, type: 'Entry' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [createEntry('1'), createEntry('2')],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1',
           },
-        }),
-      )
+        })
+      }
 
-      .calledWith('sync', { params: { sync_token: 'nextpage1' } })
-      .mockReturnValue(
-        Promise.resolve({
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextpage1' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [
               createEntry('3'),
@@ -253,18 +263,21 @@ describe('paged-sync', () => {
             ],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2',
           },
-        }),
-      )
+        })
+      }
 
-      .calledWith('sync', { params: { sync_token: 'nextpage2' } })
-      .mockReturnValue(
-        Promise.resolve({
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextpage2' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [createAsset('2'), createAsset('3'), createAsset('3', true)],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        }),
-      )
+        })
+      }
+    })
 
     const response = await pagedSync(http, { initial: true, limit: 10, type: 'Entry' })
     expect(http.get.mock.calls[0][1].params.initial).toBeTruthy()
@@ -283,10 +296,12 @@ describe('paged-sync', () => {
   })
 
   test('Sync with existing token', async () => {
-    when(http.get)
-      .calledWith('sync', { params: { sync_token: 'nextsynctoken' } })
-      .mockReturnValue(
-        Promise.resolve({
+    http.get.mockImplementation((...args) => {
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextsynctoken' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [
               createEntry('1'),
@@ -296,8 +311,9 @@ describe('paged-sync', () => {
             ],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        }),
-      )
+        })
+      }
+    })
 
     const response = await pagedSync(http, { nextSyncToken: 'nextsynctoken' })
     expect(http.get.mock.calls[0][1].params.sync_token).toEqual('nextsynctoken')
@@ -309,20 +325,23 @@ describe('paged-sync', () => {
   })
 
   test('Initial sync with multiple pages but pagination disabled', async () => {
-    when(http.get)
-      .calledWith('sync', { params: { initial: true, type: 'Entry' } })
-      .mockReturnValue(
-        Promise.resolve({
+    http.get.mockImplementation((...args) => {
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { initial: true, type: 'Entry' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [createEntry('1'), createEntry('2')],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage1',
           },
-        }),
-      )
-
-      .calledWith('sync', { params: { sync_token: 'nextpage1' } })
-      .mockReturnValue(
-        Promise.resolve({
+        })
+      }
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextpage1' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [
               createEntry('3'),
@@ -332,18 +351,20 @@ describe('paged-sync', () => {
             ],
             nextPageUrl: 'http://nextsyncurl?sync_token=nextpage2',
           },
-        }),
-      )
-
-      .calledWith('sync', { params: { sync_token: 'nextpage2' } })
-      .mockReturnValue(
-        Promise.resolve({
+        })
+      }
+      if (
+        args[0] === 'sync' &&
+        JSON.stringify(args[1]) === JSON.stringify({ params: { sync_token: 'nextpage2' } })
+      ) {
+        return Promise.resolve({
           data: {
             items: [createAsset('2'), createAsset('3'), createAsset('3', true)],
             nextSyncUrl: 'http://nextsyncurl?sync_token=nextsynctoken',
           },
-        }),
-      )
+        })
+      }
+    })
 
     const response = await pagedSync(http, { initial: true, type: 'Entry' }, { paginate: false })
     expect(http.get).toHaveBeenCalledTimes(1)
