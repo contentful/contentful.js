@@ -221,7 +221,7 @@ You can find all available methods of our client in our [reference documentation
 
 To get your own content from Contentful, an app should authenticate with an OAuth bearer token.
 
-You can create API keys using the [Contentful web interface](https://app.contentful.com). Go to the app, open the space that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section and create your first token. Done.
+You can create API keys using the [Contentful web interface](https://app.contentful.com). Go to the app, open the space that you want to access (top left corner lists all the spaces), and navigate to the APIs area. Open the API Keys section and create your first token.
 
 Don't forget to also get your Space ID.
 
