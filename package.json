@@ -153,6 +153,11 @@
         "name": "next",
         "channel": "next",
         "prerelease": true
+      },
+      {
+        "name": "beta-v11",
+        "channel": "beta-v11",
+        "prerelease": true
       }
     ],
     "plugins": [
