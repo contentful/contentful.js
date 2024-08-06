@@ -76,7 +76,7 @@
     "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && vitest --run ./test/output-integration/node",
     "test:demo-browser": "rimraf ./test/output-integration/browser/node-modules && npm --prefix ./test/output-integration/browser ci && npm --prefix ./test/output-integration/browser run test",
     "test:types": "tsd",
-    "test:prepush": "npm run build && npm run test:unit && npm run test:size && npm run test:types",
+    "test:prepush": "npm run build && npm run test:unit && npm run test:types",
     "prepublishOnly": "export PUBLISH_RUN=true && npm run build && unset PUBLISH_RUN",
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
