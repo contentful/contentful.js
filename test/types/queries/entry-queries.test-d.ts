@@ -14,6 +14,7 @@ expectAssignable<
   >
 >({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
 })
 expectNotAssignable<
   EntriesQueries<

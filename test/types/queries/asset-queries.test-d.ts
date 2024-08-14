@@ -10,6 +10,10 @@ expectAssignable<DefaultAssetQueries>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
 })
 
+expectNotAssignable<DefaultAssetQueries>({
+  'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
+})
+
 // equality operator
 
 expectAssignable<DefaultAssetQueries>({
@@ -24,6 +28,7 @@ expectAssignable<DefaultAssetQueries>({
 expectNotAssignable<DefaultAssetQueries>({
   'fields.unknownField': mocks.anyValue,
 })
+
 expectNotAssignable<DefaultAssetQueries>({
   'sys.unknownProp': mocks.anyValue,
 })

@@ -21,7 +21,7 @@ import {
 import { ReferenceSearchFilters } from './reference'
 import { TagSys } from '../tag'
 import { Metadata } from '../metadata'
-import { TagLink } from '../link'
+import { TagLink, TaxonomyConceptLink } from '../link'
 import {
   AssetOrderFilter,
   EntryOrderFilter,
@@ -51,7 +51,7 @@ export type LocaleOption = {
 }
 
 /**
- * All queries appliable to sys fields
+ * All queries applicable to sys fields
  */
 export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   EqualityFilter<Sys, 'sys'> &
@@ -60,13 +60,22 @@ export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'>
 
 /**
- * All queries appliable to metadata fields
+ * All queries applicable to metadata tags fields
  */
 export type MetadataTagsQueries =
   | ConditionalFixedQueries<Pick<Metadata, 'tags'>, any, boolean, 'metadata', '[exists]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[all]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[in]'>
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[nin]'>
+
+/**
+ * All queries applicable to metadata concepts fields
+ */
+export type MetadataConceptsQueries =
+  | ConditionalFixedQueries<Pick<Metadata, 'concepts'>, any, boolean, 'metadata', '[exists]'>
+  | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[all]'>
+  | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[in]'>
+  | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[nin]'>
 
 /**
  * All queries appliable to entry fields
@@ -103,6 +112,7 @@ export type EntriesQueries<
       EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
   | ((SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
+      MetadataConceptsQueries &
       EntrySelectFilter &
       EntryOrderFilter &
       FixedQueryOptions &

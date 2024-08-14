@@ -1,6 +1,6 @@
 import { ContentfulCollection } from './collection'
 import { LocaleCode } from './locale'
-import { Metadata } from './metadata'
+import { AssetMetadata } from './metadata'
 import { EntitySys } from './sys'
 import { ChainModifiers } from './client'
 
@@ -53,7 +53,7 @@ export interface Asset<
     : 'WITH_ALL_LOCALES' extends Modifiers
       ? { [FieldName in keyof AssetFields]: { [LocaleName in Locales]?: AssetFields[FieldName] } }
       : AssetFields
-  metadata: Metadata
+  metadata: AssetMetadata
 }
 
 /**
