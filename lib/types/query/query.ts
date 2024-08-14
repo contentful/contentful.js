@@ -76,6 +76,12 @@ export type MetadataConceptsQueries =
   | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[all]'>
   | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[in]'>
   | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[nin]'>
+  | ConditionalListQueries<
+      Pick<TaxonomyConceptLink, 'id'>,
+      any,
+      'metadata.concepts.descendants',
+      '[in]'
+    >
 
 /**
  * All queries appliable to entry fields
