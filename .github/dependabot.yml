@@ -28,4 +28,21 @@ updates:
     commit-message:
       prefix: build
       include: scope
+    groups:
+      production-dependencies:
+        applies-to: version-updates
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - '*'
+      dev-dependencies:
+        applies-to: version-updates
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - '*'
 
