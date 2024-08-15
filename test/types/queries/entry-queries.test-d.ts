@@ -15,8 +15,22 @@ expectAssignable<
 >({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
-  'metadata.concepts.descendants.id[in]': mocks.stringArrayValue,
 })
+
+expectAssignable<
+  EntriesQueries<
+    EntrySkeletonType<{
+      stringField: EntryFieldTypes.Symbol
+      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+    }>,
+    undefined
+  >
+>({
+  'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.descendants[in]': mocks.stringArrayValue,
+})
+
 expectNotAssignable<
   EntriesQueries<
     EntrySkeletonType<{

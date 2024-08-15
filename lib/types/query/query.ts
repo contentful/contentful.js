@@ -1,5 +1,9 @@
 import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset'
+import { ChainModifiers } from '../client'
 import { EntrySys } from '../entry'
+import { TagLink, TaxonomyConceptLink } from '../link'
+import { Metadata } from '../metadata'
+import { TagSys } from '../tag'
 import {
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
@@ -8,28 +12,24 @@ import {
 } from './equality'
 import { EntryFieldsExistenceFilter, ExistenceFilter } from './existence'
 import { LocationSearchFilters } from './location'
-import { EntryFieldsRangeFilters, RangeFilters } from './range'
-import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search'
-import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
-import { EntryFieldsSubsetFilters, SubsetFilters } from './subset'
-import {
-  ConditionalFixedQueries,
-  ConditionalListQueries,
-  FieldsType,
-  EntrySkeletonType,
-} from './util'
-import { ReferenceSearchFilters } from './reference'
-import { TagSys } from '../tag'
-import { Metadata } from '../metadata'
-import { TagLink, TaxonomyConceptLink } from '../link'
 import {
   AssetOrderFilter,
   EntryOrderFilter,
   EntryOrderFilterWithFields,
   TagOrderFilter,
 } from './order'
+import { EntryFieldsRangeFilters, RangeFilters } from './range'
+import { ReferenceSearchFilters } from './reference'
+import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search'
+import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { EntryFieldsSetFilter } from './set'
-import { ChainModifiers } from '../client'
+import { EntryFieldsSubsetFilters, SubsetFilters } from './subset'
+import {
+  ConditionalFixedQueries,
+  ConditionalListQueries,
+  EntrySkeletonType,
+  FieldsType,
+} from './util'
 
 export type FixedPagedOptions = {
   skip?: number
@@ -76,15 +76,10 @@ export type MetadataConceptsQueries =
   | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[all]'>
   | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[in]'>
   | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[nin]'>
-  | ConditionalListQueries<
-      Pick<TaxonomyConceptLink, 'id'>,
-      any,
-      'metadata.concepts.descendants',
-      '[in]'
-    >
+  | ConditionalListQueries<{ descendants: string }, any, 'metadata.concepts', '[in]'>
 
 /**
- * All queries appliable to entry fields
+ * All queries applicable to entry fields
  * @typeParam Fields - Shape of entry fields used to calculate dynamic keys
  */
 export type EntryFieldsQueries<Fields extends FieldsType> =
