@@ -1,5 +1,9 @@
 import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset'
+import { ChainModifiers } from '../client'
 import { EntrySys } from '../entry'
+import { TagLink, TaxonomyConceptLink } from '../link'
+import { Metadata } from '../metadata'
+import { TagSys } from '../tag'
 import {
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
@@ -8,28 +12,24 @@ import {
 } from './equality'
 import { EntryFieldsExistenceFilter, ExistenceFilter } from './existence'
 import { LocationSearchFilters } from './location'
-import { EntryFieldsRangeFilters, RangeFilters } from './range'
-import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search'
-import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
-import { EntryFieldsSubsetFilters, SubsetFilters } from './subset'
-import {
-  ConditionalFixedQueries,
-  ConditionalListQueries,
-  FieldsType,
-  EntrySkeletonType,
-} from './util'
-import { ReferenceSearchFilters } from './reference'
-import { TagSys } from '../tag'
-import { Metadata } from '../metadata'
-import { TagLink } from '../link'
 import {
   AssetOrderFilter,
   EntryOrderFilter,
   EntryOrderFilterWithFields,
   TagOrderFilter,
 } from './order'
+import { EntryFieldsRangeFilters, RangeFilters } from './range'
+import { ReferenceSearchFilters } from './reference'
+import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search'
+import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
 import { EntryFieldsSetFilter } from './set'
-import { ChainModifiers } from '../client'
+import { EntryFieldsSubsetFilters, SubsetFilters } from './subset'
+import {
+  ConditionalFixedQueries,
+  ConditionalListQueries,
+  EntrySkeletonType,
+  FieldsType,
+} from './util'
 
 export type FixedPagedOptions = {
   skip?: number
@@ -51,7 +51,7 @@ export type LocaleOption = {
 }
 
 /**
- * All queries appliable to sys fields
+ * All queries applicable to sys fields
  */
 export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   EqualityFilter<Sys, 'sys'> &
@@ -60,7 +60,7 @@ export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'>
 
 /**
- * All queries appliable to metadata fields
+ * All queries applicable to metadata tags fields
  */
 export type MetadataTagsQueries =
   | ConditionalFixedQueries<Pick<Metadata, 'tags'>, any, boolean, 'metadata', '[exists]'>
@@ -69,7 +69,17 @@ export type MetadataTagsQueries =
   | ConditionalListQueries<Pick<TagLink, 'id'>, any, 'metadata.tags.sys', '[nin]'>
 
 /**
- * All queries appliable to entry fields
+ * All queries applicable to metadata concepts fields
+ */
+export type MetadataConceptsQueries =
+  | ConditionalFixedQueries<Pick<Metadata, 'concepts'>, any, boolean, 'metadata', '[exists]'>
+  | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[all]'>
+  | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[in]'>
+  | ConditionalListQueries<Pick<TaxonomyConceptLink, 'id'>, any, 'metadata.concepts.sys', '[nin]'>
+  | ConditionalListQueries<{ descendants: string }, any, 'metadata.concepts', '[in]'>
+
+/**
+ * All queries applicable to entry fields
  * @typeParam Fields - Shape of entry fields used to calculate dynamic keys
  */
 export type EntryFieldsQueries<Fields extends FieldsType> =
@@ -103,6 +113,7 @@ export type EntriesQueries<
       EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
   | ((SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
       MetadataTagsQueries &
+      MetadataConceptsQueries &
       EntrySelectFilter &
       EntryOrderFilter &
       FixedQueryOptions &

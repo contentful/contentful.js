@@ -3,7 +3,15 @@ import { ResourceLink } from './resource-link'
 /**
  * @category Link
  */
-export type LinkType = 'Space' | 'ContentType' | 'Environment' | 'Entry' | 'Tag' | 'User' | 'Asset'
+export type LinkType =
+  | 'Space'
+  | 'ContentType'
+  | 'Environment'
+  | 'Entry'
+  | 'Tag'
+  | 'User'
+  | 'Asset'
+  | 'TaxonomyConcept'
 
 /**
  * Link definition of a specific link type
@@ -62,3 +70,9 @@ export type TagLink = Link<'Tag'>
  * @category Entity
  */
 export type UserLink = Link<'User'>
+
+/**
+ * Taxonomy Concept link type
+ * @category Entity
+ */
+export type TaxonomyConceptLink = Link<'TaxonomyConcept'>
