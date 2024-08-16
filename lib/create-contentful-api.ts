@@ -101,11 +101,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   function maybeEnableSourceMaps(query: Record<string, any> = {}): Record<string, any> {
-    const alphaFeatures = (http.httpClientParams as any as CreateClientParams)?.alphaFeatures
+    const params = http.httpClientParams as CreateClientParams
+    const includeContentSourceMaps =
+      params?.includeContentSourceMaps ?? params?.alphaFeatures?.includeContentSourceMaps
 
-    const host = http.httpClientParams?.host
+    const host = params?.host
 
-    const areAllowed = checkIncludeContentSourceMapsParamIsAllowed(host, alphaFeatures)
+    const areAllowed = checkIncludeContentSourceMapsParamIsAllowed(host, includeContentSourceMaps)
 
     if (areAllowed) {
       query.includeContentSourceMaps = true

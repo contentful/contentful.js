@@ -28,7 +28,7 @@ export const previewParams = {
 
 export const previewParamsWithCSM = {
   ...previewParams,
-  alphaFeatures: { includeContentSourceMaps: true },
+  includeContentSourceMaps: true,
 }
 
 export type Mappings = Record<
