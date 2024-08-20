@@ -117,15 +117,14 @@ describe('contentful', () => {
     )
   })
 
-  test('Initializes API with alpha features', () => {
+  test('Initializes API with includeContentSourceMaps option', () => {
     createClient({
       accessToken: 'accessToken',
       space: 'spaceId',
-      alphaFeatures: { includeContentSourceMaps: true },
+      includeContentSourceMaps: true,
     })
     const callConfig = createHttpClientMock.mock.calls[0]
 
-    const alphaFeatures = callConfig[1].alphaFeatures
-    expect(alphaFeatures).toEqual({ includeContentSourceMaps: true })
+    expect(callConfig[1].includeContentSourceMaps).toBe(true)
   })
 })
