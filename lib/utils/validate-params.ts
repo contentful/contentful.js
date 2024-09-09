@@ -47,39 +47,24 @@ export function validateRemoveUnresolvedParam(query) {
   return
 }
 
-export function checkIncludeContentSourceMapsParamIsValid(alphaFeatures?: Record<string, any>) {
-  if (!alphaFeatures) {
+export function checkIncludeContentSourceMapsParamIsAllowed(
+  host?: string,
+  includeContentSourceMaps?: boolean,
+) {
+  if (includeContentSourceMaps === undefined) {
     return false
   }
 
-  const isValidIncludeContentSourceMaps =
-    'includeContentSourceMaps' in alphaFeatures &&
-    typeof alphaFeatures.includeContentSourceMaps === 'boolean'
-
-  if (!isValidIncludeContentSourceMaps) {
+  if (typeof includeContentSourceMaps !== 'boolean') {
     throw new ValidationError(
       'includeContentSourceMaps',
       `The 'includeContentSourceMaps' parameter must be a boolean.`,
     )
   }
 
-  return true
-}
-
-export function checkIncludeContentSourceMapsParamIsAllowed(
-  host?: string,
-  alphaFeatures?: Record<string, any>,
-) {
-  if (!alphaFeatures || Object.keys(alphaFeatures).length === 0) {
-    return false
-  }
-
   const includeContentSourceMapsIsAllowed = host === 'preview.contentful.com'
 
-  if (
-    checkIncludeContentSourceMapsParamIsValid(alphaFeatures) &&
-    !includeContentSourceMapsIsAllowed
-  ) {
+  if (includeContentSourceMaps && !includeContentSourceMapsIsAllowed) {
     throw new ValidationError(
       'includeContentSourceMaps',
       `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.
@@ -87,5 +72,5 @@ export function checkIncludeContentSourceMapsParamIsAllowed(
     )
   }
 
-  return alphaFeatures.includeContentSourceMaps as boolean
+  return includeContentSourceMaps as boolean
 }

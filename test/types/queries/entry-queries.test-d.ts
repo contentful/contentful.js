@@ -14,7 +14,23 @@ expectAssignable<
   >
 >({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
 })
+
+expectAssignable<
+  EntriesQueries<
+    EntrySkeletonType<{
+      stringField: EntryFieldTypes.Symbol
+      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+    }>,
+    undefined
+  >
+>({
+  'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.descendants[in]': mocks.stringArrayValue,
+})
+
 expectNotAssignable<
   EntriesQueries<
     EntrySkeletonType<{
@@ -89,6 +105,7 @@ expectAssignable<
   EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
 >({
   'metadata.tags[exists]': mocks.booleanValue,
+  'metadata.concepts[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
 })
 expectNotAssignable<
@@ -189,6 +206,7 @@ expectAssignable<
   >
 >({
   'metadata.tags.sys.id[in]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
 expectNotAssignable<
@@ -380,6 +398,7 @@ expectAssignable<
   >
 >({
   'metadata.tags.sys.id[nin]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
 expectNotAssignable<
