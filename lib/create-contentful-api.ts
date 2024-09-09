@@ -275,7 +275,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       })
 
       return resolveCircular(entries, {
-        resolveLinks: !withoutLinkResolution ?? true,
+        resolveLinks: !withoutLinkResolution,
         removeUnresolved: withoutUnresolvableLinks ?? false,
       })
     } catch (error) {
@@ -462,7 +462,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
 
     return resolveCircular(data, {
-      resolveLinks: !withoutLinkResolution ?? true,
+      resolveLinks: !withoutLinkResolution,
       removeUnresolved: withoutUnresolvableLinks ?? false,
     })
   }
