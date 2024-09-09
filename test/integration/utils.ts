@@ -53,7 +53,7 @@ export function testEncodingDecoding(encodedResponse: EncodedResponse, mappings:
 
 const mappedAsset = {
   origin: 'contentful.com',
-  href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/1x0xpXu4pSGS4OukSyWGUK/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+  href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/1x0xpXu4pSGS4OukSyWGUK/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
   contentful: {
     space: 'ezs1swce23xe',
     environment: 'master',
@@ -71,7 +71,7 @@ const mappedAsset = {
 
 const mappedAssetCollection = {
   origin: 'contentful.com',
-  href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/38eGMAzUH5Ezv7mjU0CToA/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+  href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/38eGMAzUH5Ezv7mjU0CToA/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
   contentful: {
     space: 'ezs1swce23xe',
     environment: 'master',
@@ -89,7 +89,7 @@ const mappedAssetCollection = {
 
 const mappedEntryCollection = {
   origin: 'contentful.com',
-  href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/38eGMAzUH5Ezv7mjU0CToA/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+  href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/38eGMAzUH5Ezv7mjU0CToA/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
   contentful: {
     space: 'ezs1swce23xe',
     environment: 'master',
