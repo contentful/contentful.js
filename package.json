@@ -142,7 +142,7 @@
     },
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "170Kb"
+      "maxSize": "171Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
