@@ -79,7 +79,7 @@
     "test:prepush": "npm run build && npm run test:unit && npm run test:types",
     "prepublishOnly": "export PUBLISH_RUN=true && npm run build && unset PUBLISH_RUN",
     "postpublish": "npm run docs:publish && npm run clean",
-    "semantic-release": "semantic-release",
+    "semantic-release": "semantic-release --dry-run",
     "prepare": "husky"
   },
   "dependencies": {
