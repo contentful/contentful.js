@@ -80,7 +80,9 @@
     "prepublishOnly": "export PUBLISH_RUN=true && npm run build && unset PUBLISH_RUN",
     "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
-    "prepare": "husky"
+    "prepare": "husky",
+    "precommit": "npm run lint && npm run prettier:check",
+    "prepush": "npm run test:prepush"
   },
   "dependencies": {
     "@contentful/rich-text-types": "^16.6.1",
