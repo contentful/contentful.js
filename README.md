@@ -58,33 +58,40 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
 
 <!-- TOC -->
 
-- [contentful.js - Contentful JavaScript Delivery library](#contentfuljs---contentful-javascript-delivery-library)
-  - [Core Features](#core-features)
-    - [Supported browsers and Node.js versions](#supported-browsers-and-nodejs-versions)
-  - [Getting started](#getting-started)
-    - [Installation](#installation)
-      - [Using it directly in the browser](#using-it-directly-in-the-browser)
-      - [Legacy browsers:](#legacy-browsers)
-      - [React Native & Server Side Rendering:](#react-native--server-side-rendering)
-    - [Your first request](#your-first-request)
-    - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
-    - [Authentication](#authentication)
-  - [Documentation & References](#documentation--references)
-    - [Configuration](#configuration)
-    - [Client chain modifiers](#client-chain-modifiers)
-    - [Reference documentation](#reference-documentation)
-    - [Tutorials & other resources](#tutorials--other-resources)
-    - [Troubleshooting](#troubleshooting)
-    - [Typscript](#typescript)
-    - [Advanced Concepts](https://github.com/contentful/contentful.js/blob/master/ADVANCED.md)
-    - [Migration](https://github.com/contentful/contentful.js/blob/master/MIGRATION.md)
-  - [Reach out to us](#reach-out-to-us)
-    - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
-    - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
-    - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
-  - [Get involved](#get-involved)
-  - [License](#license)
-  - [Code of Conduct](#code-of-conduct)
+- [Introduction](#introduction)
+- [Core Features](#core-features)
+  - [Supported browsers and Node.js versions](#supported-browsers-and-nodejs-versions)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+    - [Using in Legacy Environments Without ESM/Import Support](#using-in-legacy-environments-without-esmimport-support)
+    - [Using it directly in the browser](#using-it-directly-in-the-browser)
+  - [Your first request](#your-first-request)
+  - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
+  - [Authentication](#authentication)
+- [Documentation \& References](#documentation--references)
+  - [Configuration](#configuration)
+      - [Request configuration options](#request-configuration-options)
+      - [Response configuration options](#response-configuration-options)
+  - [Client chain modifiers](#client-chain-modifiers)
+    - [Entries](#entries)
+      - [Example](#example)
+    - [Assets](#assets)
+      - [Example](#example-1)
+    - [Sync](#sync)
+      - [Example](#example-2)
+  - [Reference documentation](#reference-documentation)
+  - [Tutorials \& other resources](#tutorials--other-resources)
+  - [Troubleshooting](#troubleshooting)
+  - [TypeScript](#typescript)
+  - [Advanced concepts](#advanced-concepts)
+  - [Migration](#migration)
+- [Reach out to us](#reach-out-to-us)
+  - [You have questions about how to use this library?](#you-have-questions-about-how-to-use-this-library)
+  - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
+  - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
+- [Get involved](#get-involved)
+- [License](#license)
+- [Code of Conduct](#code-of-conduct)
 
 <!-- /TOC -->
 
@@ -106,15 +113,17 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
 - Edge
 - Safari
 - node.js (LTS)
+- React Native (Metro bundler)
 
-> See list of min supported browser version here [@contentful/browserslist-config
-> ](https://github.com/contentful/browserslist-config/blob/master/index.js)
+> For the minimum supported browser versions, refer to the [package.json of this library.](https://github.com/contentful/contentful.js/blob/master/package.json#L12)
 
-The default export is an `es9` compliant module. In order to import the `commonJS` bundle, please use:
+To ensure compatibility across various JavaScript environments, this library is built as an ECMAScript Module (ESM) by default, using the `"type": "module"` declaration in `package.json`.
 
-```js
-const contentful = require('contentful/contentful.node')
-```
+We also offer a bundle for the legacy CommonJS (CJS) require syntax, allowing usage in environments that do not support ESM.
+
+Additionally, there is a bundle available for direct usage within browsers.
+
+For more details on the different variants of this library, see [Installation](#installation).
 
 ## Getting started
 
@@ -130,6 +139,26 @@ In order to get started with the Contentful JS library you'll need not only to i
 
 ```sh
 npm install contentful
+```
+
+In a modern environment, you can import this library using:
+
+```js
+import * as contentful from 'contentful'
+```
+
+#### Using in Legacy Environments Without ESM/Import Support
+
+Typically, your system will default to our CommonJS export when you use the require syntax:
+
+```js
+const contentful = require('contentful')
+```
+
+If this does not work, you can directly require the CJS-compatible code:
+
+```js
+const contentful = require('contentful/dist/contentful.cjs')
 ```
 
 #### Using it directly in the browser
@@ -157,7 +186,7 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 The following code snippet is the most basic one you can use to get some content from Contentful with this library:
 
 ```js
-const contentful = require('contentful')
+import * as contentful from "contentful"
 const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
@@ -178,7 +207,7 @@ Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of 
 This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
-const contentful = require('contentful')
+import * as contentful from "contentful"
 const client = contentful.createClient({
   space: 'developer_bookshelf',
   accessToken: 'preview_0b7f6x59a0',
@@ -225,26 +254,26 @@ The configuration options belong to two categories: request config and response 
 
 ##### Request configuration options
 
-| Name             | Default                     | Description                                                                                                                                                                                                                                                                                                      |
-| ---------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accessToken`    |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                             |
-| `space`          |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                     |
-| `environment`    | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                              |
-| `host`           | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                    |
-| `basePath`       | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                            |
-| `httpAgent`      | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                      |
-| `httpsAgent`     | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                     |
-| `adapter`        | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                               |
+| Name             | Default                     | Description                                                                                                                                                                                                                                                                                                    |
+| ---------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `accessToken`    |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                           |
+| `space`          |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                   |
+| `environment`    | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                            |
+| `host`           | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                  |
+| `basePath`       | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                          |
+| `httpAgent`      | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                    |
+| `httpsAgent`     | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                   |
+| `adapter`        | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                             |
 | `headers`        | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.delivery.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
-| `proxy`          | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/axios/axios#request-config) for further information about the supported values.                                                                                                                                       |
-| `retryOnError`   | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                    |
-| `application`    | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                  |
-| `integration`    | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                  |
-| `timeout`        | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                            |
-| `retryLimit`     | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                       |
-| `logHandler`     | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                      |
-| `requestLogger`  | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                       |
-| `responseLogger` | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                     |
+| `proxy`          | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/axios/axios#request-config) for further information about the supported values.                                                                                                                                     |
+| `retryOnError`   | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                  |
+| `application`    | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                |
+| `integration`    | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                |
+| `timeout`        | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                          |
+| `retryLimit`     | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                     |
+| `logHandler`     | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                    |
+| `requestLogger`  | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                     |
+| `responseLogger` | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                   |
 
 ##### Response configuration options
 

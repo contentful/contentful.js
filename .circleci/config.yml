@@ -8,7 +8,7 @@ orbs:
 jobs:
   lint:
     docker:
-      - image: cimg/node:18.19-browsers
+      - image: 'cimg/node:18.20.1-browsers'
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '18.17'
+          node-version: '18.20.1'
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'packages-read'
       - run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
@@ -42,7 +42,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '18.17'
+          node-version: '18.20.1'
       - vault/get-secrets: # Loads vault secrets
           template-preset: 'packages-read'
       - run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
@@ -52,7 +52,7 @@ jobs:
 
   release:
     docker:
-      - image: cimg/node:18.19-browsers
+      - image: 'cimg/node:18.20.1-browsers'
     steps:
       - checkout
       - browser-tools/install-chrome
