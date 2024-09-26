@@ -52,6 +52,41 @@ From version 3.0.0 onwards, you can access documentation for a specific version 
 
 You can upgrade to a major version using `npm update contentful`
 
+## Migration to version 11.x
+Version 11.0.0 introduces full ESM support by default, with CJS variants still available for legacy environments. This version is a significant step forward in modernizing our build and improving performance while maintaining wide compatibility across various environments.
+
+### Breaking changes
+
+#### Node.js core modules
+
+We no longer bundle Node.js core modules. If you’re bundling for the browser, you may need to configure your bundler to provide fallbacks or empty functions, particularly for the fs module. This change was introduced in version 11.x and may affect projects using Node.js-specific modules in the browser.
+Pre-bundled code
+
+Pre-bundled code for Node.js is no longer provided. If your setup relies on pre-bundled packages, you may need to adjust your build configuration.
+
+
+### Improvements
+
+#### Tree shaking
+
+Tree shaking is significantly improved, ensuring that only the necessary parts of the library are included in your final bundle.
+Smaller browser bundles
+
+Browser bundle sizes have been reduced by nearly threefold, from 128KB to 45KB, contributing to faster load times and improved performance.
+
+#### Module support and package configuration
+The package now uses "type": "module" in package.json to define the default module format as ESM, while also providing support for CJS through the exports field. This allows us to support a wide range of environments including Node.js (with and without TypeScript, both CJS and ESM), AngularJS, GatsbyJS, Next.js, Nuxt, React Native (Expo), Rollup, Svelte, Vite, Webpack, and more.
+
+#### Testing framework
+We’ve migrated our internal test environment from Jest to Vitest, aligning with modern testing frameworks and tools.
+
+## Security
+
+### Removal of eval
+
+We have completely removed the use of eval in our exported code, improving security and compatibility with strict environments.
+
+
 ## Migration to contentful.js 10.x
 
 Version `10.0.0` is a complete rewrite in TypeScript. This version introduces a new concept of [client chain modifiers](README.md#client-chain-modifiers).
