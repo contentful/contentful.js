@@ -1,5 +1,5 @@
 import { ConditionalPick } from 'type-fest'
-import { BaseFieldMap, EntryFieldType, EntryFieldTypes } from '../entry'
+import { BaseFieldMap, EntryFieldType, EntryFieldTypes } from '../entry.js'
 
 /**
  * @category Entity

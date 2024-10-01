@@ -1,5 +1,5 @@
-import { EntryFields, EntryFieldType, EntryFieldTypes } from '..'
-import { ConditionalListQueries, EntryFieldsConditionalListQueries } from './util'
+import { EntryFields, EntryFieldType, EntryFieldTypes } from '../index.js'
+import { ConditionalListQueries, EntryFieldsConditionalListQueries } from './util.js'
 
 type SubsetFilterTypes = 'in' | 'nin'
 

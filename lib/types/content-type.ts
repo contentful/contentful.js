@@ -1,7 +1,7 @@
-import { ContentfulCollection } from './collection'
-import { EntryFields } from './entry'
-import { SpaceLink, EnvironmentLink } from './link'
-import { BaseSys } from './sys'
+import { ContentfulCollection } from './collection.js'
+import { EntryFields } from './entry.js'
+import { SpaceLink, EnvironmentLink } from './link.js'
+import { BaseSys } from './sys.js'
 import type { BLOCKS, INLINES } from '@contentful/rich-text-types'
 
 /**

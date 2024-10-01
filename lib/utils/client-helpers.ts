@@ -1,4 +1,4 @@
-import { ChainModifiers } from '../types/client'
+import { ChainModifiers } from '../types/client.js'
 
 export type ChainOption<Modifiers extends ChainModifiers = ChainModifiers> = {
   withoutLinkResolution: ChainModifiers extends Modifiers
