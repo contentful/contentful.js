@@ -416,7 +416,8 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      assertLocalizedEntriesResponse(response)
+      const conceptsIncludedInMetadata = true
+      assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata)
       expect(response?.sys?.contentSourceMapsLookup).toBeDefined()
     })
 
@@ -496,7 +497,7 @@ describe('getEntries via client chain modifiers', () => {
 })
 
 // Assertion helpers
-function assertLocalizedEntriesResponse(response) {
+function assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata = false) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
@@ -507,7 +508,7 @@ function assertLocalizedEntriesResponse(response) {
   expect(entry.fields.bestFriend['en-US'].sys.type).toBe('Entry')
   expect(entry.metadata).toEqual({
     tags: [],
-    concepts: [],
+    ...(conceptsIncludedInMetadata && { concepts: [] }),
   })
 }
 
