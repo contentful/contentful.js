@@ -334,7 +334,7 @@ describe('getEntries via client chain modifiers', () => {
         include: 5,
         'sys.id': entryWithResolvableLink,
       })
-      assertLocalizedEntriesResponse(response)
+      assertLocalizedEntriesResponse(response, true)
     })
 
     test('previewClient.withAllLocales', async () => {
@@ -342,7 +342,8 @@ describe('getEntries via client chain modifiers', () => {
         include: 5,
         'sys.id': entryWithResolvableLink,
       })
-      assertLocalizedEntriesResponse(response)
+
+      assertLocalizedEntriesResponse(response, true)
     })
 
     test('client.withAllLocales.withoutLinkResolution', async () => {
@@ -395,7 +396,8 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      assertCSMEntriesResponse(response)
+      const conceptsIncludedInMetadata = true
+      assertCSMEntriesResponse(response, conceptsIncludedInMetadata)
     })
 
     test('enforces entry.sys when query.select is defined', async () => {
@@ -414,7 +416,8 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      assertLocalizedEntriesResponse(response)
+      const conceptsIncludedInMetadata = true
+      assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata)
       expect(response?.sys?.contentSourceMapsLookup).toBeDefined()
     })
 
@@ -494,7 +497,8 @@ describe('getEntries via client chain modifiers', () => {
 })
 
 // Assertion helpers
-function assertLocalizedEntriesResponse(response) {
+function assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata = false) {
+  console.log('>>>', conceptsIncludedInMetadata)
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
@@ -503,10 +507,13 @@ function assertLocalizedEntriesResponse(response) {
 
   expect(entry.fields.bestFriend['en-US'].fields).toBeDefined()
   expect(entry.fields.bestFriend['en-US'].sys.type).toBe('Entry')
-  expect(entry.metadata).toEqual({ tags: [] })
+  expect(entry.metadata).toEqual({
+    tags: [],
+    ...(conceptsIncludedInMetadata && { concepts: [] }),
+  })
 }
 
-function assertCSMEntriesResponse(response) {
+function assertCSMEntriesResponse(response, conceptsIncludedInMetadata = false) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
@@ -515,6 +522,10 @@ function assertCSMEntriesResponse(response) {
 
   expect(entry.fields.bestFriend.fields).toBeDefined()
   expect(entry.fields.bestFriend.sys.type).toBe('Entry')
-  expect(entry.metadata).toEqual({ tags: [] })
+
+  expect(entry.metadata).toEqual({
+    tags: [],
+    ...(conceptsIncludedInMetadata && { concepts: [] }),
+  })
   expect(response.sys?.contentSourceMapsLookup).toBeDefined()
 }
