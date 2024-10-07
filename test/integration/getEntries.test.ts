@@ -498,7 +498,6 @@ describe('getEntries via client chain modifiers', () => {
 
 // Assertion helpers
 function assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata = false) {
-  console.log('>>>', conceptsIncludedInMetadata)
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
