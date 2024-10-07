@@ -8,9 +8,6 @@ type DefaultAssetQueries = AssetsQueries<AssetFields, undefined>
 
 expectAssignable<DefaultAssetQueries>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
-})
-
-expectNotAssignable<DefaultAssetQueries>({
   'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
 })
 
@@ -45,7 +42,13 @@ expectAssignable<DefaultAssetQueries>({
   'fields.file.url[exists]': mocks.booleanValue,
   'fields.title[exists]': mocks.booleanValue,
   'metadata.tags[exists]': mocks.booleanValue,
+  'metadata.concepts[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
+})
+expectAssignable<DefaultAssetQueries>({
+  'metadata.tags.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
+  'metadata.concepts.descendants[in]': mocks.stringArrayValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
   'fields.unknownField[exists]': mocks.anyValue,
@@ -84,6 +87,7 @@ expectAssignable<DefaultAssetQueries>({
   'fields.file.url[in]': mocks.stringArrayValue,
   'fields.title[in]': mocks.stringArrayValue,
   'metadata.tags.sys.id[in]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
@@ -154,6 +158,7 @@ expectAssignable<DefaultAssetQueries>({
   'fields.file.url[nin]': mocks.stringArrayValue,
   'fields.title[nin]': mocks.stringArrayValue,
   'metadata.tags.sys.id[nin]': mocks.stringArrayValue,
+  'metadata.concepts.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
 expectNotAssignable<DefaultAssetQueries>({
