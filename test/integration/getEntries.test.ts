@@ -334,7 +334,7 @@ describe('getEntries via client chain modifiers', () => {
         include: 5,
         'sys.id': entryWithResolvableLink,
       })
-      assertLocalizedEntriesResponse(response, true)
+      assertLocalizedEntriesResponse(response)
     })
 
     test('previewClient.withAllLocales', async () => {
@@ -343,7 +343,7 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      assertLocalizedEntriesResponse(response, true)
+      assertLocalizedEntriesResponse(response)
     })
 
     test('client.withAllLocales.withoutLinkResolution', async () => {
@@ -396,8 +396,7 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      const conceptsIncludedInMetadata = true
-      assertCSMEntriesResponse(response, conceptsIncludedInMetadata)
+      assertCSMEntriesResponse(response)
     })
 
     test('enforces entry.sys when query.select is defined', async () => {
@@ -416,8 +415,7 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      const conceptsIncludedInMetadata = true
-      assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata)
+      assertLocalizedEntriesResponse(response)
       expect(response?.sys?.contentSourceMapsLookup).toBeDefined()
     })
 
@@ -497,7 +495,7 @@ describe('getEntries via client chain modifiers', () => {
 })
 
 // Assertion helpers
-function assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata = false) {
+function assertLocalizedEntriesResponse(response) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
@@ -508,11 +506,11 @@ function assertLocalizedEntriesResponse(response, conceptsIncludedInMetadata = f
   expect(entry.fields.bestFriend['en-US'].sys.type).toBe('Entry')
   expect(entry.metadata).toEqual({
     tags: [],
-    ...(conceptsIncludedInMetadata && { concepts: [] }),
+    concepts: [],
   })
 }
 
-function assertCSMEntriesResponse(response, conceptsIncludedInMetadata = false) {
+function assertCSMEntriesResponse(response) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
@@ -524,7 +522,7 @@ function assertCSMEntriesResponse(response, conceptsIncludedInMetadata = false) 
 
   expect(entry.metadata).toEqual({
     tags: [],
-    ...(conceptsIncludedInMetadata && { concepts: [] }),
+    concepts: [],
   })
   expect(response.sys?.contentSourceMapsLookup).toBeDefined()
 }
