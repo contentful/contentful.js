@@ -1,14 +1,14 @@
 import { Document as RichTextDocument } from '@contentful/rich-text-types'
-import { Asset } from './asset'
-import { ContentfulCollection } from './collection'
-import { ContentTypeLink, UnresolvedLink } from './link'
-import { LocaleCode } from './locale'
-import { Metadata } from './metadata'
-import { EntrySkeletonType } from './query'
-import { EntitySys } from './sys'
+import { Asset } from './asset.js'
+import { ContentfulCollection } from './collection.js'
+import { ContentTypeLink, UnresolvedLink } from './link.js'
+import { LocaleCode } from './locale.js'
+import { Metadata } from './metadata.js'
+import { EntrySkeletonType } from './query/index.js'
+import { EntitySys } from './sys.js'
 import { JsonArray, JsonObject } from 'type-fest'
-import { ResourceLink } from './resource-link'
-import { ChainModifiers } from './client'
+import { ResourceLink } from './resource-link.js'
+import { ChainModifiers } from './client.js'
 
 /**
  * System managed metadata for entries

@@ -1,8 +1,8 @@
-import { ContentfulCollection } from './collection'
-import { LocaleCode } from './locale'
-import { Metadata } from './metadata'
-import { EntitySys } from './sys'
-import { ChainModifiers } from './client'
+import { ContentfulCollection } from './collection.js'
+import { LocaleCode } from './locale.js'
+import { Metadata } from './metadata.js'
+import { EntitySys } from './sys.js'
+import { ChainModifiers } from './client.js'
 
 /**
  * @category Asset

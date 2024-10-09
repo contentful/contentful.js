@@ -1,9 +1,9 @@
-import { Asset } from './asset'
-import { Entry } from './entry'
-import { EntitySys } from './sys'
-import { EntrySkeletonType } from './query'
-import { LocaleCode } from './locale'
-import { ChainModifiers } from './client'
+import { Asset } from './asset.js'
+import { Entry } from './entry.js'
+import { EntitySys } from './sys.js'
+import { EntrySkeletonType } from './query/index.js'
+import { LocaleCode } from './locale.js'
+import { ChainModifiers } from './client.js'
 
 /**
  * @category Sync

@@ -1,4 +1,4 @@
-import { TagLink, TaxonomyConceptLink } from './link'
+import { TagLink, TaxonomyConceptLink } from './link.js'
 
 /**
  * User-controlled metadata

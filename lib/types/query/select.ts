@@ -1,7 +1,7 @@
-import { FieldsType } from './util'
-import { EntrySys } from '../entry'
-import { AssetSys } from '../asset'
-import { Metadata } from '../metadata'
+import { FieldsType } from './util.js'
+import { EntrySys } from '../entry.js'
+import { AssetSys } from '../asset.js'
+import { Metadata } from '../metadata.js'
 
 export type SelectFilterPaths<
   Fields extends FieldsType,

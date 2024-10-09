@@ -1,4 +1,4 @@
-import getQuerySelectionSet from './query-selection-set'
+import getQuerySelectionSet from './query-selection-set.js'
 
 /*
  * sdk relies heavily on sys metadata

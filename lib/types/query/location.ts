@@ -1,5 +1,5 @@
 import { ConditionalPick } from 'type-fest'
-import { EntryFieldTypes } from '../entry'
+import { EntryFieldTypes } from '../entry.js'
 
 type Types = EntryFieldTypes.Location | undefined
 

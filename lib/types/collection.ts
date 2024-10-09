@@ -1,5 +1,5 @@
-import { AssetSys } from './asset'
-import { EntrySys } from './entry'
+import { AssetSys } from './asset.js'
+import { EntrySys } from './entry.js'
 
 /**
  * A wrapper object containing additional information for
