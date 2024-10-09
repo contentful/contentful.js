@@ -1,7 +1,7 @@
 import { FieldsType } from './util.js'
 import { EntrySys } from '../entry.js'
 import { AssetSys } from '../asset.js'
-import { AssetMetadata, Metadata } from '../metadata.js'
+import { Metadata } from '../metadata.js'
 
 export type SelectFilterPaths<
   Fields extends FieldsType,
@@ -51,6 +51,6 @@ export type AssetSelectFilter<Fields extends FieldsType> = {
     | 'fields'
     | SelectFilterPaths<Fields, 'fields'>
     | 'metadata'
-    | SelectFilterPaths<AssetMetadata, 'metadata'>
+    | SelectFilterPaths<Metadata, 'metadata'>
   )[]
 }

@@ -1,7 +1,7 @@
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
-import pkg from './package.json' assert { type: 'json' }
+import pkg from './package.json' with { type: 'json' }
 
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'

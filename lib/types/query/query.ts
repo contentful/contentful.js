@@ -183,6 +183,7 @@ export type AssetsQueries<
 > = AssetFieldsQueries<Fields> &
   AssetFieldsFileQueries &
   AssetFieldsFileDetailsQueries &
+  MetadataConceptsQueries &
   SysQueries<Pick<AssetSys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
   MetadataTagsQueries &
   FixedQueryOptions &
