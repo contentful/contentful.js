@@ -396,7 +396,8 @@ describe('getEntries via client chain modifiers', () => {
         'sys.id': entryWithResolvableLink,
       })
 
-      assertCSMEntriesResponse(response)
+      const conceptsIncludedInMetadata = true
+      assertCSMEntriesResponse(response, conceptsIncludedInMetadata)
     })
 
     test('enforces entry.sys when query.select is defined', async () => {
@@ -510,7 +511,7 @@ function assertLocalizedEntriesResponse(response) {
   })
 }
 
-function assertCSMEntriesResponse(response) {
+function assertCSMEntriesResponse(response, conceptsIncludedInMetadata = false) {
   expect(response.includes).toBeDefined()
   expect(response.includes!.Asset).toBeDefined()
   expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
@@ -522,7 +523,7 @@ function assertCSMEntriesResponse(response) {
 
   expect(entry.metadata).toEqual({
     tags: [],
-    concepts: [],
+    ...(conceptsIncludedInMetadata && { concepts: [] }),
   })
   expect(response.sys?.contentSourceMapsLookup).toBeDefined()
 }
