@@ -29,10 +29,23 @@
 # Migration information
 
 - [Migration information](#migration-information)
-  - [Migration to contentful.js 10.x](#migration-to-contentfuljs-10x)
+  - [Migration to version 11.x](#migration-to-version-11x)
     - [Breaking changes](#breaking-changes)
+      - [Node.js core modules](#nodejs-core-modules)
+        - [Webpack 5](#webpack-5)
+        - [Rollup](#rollup)
+    - [Improvements](#improvements)
+      - [Tree shaking](#tree-shaking)
+      - [Module support and package configuration](#module-support-and-package-configuration)
+      - [Testing framework](#testing-framework)
+  - [Security](#security)
+    - [Removal of eval](#removal-of-eval)
+  - [Migration to contentful.js 10.x](#migration-to-contentfuljs-10x)
+    - [Breaking changes](#breaking-changes-1)
     - [Version compatibility](#version-compatibility)
     - [Response modifiers](#response-modifiers)
+      - [Query params `resolveLinks` and `removeUnresolved`](#query-params-resolvelinks-and-removeunresolved)
+      - [Query param `locale='*'`](#query-param-locale)
     - [TypeScript](#typescript)
   - [Migration to contentful.js 9.x](#migration-to-contentfuljs-9x)
   - [Migration to contentful.js 8.x](#migration-to-contentfuljs-8x)
@@ -64,6 +77,29 @@ Pre-bundled code
 
 Pre-bundled code for Node.js is no longer provided. If your setup relies on pre-bundled packages, you may need to adjust your build configuration.
 
+##### Webpack 5
+
+To make our project bundle properly for the browser with Webpack 5, you need to add this to your configuration:
+
+```js
+module.exports = {
+  resolve: {
+    fallback: {
+      os: false,
+      zlib: false,
+      tty: false,
+    },
+  },
+};
+```
+
+##### Rollup
+
+To make our project bundle properly for the browser with Rollup, you need to add this to your configuration:
+
+```js
+nodeResolve({ browser: true, preferBuiltins: false })
+```
 
 ### Improvements
 
