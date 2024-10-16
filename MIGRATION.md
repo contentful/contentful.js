@@ -64,6 +64,20 @@ Pre-bundled code
 
 Pre-bundled code for Node.js is no longer provided. If your setup relies on pre-bundled packages, you may need to adjust your build configuration.
 
+For example, with webpack 5, you will need to add this to your configuration:
+
+```js
+module.exports = {
+  resolve: {
+    fallback: {
+      os: false,
+      zlib: false,
+      tty: false,
+    },
+  },
+};
+```
+
 
 ### Improvements
 
