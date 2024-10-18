@@ -55,12 +55,6 @@ const mappedAsset = {
   origin: 'contentful.com',
   href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/1x0xpXu4pSGS4OukSyWGUK/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
   contentful: {
-    space: 'ezs1swce23xe',
-    environment: 'master',
-    field: 'title',
-    locale: 'en-US',
-    entity: '1x0xpXu4pSGS4OukSyWGUK',
-    entityType: 'Asset',
     editorInterface: {
       widgetId: 'singleLine',
       widgetNamespace: 'builtin',
@@ -73,12 +67,6 @@ const mappedAssetCollection = {
   origin: 'contentful.com',
   href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/38eGMAzUH5Ezv7mjU0CToA/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
   contentful: {
-    space: 'ezs1swce23xe',
-    environment: 'master',
-    field: 'title',
-    locale: 'en-US',
-    entity: '38eGMAzUH5Ezv7mjU0CToA',
-    entityType: 'Asset',
     editorInterface: {
       widgetId: 'singleLine',
       widgetNamespace: 'builtin',
@@ -91,12 +79,6 @@ const mappedEntryCollection = {
   origin: 'contentful.com',
   href: 'https://app.contentful.com/spaces/ezs1swce23xe/environments/master/assets/38eGMAzUH5Ezv7mjU0CToA/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
   contentful: {
-    space: 'ezs1swce23xe',
-    environment: 'master',
-    field: 'name',
-    locale: 'en-US',
-    entity: '38eGMAzUH5Ezv7mjU0CToA',
-    entityType: 'Entry',
     editorInterface: {
       widgetId: 'singleLine',
       widgetNamespace: 'builtin',
