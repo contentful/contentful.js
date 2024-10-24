@@ -339,7 +339,7 @@ export type EntryCollection<
 > = ContentfulCollection<Entry<EntrySkeleton, Modifiers, Locales>> & {
   errors?: Array<any>
   includes?: {
-    Entry?: any[]
-    Asset?: any[]
+    Entry?: Entry<EntrySkeletonType, Modifiers, Locales>[]
+    Asset?: Asset<Modifiers, Locales>[]
   }
 }
