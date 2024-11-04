@@ -4,6 +4,7 @@ import { LocaleCode, LocaleCollection } from './locale.js'
 import {
   AssetQueries,
   AssetsQueries,
+  ConceptQueries,
   EntriesQueries,
   EntryQueries,
   EntrySkeletonType,
@@ -14,6 +15,7 @@ import { Tag, TagCollection } from './tag.js'
 import { AssetKey } from './asset-key.js'
 import { Entry, EntryCollection } from './entry.js'
 import { Asset, AssetCollection, AssetFields } from './asset.js'
+import { ConceptCollection } from './taxonomy.js'
 
 /**
  * Client chain modifiers used in all types that depend on the client configuration.
@@ -363,6 +365,25 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   getAssets<Locales extends LocaleCode = LocaleCode>(
     query?: AssetsQueries<AssetFields, Modifiers>,
   ): Promise<AssetCollection<Modifiers, Locales>>
+
+  /**
+   * Fetches a collection of Taxonomy Concepts
+   * @param query - Query object for filtering and ordering
+   * @returns Promise for a collection of concepts
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getConcepts()
+   * console.log(response.items)
+   */
+  getConcepts<Locales extends LocaleCode = LocaleCode>(
+    query?: ConceptQueries,
+  ): Promise<ConceptCollection<Locales>>
 
   /**
    * A client that will fetch assets and entries with all locales. Only available if not already enabled.

@@ -38,6 +38,7 @@ import {
   validateResolveLinksParam,
 } from './utils/validate-params.js'
 import validateSearchParameters from './utils/validate-search-parameters.js'
+import { ConceptCollection } from './types/taxonomy.js'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -467,6 +468,26 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
+  function getConcepts<Locales extends LocaleCode>(
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    return internalGetConcepts<ConceptCollection<Locales>>(query)
+  }
+
+  async function internalGetConcepts<T>(query: Record<string, any> = {}): Promise<T> {
+    try {
+      return get({
+        context: 'environment',
+        path: 'taxonomy/concepts',
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
   /*
    * Switches BaseURL to use /environments path
    * */
@@ -496,5 +517,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     getEntries,
 
     createAssetKey,
+
+    getConcepts,
   } as unknown as ContentfulClientApi<undefined>
 }

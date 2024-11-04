@@ -4,6 +4,7 @@ import { EntrySys } from '../entry.js'
 import { TagLink, TaxonomyConceptLink } from '../link.js'
 import { Metadata } from '../metadata.js'
 import { TagSys } from '../tag.js'
+import { ConceptSys } from '../taxonomy.js'
 import {
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
@@ -219,3 +220,9 @@ export type TagQueries = TagNameFilters &
   SysQueries<Pick<TagSys, 'createdAt' | 'updatedAt' | 'visibility' | 'id' | 'type'>> &
   TagOrderFilter &
   FixedPagedOptions
+
+/**
+ * Search parameters for taxonomy methods
+ */
+
+export type ConceptQueries = SysQueries<Pick<ConceptSys, 'id'>>
