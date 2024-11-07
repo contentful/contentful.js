@@ -71,7 +71,7 @@
     "test:unit:watch": "vitest ./test/unit",
     "test:integration": "vitest --run ./test/integration",
     "test:integration:watch": "vitest ./test/integration",
-    "test:size": "bundlesize",
+    "test:size": "size-limit",
     "test:demo-projects": "npm run test:demo-node && npm run test:demo-browser",
     "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && vitest --run ./test/output-integration/node",
     "test:demo-browser": "rimraf ./test/output-integration/browser/node-modules && npm --prefix ./test/output-integration/browser ci && npm --prefix ./test/output-integration/browser run test",
@@ -85,10 +85,10 @@
     "prepush": "npm run test:prepush"
   },
   "dependencies": {
-    "@contentful/rich-text-types": "^16.6.1",
-    "contentful-resolve-response": "^1.9.0",
     "@contentful/content-source-maps": "^0.11.6",
+    "@contentful/rich-text-types": "^16.6.1",
     "axios": "^1.7.4",
+    "contentful-resolve-response": "^1.9.0",
     "contentful-sdk-core": "^8.3.1",
     "json-stringify-safe": "^5.0.1",
     "type-fest": "^4.0.0"
@@ -105,10 +105,10 @@
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
     "@semantic-release/changelog": "^6.0.1",
+    "@size-limit/file": "^11.1.6",
     "@types/json-stringify-safe": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
-    "bundlesize": "^0.18.1",
     "contentful-sdk-jsdoc": "^3.1.2",
     "cz-conventional-changelog": "^3.3.0",
     "es-check": "^7.0.0",
@@ -128,6 +128,7 @@
     "rollup": "^4.13.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "semantic-release": "^22.0.8",
+    "size-limit": "^11.1.6",
     "tsd": "^0.31.0",
     "typedoc": "^0.26.4",
     "typescript": "^5.5.3",
@@ -138,14 +139,14 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "bundlesize": [
+  "size-limit": [
     {
       "path": "./dist/contentful.browser.js",
-      "maxSize": "85Kb"
+      "limit": "85 Kb"
     },
     {
       "path": "./dist/contentful.browser.min.js",
-      "maxSize": "45Kb"
+      "limit": "45 Kb"
     }
   ],
   "release": {
