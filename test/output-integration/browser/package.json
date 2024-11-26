@@ -6,13 +6,13 @@
   "type": "module",
   "scripts": {
     "test": "vitest --run",
-    "preinstall": "npm run install:browser && npm run install:browser",
+    "preinstall": "npm run install:browser && npm run install:bundle",
     "install:bundle": "cp ../../../dist/contentful.browser.min.js ./public/.",
     "install:browser": "npx puppeteer browser install"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "puppeteer": "^22.15.0"
+    "puppeteer": "^23.9.0"
   }
 }
