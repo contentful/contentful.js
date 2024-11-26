@@ -1,5 +1,5 @@
-import { Locale } from './locale.js'
-import { BaseSys } from './sys.js'
+import type { Locale } from './locale.js'
+import type { BaseSys } from './sys.js'
 
 /**
  * System managed metadata for spaces

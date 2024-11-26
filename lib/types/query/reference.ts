@@ -1,5 +1,5 @@
-import { EntryFieldTypes } from '../entry.js'
-import { ConditionalPick } from 'type-fest'
+import type { EntryFieldTypes } from '../entry.js'
+import type { ConditionalPick } from 'type-fest'
 
 type SupportedTypes =
   | EntryFieldTypes.Array<EntryFieldTypes.EntryLink<any>>

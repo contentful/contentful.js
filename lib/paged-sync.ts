@@ -1,5 +1,6 @@
 import resolveResponse from 'contentful-resolve-response'
-import { AxiosInstance, createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
+import type { AxiosInstance } from 'contentful-sdk-core'
+import { createRequestConfig, freezeSys, toPlainObject } from 'contentful-sdk-core'
 import mixinStringifySafe from './mixins/stringify-safe.js'
 import type {
   SyncPageQuery,
@@ -12,7 +13,7 @@ import type {
   LocaleCode,
   EntrySkeletonType,
 } from './types/index.js'
-import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
+import type { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 
 /**
  * Retrieves all the available pages for a sync operation

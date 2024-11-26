@@ -1,6 +1,6 @@
-import { EntryField, EntryFieldType } from '../entry.js'
-import { ConditionalFixedQueries, FieldsType, EntrySkeletonType } from './util.js'
-import { AssetDetails, AssetFile } from '../asset.js'
+import type { EntryField, EntryFieldType } from '../entry.js'
+import type { ConditionalFixedQueries, FieldsType, EntrySkeletonType } from './util.js'
+import type { AssetDetails, AssetFile } from '../asset.js'
 
 /**
  * Check for existence of provided fields

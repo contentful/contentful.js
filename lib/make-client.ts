@@ -1,5 +1,6 @@
-import createContentfulApi, { CreateContentfulApiParams } from './create-contentful-api.js'
-import {
+import type { CreateContentfulApiParams } from './create-contentful-api.js'
+import createContentfulApi from './create-contentful-api.js'
+import type {
   ChainOptions,
   DefaultChainOption,
   ChainOption,

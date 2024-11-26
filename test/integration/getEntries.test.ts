@@ -89,9 +89,9 @@ describe('getEntries via client chain modifiers', () => {
       >({ include: 2, 'sys.id': entryWithResolvableLink })
 
       expect(response.includes).toBeDefined()
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       expect(response.includes!.Asset).toBeDefined()
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       expect(Object.keys(response.includes!.Asset!).length).toBeGreaterThan(0)
       expect(response.items[0].fields.bestFriend.sys.type).toEqual('Entry')
       expect(response.items[0].fields.bestFriend).toHaveProperty('fields')
