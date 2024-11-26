@@ -3,8 +3,7 @@ import { createClient } from '../../lib/contentful'
 import { createHttpClient } from 'contentful-sdk-core'
 import * as CreateContentfulApi from '../../lib/create-contentful-api'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const version = require('../../package.json').version
+import pkg from '../../package.json' with { type: 'json' }
 
 vi.mock('../../lib/create-contentful-api')
 vi.mock('contentful-sdk-core', async (importOriginal) => {
@@ -73,7 +72,7 @@ describe('contentful', () => {
     expect(headerParts).toHaveLength(5)
     expect(headerParts[0]).toEqual('app myApplication/1.1.1')
     expect(headerParts[1]).toEqual('integration myIntegration/1.0.0')
-    expect(headerParts[2]).toEqual(`sdk contentful.js/${version}`)
+    expect(headerParts[2]).toEqual(`sdk contentful.js/${pkg.version}`)
   })
 
   test('Passes along HTTP client parameters', () => {

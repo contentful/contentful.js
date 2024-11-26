@@ -1,6 +1,6 @@
-import { ContentSourceMapsLookup, CPAContentSourceMaps } from '@contentful/content-source-maps'
-import { EntryFields } from './entry.js'
-import { EnvironmentLink, SpaceLink } from './link.js'
+import type { ContentSourceMapsLookup, CPAContentSourceMaps } from '@contentful/content-source-maps'
+import type { EntryFields } from './entry.js'
+import type { EnvironmentLink, SpaceLink } from './link.js'
 
 /**
  * Definition of common part of system managed metadata

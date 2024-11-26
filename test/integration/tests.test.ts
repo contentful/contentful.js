@@ -1,11 +1,10 @@
-import { vi } from 'vitest'
+import { vi, test, expect, describe } from 'vitest'
 import * as contentful from '../../lib/contentful'
 import { ValidationError } from '../../lib/utils/validation-error'
 // @ts-ignore
 import { localeSpaceParams, params, previewParams } from './utils'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const version = require('../../package.json').version
+import pkg from '../../package.json' with { type: 'json' }
 
 if (process.env.API_INTEGRATION_TESTS) {
   params.host = '127.0.0.1:5000'
@@ -182,5 +181,5 @@ describe('Embargoed Assets', () => {
 })
 
 test('Client object exposes current version', async () => {
-  expect(client.version).toEqual(version)
+  expect(client.version).toEqual(pkg.version)
 })
