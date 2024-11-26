@@ -1,6 +1,5 @@
 dist
 gh-pages
-test/output-integration/browser/public/contentful*.js
 
 # Esdoc dirs
 out
