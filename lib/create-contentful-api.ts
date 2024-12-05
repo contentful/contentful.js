@@ -24,6 +24,10 @@ import type {
   SyncOptions,
   EntrySkeletonType,
   LocaleCode,
+  ConceptCollection,
+  Concept,
+  ConceptScheme,
+  ConceptSchemeCollection,
 } from './types/index.js'
 import normalizeSearchParameters from './utils/normalize-search-parameters.js'
 import normalizeSelect from './utils/normalize-select.js'
@@ -467,6 +471,98 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     })
   }
 
+  function getConceptScheme<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<ConceptScheme<Locales>> {
+    return internalGetConceptScheme<Locales>(id, query)
+  }
+
+  async function internalGetConceptScheme<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<ConceptScheme<Locales>> {
+    try {
+      return get({
+        context: 'environment',
+        path: `taxonomy/concept-schemes/${id}`,
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+  function getConceptSchemes<Locales extends LocaleCode>(
+    query: Record<string, any> = {},
+  ): Promise<ConceptSchemeCollection<Locales>> {
+    return internalGetConceptSchemes<Locales>(query)
+  }
+
+  async function internalGetConceptSchemes<Locales extends LocaleCode>(
+    query: Record<string, any> = {},
+  ): Promise<ConceptSchemeCollection<Locales>> {
+    try {
+      return get({
+        context: 'environment',
+        path: 'taxonomy/concept-schemes',
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+  function getConcept<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<Concept<Locales>> {
+    return internalGetConcept<Locales>(id, query)
+  }
+
+  async function internalGetConcept<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<Concept<Locales>> {
+    try {
+      return get({
+        context: 'environment',
+        path: `taxonomy/concepts/${id}`,
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+  function getConcepts<Locales extends LocaleCode>(
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    return internalGetConcepts<Locales>(query)
+  }
+
+  async function internalGetConcepts<Locales extends LocaleCode>(
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    try {
+      return get({
+        context: 'environment',
+        path: 'taxonomy/concepts',
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
   /*
    * Switches BaseURL to use /environments path
    * */
@@ -494,6 +590,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     getEntry,
     getEntries,
+
+    getConceptScheme,
+    getConceptSchemes,
+
+    getConcept,
+    getConcepts,
 
     createAssetKey,
   } as unknown as ContentfulClientApi<undefined>
