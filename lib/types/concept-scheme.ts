@@ -1,4 +1,4 @@
-import { Link } from './link'
+import { UnresolvedLink } from './link'
 import { LocaleCode } from './locale'
 
 type ISODateString = string
@@ -22,8 +22,8 @@ export interface ConceptScheme<Locales extends LocaleCode> {
         [locale in Locales]: string
       }
     | null
-  topConcepts: Link<'TaxonomyConcept'>[]
-  concepts: Link<'TaxonomyConcept'>[]
+  topConcepts: UnresolvedLink<'TaxonomyConcept'>[]
+  concepts: UnresolvedLink<'TaxonomyConcept'>[]
   totalConcepts: number
 }
 
