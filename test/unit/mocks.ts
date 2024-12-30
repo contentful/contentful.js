@@ -66,6 +66,7 @@ const tagSysMock: TagSys = {
   updatedBy: { sys: copy(userLinkMock) },
   space: { sys: copy(spaceLinkMock) },
   environment: { sys: copy(environmentLinkMock) },
+  publishedVersion: 1,
 }
 
 const sysMock: EntrySys = {
@@ -78,6 +79,7 @@ const sysMock: EntrySys = {
   space: { sys: copy(spaceLinkMock) },
   contentType: { sys: copy(contentTypeLinkMock) },
   environment: { sys: copy(environmentLinkMock) },
+  publishedVersion: 1,
 }
 
 const contentTypeMock: ContentType = {
