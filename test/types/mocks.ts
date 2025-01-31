@@ -65,6 +65,7 @@ export const entrySys: EntrySys = {
   updatedAt: dateValue,
   id: stringValue,
   createdAt: dateValue,
+  publishedVersion: numberValue,
 }
 
 export const entryBasics = {
@@ -117,6 +118,7 @@ export const assetSys: AssetSys = {
   updatedAt: dateValue,
   id: stringValue,
   createdAt: dateValue,
+  publishedVersion: numberValue,
 }
 
 export const assetBasics = {

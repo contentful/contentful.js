@@ -24,4 +24,5 @@ export interface EntitySys extends BaseSys {
   locale?: string
   contentSourceMaps?: CPAContentSourceMaps
   contentSourceMapsLookup?: ContentSourceMapsLookup
+  publishedVersion: number
 }

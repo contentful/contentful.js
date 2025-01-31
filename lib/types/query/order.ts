@@ -90,3 +90,7 @@ export type AssetOrderFilter = {
 export type TagOrderFilter = {
   order?: (OrderFilterPaths<TagSys, 'sys'> | 'name' | '-name')[]
 }
+
+export type TaxonomyOrderFilter = {
+  order?: ('sys.createdAt' | 'sys.updatedAt' | 'prefLabel')[]
+}

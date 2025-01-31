@@ -14,6 +14,7 @@ import type { EntryFieldsExistenceFilter, ExistenceFilter } from './existence.js
 import type { LocationSearchFilters } from './location.js'
 import type {
   AssetOrderFilter,
+  TaxonomyOrderFilter,
   EntryOrderFilter,
   EntryOrderFilterWithFields,
   TagOrderFilter,
@@ -216,3 +217,14 @@ export type TagQueries = TagNameFilters &
   SysQueries<Pick<TagSys, 'createdAt' | 'updatedAt' | 'visibility' | 'id' | 'type'>> &
   TagOrderFilter &
   FixedPagedOptions
+
+type CursorPaginationOptions = {
+  limit?: number
+  prevPage?: string
+  nextPage?: string
+}
+
+export type ConceptsQueries = CursorPaginationOptions &
+  TaxonomyOrderFilter & { concept_scheme?: string }
+
+export type ConceptSchemesQueries = CursorPaginationOptions & TaxonomyOrderFilter

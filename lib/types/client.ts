@@ -4,6 +4,8 @@ import type { LocaleCode, LocaleCollection } from './locale.js'
 import type {
   AssetQueries,
   AssetsQueries,
+  ConceptSchemesQueries,
+  ConceptsQueries,
   EntriesQueries,
   EntryQueries,
   EntrySkeletonType,
@@ -14,6 +16,8 @@ import type { Tag, TagCollection } from './tag.js'
 import type { AssetKey } from './asset-key.js'
 import type { Entry, EntryCollection } from './entry.js'
 import type { Asset, AssetCollection, AssetFields } from './asset.js'
+import type { Concept, ConceptCollection } from './concept.js'
+import type { ConceptScheme, ConceptSchemeCollection } from './concept-scheme.js'
 
 /**
  * Client chain modifiers used in all types that depend on the client configuration.
@@ -201,6 +205,82 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * ```
    */
   getTags(query?: TagQueries): Promise<TagCollection>
+
+  /**
+   * Fetches a Concept
+   * @param id - The concept’s ID
+   * @returns Promise for a concept
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const concept = await client.getConcept('<concept_id>')
+   * console.log(concept)
+   * ```
+   */
+  getConcept(id: string): Promise<Concept<'en-US'>>
+
+  /**
+   * Fetches a collection of Concepts
+   * @param query - Object with search parameters
+   * @returns Promise for a collection of Concepts
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getConcepts()
+   * console.log(response.items)
+   * ```
+   */
+  getConcepts(query?: ConceptsQueries): Promise<ConceptCollection<'en-US'>>
+
+  /**
+   * Fetches a Concept Scheme
+   * @param id - The concept scheme's ID
+   * @returns Promise for a concept scheme
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const conceptScheme = await client.getConceptScheme('<concept_id>')
+   * console.log(conceptScheme)
+   * ```
+   */
+  getConceptScheme(id: string): Promise<ConceptScheme<'en-US'>>
+
+  /**
+   * Fetches a collection of Concept Schemes
+   * @param query - Object with search parameters
+   * @returns Promise for a collection of Concept Schemes
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getConceptSchemes()
+   * console.log(response.items)
+   * ```
+   */
+  getConceptSchemes(query?: ConceptSchemesQueries): Promise<ConceptSchemeCollection<'en-US'>>
 
   /**
    * Creates an asset key for signing asset URLs (Embargoed Assets)
