@@ -3,16 +3,16 @@ export {
   EntrySkeletonType,
   type ConditionalFixedQueries,
   type ConditionalListQueries,
-} from './util.js'
+} from './util'
 
-export * from './equality.js'
-export * from './existence.js'
-export * from './location.js'
-export * from './order.js'
-export * from './query.js'
-export * from './range.js'
-export * from './reference.js'
-export * from './search.js'
-export * from './select.js'
-export * from './set.js'
-export * from './subset.js'
+export * from './equality'
+export * from './existence'
+export * from './location'
+export * from './order'
+export * from './query'
+export * from './range'
+export * from './reference'
+export * from './search'
+export * from './select'
+export * from './set'
+export * from './subset'

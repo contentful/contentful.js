@@ -1,6 +1,6 @@
-import { EntitySys } from './sys.js'
-import { ContentfulCollection } from './collection.js'
-import { UserLink } from './link.js'
+import { EntitySys } from './sys'
+import { ContentfulCollection } from './collection'
+import { UserLink } from './link'
 
 /**
  * System managed metadata for tags

@@ -1,4 +1,4 @@
-import { ResourceLink } from './resource-link.js'
+import { ResourceLink } from './resource-link'
 
 /**
  * @category Link

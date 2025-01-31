@@ -1,6 +1,6 @@
-import { ContentType, ContentTypeCollection } from './content-type.js'
-import { Space } from './space.js'
-import { LocaleCode, LocaleCollection } from './locale.js'
+import { ContentType, ContentTypeCollection } from './content-type'
+import { Space } from './space'
+import { LocaleCode, LocaleCollection } from './locale'
 import {
   AssetQueries,
   AssetsQueries,
@@ -10,14 +10,14 @@ import {
   EntryQueries,
   EntrySkeletonType,
   TagQueries,
-} from './query/index.js'
-import { SyncCollection, SyncOptions, SyncQuery } from './sync.js'
-import { Tag, TagCollection } from './tag.js'
-import { AssetKey } from './asset-key.js'
-import { Entry, EntryCollection } from './entry.js'
-import { Asset, AssetCollection, AssetFields } from './asset.js'
-import { Concept, ConceptCollection } from './concept.js'
-import { ConceptScheme, ConceptSchemeCollection } from './concept-scheme.js'
+} from './query/index'
+import { SyncCollection, SyncOptions, SyncQuery } from './sync'
+import { Tag, TagCollection } from './tag'
+import { AssetKey } from './asset-key'
+import { Entry, EntryCollection } from './entry'
+import { Asset, AssetCollection, AssetFields } from './asset'
+import { Concept, ConceptCollection } from './concept'
+import { ConceptScheme, ConceptSchemeCollection } from './concept-scheme'
 
 /**
  * Client chain modifiers used in all types that depend on the client configuration.

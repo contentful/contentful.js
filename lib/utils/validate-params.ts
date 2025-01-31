@@ -1,4 +1,4 @@
-import { ValidationError } from './validation-error.js'
+import { ValidationError } from './validation-error'
 
 function checkLocaleParamIsAll(query) {
   if (query.locale === '*') {

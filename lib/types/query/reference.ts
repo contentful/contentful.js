@@ -1,4 +1,4 @@
-import { EntryFieldTypes } from '../entry.js'
+import { EntryFieldTypes } from '../entry'
 import { ConditionalPick } from 'type-fest'
 
 type SupportedTypes =
