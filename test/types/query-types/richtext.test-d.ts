@@ -1,4 +1,4 @@
-import { expectAssignable, expectNotAssignable, expectType } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import {
   EntryFieldTypes,
   EntryFieldsEqualityFilter,
@@ -16,49 +16,53 @@ import {
 // @ts-ignore
 import * as mocks from '../mocks'
 
-expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>>(
-  {},
-)
+test('richtext', async () => {
+  expectTypeOf<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>>(
+    {},
+  )
 
-expectAssignable<
-  Required<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>
->({})
+  expectTypeOf<
+    Required<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>
+  >({})
 
-expectAssignable<
-  Required<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>
->({})
+  expectTypeOf<
+    Required<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>
+  >({})
 
-expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>({})
-expectType<
-  Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.RichText }, 'fields'>>
->({
-  'fields.testField[exists]': mocks.booleanValue,
+  expectTypeOf<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.RichText }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.RichText }, 'fields'>>
+  >({
+    'fields.testField[exists]': mocks.booleanValue,
+  })
+
+  expectTypeOf<Required<LocationSearchFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>>(
+    {},
+  )
+
+  expectTypeOf<
+    Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>
+  >({})
+
+  expectTypeOf<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>(
+    {},
+  )
+  expectTypeOf<
+    Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>
+  >({
+    'fields.testField[match]': mocks.stringValue,
+  })
+
+  expectTypeOf({
+    order: ['fields.testField'],
+  }).not.toEqualTypeOf<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Object }>>()
+
+  expectTypeOf<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.RichText }>>({})
+  expectTypeOf<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.RichText }>>>({
+    select: ['fields.testField'],
+  })
+
+  expectTypeOf<
+    Required<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>
+  >({})
 })
-
-expectAssignable<
-  Required<LocationSearchFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>
->({})
-
-expectType<Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>>({})
-
-expectAssignable<
-  EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>
->({})
-expectType<
-  Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>
->({
-  'fields.testField[match]': mocks.stringValue,
-})
-
-expectNotAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Object }>>({
-  order: ['fields.testField'],
-})
-
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.RichText }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.RichText }>>>({
-  select: ['fields.testField'],
-})
-
-expectAssignable<
-  Required<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.RichText }, 'fields'>>
->({})

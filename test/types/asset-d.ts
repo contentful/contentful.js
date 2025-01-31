@@ -1,8 +1,4 @@
-// As tsd does not pick up the global.d.ts located in /lib we
-// explicitly reference it here once.
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../lib/global.d.ts" />
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 
 import {
   Asset,
@@ -31,75 +27,84 @@ const assetCollectionWithAllLocales = {
   limit: mocks.numberValue,
   items: [mocks.localizedAsset],
 }
+test('asset', async () => {
+  expectTypeOf<AssetDetails>(mocks.assetDetails)
+  expectTypeOf<AssetFile>(mocks.assetFile)
+  expectTypeOf<AssetFields>(mocks.assetFields)
 
-expectAssignable<AssetDetails>(mocks.assetDetails)
-expectAssignable<AssetFile>(mocks.assetFile)
-expectAssignable<AssetFields>(mocks.assetFields)
+  expectTypeOf<Asset<undefined>>(mocks.asset)
+  expectTypeOf<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.localizedAsset)
 
-expectAssignable<Asset<undefined>>(mocks.asset)
-expectAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.localizedAsset)
+  expectTypeOf<Asset<ChainModifiers, AssetLocales>>(mocks.asset)
+  expectTypeOf<Asset<ChainModifiers, AssetLocales>>(mocks.localizedAsset)
 
-expectAssignable<Asset<ChainModifiers, AssetLocales>>(mocks.asset)
-expectAssignable<Asset<ChainModifiers, AssetLocales>>(mocks.localizedAsset)
+  expectTypeOf<AssetCollection<undefined>>(assetCollection)
+  expectTypeOf<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
 
-expectAssignable<AssetCollection<undefined>>(assetCollection)
-expectAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
+  expectTypeOf<AssetCollection<ChainModifiers, AssetLocales>>(assetCollection)
+  expectTypeOf<AssetCollection<ChainModifiers, AssetLocales>>(assetCollectionWithAllLocales)
 
-expectAssignable<AssetCollection<ChainModifiers, AssetLocales>>(assetCollection)
-expectAssignable<AssetCollection<ChainModifiers, AssetLocales>>(assetCollectionWithAllLocales)
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<Asset<'WITH_ALL_LOCALES', AssetLocales>>()
+  expectTypeOf<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.localizedAsset)
 
-expectNotAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.asset)
-expectAssignable<Asset<'WITH_ALL_LOCALES', AssetLocales>>(mocks.localizedAsset)
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>
+  >()
+  expectTypeOf<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
+    mocks.localizedAsset,
+  )
 
-expectNotAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  mocks.asset,
-)
-expectAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  mocks.localizedAsset,
-)
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
+  >()
+  expectTypeOf<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
+    mocks.localizedAsset,
+  )
 
-expectNotAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  mocks.asset,
-)
-expectAssignable<Asset<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  mocks.localizedAsset,
-)
+  expectTypeOf(assetCollection).not.toEqualTypeOf<
+    AssetCollection<'WITH_ALL_LOCALES', AssetLocales>
+  >()
+  expectTypeOf<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
 
-expectNotAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollection)
-expectAssignable<AssetCollection<'WITH_ALL_LOCALES', AssetLocales>>(assetCollectionWithAllLocales)
+  expectTypeOf(assetCollection).not.toEqualTypeOf<
+    AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>
+  >()
+  expectTypeOf<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
+    assetCollectionWithAllLocales,
+  )
 
-expectNotAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  assetCollection,
-)
-expectAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  assetCollectionWithAllLocales,
-)
+  expectTypeOf(assetCollection).not.toEqualTypeOf<
+    AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
+  >()
+  expectTypeOf<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
+    assetCollectionWithAllLocales,
+  )
 
-expectNotAssignable<
-  AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
->(assetCollection)
-expectAssignable<AssetCollection<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  assetCollectionWithAllLocales,
-)
+  expectTypeOf<Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(mocks.asset)
+  expectTypeOf(mocks.localizedAsset).not.toEqualTypeOf<
+    Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>
+  >()
 
-expectAssignable<Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(mocks.asset)
-expectNotAssignable<Asset<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(mocks.localizedAsset)
+  expectTypeOf<Asset<undefined, AssetLocales>>(mocks.asset)
+  expectTypeOf(mocks.localizedAsset).not.toEqualTypeOf<Asset<undefined, AssetLocales>>()
 
-expectAssignable<Asset<undefined, AssetLocales>>(mocks.asset)
-expectNotAssignable<Asset<undefined, AssetLocales>>(mocks.localizedAsset)
+  expectTypeOf<Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(mocks.asset)
+  expectTypeOf(mocks.localizedAsset).not.toEqualTypeOf<
+    Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
+  >()
 
-expectAssignable<Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(mocks.asset)
-expectNotAssignable<Asset<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(mocks.localizedAsset)
+  expectTypeOf<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(assetCollection)
+  expectTypeOf(assetCollectionWithAllLocales).not.toEqualTypeOf<
+    AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>
+  >()
 
-expectAssignable<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(assetCollection)
-expectNotAssignable<AssetCollection<'WITHOUT_LINK_RESOLUTION', AssetLocales>>(
-  assetCollectionWithAllLocales,
-)
+  expectTypeOf<AssetCollection<undefined, AssetLocales>>(assetCollection)
+  expectTypeOf(assetCollectionWithAllLocales).not.toEqualTypeOf<
+    AssetCollection<undefined, AssetLocales>
+  >()
 
-expectAssignable<AssetCollection<undefined, AssetLocales>>(assetCollection)
-expectNotAssignable<AssetCollection<undefined, AssetLocales>>(assetCollectionWithAllLocales)
-
-expectAssignable<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(assetCollection)
-expectNotAssignable<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(
-  assetCollectionWithAllLocales,
-)
+  expectTypeOf<AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>>(assetCollection)
+  expectTypeOf(assetCollectionWithAllLocales).not.toEqualTypeOf<
+    AssetCollection<'WITHOUT_UNRESOLVABLE_LINKS', AssetLocales>
+  >()
+})

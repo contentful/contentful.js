@@ -1,483 +1,363 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import { EntriesQueries, EntrySkeletonType, EntryFieldTypes } from '../../../lib'
 import * as mocks from '../mocks'
 
+test('entryQueries', async () => {
+
 // all operator
 
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Symbol
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    stringField: EntryFieldTypes.Symbol
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
 })
 
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Symbol
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    stringField: EntryFieldTypes.Symbol
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.descendants[in]': mocks.stringArrayValue,
 })
 
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Symbol
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf({
   'fields.stringField[all]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Symbol
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+}).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    stringField: EntryFieldTypes.Symbol
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>()
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    stringField: EntryFieldTypes.Symbol
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   content_type: 'id',
   'fields.stringField[all]': mocks.stringArrayValue,
   'fields.stringArrayField[all]': mocks.stringArrayValue,
 })
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Symbol
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[all]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    stringField: EntryFieldTypes.Symbol
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>()
 
 // equality
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   'sys.updatedAt': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'fields.numberField': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   content_type: 'id',
   'fields.someField': mocks.stringValue,
   'sys.updatedAt': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
 // exists operator (field is present)
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   'metadata.tags[exists]': mocks.booleanValue,
   'metadata.concepts[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'fields.numberField[exists]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   content_type: 'id',
   'fields.someField[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[exists]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[exists]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
 // gt operator (range)
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   'sys.updatedAt[gt]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'fields.numberField[gt]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>({
   content_type: 'id',
   'fields.numberField[gt]': mocks.numberValue,
   'sys.updatedAt[gt]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[gt]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[gt]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
 
 // gte operator (range)
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Number }>, undefined>>({
   'sys.updatedAt[gte]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'fields.numberField[gte]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>({
   content_type: 'id',
   'fields.numberField[gte]': mocks.numberValue,
   'sys.updatedAt[gte]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[gte]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[gte]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
 
 // in operator
 
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   'metadata.tags.sys.id[in]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf({
   'fields.numberField[in]': mocks.anyValue,
   'fields.stringArrayField[in]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+}).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>()
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   content_type: 'id',
   'fields.numberField[in]': mocks.numberArrayValue,
   'fields.stringArrayField[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[in]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[in]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>()
 
 // lt operator (range)
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   'sys.updatedAt[lt]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'fields.numberField[lt]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>({
   content_type: 'id',
   'fields.numberField[lt]': mocks.numberValue,
   'sys.updatedAt[lt]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[lt]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[lt]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
 
 // lte operator (range)
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   'sys.updatedAt[lte]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'fields.numberField[lte]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>({
   content_type: 'id',
   'fields.numberField[lte]': mocks.numberValue,
   'sys.updatedAt[lte]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[lte]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[lte]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ numberField: EntryFieldTypes.Number }>, undefined>>()
 
 // match operator (full-text search)
 
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ textField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'fields.textField[match]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ textField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ textField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ textField: EntryFieldTypes.Symbol }>, undefined>>({
   content_type: 'id',
   'fields.textField[match]': mocks.stringValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ textField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[match]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ textField: EntryFieldTypes.Symbol }>, undefined>>()
 
 // ne operator (inequality)
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   'sys.updatedAt[ne]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'fields.numberField[ne]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   content_type: 'id',
   'fields.someField[ne]': mocks.stringValue,
   'sys.updatedAt[ne]': mocks.dateValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[ne]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[ne]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
 // near operator (full-text search)
 
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+expectTypeOf({
   'fields.locationField[near]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>({
   content_type: 'id',
   'fields.locationField[near]': mocks.nearLocationValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[near]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>()
 
 // nin operator
 
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   'metadata.tags.sys.id[nin]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+expectTypeOf({
   'fields.numberField[nin]': mocks.anyValue,
   'fields.stringArrayField[nin]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+}).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>()
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>({
   content_type: 'id',
   'fields.numberField[nin]': mocks.numberArrayValue,
   'fields.stringArrayField[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   'sys.unknownProp[nin]': mocks.anyValue,
-})
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      numberField: EntryFieldTypes.Number
-      stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    }>,
-    undefined
-  >
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[nin]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    numberField: EntryFieldTypes.Number
+    stringArrayField: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
+  }>,
+  undefined
+>>()
 
 // order operator
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   order: ['sys.createdAt', '-sys.createdAt'],
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   order: ['sys.unknownProperty'],
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   order: ['fields.someField'],
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   content_type: 'id',
   order: ['fields.someField', '-fields.someField'],
 })
-expectAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{
-      mediaField: EntryFieldTypes.AssetLink
-      referenceField: EntryFieldTypes.EntryLink<any>
-    }>,
-    undefined
-  >
->({
+expectTypeOf<EntriesQueries<
+  EntrySkeletonType<{
+    mediaField: EntryFieldTypes.AssetLink
+    referenceField: EntryFieldTypes.EntryLink<any>
+  }>,
+  undefined
+>>({
   content_type: 'id',
   order: [
     'fields.mediaField.sys.id',
@@ -486,122 +366,84 @@ expectAssignable<
     '-fields.referenceField.sys.id',
   ],
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   order: ['fields.unknownField'],
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
 // select operator
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   select: ['sys'],
 })
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   select: ['sys.createdAt'],
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   select: ['sys.unknownProperty'],
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   select: ['fields'],
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   select: ['fields.someField'],
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>({
   content_type: 'id',
   select: ['fields.someField'],
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   select: ['fields.unknownField'],
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ someField: EntryFieldTypes.Symbol }>, undefined>>()
 
 // within operator (bounding circle)
 
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+expectTypeOf({
   'fields.locationField[within]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>({
   content_type: 'id',
   'fields.locationField[within]': mocks.withinCircleLocationValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[within]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>()
 
 // within operator (bounding rectangle)
 
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+expectTypeOf({
   'fields.locationField[within]': mocks.anyValue,
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>({
   content_type: 'id',
   'fields.locationField[within]': mocks.withinBoxLocationValue,
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField[within]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ locationField: EntryFieldTypes.Location }>, undefined>>()
 
 // search on references
 
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>
->({
+expectTypeOf({
   'fields.referenceField.sys.contentType.sys.id': 'id',
-})
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>
->({
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>>()
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>>({
   content_type: 'id',
   'fields.referenceField.sys.contentType.sys.id': 'id',
 })
-expectNotAssignable<
-  EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>
->({
+expectTypeOf({
   content_type: 'id',
   'fields.unknownField.sys.contentType.sys.id': 'id',
-})
+}).not.toEqualTypeOf<EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>>()
 
 // locale option
 
-expectAssignable<
-  EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>
->({ locale: mocks.stringValue })
-expectNotAssignable<
-  EntriesQueries<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>,
-    'WITH_ALL_LOCALES'
-  >
->({ locale: mocks.anyValue })
+expectTypeOf<EntriesQueries<EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>, undefined>>({ locale: mocks.stringValue })
+expectTypeOf({ locale: mocks.anyValue }).not.toEqualTypeOf<EntriesQueries<
+  EntrySkeletonType<{ referenceField: EntryFieldTypes.EntryLink<any> }>,
+  'WITH_ALL_LOCALES'
+>>()})

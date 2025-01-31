@@ -1,4 +1,4 @@
-import { expectAssignable, expectType } from 'tsd'
+import { expectTypeOf, test } from 'vitest'
 import {
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
@@ -16,49 +16,57 @@ import {
 // @ts-ignore
 import * as mocks from '../mocks'
 
-expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>>({})
+test('date', async () => {
+  expectTypeOf<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>>({})
 
-expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
-expectType<Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
-  'fields.testField': mocks.dateValue,
-})
+  expectTypeOf<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
+  expectTypeOf<Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Date }, 'fields'>>>(
+    {
+      'fields.testField': mocks.dateValue,
+    },
+  )
 
-expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
-expectType<Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
-  'fields.testField[ne]': mocks.dateValue,
-})
+  expectTypeOf<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Date }, 'fields'>>
+  >({
+    'fields.testField[ne]': mocks.dateValue,
+  })
 
-expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
-  'fields.testField[exists]': mocks.booleanValue,
-})
+  expectTypeOf<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Date }, 'fields'>>
+  >({
+    'fields.testField[exists]': mocks.booleanValue,
+  })
 
-expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>>({})
+  expectTypeOf<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>>({})
 
-expectAssignable<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
-expectType<Required<EntryFieldsRangeFilters<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
-  'fields.testField[lt]': mocks.dateValue,
-  'fields.testField[lte]': mocks.dateValue,
-  'fields.testField[gt]': mocks.dateValue,
-  'fields.testField[gte]': mocks.dateValue,
-})
+  expectTypeOf<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
+  expectTypeOf<Required<EntryFieldsRangeFilters<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
+    'fields.testField[lt]': mocks.dateValue,
+    'fields.testField[lte]': mocks.dateValue,
+    'fields.testField[gt]': mocks.dateValue,
+    'fields.testField[gte]': mocks.dateValue,
+  })
 
-expectAssignable<
-  Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>
->({})
+  expectTypeOf<
+    Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>
+  >({})
 
-expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Date }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Date }>>>({
-  order: ['fields.testField', '-fields.testField'],
-})
+  expectTypeOf<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Date }>>({})
+  expectTypeOf<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Date }>>>({
+    order: ['fields.testField', '-fields.testField'],
+  })
 
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Date }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Date }>>>({
-  select: ['fields.testField'],
-})
+  expectTypeOf<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Date }>>({})
+  expectTypeOf<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Date }>>>({
+    select: ['fields.testField'],
+  })
 
-expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
-expectType<Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
-  'fields.testField[in]': mocks.dateArrayValue,
-  'fields.testField[nin]': mocks.dateArrayValue,
+  expectTypeOf<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Date }, 'fields'>>({})
+  expectTypeOf<Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Date }, 'fields'>>>({
+    'fields.testField[in]': mocks.dateArrayValue,
+    'fields.testField[nin]': mocks.dateArrayValue,
+  })
 })

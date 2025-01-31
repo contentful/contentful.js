@@ -1,4 +1,4 @@
-import { expectAssignable, expectType } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import {
   EntryFieldTypes,
   EntryFieldsEqualityFilter,
@@ -16,57 +16,63 @@ import {
 // @ts-ignore
 import * as mocks from '../mocks'
 
-expectAssignable<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
-expectType<Required<EntryFieldsSetFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>({
-  'fields.testField[all]': mocks.stringArrayValue,
-})
+test('symbol', async () => {
+  expectTypeOf<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
+  expectTypeOf<Required<EntryFieldsSetFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>({
+    'fields.testField[all]': mocks.stringArrayValue,
+  })
 
-expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
-expectType<Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>({
-  'fields.testField': mocks.stringValue,
-})
+  expectTypeOf<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>
+  >({
+    'fields.testField': mocks.stringValue,
+  })
 
-expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
-expectType<Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>(
-  {
+  expectTypeOf<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>
+  >({
     'fields.testField[ne]': mocks.stringValue,
-  },
-)
+  })
 
-expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>({
-  'fields.testField[exists]': mocks.booleanValue,
-})
+  expectTypeOf<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>
+  >({
+    'fields.testField[exists]': mocks.booleanValue,
+  })
 
-expectAssignable<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>>(
-  {},
-)
+  expectTypeOf<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>>({})
 
-expectAssignable<
-  Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>
->({})
+  expectTypeOf<Required<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>>(
+    {},
+  )
 
-expectAssignable<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>(
-  {},
-)
-expectType<
-  Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>
->({
-  'fields.testField[match]': mocks.stringValue,
-})
+  expectTypeOf<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>(
+    {},
+  )
+  expectTypeOf<
+    Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>
+  >({
+    'fields.testField[match]': mocks.stringValue,
+  })
 
-expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Symbol }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Symbol }>>>({
-  order: ['fields.testField', '-fields.testField'],
-})
+  expectTypeOf<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Symbol }>>({})
+  expectTypeOf<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Symbol }>>>({
+    order: ['fields.testField', '-fields.testField'],
+  })
 
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Symbol }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Symbol }>>>({
-  select: ['fields.testField'],
-})
+  expectTypeOf<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Symbol }>>({})
+  expectTypeOf<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Symbol }>>>({
+    select: ['fields.testField'],
+  })
 
-expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
-expectType<Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>>({
-  'fields.testField[in]': mocks.stringArrayValue,
-  'fields.testField[nin]': mocks.stringArrayValue,
+  expectTypeOf<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Symbol }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Symbol }, 'fields'>>
+  >({
+    'fields.testField[in]': mocks.stringArrayValue,
+    'fields.testField[nin]': mocks.stringArrayValue,
+  })
 })
