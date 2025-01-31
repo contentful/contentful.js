@@ -1,6 +1,6 @@
 import resolveResponse from 'contentful-resolve-response'
 
-import mixinStringifySafe from '../mixins/stringify-safe.js'
+import mixinStringifySafe from '../mixins/stringify-safe'
 
 export default function resolveCircular(data: any, { resolveLinks, removeUnresolved }): any {
   const wrappedData = mixinStringifySafe(data)

@@ -1,4 +1,4 @@
-import { ValidationError } from './validation-error.js'
+import { ValidationError } from './validation-error'
 
 type Options = {
   maximum?: number

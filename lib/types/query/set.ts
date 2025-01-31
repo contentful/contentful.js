@@ -1,5 +1,5 @@
-import { EntryFieldType, EntryFieldTypes } from '../index.js'
-import { EntryFieldsConditionalListQueries } from './util.js'
+import { EntryFieldType, EntryFieldTypes } from '../index'
+import { EntryFieldsConditionalListQueries } from './util'
 
 type SupportedTypes =
   | EntryFieldTypes.Symbol

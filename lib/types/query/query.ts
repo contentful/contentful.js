@@ -1,36 +1,36 @@
-import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset.js'
-import { ChainModifiers } from '../client.js'
-import { EntrySys } from '../entry.js'
-import { TagLink, TaxonomyConceptLink } from '../link.js'
-import { Metadata } from '../metadata.js'
-import { TagSys } from '../tag.js'
+import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset'
+import { ChainModifiers } from '../client'
+import { EntrySys } from '../entry'
+import { TagLink, TaxonomyConceptLink } from '../link'
+import { Metadata } from '../metadata'
+import { TagSys } from '../tag'
 import {
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
   EqualityFilter,
   InequalityFilter,
-} from './equality.js'
-import { EntryFieldsExistenceFilter, ExistenceFilter } from './existence.js'
-import { LocationSearchFilters } from './location.js'
+} from './equality'
+import { EntryFieldsExistenceFilter, ExistenceFilter } from './existence'
+import { LocationSearchFilters } from './location'
 import {
   AssetOrderFilter,
   TaxonomyOrderFilter,
   EntryOrderFilter,
   EntryOrderFilterWithFields,
   TagOrderFilter,
-} from './order.js'
-import { EntryFieldsRangeFilters, RangeFilters } from './range.js'
-import { ReferenceSearchFilters } from './reference.js'
-import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search.js'
-import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select.js'
-import { EntryFieldsSetFilter } from './set.js'
-import { EntryFieldsSubsetFilters, SubsetFilters } from './subset.js'
+} from './order'
+import { EntryFieldsRangeFilters, RangeFilters } from './range'
+import { ReferenceSearchFilters } from './reference'
+import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search'
+import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select'
+import { EntryFieldsSetFilter } from './set'
+import { EntryFieldsSubsetFilters, SubsetFilters } from './subset'
 import {
   ConditionalFixedQueries,
   ConditionalListQueries,
   EntrySkeletonType,
   FieldsType,
-} from './util.js'
+} from './util'
 
 export type FixedPagedOptions = {
   skip?: number

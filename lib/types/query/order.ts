@@ -1,8 +1,8 @@
-import { EntrySkeletonType, FieldsType } from './util.js'
-import { EntryFields, EntryFieldType, EntryFieldTypes, EntrySys } from '../entry.js'
-import { AssetSys } from '../asset.js'
+import { EntrySkeletonType, FieldsType } from './util'
+import { EntryFields, EntryFieldType, EntryFieldTypes, EntrySys } from '../entry'
+import { AssetSys } from '../asset'
 import { ConditionalPick } from 'type-fest'
-import { TagSys } from '../tag.js'
+import { TagSys } from '../tag'
 
 export type SupportedTypes =
   | EntryFields.Symbol
