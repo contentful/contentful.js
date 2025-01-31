@@ -1,4 +1,4 @@
-import { expectType } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import { Asset, AssetCollection, createClient } from '../../../lib'
 
 const client = createClient({
@@ -8,14 +8,17 @@ const client = createClient({
 
 type Locale = 'en'
 
-expectType<Asset<undefined>>(await client.getAsset('test'))
+test('getAssets', async () => {
 
-expectType<AssetCollection<undefined>>(await client.getAssets())
+expectTypeOf<Asset<undefined>>(await client.getAsset('test'))
 
-expectType<Asset<'WITH_ALL_LOCALES'>>(await client.withAllLocales.getAsset('test'))
-expectType<Asset<'WITH_ALL_LOCALES', Locale>>(await client.withAllLocales.getAsset<Locale>('test'))
+expectTypeOf<AssetCollection<undefined>>(await client.getAssets())
 
-expectType<AssetCollection<'WITH_ALL_LOCALES'>>(await client.withAllLocales.getAssets())
-expectType<AssetCollection<'WITH_ALL_LOCALES', Locale>>(
+expectTypeOf<Asset<'WITH_ALL_LOCALES'>>(await client.withAllLocales.getAsset('test'))
+expectTypeOf<Asset<'WITH_ALL_LOCALES', Locale>>(await client.withAllLocales.getAsset<Locale>('test'))
+
+expectTypeOf<AssetCollection<'WITH_ALL_LOCALES'>>(await client.withAllLocales.getAssets())
+expectTypeOf<AssetCollection<'WITH_ALL_LOCALES', Locale>>(
   await client.withAllLocales.getAssets<Locale>(),
 )
+})

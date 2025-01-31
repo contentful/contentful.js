@@ -1,8 +1,4 @@
-// As tsd does not pick up the global.d.ts located in /lib we
-// explicitly reference it here once.
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../lib/global.d.ts" />
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import { EntryFieldTypes, EntrySkeletonType, ResolvedField } from '../../lib'
 
 // @ts-ignore
@@ -11,540 +7,557 @@ import * as mocks from './mocks'
 type SimpleEntryFields = { title: EntryFieldTypes.Symbol }
 type SimpleEntryWithContentTypeId = EntrySkeletonType<SimpleEntryFields>
 
-expectAssignable<ResolvedField<EntryFieldTypes.Symbol, undefined>>(mocks.stringValue)
-expectAssignable<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('a')
-expectAssignable<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('b')
-expectNotAssignable<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('c')
 
-expectAssignable<ResolvedField<EntryFieldTypes.Text, undefined>>(mocks.stringValue)
-expectAssignable<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('a')
-expectAssignable<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('b')
-expectNotAssignable<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('c')
+test('resolved-field', async () => {
+  expectTypeOf<ResolvedField<EntryFieldTypes.Symbol, undefined>>(mocks.stringValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('a')
+  expectTypeOf<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>('b')
+  expectTypeOf('c').not.toEqualTypeOf<ResolvedField<EntryFieldTypes.Symbol<'a' | 'b'>, undefined>>()
 
-expectAssignable<ResolvedField<EntryFieldTypes.Integer, undefined>>(mocks.numberValue)
-expectAssignable<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(1)
-expectAssignable<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(2)
-expectNotAssignable<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(3)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Text, undefined>>(mocks.stringValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('a')
+  expectTypeOf<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>('b')
+  expectTypeOf('c').not.toEqualTypeOf<ResolvedField<EntryFieldTypes.Text<'a' | 'b'>, undefined>>()
 
-expectAssignable<ResolvedField<EntryFieldTypes.Number, undefined>>(mocks.numberValue)
-expectAssignable<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(1)
-expectAssignable<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(2)
-expectNotAssignable<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(3)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Integer, undefined>>(mocks.numberValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(1)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>(2)
+  expectTypeOf(3).not.toEqualTypeOf<ResolvedField<EntryFieldTypes.Integer<1 | 2>, undefined>>()
 
-expectAssignable<ResolvedField<EntryFieldTypes.Date, undefined>>(mocks.dateValue)
-expectAssignable<ResolvedField<EntryFieldTypes.Boolean, undefined>>(mocks.booleanValue)
-expectAssignable<ResolvedField<EntryFieldTypes.Location, undefined>>(mocks.locationValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Number, undefined>>(mocks.numberValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(1)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>(2)
+  expectTypeOf(3).not.toEqualTypeOf<ResolvedField<EntryFieldTypes.Number<1 | 2>, undefined>>()
 
-expectAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol>, undefined>>([
-  mocks.stringValue,
-])
-expectAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol<'a' | 'b'>>, undefined>
->(['a', 'b'])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol<'a' | 'b'>>, undefined>
->(['c'])
+  expectTypeOf<ResolvedField<EntryFieldTypes.Date, undefined>>(mocks.dateValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Boolean, undefined>>(mocks.booleanValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Location, undefined>>(mocks.locationValue)
 
-expectAssignable<ResolvedField<EntryFieldTypes.Object, undefined>>(mocks.jsonValue)
+  expectTypeOf<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol>, undefined>>([
+    mocks.stringValue,
+  ])
+  expectTypeOf<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol<'a' | 'b'>>, undefined>>([
+    'a',
+    'b',
+  ])
+  expectTypeOf(['c']).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.Symbol<'a' | 'b'>>, undefined>
+  >()
 
-// entries in links
+  expectTypeOf<ResolvedField<EntryFieldTypes.Object, undefined>>(mocks.jsonValue)
 
-expectAssignable<ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>>(
-  mocks.entry,
-)
-expectAssignable<ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>>(
-  mocks.entryLink,
-)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
->(undefined)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
->(mocks.asset)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
->(mocks.assetLink)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entryLink])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryLink])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryLink, undefined])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryLink, mocks.asset])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryLink, mocks.assetLink])
+  // entries in links
 
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.entry)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(undefined)
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.entryLink)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([undefined])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry, undefined])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry, mocks.entryLink, undefined])
+  expectTypeOf<ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>>(
+    mocks.entry,
+  )
+  expectTypeOf<ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>>(
+    mocks.entryLink,
+  )
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
+  >()
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
+  >()
+  expectTypeOf(mocks.assetLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, undefined>
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >([mocks.entry])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >([mocks.entryLink])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >([mocks.entry, mocks.entryLink])
+  expectTypeOf([mocks.entry, mocks.entryLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >()
+  expectTypeOf([mocks.entry, mocks.entryLink, mocks.asset]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >()
+  expectTypeOf([mocks.entry, mocks.entryLink, mocks.assetLink]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >()
 
-expectAssignable<
-  ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, 'WITHOUT_LINK_RESOLUTION'>
->(mocks.entryLink)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, 'WITHOUT_LINK_RESOLUTION'>
->(undefined)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>, 'WITHOUT_LINK_RESOLUTION'>
->(mocks.entry)
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(mocks.entry)
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(undefined)
+  expectTypeOf(mocks.entryLink).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([mocks.entry])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([undefined])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([mocks.entry, undefined])
+  expectTypeOf([mocks.entry, mocks.entryLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
 
-// entries in resource links
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >(mocks.entryLink)
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
+  expectTypeOf(mocks.entry).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
 
-expectAssignable<
-  ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
->(mocks.entry)
-expectAssignable<
-  ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
->(mocks.entryResourceLink)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
->(undefined)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
->(mocks.asset)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
->(mocks.assetLink)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entryResourceLink])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryResourceLink])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryResourceLink, undefined])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryResourceLink, mocks.asset])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    undefined
-  >
->([mocks.entry, mocks.entryResourceLink, mocks.assetLink])
+  // entries in resource links
 
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.entry)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(undefined)
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.entryResourceLink)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([undefined])
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry, undefined])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry, mocks.entryResourceLink, undefined])
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
+  >(mocks.entry)
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
+  >(mocks.entryResourceLink)
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
+  >()
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
+  >()
+  expectTypeOf(mocks.assetLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>, undefined>
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >([mocks.entry])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >([mocks.entryResourceLink])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >([mocks.entry, mocks.entryResourceLink])
+  expectTypeOf([mocks.entry, mocks.entryResourceLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >()
+  expectTypeOf([mocks.entry, mocks.entryResourceLink, mocks.asset]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >()
+  expectTypeOf([mocks.entry, mocks.entryResourceLink, mocks.assetLink]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      undefined
+    >
+  >()
 
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->(mocks.entryResourceLink)
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->(undefined)
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->(mocks.entry)
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(mocks.entry)
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(undefined)
+  expectTypeOf(mocks.entryResourceLink).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([mocks.entry])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([undefined])
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([mocks.entry, undefined])
+  expectTypeOf([mocks.entry, mocks.entryResourceLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
 
-// external resource links
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >(mocks.entryResourceLink)
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
+  expectTypeOf(mocks.entry).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
 
-expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(
-  mocks.externalResourceLink,
-)
-// assignable because 'Contentful:Entry' is a subtype of string
-expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(
-  mocks.entryResourceLink,
-)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(mocks.entry)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(undefined)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(mocks.asset)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(mocks.assetLink)
-expectAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
->([mocks.externalResourceLink, mocks.entryResourceLink])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
->([mocks.entry])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
->([mocks.externalResourceLink, undefined])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
->([mocks.externalResourceLink, mocks.asset])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
->([mocks.externalResourceLink, mocks.assetLink])
+  // external resource links
 
-expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.externalResourceLink,
-)
-// assignable because 'Contentful:Entry' is a subtype of string
-expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.entryResourceLink,
-)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
->(mocks.entry)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
->(undefined)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
->(mocks.asset)
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
->(mocks.assetLink)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.externalResourceLink, mocks.entryResourceLink])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.externalResourceLink, undefined])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.externalResourceLink, mocks.asset])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.externalResourceLink, mocks.assetLink])
+  expectTypeOf<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(
+    mocks.externalResourceLink,
+  )
+  // assignable because 'Contentful:Entry' is a subtype of string
+  expectTypeOf<ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>>(
+    mocks.entryResourceLink,
+  )
+  expectTypeOf(mocks.entry).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>
+  >()
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>
+  >()
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>
+  >()
+  expectTypeOf(mocks.assetLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, undefined>
+  >()
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+  >([mocks.externalResourceLink, mocks.entryResourceLink])
+  expectTypeOf([mocks.entry]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+  >()
+  expectTypeOf([mocks.externalResourceLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+  >()
+  expectTypeOf([mocks.externalResourceLink, mocks.asset]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+  >()
+  expectTypeOf([mocks.externalResourceLink, mocks.assetLink]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>, undefined>
+  >()
 
-expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.externalResourceLink,
-)
-// assignable because 'Contentful:Entry' is a subtype of string
-expectAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.entryResourceLink,
-)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.entry,
-)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  undefined,
-)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.asset,
-)
-expectNotAssignable<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.assetLink,
-)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->([mocks.externalResourceLink, mocks.entryResourceLink])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->([mocks.entry])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->([undefined])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->([mocks.asset])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->([mocks.assetLink])
+  expectTypeOf<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+    mocks.externalResourceLink,
+  )
+  // assignable because 'Contentful:Entry' is a subtype of string
+  expectTypeOf<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+    mocks.entryResourceLink,
+  )
+  expectTypeOf(mocks.entry).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf(mocks.assetLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([mocks.externalResourceLink, mocks.entryResourceLink])
+  expectTypeOf([mocks.entry]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+  expectTypeOf([mocks.externalResourceLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+  expectTypeOf([mocks.externalResourceLink, mocks.asset]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+  expectTypeOf([mocks.externalResourceLink, mocks.assetLink]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
 
-// mixed resource links
+  expectTypeOf<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+    mocks.externalResourceLink,
+  )
+  // assignable because 'Contentful:Entry' is a subtype of string
+  expectTypeOf<ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>>(
+    mocks.entryResourceLink,
+  )
+  expectTypeOf(mocks.entry).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>
+  >()
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>
+  >()
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>
+  >()
+  expectTypeOf(mocks.assetLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.ExternalResourceLink, 'WITHOUT_LINK_RESOLUTION'>
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >([mocks.externalResourceLink, mocks.entryResourceLink])
+  expectTypeOf([mocks.entry]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
+  expectTypeOf([undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
+  expectTypeOf([mocks.asset]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
+  expectTypeOf([mocks.assetLink]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<EntryFieldTypes.ExternalResourceLink>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
 
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    undefined
-  >
->(mocks.entry)
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    undefined
-  >
->(mocks.entryResourceLink)
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    undefined
-  >
->(mocks.externalResourceLink)
-expectNotAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    undefined
-  >
->(undefined)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<
+  // mixed resource links
+
+  expectTypeOf<
+    ResolvedField<
       | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-      | EntryFieldTypes.ExternalResourceLink
-    >,
-    undefined
-  >
->([mocks.entry, mocks.entryResourceLink, mocks.externalResourceLink])
-expectNotAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<
+      | EntryFieldTypes.ExternalResourceLink,
+      undefined
+    >
+  >(mocks.entry)
+  expectTypeOf<
+    ResolvedField<
       | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-      | EntryFieldTypes.ExternalResourceLink
-    >,
-    undefined
-  >
->([undefined])
-
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.entry)
-// assignable because 'Contentful:Entry' is a subtype of string
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.entryResourceLink)
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.externalResourceLink)
-expectAssignable<
-  ResolvedField<
-    | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-    | EntryFieldTypes.ExternalResourceLink,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(undefined)
-expectAssignable<
-  ResolvedField<
-    EntryFieldTypes.Array<
+      | EntryFieldTypes.ExternalResourceLink,
+      undefined
+    >
+  >(mocks.entryResourceLink)
+  expectTypeOf<
+    ResolvedField<
       | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
-      | EntryFieldTypes.ExternalResourceLink
-    >,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->([mocks.entry, mocks.entryResourceLink, mocks.externalResourceLink, undefined])
+      | EntryFieldTypes.ExternalResourceLink,
+      undefined
+    >
+  >(mocks.externalResourceLink)
+  expectTypeOf(undefined).not.toEqualTypeOf<
+    ResolvedField<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink,
+      undefined
+    >
+  >()
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<
+        | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+        | EntryFieldTypes.ExternalResourceLink
+      >,
+      undefined
+    >
+  >([mocks.entry, mocks.entryResourceLink, mocks.externalResourceLink])
+  expectTypeOf([undefined]).not.toEqualTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<
+        | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+        | EntryFieldTypes.ExternalResourceLink
+      >,
+      undefined
+    >
+  >()
 
-// assets
+  expectTypeOf<
+    ResolvedField<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(mocks.entry)
+  // assignable because 'Contentful:Entry' is a subtype of string
+  expectTypeOf<
+    ResolvedField<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(mocks.entryResourceLink)
+  expectTypeOf<
+    ResolvedField<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(mocks.externalResourceLink)
+  expectTypeOf<
+    ResolvedField<
+      | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+      | EntryFieldTypes.ExternalResourceLink,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(undefined)
+  expectTypeOf<
+    ResolvedField<
+      EntryFieldTypes.Array<
+        | EntryFieldTypes.EntryResourceLink<SimpleEntryWithContentTypeId>
+        | EntryFieldTypes.ExternalResourceLink
+      >,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >([mocks.entry, mocks.entryResourceLink, mocks.externalResourceLink, undefined])
 
-expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.asset)
-expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.assetLink)
-expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(undefined)
-expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.entry)
-expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.entryLink)
-expectAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
-  mocks.asset,
-])
-expectAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
-  mocks.assetLink,
-])
-expectAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
-  mocks.asset,
-  mocks.assetLink,
-])
-expectNotAssignable<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
-  mocks.asset,
-  mocks.assetLink,
-  undefined,
-])
+  // assets
 
-expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.asset,
-)
-expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(undefined)
-expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
-  mocks.assetLink,
-)
-expectAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
->([mocks.asset])
-expectAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
->([undefined])
-expectAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
->([mocks.asset, undefined])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
->([mocks.assetLink, mocks.asset, undefined])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
->([mocks.assetLink, mocks.asset, mocks.entry])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
->([mocks.assetLink, mocks.asset, mocks.entryLink])
+  expectTypeOf<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.asset)
+  expectTypeOf<ResolvedField<EntryFieldTypes.AssetLink, undefined>>(mocks.assetLink)
+  expectTypeOf(undefined).not.toEqualTypeOf<ResolvedField<EntryFieldTypes.AssetLink, undefined>>()
+  expectTypeOf(mocks.entry).not.toEqualTypeOf<ResolvedField<EntryFieldTypes.AssetLink, undefined>>()
+  expectTypeOf(mocks.entryLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.AssetLink, undefined>
+  >()
+  expectTypeOf<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
+    mocks.asset,
+  ])
+  expectTypeOf<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
+    mocks.assetLink,
+  ])
+  expectTypeOf<ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>>([
+    mocks.asset,
+    mocks.assetLink,
+  ])
+  expectTypeOf([mocks.asset, mocks.assetLink, undefined]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, undefined>
+  >()
 
-expectAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.assetLink,
-)
-expectNotAssignable<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(
-  mocks.asset,
-)
-expectAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>
->([mocks.assetLink])
-expectNotAssignable<
-  ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>
->([mocks.asset])
+  expectTypeOf<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(mocks.asset)
+  expectTypeOf<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>>(undefined)
+  expectTypeOf(mocks.assetLink).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >([mocks.asset])
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >([undefined])
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >([mocks.asset, undefined])
+  expectTypeOf([mocks.assetLink, mocks.asset, undefined]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf([mocks.assetLink, mocks.asset, mocks.entry]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+  expectTypeOf([mocks.assetLink, mocks.asset, mocks.entryLink]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_UNRESOLVABLE_LINKS'>
+  >()
+
+  expectTypeOf<ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_LINK_RESOLUTION'>>(mocks.assetLink)
+  expectTypeOf(mocks.asset).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.AssetLink, 'WITHOUT_LINK_RESOLUTION'>
+  >()
+  expectTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>
+  >([mocks.assetLink])
+  expectTypeOf([mocks.asset]).not.toEqualTypeOf<
+    ResolvedField<EntryFieldTypes.Array<EntryFieldTypes.AssetLink>, 'WITHOUT_LINK_RESOLUTION'>
+  >()
+})

@@ -1,4 +1,4 @@
-import { expectAssignable, expectType } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import {
   EntryFieldTypes,
   EntryFieldsEqualityFilter,
@@ -16,53 +16,61 @@ import {
 // @ts-ignore
 import * as mocks from '../mocks'
 
-expectAssignable<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>>(
-  {},
-)
+test('number', async () => {
+  expectTypeOf<Required<EntryFieldsSetFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>>({})
 
-expectAssignable<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
-expectType<Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>>({
-  'fields.testField': mocks.numberValue,
-})
+  expectTypeOf<EntryFieldsEqualityFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsEqualityFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>
+  >({
+    'fields.testField': mocks.numberValue,
+  })
 
-expectAssignable<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
-expectType<Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>>(
-  {
+  expectTypeOf<EntryFieldsInequalityFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsInequalityFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>
+  >({
     'fields.testField[ne]': mocks.numberValue,
-  },
-)
+  })
 
-expectAssignable<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
-expectType<Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>>({
-  'fields.testField[exists]': mocks.booleanValue,
-})
+  expectTypeOf<EntryFieldsExistenceFilter<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsExistenceFilter<{ testField?: EntryFieldTypes.Number }, 'fields'>>
+  >({
+    'fields.testField[exists]': mocks.booleanValue,
+  })
 
-expectType<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>>({})
+  expectTypeOf<Required<LocationSearchFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>>({})
 
-expectAssignable<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
-expectType<Required<EntryFieldsRangeFilters<{ testField?: EntryFieldTypes.Number }, 'fields'>>>({
-  'fields.testField[lt]': mocks.numberValue,
-  'fields.testField[lte]': mocks.numberValue,
-  'fields.testField[gt]': mocks.numberValue,
-  'fields.testField[gte]': mocks.numberValue,
-})
+  expectTypeOf<EntryFieldsRangeFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
+  expectTypeOf<Required<EntryFieldsRangeFilters<{ testField?: EntryFieldTypes.Number }, 'fields'>>>(
+    {
+      'fields.testField[lt]': mocks.numberValue,
+      'fields.testField[lte]': mocks.numberValue,
+      'fields.testField[gt]': mocks.numberValue,
+      'fields.testField[gte]': mocks.numberValue,
+    },
+  )
 
-expectAssignable<
-  Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>
->({})
+  expectTypeOf<
+    Required<EntryFieldsFullTextSearchFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>
+  >({})
 
-expectAssignable<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Number }>>({})
-expectAssignable<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Number }>>>({
-  order: ['fields.testField', '-fields.testField'],
-})
+  expectTypeOf<EntryOrderFilterWithFields<{ testField: EntryFieldTypes.Number }>>({})
+  expectTypeOf<Required<EntryOrderFilterWithFields<{ testField?: EntryFieldTypes.Number }>>>({
+    order: ['fields.testField', '-fields.testField'],
+  })
 
-expectAssignable<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Number }>>({})
-expectAssignable<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Number }>>>({
-  select: ['fields.testField'],
-})
+  expectTypeOf<EntrySelectFilterWithFields<{ testField: EntryFieldTypes.Number }>>({})
+  expectTypeOf<Required<EntrySelectFilterWithFields<{ testField?: EntryFieldTypes.Number }>>>({
+    select: ['fields.testField'],
+  })
 
-expectAssignable<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
-expectType<Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Number }, 'fields'>>>({
-  'fields.testField[in]': mocks.numberArrayValue,
-  'fields.testField[nin]': mocks.numberArrayValue,
+  expectTypeOf<EntryFieldsSubsetFilters<{ testField: EntryFieldTypes.Number }, 'fields'>>({})
+  expectTypeOf<
+    Required<EntryFieldsSubsetFilters<{ testField?: EntryFieldTypes.Number }, 'fields'>>
+  >({
+    'fields.testField[in]': mocks.numberArrayValue,
+    'fields.testField[nin]': mocks.numberArrayValue,
+  })
 })

@@ -7,6 +7,10 @@ export default defineConfig({
     coverage: {
       include: ['lib/**/*.{ts,tsx,js,jsx}'],
     },
-    setupFiles: ['./vitest.setup.ts'],
+    // @todo In a future version of Vitest, we hope to be able to set these options to our integration tests through Vitest workspaces.
+    // Currently, we’re specifying them in the package.json CLI parameters.
+    // maxWorkers: 3,
+    // minWorkers: 1,
+    // fileParallelism: false,
   },
 })

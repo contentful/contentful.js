@@ -1,22 +1,24 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import { TagNameFilters } from '../../../lib'
 
 // @ts-ignore
 import * as mocks from '../mocks'
 
-expectAssignable<TagNameFilters>({
-  'name[exists]': mocks.booleanValue,
-  name: mocks.stringValue,
-  'name[match]': mocks.stringValue,
-  'name[ne]': mocks.stringValue,
-  'name[in]': mocks.stringArrayValue,
-  'name[nin]': mocks.stringArrayValue,
-})
+test('tagName', async () => {
+  expectTypeOf<TagNameFilters>({
+    'name[exists]': mocks.booleanValue,
+    name: mocks.stringValue,
+    'name[match]': mocks.stringValue,
+    'name[ne]': mocks.stringValue,
+    'name[in]': mocks.stringArrayValue,
+    'name[nin]': mocks.stringArrayValue,
+  })
 
-expectNotAssignable<TagNameFilters>({ 'name[near]': mocks.anyValue })
-expectNotAssignable<TagNameFilters>({ 'name[within]': mocks.anyValue })
-expectNotAssignable<TagNameFilters>({ select: mocks.anyValue })
-expectNotAssignable<TagNameFilters>({ 'name[lt]': mocks.anyValue })
-expectNotAssignable<TagNameFilters>({ 'name[lte]': mocks.anyValue })
-expectNotAssignable<TagNameFilters>({ 'name[gt]': mocks.anyValue })
-expectNotAssignable<TagNameFilters>({ 'name[gte]': mocks.anyValue })
+  expectTypeOf({ 'name[near]': mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+  expectTypeOf({ 'name[within]': mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+  expectTypeOf({ select: mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+  expectTypeOf({ 'name[lt]': mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+  expectTypeOf({ 'name[lte]': mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+  expectTypeOf({ 'name[gt]': mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+  expectTypeOf({ 'name[gte]': mocks.anyValue }).not.toEqualTypeOf<TagNameFilters>()
+})

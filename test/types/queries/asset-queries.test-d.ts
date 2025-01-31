@@ -1,19 +1,21 @@
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import { AssetFields, AssetsQueries } from '../../../lib'
 import * as mocks from '../mocks'
 
 type DefaultAssetQueries = AssetsQueries<AssetFields, undefined>
 
+test('assetQueries', async () => {
+
 // all operator
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
 })
 
 // equality operator
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.description': mocks.stringValue,
   'fields.file.contentType': mocks.stringValue,
   'fields.file.details.size': mocks.numberValue,
@@ -22,17 +24,17 @@ expectAssignable<DefaultAssetQueries>({
   'fields.title': mocks.stringValue,
   'sys.updatedAt': mocks.dateValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'fields.unknownField': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'sys.unknownProp': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // exists operator (field is present)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.description[exists]': mocks.booleanValue,
   'fields.file[exists]': mocks.booleanValue,
   'fields.file.contentType[exists]': mocks.booleanValue,
@@ -45,41 +47,41 @@ expectAssignable<DefaultAssetQueries>({
   'metadata.concepts[exists]': mocks.booleanValue,
   'sys.updatedAt[exists]': mocks.booleanValue,
 })
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'metadata.tags.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[all]': mocks.stringArrayValue,
   'metadata.concepts.descendants[in]': mocks.stringArrayValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'fields.unknownField[exists]': mocks.anyValue,
-})
-expectNotAssignable<DefaultAssetQueries>({
+}).not.toEqualTypeOf<DefaultAssetQueries>()
+expectTypeOf({
   'sys.unknownProp[exists]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // gt operator (range)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.file.details.size[gt]': mocks.numberValue,
   'sys.updatedAt[gt]': mocks.dateValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'sys.unknownProp[gt]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // gte operator (range)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.file.details.size[gte]': mocks.numberValue,
   'sys.updatedAt[gte]': mocks.dateValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'sys.unknownProp[gte]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // in operator
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.description[in]': mocks.stringArrayValue,
   'fields.file.contentType[in]': mocks.stringArrayValue,
   'fields.file.details.size[in]': mocks.numberArrayValue,
@@ -90,49 +92,49 @@ expectAssignable<DefaultAssetQueries>({
   'metadata.concepts.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'fields.unknownField[in]': mocks.anyValue,
-})
-expectNotAssignable<DefaultAssetQueries>({
+}).not.toEqualTypeOf<DefaultAssetQueries>()
+expectTypeOf({
   'sys.unknownProp[in]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // lt operator (range)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.file.details.size[lt]': mocks.numberValue,
   'sys.updatedAt[lt]': mocks.dateValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'sys.unknownProp[lt]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // lte operator (range)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.file.details.size[lte]': mocks.numberValue,
   'sys.updatedAt[lte]': mocks.dateValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'sys.unknownProp[lte]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // match operator (full-text search)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.description[match]': mocks.stringValue,
   'fields.file.contentType[match]': mocks.stringValue,
   'fields.file.fileName[match]': mocks.stringValue,
   'fields.file.url[match]': mocks.stringValue,
   'fields.title[match]': mocks.stringValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'fields.unknownField[match]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // ne operator (inequality)
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.description[ne]': mocks.stringValue,
   'fields.file.contentType[ne]': mocks.stringValue,
   'fields.file.details.size[ne]': mocks.numberValue,
@@ -141,16 +143,16 @@ expectAssignable<DefaultAssetQueries>({
   'fields.title[ne]': mocks.stringValue,
   'sys.updatedAt[ne]': mocks.dateValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'fields.unknownField[ne]': mocks.anyValue,
-})
-expectNotAssignable<DefaultAssetQueries>({
+}).not.toEqualTypeOf<DefaultAssetQueries>()
+expectTypeOf({
   'sys.unknownProp[ne]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // nin operator
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   'fields.description[nin]': mocks.stringArrayValue,
   'fields.file.contentType[nin]': mocks.stringArrayValue,
   'fields.file.details.size[nin]': mocks.numberArrayValue,
@@ -161,19 +163,19 @@ expectAssignable<DefaultAssetQueries>({
   'metadata.concepts.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
 })
-expectNotAssignable<DefaultAssetQueries>({
+expectTypeOf({
   'fields.unknownField[nin]': mocks.anyValue,
-})
-expectNotAssignable<DefaultAssetQueries>({
+}).not.toEqualTypeOf<DefaultAssetQueries>()
+expectTypeOf({
   'sys.unknownProp[nin]': mocks.anyValue,
-})
+}).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // order operator
 
-expectAssignable<DefaultAssetQueries>({ order: ['sys.createdAt', '-sys.createdAt'] })
-expectNotAssignable<DefaultAssetQueries>({ order: ['sys.unknownProperty'] })
+expectTypeOf<DefaultAssetQueries>({ order: ['sys.createdAt', '-sys.createdAt'] })
+expectTypeOf({ order: ['sys.unknownProperty'] }).not.toEqualTypeOf<DefaultAssetQueries>()
 
-expectAssignable<DefaultAssetQueries>({
+expectTypeOf<DefaultAssetQueries>({
   order: [
     'fields.file.contentType',
     '-fields.file.contentType',
@@ -185,19 +187,19 @@ expectAssignable<DefaultAssetQueries>({
     '-fields.file.details.size',
   ],
 })
-expectNotAssignable<DefaultAssetQueries>({ order: ['fields.unknownField'] })
+expectTypeOf({ order: ['fields.unknownField'] }).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // select operator
 
-expectAssignable<DefaultAssetQueries>({ select: ['sys'] })
-expectAssignable<DefaultAssetQueries>({ select: ['sys.createdAt'] })
-expectNotAssignable<DefaultAssetQueries>({ select: ['sys.unknownProperty'] })
+expectTypeOf<DefaultAssetQueries>({ select: ['sys'] })
+expectTypeOf<DefaultAssetQueries>({ select: ['sys.createdAt'] })
+expectTypeOf({ select: ['sys.unknownProperty'] }).not.toEqualTypeOf<DefaultAssetQueries>()
 
-expectAssignable<DefaultAssetQueries>({ select: ['fields'] })
-expectAssignable<DefaultAssetQueries>({ select: ['fields.title'] })
-expectNotAssignable<DefaultAssetQueries>({ select: ['fields.unknownField'] })
+expectTypeOf<DefaultAssetQueries>({ select: ['fields'] })
+expectTypeOf<DefaultAssetQueries>({ select: ['fields.title'] })
+expectTypeOf({ select: ['fields.unknownField'] }).not.toEqualTypeOf<DefaultAssetQueries>()
 
 // locale option
 
-expectAssignable<AssetsQueries<AssetFields, undefined>>({ locale: mocks.stringValue })
-expectNotAssignable<AssetsQueries<AssetFields, 'WITH_ALL_LOCALES'>>({ locale: mocks.anyValue })
+expectTypeOf<AssetsQueries<AssetFields, undefined>>({ locale: mocks.stringValue })
+expectTypeOf({ locale: mocks.anyValue }).not.toEqualTypeOf<AssetsQueries<AssetFields, 'WITH_ALL_LOCALES'>>()})

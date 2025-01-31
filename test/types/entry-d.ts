@@ -1,538 +1,554 @@
-// As tsd does not pick up the global.d.ts located in /lib we
-// explicitly reference it here once.
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../lib/global.d.ts" />
-import { expectAssignable, expectNotAssignable } from 'tsd'
+import { expectTypeOf, test } from "vitest";
 import { Entry, EntrySkeletonType, EntryFieldTypes } from '../../lib'
 
 // @ts-ignore
 import * as mocks from './mocks'
 
-/**
- * A simple Entry with generic fields
- */
-expectAssignable<Entry<EntrySkeletonType<Record<string, any>>>>({
-  ...mocks.entryBasics,
-  fields: {
-    stringField: mocks.stringValue,
-    anyRandomFieldName: mocks.numberValue,
-  },
-})
-
-/**
- * A simple Entry generic
- */
-expectAssignable<Entry<EntrySkeletonType<{ stringField: EntryFieldTypes.Text }>>>({
-  ...mocks.entryBasics,
-  fields: {
-    stringField: mocks.stringValue,
-  },
-})
-
-/**
- * A simple Entry generic with a referenced fields wildcard
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      referenceField: EntryFieldTypes.EntryLink<EntrySkeletonType<Record<string, any>>>
-    }>
-  >
->({
-  ...mocks.entryBasics,
-  fields: {
-    stringField: mocks.stringValue,
-    referenceField: {
-      ...mocks.entryBasics,
-      fields: {},
+test('entry', async () => {
+  /**
+   * A simple Entry with generic fields
+   */
+  expectTypeOf<Entry<EntrySkeletonType<Record<string, any>>>>({
+    ...mocks.entryBasics,
+    fields: {
+      stringField: mocks.stringValue,
+      anyRandomFieldName: mocks.numberValue,
     },
-  },
-})
+  })
 
-/**
- * EntryWithoutLinkResolution linked entities are all rendered as links
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      multiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      assetReferenceField: EntryFieldTypes.AssetLink
-      multiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-    }>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->(
-  mocks.getEntry({
-    stringField: mocks.stringValue,
-    entryReferenceField: mocks.entryLink,
-    multiEntryReferenceField: [mocks.entryLink, mocks.entryLink],
-    assetReferenceField: mocks.assetLink,
-    multiAssetReferenceField: [mocks.assetLink, mocks.assetLink],
-  }),
-)
+  /**
+   * A simple Entry generic
+   */
+  expectTypeOf<Entry<EntrySkeletonType<{ stringField: EntryFieldTypes.Text }>>>({
+    ...mocks.entryBasics,
+    fields: {
+      stringField: mocks.stringValue,
+    },
+  })
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-    }>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->(mocks.getEntry({ referenceField: undefined }))
+  /**
+   * A simple Entry generic with a referenced fields wildcard
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        referenceField: EntryFieldTypes.EntryLink<EntrySkeletonType<Record<string, any>>>
+      }>
+    >
+  >({
+    ...mocks.entryBasics,
+    fields: {
+      stringField: mocks.stringValue,
+      referenceField: {
+        ...mocks.entryBasics,
+        fields: {},
+      },
+    },
+  })
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
-    }>,
-    'WITHOUT_LINK_RESOLUTION'
-  >
->(mocks.getEntry({ referenceField: [undefined] }))
-
-expectNotAssignable<
-  Entry<EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>
->(mocks.getEntry({ referenceField: undefined }))
-
-expectNotAssignable<
-  Entry<EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>>
->(mocks.getEntry({ referenceField: mocks.asset }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<
-      { referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> },
+  /**
+   * EntryWithoutLinkResolution linked entities are all rendered as links
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        multiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        assetReferenceField: EntryFieldTypes.AssetLink
+        multiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+      }>,
       'WITHOUT_LINK_RESOLUTION'
     >
-  >
->(mocks.getEntry({ referenceField: [undefined] }))
+  >(
+    mocks.getEntry({
+      stringField: mocks.stringValue,
+      entryReferenceField: mocks.entryLink,
+      multiEntryReferenceField: [mocks.entryLink, mocks.entryLink],
+      assetReferenceField: mocks.assetLink,
+      multiAssetReferenceField: [mocks.assetLink, mocks.assetLink],
+    }),
+  )
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<
-      { referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> },
+  expectTypeOf(mocks.getEntry({ referenceField: undefined })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+      }>,
       'WITHOUT_LINK_RESOLUTION'
     >
-  >
->(mocks.getEntry({ referenceField: [mocks.asset] }))
+  >()
 
-/**
- * EntryWithLinkResolutionAndWithUnresolvableLinks referenced entities can be either resolved or unresolved.
- * unresolved entities are referenced as links. Fields with multiple references can have resolved and unresolved mixed.
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+  expectTypeOf(mocks.getEntry({ referenceField: [undefined] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
+      }>,
+      'WITHOUT_LINK_RESOLUTION'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: undefined })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: mocks.asset })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }, 'WITHOUT_LINK_RESOLUTION'>
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: [undefined] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<
+        { referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> },
+        'WITHOUT_LINK_RESOLUTION'
       >
-      unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: [mocks.asset] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<
+        { referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> },
+        'WITHOUT_LINK_RESOLUTION'
       >
-      mixedMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      resolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-    }>,
-    undefined
-  >
->(
-  mocks.getEntry({
-    stringField: mocks.stringValue,
-    resolvableEntryReferenceField: mocks.entry,
-    unresolvableEntryReferenceField: mocks.entryLink,
-    resolvableMultiEntryReferenceField: [mocks.entry],
-    unresolvableMultiEntryReferenceField: [mocks.entryLink],
-    mixedMultiEntryReferenceField: [mocks.entry, mocks.entryLink],
-    resolvableAssetReferenceField: mocks.asset,
-    unresolvableAssetReferenceField: mocks.assetLink,
-    resolvableMultiAssetReferenceField: [mocks.asset],
-    unresolvableMultiAssetReferenceField: [mocks.assetLink],
-    mixedMultiAssetReferenceField: [mocks.asset, mocks.assetLink],
-  }),
-)
+    >
+  >()
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-    }>,
-    undefined
-  >
->(mocks.getEntry({ referenceField: undefined }))
+  /**
+   * EntryWithLinkResolutionAndWithUnresolvableLinks referenced entities can be either resolved or unresolved.
+   * unresolved entities are referenced as links. Fields with multiple references can have resolved and unresolved mixed.
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        mixedMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        resolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+      }>,
+      undefined
+    >
+  >(
+    mocks.getEntry({
+      stringField: mocks.stringValue,
+      resolvableEntryReferenceField: mocks.entry,
+      unresolvableEntryReferenceField: mocks.entryLink,
+      resolvableMultiEntryReferenceField: [mocks.entry],
+      unresolvableMultiEntryReferenceField: [mocks.entryLink],
+      mixedMultiEntryReferenceField: [mocks.entry, mocks.entryLink],
+      resolvableAssetReferenceField: mocks.asset,
+      unresolvableAssetReferenceField: mocks.assetLink,
+      resolvableMultiAssetReferenceField: [mocks.asset],
+      unresolvableMultiAssetReferenceField: [mocks.assetLink],
+      mixedMultiAssetReferenceField: [mocks.asset, mocks.assetLink],
+    }),
+  )
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
-    }>,
-    undefined
-  >
->(mocks.getEntry({ referenceField: [undefined] }))
+  expectTypeOf(mocks.getEntry({ referenceField: undefined })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+      }>,
+      undefined
+    >
+  >()
 
-expectNotAssignable<
-  Entry<EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>, undefined>
->(mocks.getEntry({ referenceField: undefined }))
+  expectTypeOf(mocks.getEntry({ referenceField: [undefined] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
+      }>,
+      undefined
+    >
+  >()
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
-    undefined
-  >
->(mocks.getEntry({ referenceField: [undefined] }))
+  expectTypeOf(mocks.getEntry({ referenceField: undefined })).not.toEqualTypeOf<
+    Entry<EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>, undefined>
+  >()
 
-/**
- * EntryWithAllLocalesAndWithoutLinkResolution All fields are mapped to the given set of locales.
- * linked entites are all rendered as links.
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      multiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      assetReferenceField: EntryFieldTypes.AssetLink
-      multiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(
-  mocks.getEntry({
-    stringField: { US: mocks.stringValue, DE: mocks.stringValue },
-    entryReferenceField: { DE: mocks.entryLink, US: mocks.entryLink },
-    multiEntryReferenceField: { DE: [mocks.entryLink], US: [mocks.entryLink] },
-    assetReferenceField: { DE: mocks.assetLink, US: mocks.assetLink },
-    multiAssetReferenceField: { DE: [mocks.assetLink], US: [mocks.assetLink] },
-  }),
-)
+  expectTypeOf(mocks.getEntry({ referenceField: [undefined] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
+      undefined
+    >
+  >()
 
-/* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      assetReferenceField: EntryFieldTypes.AssetLink
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(
-  mocks.getEntry({
-    entryReferenceField: { US: undefined },
-    assetReferenceField: { US: undefined },
-  }),
-)
+  /**
+   * EntryWithAllLocalesAndWithoutLinkResolution All fields are mapped to the given set of locales.
+   * linked entites are all rendered as links.
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        multiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        assetReferenceField: EntryFieldTypes.AssetLink
+        multiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >(
+    mocks.getEntry({
+      stringField: { US: mocks.stringValue, DE: mocks.stringValue },
+      entryReferenceField: { DE: mocks.entryLink, US: mocks.entryLink },
+      multiEntryReferenceField: { DE: [mocks.entryLink], US: [mocks.entryLink] },
+      assetReferenceField: { DE: mocks.assetLink, US: mocks.assetLink },
+      multiAssetReferenceField: { DE: [mocks.assetLink], US: [mocks.assetLink] },
+    }),
+  )
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: mocks.localizedEntry } }))
+  /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        assetReferenceField: EntryFieldTypes.AssetLink
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >(
+    mocks.getEntry({
+      entryReferenceField: { US: undefined },
+      assetReferenceField: { US: undefined },
+    }),
+  )
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [undefined] } }))
+  expectTypeOf(mocks.getEntry({ referenceField: { US: mocks.localizedEntry } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >()
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [mocks.localizedEntry] } }))
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [undefined] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >()
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: mocks.asset } }))
+  expectTypeOf(
+    mocks.getEntry({ referenceField: { US: [mocks.localizedEntry] } }),
+  ).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >()
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [undefined] } }))
+  expectTypeOf(mocks.getEntry({ referenceField: { US: mocks.asset } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >()
 
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [mocks.asset] } }))
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [undefined] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >()
 
-/**
- * EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
- * linked entities are all rendered as inlined references, or if not resolvable, as links. multi reference fields can have mixed content.
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      mixedMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      resolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-    }>,
-    'WITH_ALL_LOCALES',
-    'US' | 'DE'
-  >
->({
-  ...mocks.entryBasics,
-  fields: {
-    stringField: { US: mocks.stringValue, DE: mocks.stringValue },
-    resolvableEntryReferenceField: { DE: mocks.localizedEntry, US: mocks.localizedEntry },
-    unresolvableEntryReferenceField: { US: mocks.entryLink, DE: mocks.entryLink },
-    resolvableMultiEntryReferenceField: { DE: [mocks.localizedEntry], US: [mocks.localizedEntry] },
-    unresolvableMultiEntryReferenceField: { DE: [mocks.entryLink], US: [mocks.entryLink] },
-    mixedMultiEntryReferenceField: {
-      DE: [mocks.localizedEntry, mocks.entryLink],
-      US: [mocks.localizedEntry, mocks.entryLink],
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [mocks.asset] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+      'US' | 'DE'
+    >
+  >()
+
+  /**
+   * EntryWithAllLocalesAndWithLinkResolutionAndWithUnresolvableLinks All fields are mapped to the given set of locales.
+   * linked entities are all rendered as inlined references, or if not resolvable, as links. multi reference fields can have mixed content.
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        mixedMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        resolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+      }>,
+      'WITH_ALL_LOCALES',
+      'US' | 'DE'
+    >
+  >({
+    ...mocks.entryBasics,
+    fields: {
+      stringField: { US: mocks.stringValue, DE: mocks.stringValue },
+      resolvableEntryReferenceField: { DE: mocks.localizedEntry, US: mocks.localizedEntry },
+      unresolvableEntryReferenceField: { US: mocks.entryLink, DE: mocks.entryLink },
+      resolvableMultiEntryReferenceField: {
+        DE: [mocks.localizedEntry],
+        US: [mocks.localizedEntry],
+      },
+      unresolvableMultiEntryReferenceField: { DE: [mocks.entryLink], US: [mocks.entryLink] },
+      mixedMultiEntryReferenceField: {
+        DE: [mocks.localizedEntry, mocks.entryLink],
+        US: [mocks.localizedEntry, mocks.entryLink],
+      },
+      resolvableAssetReferenceField: { DE: mocks.localizedAsset, US: mocks.localizedAsset },
+      unresolvableAssetReferenceField: { US: mocks.assetLink, DE: mocks.assetLink },
+      resolvableMultiAssetReferenceField: {
+        DE: [mocks.localizedAsset],
+        US: [mocks.localizedAsset],
+      },
+      unresolvableMultiAssetReferenceField: { DE: [mocks.assetLink], US: [mocks.assetLink] },
+      mixedMultiAssetReferenceField: {
+        DE: [mocks.localizedAsset, mocks.assetLink],
+        US: [mocks.localizedAsset, mocks.assetLink],
+      },
     },
-    resolvableAssetReferenceField: { DE: mocks.localizedAsset, US: mocks.localizedAsset },
-    unresolvableAssetReferenceField: { US: mocks.assetLink, DE: mocks.assetLink },
-    resolvableMultiAssetReferenceField: { DE: [mocks.localizedAsset], US: [mocks.localizedAsset] },
-    unresolvableMultiAssetReferenceField: { DE: [mocks.assetLink], US: [mocks.assetLink] },
-    mixedMultiAssetReferenceField: {
-      DE: [mocks.localizedAsset, mocks.assetLink],
-      US: [mocks.localizedAsset, mocks.assetLink],
-    },
-  },
+  })
+
+  /* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        assetReferenceField: EntryFieldTypes.AssetLink
+      }>,
+      'WITH_ALL_LOCALES',
+      'US' | 'DE'
+    >
+  >(
+    mocks.getEntry({
+      entryReferenceField: { US: undefined },
+      assetReferenceField: { US: undefined },
+    }),
+  )
+
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [undefined] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>[]
+      }>,
+      'WITH_ALL_LOCALES',
+      'US' | 'DE'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [undefined] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink[] }>,
+      'WITH_ALL_LOCALES',
+      'US' | 'DE'
+    >
+  >()
+
+  /**
+   * EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entities are present.
+   * unresolvable links are completely removed.
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        mixedMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        resolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+      }>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >(
+    mocks.getEntry({
+      stringField: mocks.stringValue,
+      resolvableEntryReferenceField: mocks.entry,
+      unresolvableEntryReferenceField: undefined,
+      resolvableMultiEntryReferenceField: [mocks.entry],
+      unresolvableMultiEntryReferenceField: [undefined],
+      mixedMultiEntryReferenceField: [mocks.entry, undefined],
+      resolvableAssetReferenceField: mocks.asset,
+      unresolvableAssetReferenceField: undefined,
+      resolvableMultiAssetReferenceField: [mocks.asset],
+      unresolvableMultiAssetReferenceField: [undefined],
+      mixedMultiAssetReferenceField: [mocks.asset, undefined],
+    }),
+  )
+
+  expectTypeOf(mocks.getEntry({ referenceField: mocks.entryLink })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+      }>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: [mocks.entryLink] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
+      }>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: mocks.assetLink })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: [mocks.assetLink] })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
+      'WITHOUT_UNRESOLVABLE_LINKS'
+    >
+  >()
+
+  /**
+   * EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
+   */
+  expectTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        stringField: EntryFieldTypes.Text
+        resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        mixedMultiEntryReferenceField: EntryFieldTypes.Array<
+          EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+        >
+        resolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
+        resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+        mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+      'US' | 'DE'
+    >
+  >(
+    mocks.getEntry({
+      stringField: { US: mocks.stringValue, DE: mocks.stringValue },
+      resolvableEntryReferenceField: { US: mocks.localizedEntry, DE: mocks.localizedEntry },
+      unresolvableEntryReferenceField: { US: undefined, DE: undefined },
+      resolvableMultiEntryReferenceField: {
+        US: [mocks.localizedEntry],
+        DE: [mocks.localizedEntry],
+      },
+      unresolvableMultiEntryReferenceField: { US: [undefined], DE: [undefined] },
+      mixedMultiEntryReferenceField: {
+        US: [mocks.localizedEntry, undefined],
+        DE: [mocks.localizedEntry, undefined],
+      },
+      resolvableAssetReferenceField: { US: mocks.localizedAsset, DE: mocks.localizedAsset },
+      unresolvableAssetReferenceField: { US: undefined, DE: undefined },
+      resolvableMultiAssetReferenceField: {
+        US: [mocks.localizedAsset],
+        DE: [mocks.localizedAsset],
+      },
+      unresolvableMultiAssetReferenceField: { US: [undefined], DE: [undefined] },
+      mixedMultiAssetReferenceField: {
+        US: [mocks.localizedAsset, undefined],
+        DE: [mocks.localizedAsset, undefined],
+      },
+    }),
+  )
+
+  expectTypeOf(mocks.getEntry({ referenceField: { US: mocks.entryLink } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+      'US' | 'DE'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [mocks.entryLink] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{
+        referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
+      }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+      'US' | 'DE'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: { US: mocks.assetLink } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+      'US' | 'DE'
+    >
+  >()
+
+  expectTypeOf(mocks.getEntry({ referenceField: { US: [mocks.assetLink] } })).not.toEqualTypeOf<
+    Entry<
+      EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
+      'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+      'US' | 'DE'
+    >
+  >()
 })
-
-/* links in single reference fields can be undefined because we can’t distinguish between missing translation and missing links */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      entryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      assetReferenceField: EntryFieldTypes.AssetLink
-    }>,
-    'WITH_ALL_LOCALES',
-    'US' | 'DE'
-  >
->(
-  mocks.getEntry({
-    entryReferenceField: { US: undefined },
-    assetReferenceField: { US: undefined },
-  }),
-)
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>[]
-    }>,
-    'WITH_ALL_LOCALES',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [undefined] } }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink[] }>,
-    'WITH_ALL_LOCALES',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [undefined] } }))
-
-/**
- * EntryWithLinkResolutionAndWithoutUnresolvableLinks only resolvable entities are present.
- * unresolvable links are completely removed.
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      mixedMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      resolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-    }>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(
-  mocks.getEntry({
-    stringField: mocks.stringValue,
-    resolvableEntryReferenceField: mocks.entry,
-    unresolvableEntryReferenceField: undefined,
-    resolvableMultiEntryReferenceField: [mocks.entry],
-    unresolvableMultiEntryReferenceField: [undefined],
-    mixedMultiEntryReferenceField: [mocks.entry, undefined],
-    resolvableAssetReferenceField: mocks.asset,
-    unresolvableAssetReferenceField: undefined,
-    resolvableMultiAssetReferenceField: [mocks.asset],
-    unresolvableMultiAssetReferenceField: [undefined],
-    mixedMultiAssetReferenceField: [mocks.asset, undefined],
-  }),
-)
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-    }>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.getEntry({ referenceField: mocks.entryLink }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
-    }>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.getEntry({ referenceField: [mocks.entryLink] }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.getEntry({ referenceField: mocks.assetLink }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
-    'WITHOUT_UNRESOLVABLE_LINKS'
-  >
->(mocks.getEntry({ referenceField: [mocks.assetLink] }))
-
-/**
- * EntryWithAllLocalesAndWithLinkResolutionAndWithoutUnresolvableLinks All unresolvable fields are removed
- */
-expectAssignable<
-  Entry<
-    EntrySkeletonType<{
-      stringField: EntryFieldTypes.Text
-      resolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      unresolvableEntryReferenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      resolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      unresolvableMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      mixedMultiEntryReferenceField: EntryFieldTypes.Array<
-        EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-      >
-      resolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      unresolvableAssetReferenceField: EntryFieldTypes.AssetLink
-      resolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      unresolvableMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-      mixedMultiAssetReferenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
-    'US' | 'DE'
-  >
->(
-  mocks.getEntry({
-    stringField: { US: mocks.stringValue, DE: mocks.stringValue },
-    resolvableEntryReferenceField: { US: mocks.localizedEntry, DE: mocks.localizedEntry },
-    unresolvableEntryReferenceField: { US: undefined, DE: undefined },
-    resolvableMultiEntryReferenceField: { US: [mocks.localizedEntry], DE: [mocks.localizedEntry] },
-    unresolvableMultiEntryReferenceField: { US: [undefined], DE: [undefined] },
-    mixedMultiEntryReferenceField: {
-      US: [mocks.localizedEntry, undefined],
-      DE: [mocks.localizedEntry, undefined],
-    },
-    resolvableAssetReferenceField: { US: mocks.localizedAsset, DE: mocks.localizedAsset },
-    unresolvableAssetReferenceField: { US: undefined, DE: undefined },
-    resolvableMultiAssetReferenceField: { US: [mocks.localizedAsset], DE: [mocks.localizedAsset] },
-    unresolvableMultiAssetReferenceField: { US: [undefined], DE: [undefined] },
-    mixedMultiAssetReferenceField: {
-      US: [mocks.localizedAsset, undefined],
-      DE: [mocks.localizedAsset, undefined],
-    },
-  }),
-)
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: mocks.entryLink } }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{
-      referenceField: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<mocks.SimpleEntrySkeleton>>
-    }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [mocks.entryLink] } }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.AssetLink }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: mocks.assetLink } }))
-
-expectNotAssignable<
-  Entry<
-    EntrySkeletonType<{ referenceField: EntryFieldTypes.Array<EntryFieldTypes.AssetLink> }>,
-    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
-    'US' | 'DE'
-  >
->(mocks.getEntry({ referenceField: { US: [mocks.assetLink] } }))
