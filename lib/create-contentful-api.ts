@@ -4,9 +4,10 @@
  */
 
 import { encodeCPAResponse } from '@contentful/content-source-maps'
-import { AxiosInstance, createRequestConfig, errorHandler } from 'contentful-sdk-core'
-import { CreateClientParams } from './contentful.js'
-import { GetGlobalOptions } from './create-global-options.js'
+import type { AxiosInstance } from 'contentful-sdk-core'
+import { createRequestConfig, errorHandler } from 'contentful-sdk-core'
+import type { CreateClientParams } from './contentful.js'
+import type { GetGlobalOptions } from './create-global-options.js'
 import pagedSync from './paged-sync.js'
 import type {
   Asset,
@@ -34,7 +35,7 @@ import normalizeSelect from './utils/normalize-select.js'
 import resolveCircular from './utils/resolve-circular.js'
 import getQuerySelectionSet from './utils/query-selection-set.js'
 import validateTimestamp from './utils/validate-timestamp.js'
-import { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
+import type { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 import {
   checkIncludeContentSourceMapsParamIsAllowed,
   validateLocaleParam,

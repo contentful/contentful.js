@@ -1,31 +1,31 @@
-import { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset.js'
-import { ChainModifiers } from '../client.js'
-import { EntrySys } from '../entry.js'
-import { TagLink, TaxonomyConceptLink } from '../link.js'
-import { Metadata } from '../metadata.js'
-import { TagSys } from '../tag.js'
-import {
+import type { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset.js'
+import type { ChainModifiers } from '../client.js'
+import type { EntrySys } from '../entry.js'
+import type { TagLink, TaxonomyConceptLink } from '../link.js'
+import type { Metadata } from '../metadata.js'
+import type { TagSys } from '../tag.js'
+import type {
   EntryFieldsEqualityFilter,
   EntryFieldsInequalityFilter,
   EqualityFilter,
   InequalityFilter,
 } from './equality.js'
-import { EntryFieldsExistenceFilter, ExistenceFilter } from './existence.js'
-import { LocationSearchFilters } from './location.js'
-import {
+import type { EntryFieldsExistenceFilter, ExistenceFilter } from './existence.js'
+import type { LocationSearchFilters } from './location.js'
+import type {
   AssetOrderFilter,
   TaxonomyOrderFilter,
   EntryOrderFilter,
   EntryOrderFilterWithFields,
   TagOrderFilter,
 } from './order.js'
-import { EntryFieldsRangeFilters, RangeFilters } from './range.js'
-import { ReferenceSearchFilters } from './reference.js'
-import { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search.js'
-import { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select.js'
-import { EntryFieldsSetFilter } from './set.js'
-import { EntryFieldsSubsetFilters, SubsetFilters } from './subset.js'
-import {
+import type { EntryFieldsRangeFilters, RangeFilters } from './range.js'
+import type { ReferenceSearchFilters } from './reference.js'
+import type { EntryFieldsFullTextSearchFilters, FullTextSearchFilters } from './search.js'
+import type { AssetSelectFilter, EntrySelectFilter, EntrySelectFilterWithFields } from './select.js'
+import type { EntryFieldsSetFilter } from './set.js'
+import type { EntryFieldsSubsetFilters, SubsetFilters } from './subset.js'
+import type {
   ConditionalFixedQueries,
   ConditionalListQueries,
   EntrySkeletonType,
@@ -120,7 +120,6 @@ export type EntriesQueries<
       FixedQueryOptions &
       FixedPagedOptions &
       FixedLinkOptions) &
-      // eslint-disable-next-line @typescript-eslint/ban-types
       ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption))
 
 /**
@@ -129,7 +128,6 @@ export type EntriesQueries<
  * @category Query
  */
 export type EntryQueries<Modifiers extends ChainModifiers> = Omit<FixedQueryOptions, 'query'> &
-  // eslint-disable-next-line @typescript-eslint/ban-types
   ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption)
 
 /**
@@ -189,8 +187,7 @@ export type AssetsQueries<
   MetadataTagsQueries &
   FixedQueryOptions &
   FixedPagedOptions & { mimetype_group?: AssetMimeType } & ('WITH_ALL_LOCALES' extends Modifiers
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
+    ? {}
     : LocaleOption)
 
 /**

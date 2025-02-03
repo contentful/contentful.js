@@ -1,5 +1,5 @@
-import { ContentfulCollection } from './collection.js'
-import { BaseSys } from './sys.js'
+import type { ContentfulCollection } from './collection.js'
+import type { BaseSys } from './sys.js'
 
 /**
  * @category Entity

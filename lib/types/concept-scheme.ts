@@ -1,5 +1,5 @@
-import { UnresolvedLink } from './link'
-import { LocaleCode } from './locale'
+import type { UnresolvedLink } from './link'
+import type { LocaleCode } from './locale'
 
 type ISODateString = string
 

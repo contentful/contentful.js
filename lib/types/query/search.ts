@@ -1,5 +1,5 @@
-import { EntryFields, EntryFieldTypes } from '../entry.js'
-import { ConditionalFixedQueries, FieldsType } from './util.js'
+import type { EntryFields, EntryFieldTypes } from '../entry.js'
+import type { ConditionalFixedQueries, FieldsType } from './util.js'
 
 type SupportedTypes =
   | EntryFields.Text

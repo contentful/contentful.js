@@ -62,7 +62,7 @@
     "docs:build": "typedoc --options typedoc.json",
     "docs:watch": "npm run docs:build -- --watch",
     "docs:publish": "npm run docs:build && ./node_modules/contentful-sdk-jsdoc/bin/publish-docs.sh contentful.js contentful",
-    "lint": "eslint \"lib/**\" \"test/**\"",
+    "lint": "eslint lib test",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx}'",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx}'",
     "pretest": "rimraf coverage",
@@ -96,6 +96,7 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.24.7",
     "@babel/preset-env": "^7.24.3",
+    "@eslint/js": "^9.15.0",
     "@optimize-lodash/rollup-plugin": "^4.0.4",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-babel": "^6.0.4",
@@ -107,21 +108,13 @@
     "@semantic-release/changelog": "^6.0.1",
     "@size-limit/file": "^11.1.6",
     "@types/json-stringify-safe": "^5.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
     "contentful-sdk-jsdoc": "^3.1.2",
     "cz-conventional-changelog": "^3.3.0",
     "es-check": "^7.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-standard": "^5.0.0",
-    "eslint-plugin-vitest-globals": "^1.5.0",
+    "eslint": "^9.15.0",
     "fast-copy": "^3.0.2",
     "husky": "^9.0.11",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.1.0",
     "process": "^0.11.10",
     "rimraf": "^5.0.0",
@@ -131,13 +124,23 @@
     "size-limit": "^11.1.6",
     "tsd": "^0.31.0",
     "typedoc": "^0.26.4",
-    "typescript": "^5.5.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.16.0",
     "vitest": "^2.0.2"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
   },
   "size-limit": [
     {
