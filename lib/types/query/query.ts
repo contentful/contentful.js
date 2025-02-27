@@ -225,6 +225,6 @@ type CursorPaginationOptions = {
 }
 
 export type ConceptsQueries = CursorPaginationOptions &
-  TaxonomyOrderFilter & { concept_scheme?: string }
+  TaxonomyOrderFilter & { conceptScheme?: string }
 
 export type ConceptSchemesQueries = CursorPaginationOptions & TaxonomyOrderFilter
