@@ -1,14 +1,17 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: contentful
+  name: contentful.js
   description: |
     JavaScript library for Contentful's Delivery API (node & browser).
   annotations:
     circleci.com/project-slug: github/contentful/contentful.js
     github.com/project-slug: contentful/contentful.js
-    contentful.com/ci-alert-slack: prd-extensibility-bots
+    contentful.com/ci-alert-slack: prd-ecosystem-dx-bots
+    contentful.com/service-tier: "4"
+  tags:
+    - tier-4
 spec:
   type: library
   lifecycle: production
-  owner: group:team-tundra
+  owner: group:team-developer-experience
