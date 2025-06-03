@@ -61,6 +61,7 @@ export interface Concept<Locales extends LocaleCode> {
   notations?: string[]
   broader?: UnresolvedLink<'TaxonomyConcept'>[]
   related?: UnresolvedLink<'TaxonomyConcept'>[]
+  conceptSchemes?: UnresolvedLink<'TaxonomyConceptScheme'>[]
 }
 
 export type ConceptCollection<Locale extends LocaleCode> = {
