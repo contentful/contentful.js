@@ -1,6 +1,18 @@
 import type { TimelinePreview } from '../types/timeline-preview'
 import { ValidationError } from './validation-error'
 
+function isValidRelease(release: any): boolean {
+  return release && typeof release === 'object' && typeof release.lte === 'string'
+}
+
+function isValidTimestamp(timestamp: any): boolean {
+  return (
+    timestamp &&
+    typeof timestamp === 'object' &&
+    (typeof timestamp.lte === 'string' || timestamp.lte instanceof Date)
+  )
+}
+
 export const isValidTimelinePreviewConfig = (timelinePreview: TimelinePreview) => {
   if (
     typeof timelinePreview !== 'object' ||
@@ -13,16 +25,8 @@ export const isValidTimelinePreviewConfig = (timelinePreview: TimelinePreview) =
     )
   }
 
-  const hasRelease =
-    timelinePreview.release &&
-    typeof timelinePreview.release === 'object' &&
-    typeof timelinePreview.release.lte === 'string'
-
-  const hasTimestamp =
-    timelinePreview.timestamp &&
-    typeof timelinePreview.timestamp === 'object' &&
-    (typeof timelinePreview.timestamp.lte === 'string' ||
-      timelinePreview.timestamp.lte instanceof Date)
+  const hasRelease = isValidRelease(timelinePreview.release)
+  const hasTimestamp = isValidTimestamp(timelinePreview.timestamp)
 
   if (!hasRelease && !hasTimestamp) {
     throw new ValidationError(
