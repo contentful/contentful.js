@@ -9,10 +9,7 @@ vi.mock('../../lib/create-contentful-api')
 vi.mock('contentful-sdk-core', async (importOriginal) => {
   const mod: object = await importOriginal()
 
-  return {
-    ...mod,
-    createHttpClient: vi.fn(),
-  }
+  return { ...mod, createHttpClient: vi.fn() }
 })
 
 const createHttpClientMock = <MockedFunction<typeof createHttpClient>>(<unknown>createHttpClient)
@@ -24,14 +21,10 @@ describe('contentful', () => {
   beforeEach(() => {
     createHttpClientMock.mockReturnValue({
       // @ts-ignore
-      defaults: {
-        baseURL: 'http://some-base-url.com/',
-      },
+      defaults: { baseURL: 'http://some-base-url.com/' },
       interceptors: {
         // @ts-ignore
-        response: {
-          use: vi.fn(),
-        },
+        response: { use: vi.fn() },
       },
     })
   })
@@ -76,10 +69,7 @@ describe('contentful', () => {
   })
 
   test('Passes along HTTP client parameters', () => {
-    createClient({
-      accessToken: 'accessToken',
-      space: 'spaceId',
-    })
+    createClient({ accessToken: 'accessToken', space: 'spaceId' })
     const callConfig = createHttpClientMock.mock.calls[0][1]
     if (!callConfig.headers) {
       throw new Error('httpClient was created without headers')
@@ -90,10 +80,7 @@ describe('contentful', () => {
 
   // So what?
   test.skip('Returns a client instance', () => {
-    const client = createClient({
-      accessToken: 'accessToken',
-      space: 'spaceId',
-    })
+    const client = createClient({ accessToken: 'accessToken', space: 'spaceId' })
 
     expect(client.getSpace).toBeDefined()
     expect(client.getEntry).toBeDefined()
@@ -105,10 +92,7 @@ describe('contentful', () => {
   })
 
   test('Initializes API and attaches default environment', () => {
-    createClient({
-      accessToken: 'accessToken',
-      space: 'spaceId',
-    })
+    createClient({ accessToken: 'accessToken', space: 'spaceId' })
     const callConfig = createContentfulApiMock.mock.calls[0]
     expect(callConfig[0].http.defaults.baseURL).toEqual(
       'http://some-base-url.com/environments/master',
@@ -116,11 +100,7 @@ describe('contentful', () => {
   })
 
   test('Initializes API and attaches custom environment', () => {
-    createClient({
-      accessToken: 'accessToken',
-      space: 'spaceId',
-      environment: 'stage',
-    })
+    createClient({ accessToken: 'accessToken', space: 'spaceId', environment: 'stage' })
     const callConfig = createContentfulApiMock.mock.calls[0]
     expect(callConfig[0].http.defaults.baseURL).toEqual(
       'http://some-base-url.com/environments/stage',
@@ -128,13 +108,21 @@ describe('contentful', () => {
   })
 
   test('Initializes API with includeContentSourceMaps option', () => {
-    createClient({
-      accessToken: 'accessToken',
-      space: 'spaceId',
-      includeContentSourceMaps: true,
-    })
+    createClient({ accessToken: 'accessToken', space: 'spaceId', includeContentSourceMaps: true })
     const callConfig = createHttpClientMock.mock.calls[0]
 
     expect(callConfig[1].includeContentSourceMaps).toBe(true)
+  })
+
+  test('Initializes API with timelinePreview option', () => {
+    createClient({
+      accessToken: 'accessToken',
+      space: 'spaceId',
+      timelinePreview: { release: { lte: 'black-friday' } },
+    })
+
+    const callConfig = createHttpClientMock.mock.calls[0]
+
+    expect(callConfig[1].timelinePreview).toStrictEqual({ release: { lte: 'black-friday' } })
   })
 })
