@@ -14,6 +14,7 @@ import {
   validateResolveLinksParam,
 } from './utils/validate-params.js'
 import type { ContentfulClientApi } from './types/client.js'
+import type { TimelinePreview } from './types/timeline-preview.js'
 
 /**
  * @category Client
@@ -119,6 +120,12 @@ export interface CreateClientParams {
    * This feature is only available when using the Content Preview API.
    */
   includeContentSourceMaps?: boolean
+  /**
+   * Enable Timeline Preview.
+   * @remarks
+   * This feature is only available when using the Content Preview API.
+   */
+  timelinePreview?: TimelinePreview
   /**
    * Enable alpha features.
    */

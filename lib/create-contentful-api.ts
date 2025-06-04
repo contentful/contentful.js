@@ -37,6 +37,7 @@ import getQuerySelectionSet from './utils/query-selection-set.js'
 import validateTimestamp from './utils/validate-timestamp.js'
 import type { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 import {
+  checkEnableTimelinePreviewIsAllowed,
   checkIncludeContentSourceMapsParamIsAllowed,
   validateLocaleParam,
   validateRemoveUnresolvedParam,
@@ -128,6 +129,20 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
 
     return query
+  }
+
+  function maybeEnableTimelinePreview(path: string): string {
+    const params = http.httpClientParams as CreateClientParams
+
+    const host = params?.host
+
+    const areAllowed = checkEnableTimelinePreviewIsAllowed(host, params?.timelinePreview)
+
+    if (areAllowed) {
+      path = `timeline/${path}`
+    }
+
+    return path
   }
 
   function maybeEncodeCPAResponse(data: any, config: Record<string, any>): any {
@@ -273,7 +288,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       const entries = await get({
         context: 'environment',
-        path: 'entries',
+        path: maybeEnableTimelinePreview('entries'),
         config: createRequestConfig({
           query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
         }),
@@ -321,7 +336,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       return get({
         context: 'environment',
-        path: `assets/${id}`,
+        path: maybeEnableTimelinePreview(`assets/${id}`),
         config: createRequestConfig({ query: maybeEnableSourceMaps(normalizeSelect(query)) }),
       })
     } catch (error) {
@@ -354,7 +369,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       return get({
         context: 'environment',
-        path: 'assets',
+        path: maybeEnableTimelinePreview('assets'),
         config: createRequestConfig({
           query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
         }),

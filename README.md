@@ -11,10 +11,10 @@
 <h3 align="center">Javascript</h3>
 
 <p align="center">
-  <a href="README.md">Readme</a> · 
-  <a href="MIGRATION.md">Migration</a> · 
-  <a href="ADVANCED.md">Advanced</a> · 
-  <a href="TYPESCRIPT.md">TypeScript</a> · 
+  <a href="README.md">Readme</a> ·
+  <a href="MIGRATION.md">Migration</a> ·
+  <a href="ADVANCED.md">Advanced</a> ·
+  <a href="TYPESCRIPT.md">TypeScript</a> ·
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -70,8 +70,8 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
   - [Authentication](#authentication)
 - [Documentation \& References](#documentation--references)
   - [Configuration](#configuration)
-      - [Request configuration options](#request-configuration-options)
-      - [Response configuration options](#response-configuration-options)
+    - [Request configuration options](#request-configuration-options)
+    - [Response configuration options](#response-configuration-options)
   - [Client chain modifiers](#client-chain-modifiers)
     - [Entries](#entries)
       - [Example](#example)
@@ -186,7 +186,7 @@ Check the [releases](https://github.com/contentful/contentful.js/releases) page 
 The following code snippet is the most basic one you can use to get some content from Contentful with this library:
 
 ```js
-import * as contentful from "contentful"
+import * as contentful from 'contentful'
 const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: 'developer_bookshelf',
@@ -207,7 +207,7 @@ Check out this [JSFiddle](https://jsfiddle.net/contentful/kefaj4s8/) version of 
 This library can also be used with the Preview API. In order to do so, you need to use the Preview API Access token, available on the same page where you get the Delivery API token, and specify the host of the preview API, such as:
 
 ```js
-import * as contentful from "contentful"
+import * as contentful from 'contentful'
 const client = contentful.createClient({
   space: 'developer_bookshelf',
   accessToken: 'preview_0b7f6x59a0',
@@ -254,30 +254,48 @@ The configuration options belong to two categories: request config and response 
 
 ##### Request configuration options
 
-| Name             | Default                     | Description                                                                                                                                                                                                                                                                                                    |
-| ---------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accessToken`    |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                           |
-| `space`          |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                   |
-| `environment`    | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                            |
-| `host`           | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                  |
-| `basePath`       | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                          |
-| `httpAgent`      | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                    |
-| `httpsAgent`     | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                   |
-| `adapter`        | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                             |
-| `headers`        | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.delivery.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
-| `proxy`          | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/axios/axios#request-config) for further information about the supported values.                                                                                                                                     |
-| `retryOnError`   | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                  |
-| `application`    | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                |
-| `integration`    | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                |
-| `timeout`        | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                          |
-| `retryLimit`     | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                     |
-| `logHandler`     | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                    |
-| `requestLogger`  | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                     |
-| `responseLogger` | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                   |
+| Name              | Default                     | Description                                                                                                                                                                                                                                                                                                    |
+| ----------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `accessToken`     |                             | **Required**. Your CDA access token.                                                                                                                                                                                                                                                                           |
+| `space`           |                             | **Required**. Your Space ID.                                                                                                                                                                                                                                                                                   |
+| `environment`     | `'master'`                  | Set the environment that the API key has access to.                                                                                                                                                                                                                                                            |
+| `host`            | `'cdn.contentful.com'`      | Set the host used to build the request URI's.                                                                                                                                                                                                                                                                  |
+| `basePath`        | `''`                        | This path gets appended to the host to allow request urls like `https://gateway.example.com/contentful/` for custom gateways/proxies.                                                                                                                                                                          |
+| `httpAgent`       | `undefined`                 | Custom agent to perform HTTP requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                    |
+| `httpsAgent`      | `undefined`                 | Custom agent to perform HTTPS requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                                   |
+| `adapter`         | `undefined`                 | Custom adapter to handle making the requests. Find further information in the [axios request config documentation](https://github.com/axios/axios#request-config).                                                                                                                                             |
+| `headers`         | `{}`                        | Additional headers to attach to the requests. We add/overwrite the following headers: <ul><li><b>Content-Type:</b> `application/vnd.contentful.delivery.v1+json`</li><li><b>X-Contentful-User-Agent:</b> `sdk contentful.js/1.2.3; platform node.js/1.2.3; os macOS/1.2.3` (Automatically generated)</li></ul> |
+| `timelinePreview` | `undefined`                 | Configuration for enabling timeline preview by passing a future date or release id                                                                                                                                                                                                                             |
+| `proxy`           | `undefined`                 | Axios proxy configuration. See the [axios request config documentation](https://github.com/axios/axios#request-config) for further information about the supported values.                                                                                                                                     |
+| `retryOnError`    | `true`                      | By default, this library is retrying requests which resulted in a 500 server error and 429 rate limit response. Set this to `false` to disable this behavior.                                                                                                                                                  |
+| `application`     | `undefined`                 | Application name and version e.g myApp/version.                                                                                                                                                                                                                                                                |
+| `integration`     | `undefined`                 | Integration name and version e.g react/version.                                                                                                                                                                                                                                                                |
+| `timeout`         | `30000`                     | in milliseconds - connection timeout.                                                                                                                                                                                                                                                                          |
+| `retryLimit`      | `5`                         | Optional number of retries before failure.                                                                                                                                                                                                                                                                     |
+| `logHandler`      | `function (level, data) {}` | Errors and warnings will be logged by default to the node or browser console. Pass your own log handler to intercept here and handle errors, warnings and info on your own.                                                                                                                                    |
+| `requestLogger`   | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                     |
+| `responseLogger`  | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                   |
 
 ##### Response configuration options
 
 > :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [client chain modifiers](#client-chain-modifiers) approach.
+
+### Timeline Preview
+
+The Timeline Preview API provides the ability to query content by future date or specific release
+
+##### Example
+
+```js
+import * as contentful from 'contentful'
+const client = contentful.createClient({
+  space: 'developer_bookshelf',
+  accessToken: 'preview_0b7f6x59a0',
+  host: 'preview.contentful.com',
+  // either release or timestamp or both can be passed as a valid config
+  timelinePreview: { release: { lte: 'black-friday' }, timestamp: { lte: '2025-11-29T08:46:15Z' } },
+})
+```
 
 ### Client chain modifiers
 
@@ -332,24 +350,18 @@ const localizedData = {
     {
       metadata: { tags: [] },
       sys: {
-        space: {
-          sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' },
-        },
+        space: { sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' } },
         id: 'my-zoo',
         type: 'Entry',
         createdAt: '2020-01-01T00:00:00.000Z',
         updatedAt: '2020-01-01T00:00:00.000Z',
-        environment: {
-          sys: { id: 'master', type: 'Link', linkType: 'Environment' },
-        },
+        environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
         revision: 1,
         contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'zoo' } },
         locale: 'en-US',
       },
       fields: {
-        animal: {
-          'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'oink' } },
-        },
+        animal: { 'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'oink' } } },
         anotheranimal: {
           'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'middle-parrot' } },
         },
@@ -361,28 +373,19 @@ const localizedData = {
       {
         metadata: { tags: [] },
         sys: {
-          space: {
-            sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' },
-          },
+          space: { sys: { type: 'Link', linkType: 'Space', id: 'my-space-id' } },
           id: 'oink',
           type: 'Entry',
           createdAt: '2020-01-01T00:00:00.000Z',
           updatedAt: '2020-02-01T00:00:00.000Z',
-          environment: {
-            sys: { id: 'master', type: 'Link', linkType: 'Environment' },
-          },
+          environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
           revision: 2,
           contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'animal' } },
           locale: 'en-US',
         },
         fields: {
-          name: {
-            'en-US': 'Pig',
-            de: 'Schwein',
-          },
-          friend: {
-            'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } },
-          },
+          name: { 'en-US': 'Pig', de: 'Schwein' },
+          friend: { 'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'groundhog' } } },
         },
       },
     ],
