@@ -353,3 +353,16 @@ test('Gets entry with attached metadata and field called "metadata" on preview',
   expect(response.fields.metadata).toBeDefined()
   expect(response.metadata).toBeDefined()
 })
+
+test('can make calls to TimelinePreview API on preview', async () => {
+  const timelinePreviewClient = contentful.createClient({
+    ...previewParamsWithCSM,
+    timelinePreview: { release: { lte: 'black-friday' } },
+  })
+
+  const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW'
+
+  await expect(timelinePreviewClient.getEntry(entryWithMetadataFieldAndMetadata)).rejects.toThrow(
+    /spaces\/ezs1swce23xe\/environments\/master\/timeline\/entries/,
+  )
+})
