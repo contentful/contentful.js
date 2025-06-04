@@ -12,6 +12,7 @@ export type LinkType =
   | 'User'
   | 'Asset'
   | 'TaxonomyConcept'
+  | 'TaxonomyConceptScheme'
 
 /**
  * Link definition of a specific link type
