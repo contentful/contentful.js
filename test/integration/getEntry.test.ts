@@ -357,7 +357,9 @@ test('Gets entry with attached metadata and field called "metadata" on preview',
 test('can make calls to TimelinePreview API on preview', async () => {
   const timelinePreviewClient = contentful.createClient({
     ...previewParamsWithCSM,
-    timelinePreview: { release: { lte: 'black-friday' } },
+    alphaFeatures: {
+      timelinePreview: { release: { lte: 'black-friday' } },
+    },
   })
 
   const entryWithMetadataFieldAndMetadata = '1NnAC4eF9IRMpHtFB1NleW'

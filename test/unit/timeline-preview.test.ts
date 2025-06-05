@@ -9,9 +9,11 @@ describe('Timeline Preview path and query', () => {
       get: mockGet,
       httpClientParams: {
         host: 'preview.contentful.com',
-        timelinePreview: {
-          release: { lte: 'black-friday' },
-          timestamp: { lte: '2023-11-30T23:59:59Z' },
+        alphaFeatures: {
+          timelinePreview: {
+            release: { lte: 'black-friday' },
+            timestamp: { lte: '2023-11-30T23:59:59Z' },
+          },
         },
       },
     } as unknown as AxiosInstance

@@ -120,12 +120,7 @@ export interface CreateClientParams {
    * This feature is only available when using the Content Preview API.
    */
   includeContentSourceMaps?: boolean
-  /**
-   * Enable Timeline Preview.
-   * @remarks
-   * This feature is only available in private beta when using the Content Preview API.
-   */
-  timelinePreview?: TimelinePreview
+
   /**
    * Enable alpha features.
    */
@@ -134,6 +129,13 @@ export interface CreateClientParams {
      * @deprecated Use the `includeContentSourceMaps` option directly instead.
      */
     includeContentSourceMaps?: boolean
+
+    /**
+     * Enable Timeline Preview.
+     * @remarks
+     * This feature is only available in private beta when using the Content Preview API.
+     */
+    timelinePreview?: TimelinePreview
   }
 }
 
