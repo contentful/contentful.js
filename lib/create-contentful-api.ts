@@ -165,12 +165,10 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
-    console.log('GET request:', { url: baseUrl + path, config })
     try {
       const response = await http.get(baseUrl + path, config)
       return maybeEncodeCPAResponse(response.data, config)
     } catch (error) {
-      console.error('Error in GET request:', { url: baseUrl + path, error })
       errorHandler(error)
     }
   }
