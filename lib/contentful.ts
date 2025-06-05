@@ -123,7 +123,7 @@ export interface CreateClientParams {
   /**
    * Enable Timeline Preview.
    * @remarks
-   * This feature is only available when using the Content Preview API.
+   * This feature is only available in private beta when using the Content Preview API.
    */
   timelinePreview?: TimelinePreview
   /**

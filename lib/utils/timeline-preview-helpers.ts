@@ -1,12 +1,14 @@
+import type { CreateClientParams } from '../contentful'
 import type { TimelinePreview } from '../types/timeline-preview'
+import { checkEnableTimelinePreviewIsAllowed } from './validate-params'
 import { ValidationError } from './validation-error'
 
-function isValidRelease(release: any): boolean {
-  return release && typeof release === 'object' && typeof release.lte === 'string'
+function isValidRelease(release: TimelinePreview['release']): boolean {
+  return !!(release && typeof release === 'object' && typeof release.lte === 'string')
 }
 
-function isValidTimestamp(timestamp: any): boolean {
-  return (
+function isValidTimestamp(timestamp: TimelinePreview['timestamp']): boolean {
+  return !!(
     timestamp &&
     typeof timestamp === 'object' &&
     (typeof timestamp.lte === 'string' || timestamp.lte instanceof Date)
@@ -36,4 +38,11 @@ export const isValidTimelinePreviewConfig = (timelinePreview: TimelinePreview) =
   }
 
   return hasRelease || hasTimestamp
+}
+
+export const getTimelinePreviewParams = (params: CreateClientParams) => {
+  const host = params?.host as string
+  const timelinePreview = params?.timelinePreview
+  const enabled = checkEnableTimelinePreviewIsAllowed(host, timelinePreview)
+  return { enabled, timelinePreview }
 }

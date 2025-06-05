@@ -37,13 +37,13 @@ import getQuerySelectionSet from './utils/query-selection-set.js'
 import validateTimestamp from './utils/validate-timestamp.js'
 import type { ChainOptions, ModifiersFromOptions } from './utils/client-helpers.js'
 import {
-  checkEnableTimelinePreviewIsAllowed,
   checkIncludeContentSourceMapsParamIsAllowed,
   validateLocaleParam,
   validateRemoveUnresolvedParam,
   validateResolveLinksParam,
 } from './utils/validate-params.js'
 import validateSearchParameters from './utils/validate-search-parameters.js'
+import { getTimelinePreviewParams } from './utils/timeline-preview-helpers.js'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -132,17 +132,24 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   }
 
   function maybeEnableTimelinePreview(path: string): string {
-    const params = http.httpClientParams as CreateClientParams
+    const { enabled } = getTimelinePreviewParams(http.httpClientParams as CreateClientParams)
+    return enabled ? `timeline/${path}` : path
+  }
 
-    const host = params?.host
-
-    const areAllowed = checkEnableTimelinePreviewIsAllowed(host, params?.timelinePreview)
-
-    if (areAllowed) {
-      path = `timeline/${path}`
+  function maybeAddTimelinePreviewConfigToQuery(query: Record<string, any>) {
+    const { enabled, timelinePreview } = getTimelinePreviewParams(
+      http.httpClientParams as CreateClientParams,
+    )
+    if (enabled) {
+      if (timelinePreview?.release) {
+        query.release = timelinePreview.release
+      }
+      if (timelinePreview?.timestamp) {
+        query.timestamp = timelinePreview.timestamp
+      }
     }
 
-    return path
+    return query
   }
 
   function maybeEncodeCPAResponse(data: any, config: Record<string, any>): any {
@@ -158,10 +165,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   async function get<T>({ context, path, config }: GetConfig): Promise<T> {
     const baseUrl = getBaseUrl(context)
 
+    console.log('GET request:', { url: baseUrl + path, config })
     try {
       const response = await http.get(baseUrl + path, config)
       return maybeEncodeCPAResponse(response.data, config)
     } catch (error) {
+      console.error('Error in GET request:', { url: baseUrl + path, error })
       errorHandler(error)
     }
   }
@@ -275,6 +284,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     )
   }
 
+  function prepareQuery(query: Record<string, any>): Record<string, any> {
+    // First, add timeline preview config if enabled
+    const withTimelinePreview = maybeAddTimelinePreviewConfigToQuery({ ...query })
+    // Then, apply source maps and other normalizations
+    return maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(withTimelinePreview)))
+  }
+
   async function internalGetEntries<
     EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
@@ -284,13 +300,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     options: Options,
   ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
-
     try {
       const entries = await get({
         context: 'environment',
         path: maybeEnableTimelinePreview('entries'),
         config: createRequestConfig({
-          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+          query: prepareQuery(query),
         }),
       })
 
@@ -337,7 +352,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       return get({
         context: 'environment',
         path: maybeEnableTimelinePreview(`assets/${id}`),
-        config: createRequestConfig({ query: maybeEnableSourceMaps(normalizeSelect(query)) }),
+        config: createRequestConfig({ query: prepareQuery(query) }),
       })
     } catch (error) {
       errorHandler(error)
@@ -371,7 +386,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         context: 'environment',
         path: maybeEnableTimelinePreview('assets'),
         config: createRequestConfig({
-          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+          query: prepareQuery(query),
         }),
       })
     } catch (error) {

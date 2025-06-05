@@ -78,7 +78,7 @@ export function checkIncludeContentSourceMapsParamIsAllowed(
 }
 
 export function checkEnableTimelinePreviewIsAllowed(
-  host?: string,
+  host: string,
   timelinePreview?: TimelinePreview,
 ) {
   if (timelinePreview === undefined) {
@@ -87,7 +87,7 @@ export function checkEnableTimelinePreviewIsAllowed(
 
   const isValidConfig = isValidTimelinePreviewConfig(timelinePreview)
 
-  const isValidHost = host === 'preview.contentful.com'
+  const isValidHost = typeof host === 'string' && host.startsWith('preview')
 
   if (isValidConfig && !isValidHost) {
     throw new ValidationError(
