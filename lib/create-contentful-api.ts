@@ -43,6 +43,7 @@ import {
   validateResolveLinksParam,
 } from './utils/validate-params.js'
 import validateSearchParameters from './utils/validate-search-parameters.js'
+import { getTimelinePreviewParams } from './utils/timeline-preview-helpers.js'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -124,6 +125,27 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
         selection.add('sys')
 
         query.select = Array.from(selection).join(',')
+      }
+    }
+
+    return query
+  }
+
+  function maybeEnableTimelinePreview(path: string): string {
+    const { enabled } = getTimelinePreviewParams(http.httpClientParams as CreateClientParams)
+    return enabled ? `timeline/${path}` : path
+  }
+
+  function maybeAddTimelinePreviewConfigToQuery(query: Record<string, any>) {
+    const { enabled, timelinePreview } = getTimelinePreviewParams(
+      http.httpClientParams as CreateClientParams,
+    )
+    if (enabled) {
+      if (timelinePreview?.release) {
+        query.release = timelinePreview.release
+      }
+      if (timelinePreview?.timestamp) {
+        query.timestamp = timelinePreview.timestamp
       }
     }
 
@@ -260,6 +282,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     )
   }
 
+  function prepareQuery(query: Record<string, any>): Record<string, any> {
+    // First, add timeline preview config if enabled
+    const withTimelinePreview = maybeAddTimelinePreviewConfigToQuery({ ...query })
+    // Then, apply source maps and other normalizations
+    return maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(withTimelinePreview)))
+  }
+
   async function internalGetEntries<
     EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
@@ -269,13 +298,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     options: Options,
   ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
-
     try {
       const entries = await get({
         context: 'environment',
-        path: 'entries',
+        path: maybeEnableTimelinePreview('entries'),
         config: createRequestConfig({
-          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+          query: prepareQuery(query),
         }),
       })
 
@@ -321,8 +349,8 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       return get({
         context: 'environment',
-        path: `assets/${id}`,
-        config: createRequestConfig({ query: maybeEnableSourceMaps(normalizeSelect(query)) }),
+        path: maybeEnableTimelinePreview(`assets/${id}`),
+        config: createRequestConfig({ query: prepareQuery(query) }),
       })
     } catch (error) {
       errorHandler(error)
@@ -354,9 +382,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     try {
       return get({
         context: 'environment',
-        path: 'assets',
+        path: maybeEnableTimelinePreview('assets'),
         config: createRequestConfig({
-          query: maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query))),
+          query: prepareQuery(query),
         }),
       })
     } catch (error) {
