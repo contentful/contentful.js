@@ -28,6 +28,7 @@ export type ChainModifiers =
   | 'WITH_ALL_LOCALES'
   | 'WITHOUT_LINK_RESOLUTION'
   | 'WITHOUT_UNRESOLVABLE_LINKS'
+  | 'WITH_TIMELINE'
   | undefined
 
 /**
@@ -468,6 +469,15 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
       ? never
       : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>>
+
+  /**
+   * Enable Timeline Preview.
+   * @remarks
+   * This feature is only available in private beta when using the Content Preview API.
+   */
+  withTimeline: 'WITH_TIMELINE' extends Modifiers
+    ? never
+    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITH_TIMELINE'>>
 
   /**
    * The current Contentful.js version

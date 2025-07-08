@@ -1,5 +1,3 @@
-import type { TimelinePreview } from '../types/timeline-preview.js'
-import { isValidTimelinePreviewConfig } from './timeline-preview-helpers.js'
 import { ValidationError } from './validation-error.js'
 
 function checkLocaleParamIsAll(query) {
@@ -75,27 +73,4 @@ export function checkIncludeContentSourceMapsParamIsAllowed(
   }
 
   return includeContentSourceMaps as boolean
-}
-
-export function checkEnableTimelinePreviewIsAllowed(
-  host: string,
-  timelinePreview?: TimelinePreview,
-) {
-  if (timelinePreview === undefined) {
-    return false
-  }
-
-  const isValidConfig = isValidTimelinePreviewConfig(timelinePreview)
-
-  const isValidHost = typeof host === 'string' && host.startsWith('preview')
-
-  if (isValidConfig && !isValidHost) {
-    throw new ValidationError(
-      'timelinePreview',
-      `The 'timelinePreview' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to enable Timeline Preview.
-      `,
-    )
-  }
-
-  return true
 }

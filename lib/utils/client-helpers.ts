@@ -16,6 +16,11 @@ export type ChainOption<Modifiers extends ChainModifiers = ChainModifiers> = {
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
       ? true
       : false
+  withTimeline: ChainModifiers extends Modifiers
+    ? boolean
+    : 'WITH_TIMELINE' extends Modifiers
+      ? true
+      : false
 }
 
 export type DefaultChainOption = ChainOption<undefined>

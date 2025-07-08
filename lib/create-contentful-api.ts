@@ -43,7 +43,8 @@ import {
   validateResolveLinksParam,
 } from './utils/validate-params.js'
 import validateSearchParameters from './utils/validate-search-parameters.js'
-import { getTimelinePreviewParams } from './utils/timeline-preview-helpers.js'
+import type { TimelinePreview } from './types/timeline-preview.js'
+import { checkEnableTimelinePreviewIsAllowed } from './utils/timeline-preview-helpers.js'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -131,27 +132,6 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return query
   }
 
-  function maybeEnableTimelinePreview(path: string): string {
-    const { enabled } = getTimelinePreviewParams(http.httpClientParams as CreateClientParams)
-    return enabled ? `timeline/${path}` : path
-  }
-
-  function maybeAddTimelinePreviewConfigToQuery(query: Record<string, any>) {
-    const { enabled, timelinePreview } = getTimelinePreviewParams(
-      http.httpClientParams as CreateClientParams,
-    )
-    if (enabled) {
-      if (timelinePreview?.release) {
-        query.release = timelinePreview.release
-      }
-      if (timelinePreview?.timestamp) {
-        query.timestamp = timelinePreview.timestamp
-      }
-    }
-
-    return query
-  }
-
   function maybeEncodeCPAResponse(data: any, config: Record<string, any>): any {
     const includeContentSourceMaps = config?.params?.includeContentSourceMaps as boolean
 
@@ -217,6 +197,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withTimeline: false,
     },
   ) {
     const { withAllLocales } = options
@@ -262,6 +243,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withTimeline: false,
     },
   ) {
     const { withAllLocales } = options
@@ -282,11 +264,22 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     )
   }
 
-  function prepareQuery(query: Record<string, any>): Record<string, any> {
-    // First, add timeline preview config if enabled
-    const withTimelinePreview = maybeAddTimelinePreviewConfigToQuery({ ...query })
+  function prepareQuery(query: Record<string, any>, withTimeline: boolean): Record<string, any> {
+    // If timeline is enabled, we need to ensure that the query is prepared correctly
+    if (withTimeline) {
+      if (
+        !checkEnableTimelinePreviewIsAllowed(
+          http.httpClientParams?.host as string,
+          query as TimelinePreview,
+        )
+      ) {
+        throw new Error('Timeline preview is not enabled for the given query.')
+      }
+    }
+    // Ensure that the query is prepared for timeline
+
     // Then, apply source maps and other normalizations
-    return maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(withTimelinePreview)))
+    return maybeEnableSourceMaps(normalizeSearchParameters(normalizeSelect(query)))
   }
 
   async function internalGetEntries<
@@ -297,13 +290,15 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     query: Record<string, any>,
     options: Options,
   ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
-    const { withoutLinkResolution, withoutUnresolvableLinks } = options
+    const { withoutLinkResolution, withoutUnresolvableLinks, withTimeline } = options
     try {
+      const path = withTimeline ? 'timeline/entries' : 'entries'
+
       const entries = await get({
         context: 'environment',
-        path: maybeEnableTimelinePreview('entries'),
+        path,
         config: createRequestConfig({
-          query: prepareQuery(query),
+          query: prepareQuery(query, withTimeline),
         }),
       })
 
@@ -330,6 +325,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withTimeline: false,
     },
   ) {
     const { withAllLocales } = options
@@ -339,18 +335,25 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAssets<any, Extract<ChainOptions, typeof options>>(localeSpecificQuery)
+    return internalGetAssets<any, Extract<ChainOptions, typeof options>>(
+      localeSpecificQuery,
+      options,
+    )
   }
 
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
     id: string,
     query: Record<string, any>,
+    options: Options,
   ): Promise<Asset<ModifiersFromOptions<Options>, Locales>> {
     try {
+      const { withTimeline } = options
+      const path = withTimeline ? `timeline/assets/${id}` : `assets/${id}`
+
       return get({
         context: 'environment',
-        path: maybeEnableTimelinePreview(`assets/${id}`),
-        config: createRequestConfig({ query: prepareQuery(query) }),
+        path,
+        config: createRequestConfig({ query: prepareQuery(query, withTimeline) }),
       })
     } catch (error) {
       errorHandler(error)
@@ -364,6 +367,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withTimeline: false,
     },
   ) {
     const { withAllLocales } = options
@@ -373,18 +377,26 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(id, localeSpecificQuery)
+    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(
+      id,
+      localeSpecificQuery,
+      options,
+    )
   }
 
   async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(
     query: Record<string, any>,
+    options: Options,
   ): Promise<AssetCollection<ModifiersFromOptions<Options>, Locales>> {
     try {
+      const { withTimeline } = options
+      const path = withTimeline ? 'timeline/assets' : 'assets'
+
       return get({
         context: 'environment',
-        path: maybeEnableTimelinePreview('assets'),
+        path,
         config: createRequestConfig({
-          query: prepareQuery(query),
+          query: prepareQuery(query, withTimeline),
         }),
       })
     } catch (error) {
@@ -449,6 +461,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withTimeline: false,
     },
   ) {
     validateResolveLinksParam(query)
@@ -476,6 +489,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withTimeline: false,
     },
   ) {
     return internalParseEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
