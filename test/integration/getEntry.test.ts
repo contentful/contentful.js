@@ -197,7 +197,7 @@ describe('getEntry via client chain modifiers', () => {
   describe('preview client has includeContentSourceMaps enabled', () => {
     test('invalid client', async () => {
       await expect(invalidClient.getEntry(entryWithResolvableLink)).rejects.toThrow(
-        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' or 'preview.eu.contentful.com' to include Content Source Maps.`,
       )
       await expect(invalidClient.getEntry(entryWithResolvableLink)).rejects.toThrow(ValidationError)
     })
