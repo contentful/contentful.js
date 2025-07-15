@@ -365,7 +365,7 @@ describe('getEntries via client chain modifiers', () => {
       ).toBeDefined()
       expect(
         response.items[0].fields.bestFriend &&
-          response.items[0].fields.bestFriend['en-US']?.sys.type,
+        response.items[0].fields.bestFriend['en-US']?.sys.type,
       ).toBe('Link')
     })
 
@@ -385,7 +385,7 @@ describe('getEntries via client chain modifiers', () => {
   describe('has includeContentSourceMaps enabled', () => {
     test('invalid client', async () => {
       await expect(invalidClient.getEntries()).rejects.toThrow(
-        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' or 'preview.eu.contentful.com' to include Content Source Maps.`,
       )
       await expect(invalidClient.getEntries()).rejects.toThrow(ValidationError)
     })
@@ -437,7 +437,7 @@ describe('getEntries via client chain modifiers', () => {
       ).toBeDefined()
       expect(
         response.items[0].fields.bestFriend &&
-          response.items[0].fields.bestFriend['en-US']?.sys.type,
+        response.items[0].fields.bestFriend['en-US']?.sys.type,
       ).toBe('Link')
     })
 
@@ -489,7 +489,7 @@ describe('getEntries via client chain modifiers', () => {
       ).toBeDefined()
       expect(
         response.items[0].fields.bestFriend &&
-          response.items[0].fields.bestFriend['en-US']?.sys.type,
+        response.items[0].fields.bestFriend['en-US']?.sys.type,
       ).toBe('Link')
     })
   })

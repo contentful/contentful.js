@@ -64,12 +64,12 @@ export function checkIncludeContentSourceMapsParamIsAllowed(
     )
   }
 
-  const includeContentSourceMapsIsAllowed = host === 'preview.contentful.com'
+  const includeContentSourceMapsIsAllowed = typeof host === 'string' && host.startsWith('preview')
 
   if (includeContentSourceMaps && !includeContentSourceMapsIsAllowed) {
     throw new ValidationError(
       'includeContentSourceMaps',
-      `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.
+      `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' or 'preview.eu.contentful.com' to include Content Source Maps.
       `,
     )
   }
@@ -92,7 +92,7 @@ export function checkEnableTimelinePreviewIsAllowed(
   if (isValidConfig && !isValidHost) {
     throw new ValidationError(
       'timelinePreview',
-      `The 'timelinePreview' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to enable Timeline Preview.
+      `The 'timelinePreview' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' or 'preview.eu.contentful.com' to enable Timeline Preview.
       `,
     )
   }

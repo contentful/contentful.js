@@ -48,7 +48,7 @@ describe('getAssets', () => {
   describe('has includeContentSourceMaps enabled', () => {
     test('cdn client', async () => {
       await expect(invalidClient.getAssets()).rejects.toThrow(
-        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' to include Content Source Maps.`,
+        `The 'includeContentSourceMaps' parameter can only be used with the CPA. Please set host to 'preview.contentful.com' or 'preview.eu.contentful.com' to include Content Source Maps.`,
       )
       await expect(invalidClient.getAssets()).rejects.toThrow(ValidationError)
     })
