@@ -275,7 +275,7 @@ The configuration options belong to two categories: request config and response 
 | `requestLogger`  | `function (config) {}`      | Interceptor called on every request. Takes Axios request config as an arg.                                                                                                                                                                                                                                     |
 | `responseLogger` | `function (response) {}`    | Interceptor called on every response. Takes Axios response object as an arg.                                                                                                                                                                                                                                   |
 
-##### Response configuration options
+##### Response configuration options test
 
 > :warning: **Response config options** have been **removed** in `v10.0.0` in favor of the new [client chain modifiers](#client-chain-modifiers) approach.
 
