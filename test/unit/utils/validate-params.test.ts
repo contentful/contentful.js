@@ -27,7 +27,9 @@ describe('checkIncludeContentSourceMapsParamIsAllowed', () => {
   })
 
   it('returns true if includeContentSourceMaps is true and host is preview.eu.contentful.com', () => {
-    expect(checkIncludeContentSourceMapsParamIsAllowed('preview.eu.contentful.com', true)).toBe(true)
+    expect(checkIncludeContentSourceMapsParamIsAllowed('preview.eu.contentful.com', true)).toBe(
+      true,
+    )
   })
 
   it('returns false if includeContentSourceMaps is false, regardless of host', () => {

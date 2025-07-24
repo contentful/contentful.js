@@ -365,7 +365,7 @@ describe('getEntries via client chain modifiers', () => {
       ).toBeDefined()
       expect(
         response.items[0].fields.bestFriend &&
-        response.items[0].fields.bestFriend['en-US']?.sys.type,
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
       ).toBe('Link')
     })
 
@@ -437,7 +437,7 @@ describe('getEntries via client chain modifiers', () => {
       ).toBeDefined()
       expect(
         response.items[0].fields.bestFriend &&
-        response.items[0].fields.bestFriend['en-US']?.sys.type,
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
       ).toBe('Link')
     })
 
@@ -489,7 +489,7 @@ describe('getEntries via client chain modifiers', () => {
       ).toBeDefined()
       expect(
         response.items[0].fields.bestFriend &&
-        response.items[0].fields.bestFriend['en-US']?.sys.type,
+          response.items[0].fields.bestFriend['en-US']?.sys.type,
       ).toBe('Link')
     })
   })
