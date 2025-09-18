@@ -592,6 +592,54 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
+  function getConceptAncestors<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    return internalGetConceptAncestors<Locales>(id, query)
+  }
+
+  async function internalGetConceptAncestors<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    try {
+      return get({
+        context: 'environment',
+        path: `taxonomy/concepts/${id}/ancestors`,
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+  function getConceptDescendants<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    return internalGetConceptDescendants<Locales>(id, query)
+  }
+
+  async function internalGetConceptDescendants<Locales extends LocaleCode>(
+    id: string,
+    query: Record<string, any> = {},
+  ): Promise<ConceptCollection<Locales>> {
+    try {
+      return get({
+        context: 'environment',
+        path: `taxonomy/concepts/${id}/descendants`,
+        config: createRequestConfig({
+          query: normalizeSearchParameters(normalizeSelect(query)),
+        }),
+      })
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
   /*
    * Switches BaseURL to use /environments path
    * */
@@ -625,6 +673,9 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     getConcept,
     getConcepts,
+
+    getConceptAncestors,
+    getConceptDescendants,
 
     createAssetKey,
   } as unknown as ContentfulClientApi<undefined>

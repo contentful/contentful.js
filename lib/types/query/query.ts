@@ -228,3 +228,5 @@ export type ConceptsQueries = CursorPaginationOptions &
   TaxonomyOrderFilter & { conceptScheme?: string }
 
 export type ConceptSchemesQueries = CursorPaginationOptions & TaxonomyOrderFilter
+export type ConceptAncestorsDescendantsQueries = CursorPaginationOptions &
+  TaxonomyOrderFilter & { depth?: number }

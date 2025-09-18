@@ -4,6 +4,7 @@ import type { LocaleCode, LocaleCollection } from './locale.js'
 import type {
   AssetQueries,
   AssetsQueries,
+  ConceptAncestorsDescendantsQueries,
   ConceptSchemesQueries,
   ConceptsQueries,
   EntriesQueries,
@@ -223,7 +224,51 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(concept)
    * ```
    */
-  getConcept(id: string): Promise<Concept<'en-US'>>
+  getConcept<Locales extends LocaleCode>(id: string): Promise<Concept<Locales>>
+
+  /**
+   * Fetches a Concept Ancestors traversing the concept hierarchy by depth
+   * @param id - The concept’s ID
+   * @returns Promise for a concept
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const concept = await client.getConceptAncestors('<concept_id>', { depth: 5, order: 'sys.updatedAt' })
+   * console.log(concept)
+   * ```
+   */
+  getConceptAncestors<Locales extends LocaleCode>(
+    id: string,
+    query?: ConceptAncestorsDescendantsQueries,
+  ): Promise<ConceptCollection<Locales>>
+
+  /**
+   * Fetches a Concept Descendants traversing the concept hierarchy by depth
+   * @param id - The concept’s ID
+   * @returns Promise for a concept
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const concept = await client.getConceptDescendants('<concept_id>', { depth: 5, order: 'sys.updatedAt' })
+   * console.log(concept)
+   * ```
+   */
+  getConceptDescendants<Locale extends LocaleCode>(
+    id: string,
+    query?: ConceptAncestorsDescendantsQueries,
+  ): Promise<ConceptCollection<Locale>>
 
   /**
    * Fetches a collection of Concepts
@@ -242,7 +287,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(response.items)
    * ```
    */
-  getConcepts(query?: ConceptsQueries): Promise<ConceptCollection<'en-US'>>
+  getConcepts<Locales extends LocaleCode = 'en-US'>(
+    query?: ConceptsQueries,
+  ): Promise<ConceptCollection<Locales>>
 
   /**
    * Fetches a Concept Scheme
@@ -261,7 +308,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(conceptScheme)
    * ```
    */
-  getConceptScheme(id: string): Promise<ConceptScheme<'en-US'>>
+  getConceptScheme<Locales extends LocaleCode = 'en-US'>(
+    id: string,
+  ): Promise<ConceptScheme<Locales>>
 
   /**
    * Fetches a collection of Concept Schemes
@@ -280,7 +329,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(response.items)
    * ```
    */
-  getConceptSchemes(query?: ConceptSchemesQueries): Promise<ConceptSchemeCollection<'en-US'>>
+  getConceptSchemes<Locales extends LocaleCode = 'en-US'>(
+    query?: ConceptSchemesQueries,
+  ): Promise<ConceptSchemeCollection<Locales>>
 
   /**
    * Creates an asset key for signing asset URLs (Embargoed Assets)
