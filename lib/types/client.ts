@@ -4,6 +4,7 @@ import type { LocaleCode, LocaleCollection } from './locale.js'
 import type {
   AssetQueries,
   AssetsQueries,
+  ConceptAncestorsDescendantsQueries,
   ConceptSchemesQueries,
   ConceptsQueries,
   EntriesQueries,
@@ -224,6 +225,50 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * ```
    */
   getConcept(id: string): Promise<Concept<'en-US'>>
+
+  /**
+   * Fetches a Concept Ancestors traversing the concept hierarchy by depth
+   * @param id - The concept’s ID
+   * @returns Promise for a concept
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const concept = await client.getConceptAncestors('<concept_id>', { depth: 5, order: 'sys.updatedAt' })
+   * console.log(concept)
+   * ```
+   */
+  getConceptAncestors(
+    id: string,
+    query?: ConceptAncestorsDescendantsQueries,
+  ): Promise<ConceptCollection<'en-US'>>
+
+  /**
+   * Fetches a Concept Descendants traversing the concept hierarchy by depth
+   * @param id - The concept’s ID
+   * @returns Promise for a concept
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const concept = await client.getConceptDescendants('<concept_id>', { depth: 5, order: 'sys.updatedAt' })
+   * console.log(concept)
+   * ```
+   */
+  getConceptDescendants(
+    id: string,
+    query?: ConceptAncestorsDescendantsQueries,
+  ): Promise<ConceptCollection<'en-US'>>
 
   /**
    * Fetches a collection of Concepts
