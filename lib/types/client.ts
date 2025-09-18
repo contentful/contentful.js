@@ -224,7 +224,7 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(concept)
    * ```
    */
-  getConcept(id: string): Promise<Concept<'en-US'>>
+  getConcept<Locales extends LocaleCode>(id: string): Promise<Concept<Locales>>
 
   /**
    * Fetches a Concept Ancestors traversing the concept hierarchy by depth
@@ -243,10 +243,10 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(concept)
    * ```
    */
-  getConceptAncestors(
+  getConceptAncestors<Locales extends LocaleCode>(
     id: string,
     query?: ConceptAncestorsDescendantsQueries,
-  ): Promise<ConceptCollection<'en-US'>>
+  ): Promise<ConceptCollection<Locales>>
 
   /**
    * Fetches a Concept Descendants traversing the concept hierarchy by depth
@@ -265,10 +265,10 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(concept)
    * ```
    */
-  getConceptDescendants(
+  getConceptDescendants<Locale extends LocaleCode>(
     id: string,
     query?: ConceptAncestorsDescendantsQueries,
-  ): Promise<ConceptCollection<'en-US'>>
+  ): Promise<ConceptCollection<Locale>>
 
   /**
    * Fetches a collection of Concepts
@@ -287,7 +287,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(response.items)
    * ```
    */
-  getConcepts(query?: ConceptsQueries): Promise<ConceptCollection<'en-US'>>
+  getConcepts<Locales extends LocaleCode = 'en-US'>(
+    query?: ConceptsQueries,
+  ): Promise<ConceptCollection<Locales>>
 
   /**
    * Fetches a Concept Scheme
@@ -306,7 +308,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(conceptScheme)
    * ```
    */
-  getConceptScheme(id: string): Promise<ConceptScheme<'en-US'>>
+  getConceptScheme<Locales extends LocaleCode = 'en-US'>(
+    id: string,
+  ): Promise<ConceptScheme<Locales>>
 
   /**
    * Fetches a collection of Concept Schemes
@@ -325,7 +329,9 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
    * console.log(response.items)
    * ```
    */
-  getConceptSchemes(query?: ConceptSchemesQueries): Promise<ConceptSchemeCollection<'en-US'>>
+  getConceptSchemes<Locales extends LocaleCode = 'en-US'>(
+    query?: ConceptSchemesQueries,
+  ): Promise<ConceptSchemeCollection<Locales>>
 
   /**
    * Creates an asset key for signing asset URLs (Embargoed Assets)

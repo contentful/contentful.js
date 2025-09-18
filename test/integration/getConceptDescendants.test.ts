@@ -6,11 +6,13 @@ if (process.env.API_INTEGRATION_TESTS) {
   params.insecure = true
 }
 
+type AvailableLocales = 'de-de' | 'en-US'
+
 const client = contentful.createClient(params)
 
 describe('getConcept', () => {
   it('returns a single concept', async () => {
-    const response = await client.getConceptDescendants('3eXhEIEzcZqwHyYWHbzSoS')
+    const response = await client.getConceptDescendants<AvailableLocales>('3eXhEIEzcZqwHyYWHbzSoS')
 
     expect(response.sys.type).toBe('TaxonomyConcept')
   })
