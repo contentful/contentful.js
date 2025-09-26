@@ -53,7 +53,7 @@ describe('getConcepts', () => {
   })
 
   describe('Concept Scheme', () => {
-    it.only('filters by Concept Scheme', async () => {
+    it('filters by Concept Scheme', async () => {
       const response = await client.getConcepts({ conceptScheme: '29lkBedZoW295B4sR7Hwrw' })
 
       expect(response.items).toHaveLength(2)
