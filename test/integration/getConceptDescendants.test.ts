@@ -14,6 +14,8 @@ describe('getConcept', () => {
   it('returns a single concept', async () => {
     const response = await client.getConceptDescendants<AvailableLocales>('3eXhEIEzcZqwHyYWHbzSoS')
 
-    expect(response.sys.type).toBe('TaxonomyConcept')
+    expect(response.sys.type).toBe('Array')
+    expect(response.items.length).toBeGreaterThan(0)
+    expect(response.items[0].sys.type).toBe('TaxonomyConcept')
   })
 })
