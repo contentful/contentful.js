@@ -9,9 +9,6 @@ gh-pages
 *.dockerfile
 *.dockerignore
 
-# NPM config
-.npmrc
-
 # Created by https://www.gitignore.io/api/node,windows,osx,linux,vim
 
 ### Linux ###
