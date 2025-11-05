@@ -1,0 +1,40 @@
+name: CI
+permissions:
+  contents: read
+  issues: write
+
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+
+  check:
+    needs: build
+    uses: ./.github/workflows/check.yaml
+
+  release:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next')
+    needs: [build, check]
+    permissions:
+      contents: write
+      id-token: write
+      actions: read
+    uses: ./.github/workflows/release.yaml
+
+  notify-failure:
+    if: |
+      always() && 
+      (needs.build.result == 'failure' || needs.check.result == 'failure' || needs.release.result == 'failure') && 
+      (github.event_name == 'push' && github.ref == 'refs/heads/master')
+    needs: [build, check, release]
+    permissions:
+      contents: read
+      issues: write
+    uses: ./.github/workflows/failure-notification.yaml
+    with:
+      workflow_name: "Main CI Pipeline"
+      job_name: ${{ needs.build.result == 'failure' && 'build' || needs.check.result == 'failure' && 'check' || needs.release.result == 'failure' && 'release' || 'unknown' }}
+      failure_reason: "One or more jobs in the main CI pipeline failed. Check the workflow run for detailed error information."
