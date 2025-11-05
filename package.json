@@ -159,6 +159,11 @@
         "name": "next",
         "channel": "next",
         "prerelease": true
+      },
+      {
+        "name": "testing-oidc-trusted-publishing",
+        "channel": "testing-oidc-trusted-publishing",
+        "prerelease": true
       }
     ],
     "plugins": [

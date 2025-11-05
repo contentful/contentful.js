@@ -1,0 +1,91 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+      - next
+      - testing-oidc-trusted-publishing
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  install_dependencies_and_setup_node_checkout:
+    name: Configure github npm package registry for installing private @contentful packages, any public/non-contentful dependencies will be installed from npmjs.com
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+    
+      - name: config npmrc
+      - run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_PACKAGES_READ_TOKEN }}" > ~/.npmrc
+          echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+
+  lint:
+    name: Lint and Build
+    runs-on: ubuntu-latest
+    needs: install_dependencies
+    steps:
+      - name: Run linting
+        run: npm run lint
+
+      - name: Check prettier formatting
+        run: npm run prettier:check
+
+      - name: Build project
+        run: npm run build
+
+      - name: Test bundle size
+        run: npm run test:size
+
+      - name: Test TypeScript types
+        run: npm run test:types
+
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: install_dependencies
+    steps:
+      - name: Run unit tests
+        run: npm run test:unit
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: install_dependencies
+    steps:
+      - name: Run integration tests
+        run: npm run test:integration
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [lint, unit, integration, install_dependencies]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/testing-oidc-trusted-publishing')
+    steps:
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Setup ChromeDriver
+        uses: browser-actions/setup-chromedriver@v1
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run semantic release
+        run: npm run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
