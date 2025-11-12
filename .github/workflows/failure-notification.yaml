@@ -1,0 +1,113 @@
+name: Create Issue on Workflow Failure
+
+permissions:
+  contents: read
+  issues: write
+
+on:
+  workflow_call:
+    inputs:
+      workflow_name:
+        description: 'Name of the failed workflow'
+        required: true
+        type: string
+      job_name:
+        description: 'Name of the failed job(s)'
+        required: false
+        type: string
+        default: 'Unknown'
+      failure_reason:
+        description: 'Reason for the failure(s)'
+        required: false
+        type: string
+        default: 'Unknown failure reason'
+
+jobs:
+  create-failure-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Create Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflowName = '${{ inputs.workflow_name }}';
+            const jobName = '${{ inputs.job_name }}';
+            const failureReason = '${{ inputs.failure_reason }}';
+            const runUrl = `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
+            const commitSha = context.sha;
+            const commitUrl = `${context.payload.repository.html_url}/commit/${commitSha}`;
+            const branch = context.ref.replace('refs/heads/', '');
+            const actor = context.actor;
+            
+            // Check if there's already an open issue for this workflow
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'workflow-failure,' + workflowName.toLowerCase().replace(/\s+/g, '-')
+            });
+            
+            const title = `🚨 Workflow Failure: ${workflowName}`;
+            const body = `## Workflow Failure Report
+            
+            **Workflow:** ${workflowName}
+            **Job:** ${jobName}
+            **Branch:** ${branch}
+            **Commit:** [${commitSha.substring(0, 7)}](${commitUrl})
+            **Triggered by:** @${actor}
+            **Run URL:** [View Failed Run](${runUrl})
+            
+            ### Failure Details
+            ${failureReason}
+            
+            ### Debugging Information
+            - **Timestamp:** ${new Date().toISOString()}
+            - **Repository:** ${context.payload.repository.full_name}
+            - **Event:** ${context.eventName}
+            
+            ### Next Steps
+            1. Check the [workflow run logs](${runUrl}) for detailed error information
+            2. Review the changes in [commit ${commitSha.substring(0, 7)}](${commitUrl})
+            3. Fix the issue and re-run the workflow
+            4. Close this issue once resolved
+            
+            ---
+            *This issue was automatically created by the failure notification workflow.*`;
+            
+            // If no existing open issue, create a new one
+            if (existingIssues.data.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: [
+                  'workflow-failure',
+                  'bug',
+                  workflowName.toLowerCase().replace(/\s+/g, '-'),
+                  'automated'
+                ]
+              });
+              console.log(`Created new issue for ${workflowName} failure`);
+            } else {
+              console.log(`Issue already exists for ${workflowName} failure`);
+              // Optionally add a comment to the existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssues.data[0].number,
+                body: `## Additional Failure Report
+                
+                **New failure detected:**
+                - **Job:** ${jobName}
+                - **Commit:** [${commitSha.substring(0, 7)}](${commitUrl})
+                - **Run URL:** [View Failed Run](${runUrl})
+                - **Timestamp:** ${new Date().toISOString()}
+                
+                ${failureReason}`
+              });
+              console.log(`Added comment to existing issue for ${workflowName} failure`);
+            }

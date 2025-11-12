@@ -1,0 +1,45 @@
+name: release
+
+on:
+  workflow_call:
+
+jobs:
+  release:
+    name: Release
+    permissions:
+      contents: write
+      id-token: write # Required for OIDC trusted publishing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Install latest npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore the build folders
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            dist
+          key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
+
+      - name: Run semantic release
+        run: npm run semantic-release
