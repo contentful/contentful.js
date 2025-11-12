@@ -2,6 +2,9 @@ name: release
 
 on:
   workflow_call:
+    secrets:
+      VAULT_URL:
+        required: true
 
 jobs:
   release:
@@ -11,6 +14,29 @@ jobs:
       id-token: write # Required for OIDC trusted publishing
     runs-on: ubuntu-latest
     steps:
+      - name: 'Retrieve Secrets from Vault'
+        id: vault
+        uses: hashicorp/vault-action@v3.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          role: ${{ github.event.repository.name }}-github-action
+          method: jwt
+          path: github-actions
+          exportEnv: false
+          secrets: |
+            github/token/${{ github.event.repository.name }}-semantic-release token | GITHUB_TOKEN;
+
+      - name: Get Automation Bot User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/contentful-automation[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_TOKEN }}
+
+      - name: Setting up Git User Credentials
+        run: |
+          git config --global user.name 'contentful-automation[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+contentful-automation[bot]@users.noreply.github.com'
+
       - name: Checkout code
         uses: actions/checkout@v5
         with:
@@ -36,10 +62,7 @@ jobs:
             dist
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
 
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v2
-        with:
-          install-chromedriver: true
-
       - name: Run semantic release
         run: npm run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
