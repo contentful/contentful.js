@@ -11,7 +11,7 @@
 <h3 align="center">JavaScript</h3>
 
 <p align="center">
-  <a href="README.md">Readme</a> ·
+  <a href="README.md">ReadMe</a> ·
   <a href="MIGRATION.md">Migration</a> ·
   <a href="ADVANCED.md">Advanced</a> ·
   <a href="TYPESCRIPT.md">TypeScript</a> ·
