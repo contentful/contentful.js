@@ -32,6 +32,17 @@ import type {
   FieldsType,
 } from './util.js'
 
+export type CursorPaginationOptions = (
+  | {
+      pagePrev?: string
+      pageNext?: never
+    }
+  | {
+      pageNext?: string
+      pagePrev?: never
+    }
+) & { limit?: number; skip?: never }
+
 export type FixedPagedOptions = {
   skip?: number
   limit?: number
@@ -123,6 +134,17 @@ export type EntriesQueries<
       ('WITH_ALL_LOCALES' extends Modifiers ? {} : LocaleOption))
 
 /**
+ * Search parameters for entry cursor paginated collection
+ * @typeParam EntrySkeleton - Shape of an entry used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @category Query
+ */
+export type EntriesQueriesCursor<
+  EntrySkeleton extends EntrySkeletonType,
+  Modifiers extends ChainModifiers,
+> = EntriesQueries<EntrySkeleton, Modifiers> & CursorPaginationOptions
+
+/**
  * Search parameters for a single entry methods
  * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
@@ -191,6 +213,17 @@ export type AssetsQueries<
     : LocaleOption)
 
 /**
+ * Search parameters for asset cursor paginated collection
+ * @typeParam EntrySkeleton Shape of an asset used to calculate dynamic keys
+ * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @category Query
+ */
+export type AssetsQueriesCursor<
+  Fields extends FieldsType,
+  Modifiers extends ChainModifiers,
+> = AssetsQueries<Fields, Modifiers> & CursorPaginationOptions
+
+/**
  * Search parameters for a single asset methods
  * @typeParam Modifiers The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
  * @category Query
@@ -218,15 +251,15 @@ export type TagQueries = TagNameFilters &
   TagOrderFilter &
   FixedPagedOptions
 
-type CursorPaginationOptions = {
+type ConcenptsCursorPaginationOptions = {
   limit?: number
   prevPage?: string
   nextPage?: string
 }
 
-export type ConceptsQueries = CursorPaginationOptions &
+export type ConceptsQueries = ConcenptsCursorPaginationOptions &
   TaxonomyOrderFilter & { conceptScheme?: string }
 
-export type ConceptSchemesQueries = CursorPaginationOptions & TaxonomyOrderFilter
-export type ConceptAncestorsDescendantsQueries = CursorPaginationOptions &
+export type ConceptSchemesQueries = ConcenptsCursorPaginationOptions & TaxonomyOrderFilter
+export type ConceptAncestorsDescendantsQueries = ConcenptsCursorPaginationOptions &
   TaxonomyOrderFilter & { depth?: number }

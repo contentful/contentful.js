@@ -68,6 +68,7 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
   - [Your first request](#your-first-request)
   - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
   - [Authentication](#authentication)
+  - [Cursor-based Pagination](#cursor-based-pagination)
 - [Documentation \& References](#documentation--references)
   - [Configuration](#configuration)
     - [Request configuration options](#request-configuration-options)
@@ -133,6 +134,7 @@ In order to get started with the Contentful JS library you'll need not only to i
 - [Your first request](#your-first-request)
 - [Using this library with the Preview API](#using-this-library-with-the-preview-api)
 - [Authentication](#authentication)
+- [Cursor-based pagination](#cursor-based-pagination)
 - [Documentation & References](#documentation--references)
 
 ### Installation
@@ -226,6 +228,29 @@ You can create API keys using the [Contentful web interface](https://app.content
 Don't forget to also get your Space ID.
 
 For more information, check the [Contentful REST API reference on Authentication](https://www.contentful.com/developers/docs/references/authentication/).
+
+### Cursor-based Pagination
+
+Cursor-based pagination is supported on collection endpoints for entries and assets:
+
+```js
+const response = await client.getEntriesCursor({ limit: 10 })
+console.log(response.items) // Array of items
+console.log(response.pages?.next) // Cursor for next page
+```
+
+Use the value from `response.pages.next` to fetch the next page or `response.pages.prev` to fetch the previous page.
+
+```js
+const nextPageResponse = await client.getEntriesCursor({
+  limit: 10,
+  pageNext: response.pages?.next,
+})
+
+console.log(nextPageResponse.items) // Array of items
+console.log(nextPageResponse.pages?.next) // Cursor for next page
+console.log(nextPageResponse.pages?.prev) // Cursor for prev page
+```
 
 ## Documentation & References
 

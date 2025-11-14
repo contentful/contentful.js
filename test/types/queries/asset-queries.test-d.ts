@@ -1,5 +1,5 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { AssetFields, AssetsQueries } from '../../../lib'
+import { AssetFields, AssetsQueries, AssetsQueriesCursor } from '../../../lib'
 import * as mocks from '../mocks'
 
 type DefaultAssetQueries = AssetsQueries<AssetFields, undefined>
@@ -201,3 +201,19 @@ expectNotAssignable<DefaultAssetQueries>({ select: ['fields.unknownField'] })
 
 expectAssignable<AssetsQueries<AssetFields, undefined>>({ locale: mocks.stringValue })
 expectNotAssignable<AssetsQueries<AssetFields, 'WITH_ALL_LOCALES'>>({ locale: mocks.anyValue })
+
+// cursor pagination options
+
+expectAssignable<AssetsQueriesCursor<AssetFields, undefined>>({})
+expectAssignable<AssetsQueriesCursor<AssetFields, undefined>>({ pageNext: 'page_next' })
+expectAssignable<AssetsQueriesCursor<AssetFields, undefined>>({
+  pagePrev: 'page_prev',
+  limit: 40,
+})
+
+expectNotAssignable<AssetsQueriesCursor<AssetFields, undefined>>({ skip: 20 })
+expectNotAssignable<AssetsQueriesCursor<AssetFields, undefined>>({ pagePrev: 20 })
+expectNotAssignable<AssetsQueriesCursor<AssetFields, undefined>>({
+  pagePrev: 'page_prev',
+  pageNext: 'page_next',
+})

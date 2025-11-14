@@ -29,6 +29,10 @@ import type {
   Concept,
   ConceptScheme,
   ConceptSchemeCollection,
+  AssetCursorPaginatedCollection,
+  CollectionForQuery,
+  EntryCursorPaginatedCollection,
+  Entry,
 } from './types/index.js'
 import normalizeSearchParameters from './utils/normalize-search-parameters.js'
 import normalizeSelect from './utils/normalize-select.js'
@@ -44,6 +48,8 @@ import {
 } from './utils/validate-params.js'
 import validateSearchParameters from './utils/validate-search-parameters.js'
 import { getTimelinePreviewParams } from './utils/timeline-preview-helpers.js'
+import { normalizeCursorPaginationParameters } from './utils/normalize-cursor-pagination-parameters.js'
+import { normalizeCursorPaginationResponse } from './utils/normalize-cursor-pagination-response.js'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -210,6 +216,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return makeGetEntries(query, options)
   }
 
+  async function getEntriesCursor(
+    query = {},
+  ): Promise<EntryCursorPaginatedCollection<EntrySkeletonType>> {
+    const response = await makeGetEntries(normalizeCursorPaginationParameters(query), options)
+    return normalizeCursorPaginationResponse(response)
+  }
+
   async function makeGetEntry<EntrySkeleton extends EntrySkeletonType>(
     id: string,
     query,
@@ -242,10 +255,12 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       throw notFoundError(id)
     }
     try {
-      const response = await internalGetEntries<EntrySkeletonType<EntrySkeleton>, Locales, Options>(
-        { 'sys.id': id, ...maybeEnableSourceMaps(query) },
-        options,
-      )
+      const response = await internalGetEntries<
+        EntrySkeletonType<EntrySkeleton>,
+        Locales,
+        Options,
+        Record<string, unknown>
+      >({ 'sys.id': id, ...maybeEnableSourceMaps(query) }, options)
       if (response.items.length > 0) {
         return response.items[0]
       } else {
@@ -256,8 +271,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     }
   }
 
-  async function makeGetEntries<EntrySkeleton extends EntrySkeletonType>(
-    query,
+  async function makeGetEntries<
+    EntrySkeleton extends EntrySkeletonType,
+    Query extends Record<string, unknown>,
+  >(
+    query: Query,
     options: ChainOptions = {
       withAllLocales: false,
       withoutLinkResolution: false,
@@ -271,7 +289,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     validateRemoveUnresolvedParam(query)
     validateSearchParameters(query)
 
-    return internalGetEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
+    return internalGetEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>, Query>(
       withAllLocales
         ? {
             ...query,
@@ -293,10 +311,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     EntrySkeleton extends EntrySkeletonType,
     Locales extends LocaleCode,
     Options extends ChainOptions,
+    Query extends Record<string, unknown>,
   >(
-    query: Record<string, any>,
+    query: Query,
     options: Options,
-  ): Promise<EntryCollection<EntrySkeleton, ModifiersFromOptions<Options>, Locales>> {
+  ): Promise<
+    CollectionForQuery<Entry<EntrySkeleton, ModifiersFromOptions<Options>, Locales>, Query>
+  > {
     const { withoutLinkResolution, withoutUnresolvableLinks } = options
     try {
       const entries = await get({
@@ -324,8 +345,15 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return makeGetAssets(query, options)
   }
 
-  async function makeGetAssets(
-    query: Record<string, any>,
+  async function getAssetsCursor(
+    query: Record<string, any> = {},
+  ): Promise<AssetCursorPaginatedCollection> {
+    const response = await makeGetAssets(normalizeCursorPaginationParameters(query), options)
+    return normalizeCursorPaginationResponse(response)
+  }
+
+  async function makeGetAssets<Query extends Record<string, any>>(
+    query: Query,
     options: ChainOptions = {
       withAllLocales: false,
       withoutLinkResolution: false,
@@ -339,7 +367,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAssets<any, Extract<ChainOptions, typeof options>>(localeSpecificQuery)
+    return internalGetAssets<any, Extract<ChainOptions, typeof options>, Query>(localeSpecificQuery)
   }
 
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
@@ -376,9 +404,13 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     return internalGetAsset<any, Extract<ChainOptions, typeof options>>(id, localeSpecificQuery)
   }
 
-  async function internalGetAssets<Locales extends LocaleCode, Options extends ChainOptions>(
-    query: Record<string, any>,
-  ): Promise<AssetCollection<ModifiersFromOptions<Options>, Locales>> {
+  async function internalGetAssets<
+    Locales extends LocaleCode,
+    Options extends ChainOptions,
+    Query extends Record<string, any>,
+  >(
+    query: Query,
+  ): Promise<CollectionForQuery<Asset<ModifiersFromOptions<Options>, Locales>, Query>> {
     try {
       return get({
         context: 'environment',
@@ -657,6 +689,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     getAsset,
     getAssets,
+    getAssetsCursor,
 
     getTag,
     getTags,
@@ -667,6 +700,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     getEntry,
     getEntries,
+    getEntriesCursor,
 
     getConceptScheme,
     getConceptSchemes,

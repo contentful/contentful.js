@@ -1,5 +1,11 @@
 import { expectType, expectError } from 'tsd'
-import { createClient, EntryCollection, Entry, EntrySkeletonType } from '../../../lib'
+import {
+  createClient,
+  EntryCollection,
+  Entry,
+  EntrySkeletonType,
+  EntryCursorPaginatedCollection,
+} from '../../../lib'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -51,6 +57,14 @@ expectType<EntryCollection<TestEntrySkeleton | LinkedSkeleton, undefined>>(
   await client.getEntries<TestEntrySkeleton | LinkedSkeleton>({
     content_type: 'content-type-id',
   }),
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton>>(await client.getEntriesCursor())
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton>>(
+  await client.getEntriesCursor({ limit: 40 }),
+)
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton>>(
+  await client.getEntriesCursor({ pageNext: 'next_page_token' }),
 )
 
 /**

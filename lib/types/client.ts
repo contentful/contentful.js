@@ -4,10 +4,12 @@ import type { LocaleCode, LocaleCollection } from './locale.js'
 import type {
   AssetQueries,
   AssetsQueries,
+  AssetsQueriesCursor,
   ConceptAncestorsDescendantsQueries,
   ConceptSchemesQueries,
   ConceptsQueries,
   EntriesQueries,
+  EntriesQueriesCursor,
   EntryQueries,
   EntrySkeletonType,
   TagQueries,
@@ -15,8 +17,13 @@ import type {
 import type { SyncCollection, SyncOptions, SyncQuery } from './sync.js'
 import type { Tag, TagCollection } from './tag.js'
 import type { AssetKey } from './asset-key.js'
-import type { Entry, EntryCollection } from './entry.js'
-import type { Asset, AssetCollection, AssetFields } from './asset.js'
+import type { Entry, EntryCollection, EntryCursorPaginatedCollection } from './entry.js'
+import type {
+  Asset,
+  AssetCollection,
+  AssetCursorPaginatedCollection,
+  AssetFields,
+} from './asset.js'
 import type { Concept, ConceptCollection } from './concept.js'
 import type { ConceptScheme, ConceptSchemeCollection } from './concept-scheme.js'
 
@@ -408,6 +415,36 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   ): Promise<EntryCollection<EntrySkeleton, Modifiers, Locales>>
 
   /**
+   * Fetches a cursor paginated collection of Entries
+   * @param pagination - Object with cursor pagination options
+   * @param query - Object with search parameters
+   * @returns Promise for a cursor paginated collection of Entries
+   * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+   * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/cursor-pagination | REST API cursor pagination reference}
+   * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters | JS SDK tutorial}
+   * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters | REST API reference}
+   * @example
+   * ```typescript
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getEntriesCursor()
+   * console.log(response.items)
+   * ```
+   */
+  getEntriesCursor<
+    EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
+    Locales extends LocaleCode = LocaleCode,
+  >(
+    query?: EntriesQueriesCursor<EntrySkeleton, Modifiers>,
+  ): Promise<EntryCursorPaginatedCollection<EntrySkeleton, Modifiers, Locales>>
+
+  /**
    * Parse raw json data into a collection of entries. objects.Links will be resolved also
    * @param data - json data
    * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
@@ -494,6 +531,30 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
   getAssets<Locales extends LocaleCode = LocaleCode>(
     query?: AssetsQueries<AssetFields, Modifiers>,
   ): Promise<AssetCollection<Modifiers, Locales>>
+
+  /**
+   * Fetches a cursor paginated collection of assets
+   * @param pagination - Object with cursor pagination options
+   * @param query - Object with search parameters
+   * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/cursor-pagination | REST API cursor pagination reference}
+   * @see {@link https://www.contentful.com/developers/docs/javascript/tutorials/using-js-cda-sdk/#retrieving-entries-with-search-parameters | JS SDK tutorial}
+   * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters | REST API reference}
+   * @returns Promise for a cursor paginated collection of Assets
+   * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for asset field values.
+   * @example
+   * const contentful = require('contentful')
+   *
+   * const client = contentful.createClient({
+   *   space: '<space_id>',
+   *   accessToken: '<content_delivery_api_key>'
+   * })
+   *
+   * const response = await client.getAssetsCursor()
+   * console.log(response.items)
+   */
+  getAssetsCursor<Locales extends LocaleCode = LocaleCode>(
+    query?: AssetsQueriesCursor<AssetFields, Modifiers>,
+  ): Promise<AssetCursorPaginatedCollection<Modifiers, Locales>>
 
   /**
    * A client that will fetch assets and entries with all locales. Only available if not already enabled.

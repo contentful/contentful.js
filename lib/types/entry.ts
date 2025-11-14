@@ -1,6 +1,6 @@
 import type { Document as RichTextDocument } from '@contentful/rich-text-types'
 import type { Asset } from './asset.js'
-import type { ContentfulCollection } from './collection.js'
+import type { ContentfulCollection, CursorPaginatedCollection } from './collection.js'
 import type { ContentTypeLink, UnresolvedLink } from './link.js'
 import type { LocaleCode } from './locale.js'
 import type { Metadata } from './metadata.js'
@@ -337,6 +337,26 @@ export type EntryCollection<
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = ContentfulCollection<Entry<EntrySkeleton, Modifiers, Locales>> & {
+  errors?: Array<any>
+  includes?: {
+    Entry?: Entry<EntrySkeletonType, Modifiers, Locales>[]
+    Asset?: Asset<Modifiers, Locales>[]
+  }
+}
+
+/**
+ * A cursor paginated collection of entries
+ * @category Entry
+ * @typeParam EntrySkeleton - Shape of entry fields used to calculate dynamic keys
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for entry field values.
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries | Documentation}
+ */
+export type EntryCursorPaginatedCollection<
+  EntrySkeleton extends EntrySkeletonType,
+  Modifiers extends ChainModifiers = ChainModifiers,
+  Locales extends LocaleCode = LocaleCode,
+> = CursorPaginatedCollection<Entry<EntrySkeleton, Modifiers, Locales>> & {
   errors?: Array<any>
   includes?: {
     Entry?: Entry<EntrySkeletonType, Modifiers, Locales>[]
