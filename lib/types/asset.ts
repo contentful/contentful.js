@@ -1,4 +1,4 @@
-import type { ContentfulCollection } from './collection.js'
+import type { ContentfulCollection, CursorPaginatedCollection } from './collection.js'
 import type { LocaleCode } from './locale.js'
 import type { Metadata } from './metadata.js'
 import type { EntitySys } from './sys.js'
@@ -84,6 +84,18 @@ export type AssetCollection<
   Modifiers extends ChainModifiers = ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = ContentfulCollection<Asset<Modifiers, Locales>>
+
+/**
+ * A cursor paginated collection of assets
+ * @category Asset
+ * @typeParam Modifiers - The chain modifiers used to configure the client. They’re set automatically when using the client chain modifiers.
+ * @typeParam Locales - If provided for a client using `allLocales` modifier, response type defines locale keys for asset field values.
+ * @see {@link https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets | Documentation}
+ */
+export type AssetCursorPaginatedCollection<
+  Modifiers extends ChainModifiers = ChainModifiers,
+  Locales extends LocaleCode = LocaleCode,
+> = CursorPaginatedCollection<Asset<Modifiers, Locales>>
 
 /**
  * System managed metadata for assets
