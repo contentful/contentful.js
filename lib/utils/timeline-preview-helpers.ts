@@ -42,7 +42,8 @@ export const isValidTimelinePreviewConfig = (timelinePreview: TimelinePreview) =
 
 export const getTimelinePreviewParams = (params: CreateClientParams) => {
   const host = params?.host as string
-  const timelinePreview = params?.alphaFeatures?.timelinePreview as TimelinePreview
+  const timelinePreview =
+    params?.timelinePreview ?? (params?.alphaFeatures?.timelinePreview as TimelinePreview)
   const enabled = checkEnableTimelinePreviewIsAllowed(host, timelinePreview)
   return { enabled, timelinePreview }
 }

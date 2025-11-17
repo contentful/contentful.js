@@ -70,15 +70,17 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
   - [Authentication](#authentication)
 - [Documentation \& References](#documentation--references)
   - [Configuration](#configuration)
-    - [Request configuration options](#request-configuration-options)
-    - [Response configuration options](#response-configuration-options)
+      - [Request configuration options](#request-configuration-options)
+      - [Response configuration options](#response-configuration-options)
+  - [Timeline Preview](#timeline-preview)
+      - [Example](#example)
   - [Client chain modifiers](#client-chain-modifiers)
     - [Entries](#entries)
-      - [Example](#example)
-    - [Assets](#assets)
       - [Example](#example-1)
-    - [Sync](#sync)
+    - [Assets](#assets)
       - [Example](#example-2)
+    - [Sync](#sync)
+      - [Example](#example-3)
   - [Reference documentation](#reference-documentation)
   - [Tutorials \& other resources](#tutorials--other-resources)
   - [Troubleshooting](#troubleshooting)
@@ -292,11 +294,9 @@ const client = contentful.createClient({
   accessToken: 'preview_0b7f6x59a0',
   host: 'preview.contentful.com',
   // either release or timestamp or both can be passed as a valid config
-  alphaFeatures: {
-    timelinePreview: {
-      release: { lte: 'black-friday' },
-      timestamp: { lte: '2025-11-29T08:46:15Z' },
-    },
+  timelinePreview: {
+    release: { lte: 'black-friday' },
+    timestamp: { lte: '2025-11-29T08:46:15Z' },
   },
 })
 ```
