@@ -31,8 +31,8 @@
 <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License" />
   </a>
-  <a href="https://circleci.com/gh/contentful/contentful.js">
-    <img src="https://circleci.com/gh/contentful/contentful.js.svg?style=svg" alt="Build Status">
+  <a href="https://github.com/contentful/contentful.js/actions?query=branch%3Amaster">
+    <img src="https://github.com/contentful/contentful.js/actions/workflows/main.yaml/badge.svg">
   </a>
  <a href="https://www.npmjs.com/package/contentful">
     <img src="https://img.shields.io/npm/v/contentful.svg" alt="NPM">
@@ -70,10 +70,10 @@ JavaScript library for the Contentful [Content Delivery API](https://www.content
   - [Authentication](#authentication)
 - [Documentation \& References](#documentation--references)
   - [Configuration](#configuration)
-      - [Request configuration options](#request-configuration-options)
-      - [Response configuration options](#response-configuration-options)
+    - [Request configuration options](#request-configuration-options)
+    - [Response configuration options](#response-configuration-options)
   - [Timeline Preview](#timeline-preview)
-      - [Example](#example)
+    - [Example](#example)
   - [Client chain modifiers](#client-chain-modifiers)
     - [Entries](#entries)
       - [Example](#example-1)
