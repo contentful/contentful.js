@@ -8,7 +8,7 @@ let page: Page
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
-    headless: 'new',
+    headless: true
   })
 })
 
