@@ -8,7 +8,8 @@
     "test": "vitest --run",
     "install:bundle": "cp ../../../dist/contentful.browser.min.js ./public/.",
     "install:browser": "npx puppeteer browser install",
-    "setup-test-env": "npm run install:browser && npm run install:bundle"
+    "setup-puppeteer": "node ./node_modules/puppeteer/install.mjs",
+    "setup-test-env": "npm run setup-puppeteer && npm run install:browser && npm run install:bundle"
   },
   "author": "",
   "license": "ISC",
