@@ -29,6 +29,9 @@ jobs:
       - name: Run linter
         run: npm run lint
 
+      - name: Run checks
+        run: npm run check
+
   prettier:
     runs-on: ubuntu-latest
 
@@ -79,6 +82,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Run demo tests
+        run: npm run test:demo-projects
 
   test-bundle-size:
     runs-on: ubuntu-latest

@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "vitest --run",
-    "preinstall": "npm run install:browser && npm run install:bundle",
     "install:bundle": "cp ../../../dist/contentful.browser.min.js ./public/.",
-    "install:browser": "npx puppeteer browser install"
+    "install:browser": "npx puppeteer browser install",
+    "setup-test-env": "npm run install:browser && npm run install:bundle"
   },
   "author": "",
   "license": "ISC",
