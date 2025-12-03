@@ -1,12 +1,8 @@
 <!--
-Thank you for reporting an issue.
+Thank you for opening a pull request.
 
-Please fill in as much of the template below as you're able. Feel free to delete
+Please fill in as much of the template below as you're able. Feel free to remove
 any section you want to skip.
-
-PLEASE **DO NOT** share any credentials related to your Contentful account like
-<space_id> or <access_token>. If this is an urgent issue you are having with Contentful
-It's better to contact [support@contentful.com](mailto:support@contentful.com).
 -->
 
 ## Summary
@@ -24,14 +20,10 @@ Why is this change required? What problem does it solve?
 If it fixes an open issue, please link to the issue here.
 -->
 
-## Todos
+## PR Checklist
 
-<!--
-In case your PR is not finished yet, feel free to add checkboxes in this section
-to give other people an overview of your current state.
--->
-
--   [x] Implemented feature
--   [ ] Feature with pending implementation
-
-## Screenshots (if appropriate):
+- [ ] I have read the `CONTRIBUTING.md` file
+- [ ] All commits follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [ ] Documentation is updated (if necessary)
+- [ ] PR doesn't contain any sensitive information
+- [ ] There are no breaking changes
