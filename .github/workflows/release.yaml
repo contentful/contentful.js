@@ -73,3 +73,10 @@ jobs:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_TOKEN }}
           # required for browser output-integration tests
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+      - name: Publish Docs
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "Publishing Documentation"
+          npm run docs:publish
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_TOKEN }}

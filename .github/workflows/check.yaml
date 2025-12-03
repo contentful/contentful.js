@@ -80,6 +80,9 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Run demo tests
+        run: npm run test:demo-projects
+
   test-bundle-size:
     runs-on: ubuntu-latest
 
@@ -137,3 +140,6 @@ jobs:
 
       - name: Test TypeScript types
         run: npm run test:types
+
+      - name: Run checks
+        run: npm run check

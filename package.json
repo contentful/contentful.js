@@ -53,7 +53,6 @@
     "build": "npm run clean && npm run build:esm && npm run build:bundles && rm -rf dist/esm-raw",
     "build:esm": "tsc",
     "build:bundles": "NODE_ENV=production rollup -c",
-    "postbuild": "npm run check && npm run test:demo-projects",
     "check": "npm run check:cjs && npm run check:esm && npm run check:browser && npm run check:browser-min",
     "check:browser": "es-check es2018 ./dist/contentful.browser.js",
     "check:browser-min": "es-check es2018 ./dist/contentful.browser.min.js",
@@ -73,12 +72,10 @@
     "test:integration:watch": "vitest ./test/integration",
     "test:size": "size-limit",
     "test:demo-projects": "npm run test:demo-node && npm run test:demo-browser",
-    "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && vitest --run ./test/output-integration/node",
-    "test:demo-browser": "rimraf ./test/output-integration/browser/node-modules && npm --prefix ./test/output-integration/browser ci && npm --prefix ./test/output-integration/browser run test",
+    "test:demo-node": "rimraf ./test/output-integration/node/node-modules && npm --prefix ./test/output-integration/node ci && npm --prefix ./test/output-integration/node test",
+    "test:demo-browser": "rimraf ./test/output-integration/browser/node-modules && npm --prefix ./test/output-integration/browser ci && npm --prefix ./test/output-integration/browser run setup-test-env && npm --prefix ./test/output-integration/browser run test",
     "test:types": "tsd",
     "test:prepush": "npm run build && npm run test:unit && npm run test:types",
-    "prepublishOnly": "export PUBLISH_RUN=true && npm run build && unset PUBLISH_RUN",
-    "postpublish": "npm run docs:publish && npm run clean",
     "semantic-release": "semantic-release",
     "prepare": "husky",
     "precommit": "npm run lint && npm run prettier:check",
@@ -136,7 +133,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
-      "eslint"
+      "eslint --fix"
     ],
     "*.md": [
       "prettier --write"
