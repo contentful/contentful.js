@@ -1,5 +1,10 @@
 import { expectAssignable, expectNotAssignable } from 'tsd'
-import { EntriesQueries, EntrySkeletonType, EntryFieldTypes } from '../../../lib'
+import {
+  EntriesQueries,
+  EntrySkeletonType,
+  EntryFieldTypes,
+  EntriesQueriesWithCursor,
+} from '../../../lib'
 import * as mocks from '../mocks'
 
 // all operator
@@ -605,3 +610,19 @@ expectNotAssignable<
     'WITH_ALL_LOCALES'
   >
 >({ locale: mocks.anyValue })
+
+// cursor pagination options
+
+expectAssignable<EntriesQueriesWithCursor<EntrySkeletonType, undefined>>({})
+expectAssignable<EntriesQueriesWithCursor<EntrySkeletonType, undefined>>({ pageNext: 'page_next' })
+expectAssignable<EntriesQueriesWithCursor<EntrySkeletonType, undefined>>({
+  pagePrev: 'page_prev',
+  limit: 40,
+})
+
+expectNotAssignable<EntriesQueriesWithCursor<EntrySkeletonType, undefined>>({ skip: 20 })
+expectNotAssignable<EntriesQueriesWithCursor<EntrySkeletonType, undefined>>({ pagePrev: 20 })
+expectNotAssignable<EntriesQueriesWithCursor<EntrySkeletonType, undefined>>({
+  pagePrev: 'page_prev',
+  pageNext: 'page_next',
+})
