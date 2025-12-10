@@ -88,6 +88,7 @@
     "contentful-resolve-response": "^1.9.4",
     "contentful-sdk-core": "^9.0.1",
     "json-stringify-safe": "^5.0.1",
+    "tslib": "^2.6.0",
     "type-fest": "^4.0.0"
   },
   "devDependencies": {
