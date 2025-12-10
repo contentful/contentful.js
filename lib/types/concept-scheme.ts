@@ -1,3 +1,4 @@
+import type { CursorPaginatedCollection } from './collection'
 import type { UnresolvedLink } from './link'
 import type { LocaleCode } from './locale'
 
@@ -27,14 +28,6 @@ export interface ConceptScheme<Locales extends LocaleCode> {
   totalConcepts: number
 }
 
-export type ConceptSchemeCollection<Locale extends LocaleCode> = {
-  sys: {
-    type: 'Array'
-  }
-  items: ConceptScheme<Locale>[]
-  limit: number
-  pages?: {
-    prev?: string
-    next?: string
-  }
-}
+export type ConceptSchemeCollection<Locale extends LocaleCode> = CursorPaginatedCollection<
+  ConceptScheme<Locale>
+>

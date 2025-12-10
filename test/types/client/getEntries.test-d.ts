@@ -1,5 +1,11 @@
 import { expectType, expectError } from 'tsd'
-import { createClient, EntryCollection, Entry, EntrySkeletonType } from '../../../lib'
+import {
+  createClient,
+  EntryCollection,
+  Entry,
+  EntrySkeletonType,
+  EntryCursorPaginatedCollection,
+} from '../../../lib'
 
 const client = createClient({
   accessToken: 'accessToken',
@@ -53,6 +59,45 @@ expectType<EntryCollection<TestEntrySkeleton | LinkedSkeleton, undefined>>(
   }),
 )
 
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, undefined>>(
+  await client.getEntriesWithCursor(),
+)
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, undefined>>(
+  await client.getEntriesWithCursor({ limit: 40 }),
+)
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, undefined>>(
+  await client.getEntriesWithCursor({ pageNext: 'next_page_token' }),
+)
+expectType<
+  EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+>(await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor())
+expectType<
+  EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+>(await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor<TestEntrySkeleton>())
+expectType<
+  EntryCursorPaginatedCollection<
+    TestEntrySkeleton,
+    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+    Locale
+  >
+>(
+  await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor<
+    TestEntrySkeleton,
+    Locale
+  >(),
+)
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
+  (await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor()).includes!.Entry![0],
+)
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>>(
+  (
+    await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor<
+      TestEntrySkeleton,
+      Locale
+    >()
+  ).includes!.Entry![0],
+)
+
 /**
  * Without unresolvable Links
  */
@@ -73,6 +118,18 @@ expectType<EntryCollection<TestEntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
 
 expectType<Entry<BaseEntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   (await client.withoutUnresolvableLinks.getEntries()).includes!.Entry![0],
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  await client.withoutUnresolvableLinks.getEntriesWithCursor(),
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  await client.withoutUnresolvableLinks.getEntriesWithCursor<TestEntrySkeleton>(),
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  (await client.withoutUnresolvableLinks.getEntriesWithCursor()).includes!.Entry![0],
 )
 
 /**
@@ -96,6 +153,18 @@ expectType<EntryCollection<TestEntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
 
 expectType<Entry<BaseEntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
   (await client.withoutLinkResolution.getEntries()).includes!.Entry![0],
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
+  await client.withoutLinkResolution.getEntriesWithCursor(),
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
+  await client.withoutLinkResolution.getEntriesWithCursor<TestEntrySkeleton>(),
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITHOUT_LINK_RESOLUTION'>>(
+  (await client.withoutLinkResolution.getEntriesWithCursor()).includes!.Entry![0],
 )
 
 /**
@@ -131,6 +200,27 @@ expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES', Locale>>(
 
 expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES'>>(
   (await client.withAllLocales.getEntries<TestEntrySkeleton>()).includes!.Entry![0],
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES'>>(
+  await client.withAllLocales.getEntriesWithCursor(),
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES'>>(
+  await client.withAllLocales.getEntriesWithCursor<TestEntrySkeleton>(),
+)
+
+expectType<EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES', Locale>>(
+  await client.withAllLocales.getEntriesWithCursor<TestEntrySkeleton, Locale>(),
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES', Locale>>(
+  (await client.withAllLocales.getEntriesWithCursor<TestEntrySkeleton, Locale>()).includes!
+    .Entry![0],
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES'>>(
+  (await client.withAllLocales.getEntriesWithCursor<TestEntrySkeleton>()).includes!.Entry![0],
 )
 
 /**
@@ -172,6 +262,47 @@ expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_L
     .includes!.Entry![0],
 )
 
+expectType<
+  EntryCursorPaginatedCollection<
+    TestEntrySkeleton,
+    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(await client.withAllLocales.withoutUnresolvableLinks.getEntriesWithCursor())
+
+expectType<
+  EntryCursorPaginatedCollection<
+    TestEntrySkeleton,
+    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'
+  >
+>(await client.withAllLocales.withoutUnresolvableLinks.getEntriesWithCursor<TestEntrySkeleton>())
+
+expectType<
+  EntryCursorPaginatedCollection<
+    TestEntrySkeleton,
+    'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS',
+    Locale
+  >
+>(
+  await client.withAllLocales.withoutUnresolvableLinks.getEntriesWithCursor<
+    TestEntrySkeleton,
+    Locale
+  >(),
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  (await client.withAllLocales.withoutUnresolvableLinks.getEntriesWithCursor<TestEntrySkeleton>())
+    .includes!.Entry![0],
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS', Locale>>(
+  (
+    await client.withAllLocales.withoutUnresolvableLinks.getEntriesWithCursor<
+      TestEntrySkeleton,
+      Locale
+    >()
+  ).includes!.Entry![0],
+)
+
 /**
  * With all Locales and without link resolution
  */
@@ -206,4 +337,38 @@ expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTIO
 expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>>(
   (await client.withAllLocales.withoutLinkResolution.getEntries<TestEntrySkeleton, Locale>())
     .includes!.Entry![0],
+)
+
+expectType<
+  EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+>(await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor())
+
+expectType<
+  EntryCursorPaginatedCollection<TestEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>
+>(await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor<TestEntrySkeleton>())
+
+expectType<
+  EntryCursorPaginatedCollection<
+    TestEntrySkeleton,
+    'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION',
+    Locale
+  >
+>(
+  await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor<
+    TestEntrySkeleton,
+    Locale
+  >(),
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
+  (await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor()).includes!.Entry![0],
+)
+
+expectType<Entry<BaseEntrySkeleton, 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION', Locale>>(
+  (
+    await client.withAllLocales.withoutLinkResolution.getEntriesWithCursor<
+      TestEntrySkeleton,
+      Locale
+    >()
+  ).includes!.Entry![0],
 )

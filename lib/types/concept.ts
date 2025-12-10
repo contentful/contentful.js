@@ -1,3 +1,4 @@
+import type { CursorPaginatedCollection } from './collection'
 import type { UnresolvedLink } from './link'
 import type { LocaleCode } from './locale'
 
@@ -64,14 +65,6 @@ export interface Concept<Locales extends LocaleCode> {
   conceptSchemes?: UnresolvedLink<'TaxonomyConceptScheme'>[]
 }
 
-export type ConceptCollection<Locale extends LocaleCode> = {
-  sys: {
-    type: 'Array'
-  }
-  items: Concept<Locale>[]
-  limit: number
-  pages?: {
-    prev?: string
-    next?: string
-  }
-}
+export type ConceptCollection<Locale extends LocaleCode> = CursorPaginatedCollection<
+  Concept<Locale>
+>
