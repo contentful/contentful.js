@@ -10,6 +10,27 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == github.event.pull_request.head.repo.full_name
     steps:
-      - uses: contentful/github-auto-merge@v1
+      - uses: contentful/github-auto-merge@b995e4ecd10bed72105998808b1fe666d6b0892d # v2
+        id: auto-merge
         with:
           VAULT_URL: ${{ secrets.VAULT_URL }}
+
+      # After merge, explicitly trigger CI workflow.
+      # The auto-merge action uses the auto-generated workflow token for the merge,
+      # which by design doesn't trigger push-based workflows (prevents infinite loops).
+      - name: 'Retrieve Secrets from Vault'
+        id: vault
+        uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          role: ${{ github.event.repository.name }}-github-action
+          method: jwt
+          path: github-actions
+          exportEnv: false
+          secrets: |
+            github/token/${{ github.event.repository.name }}-semantic-release token | GITHUB_TOKEN;
+
+      - name: Trigger CI workflow on master
+        run: gh workflow run main.yaml --ref master
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_TOKEN }}
