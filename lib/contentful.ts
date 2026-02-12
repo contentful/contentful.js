@@ -4,7 +4,7 @@
  */
 
 import axios from 'axios'
-import type { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { createHttpClient, getUserAgentHeader } from 'contentful-sdk-core'
 import { createGlobalOptions } from './create-global-options.js'
@@ -76,7 +76,11 @@ export interface CreateClientParams {
   /**
    * Optional axios request adapter (see <a href="https://github.com/mzabriskie/axios#request-config"> axios docs </a>)
    */
-  adapter?: AxiosAdapter
+  adapter?: AxiosRequestConfig['adapter']
+  /**
+   * Axios fetch options
+   */
+  fetchOptions?: AxiosRequestConfig['fetchOptions']
   /**
    * Application name and version e.g myApp/version
    */
