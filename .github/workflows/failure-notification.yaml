@@ -31,11 +31,15 @@ jobs:
 
       - name: Create Issue
         uses: actions/github-script@v7
+        env:
+          WORKFLOW_NAME: ${{ inputs.workflow_name }}
+          JOB_NAME: ${{ inputs.job_name }}
+          FAILURE_REASON: ${{ inputs.failure_reason }}
         with:
           script: |
-            const workflowName = '${{ inputs.workflow_name }}';
-            const jobName = '${{ inputs.job_name }}';
-            const failureReason = '${{ inputs.failure_reason }}';
+            const workflowName = process.env.WORKFLOW_NAME;
+            const jobName = process.env.JOB_NAME;
+            const failureReason = process.env.FAILURE_REASON;
             const runUrl = `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
             const commitSha = context.sha;
             const commitUrl = `${context.payload.repository.html_url}/commit/${commitSha}`;
