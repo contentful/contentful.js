@@ -55,3 +55,29 @@ expectType<ContentfulClientApi<'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'>>(
 expectType<ContentfulClientApi<'WITH_ALL_LOCALES' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
   createClient(CLIENT_OPTIONS).withAllLocales.withoutUnresolvableLinks,
 )
+expectType<ContentfulClientApi<'WITH_LOCALE_BASED_PUBLISHING'>>(
+  createClient(CLIENT_OPTIONS).withLocaleBasedPublishing,
+)
+expectType<never>(createClient(CLIENT_OPTIONS).withLocaleBasedPublishing.withLocaleBasedPublishing)
+
+expectType<ContentfulClientApi<'WITH_LOCALE_BASED_PUBLISHING' | 'WITH_ALL_LOCALES'>>(
+  createClient(CLIENT_OPTIONS).withLocaleBasedPublishing.withAllLocales,
+)
+
+expectType<ContentfulClientApi<'WITH_LOCALE_BASED_PUBLISHING' | 'WITHOUT_LINK_RESOLUTION'>>(
+  createClient(CLIENT_OPTIONS).withLocaleBasedPublishing.withoutLinkResolution,
+)
+
+expectType<ContentfulClientApi<'WITH_LOCALE_BASED_PUBLISHING' | 'WITHOUT_UNRESOLVABLE_LINKS'>>(
+  createClient(CLIENT_OPTIONS).withLocaleBasedPublishing.withoutUnresolvableLinks,
+)
+
+expectType<
+  ContentfulClientApi<
+    'WITH_LOCALE_BASED_PUBLISHING' | 'WITH_ALL_LOCALES' | 'WITHOUT_LINK_RESOLUTION'
+  >
+>(createClient(CLIENT_OPTIONS).withLocaleBasedPublishing.withAllLocales.withoutLinkResolution)
+
+expectType<ContentfulClientApi<'WITH_ALL_LOCALES' | 'WITH_LOCALE_BASED_PUBLISHING'>>(
+  createClient(CLIENT_OPTIONS).withAllLocales.withLocaleBasedPublishing,
+)

@@ -31,6 +31,9 @@ function create<OptionsType extends ChainOptions>(
   Object.defineProperty(response, 'withoutUnresolvableLinks', {
     get: () => makeInnerClient({ ...options, withoutUnresolvableLinks: true }),
   })
+  Object.defineProperty(response, 'withLocaleBasedPublishing', {
+    get: () => makeInnerClient({ ...options, withLocaleBasedPublishing: true }),
+  })
   return Object.create(response) as ContentfulClientApi<ModifiersFromOptions<OptionsType>>
 }
 
@@ -50,6 +53,7 @@ export const makeClient = ({
       withoutLinkResolution: false,
       withAllLocales: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   )
 
@@ -60,6 +64,7 @@ export const makeClient = ({
         withAllLocales: true,
         withoutLinkResolution: false,
         withoutUnresolvableLinks: false,
+        withLocaleBasedPublishing: false,
       })
     },
     get withoutLinkResolution() {
@@ -67,6 +72,7 @@ export const makeClient = ({
         withAllLocales: false,
         withoutLinkResolution: true,
         withoutUnresolvableLinks: false,
+        withLocaleBasedPublishing: false,
       })
     },
     get withoutUnresolvableLinks() {
@@ -74,6 +80,15 @@ export const makeClient = ({
         withAllLocales: false,
         withoutLinkResolution: false,
         withoutUnresolvableLinks: true,
+        withLocaleBasedPublishing: false,
+      })
+    },
+    get withLocaleBasedPublishing() {
+      return makeInnerClient<ChainOption<'WITH_LOCALE_BASED_PUBLISHING'>>({
+        withAllLocales: false,
+        withoutLinkResolution: false,
+        withoutUnresolvableLinks: false,
+        withLocaleBasedPublishing: true,
       })
     },
   }

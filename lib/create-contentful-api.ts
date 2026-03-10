@@ -50,6 +50,7 @@ import validateSearchParameters from './utils/validate-search-parameters.js'
 import { getTimelinePreviewParams } from './utils/timeline-preview-helpers.js'
 import { normalizeCursorPaginationParameters } from './utils/normalize-cursor-pagination-parameters.js'
 import { normalizeCursorPaginationResponse } from './utils/normalize-cursor-pagination-response.js'
+import type { AxiosRequestConfig } from 'axios'
 
 const ASSET_KEY_MAX_LIFETIME = 48 * 60 * 60
 
@@ -230,6 +231,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   ) {
     const { withAllLocales } = options
@@ -280,6 +282,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   ) {
     const { withAllLocales } = options
@@ -318,14 +321,21 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
   ): Promise<
     CollectionForQuery<Entry<EntrySkeleton, ModifiersFromOptions<Options>, Locales>, Query>
   > {
-    const { withoutLinkResolution, withoutUnresolvableLinks } = options
+    const { withoutLinkResolution, withoutUnresolvableLinks, withLocaleBasedPublishing } = options
     try {
+      const baseConfig = createRequestConfig({
+        query: prepareQuery(query),
+      })
+      const config: AxiosRequestConfig = baseConfig
+      if (withLocaleBasedPublishing) {
+        config.headers = {
+          'X-Contentful-Locale-Based-Publishing': true,
+        }
+      }
       const entries = await get({
         context: 'environment',
         path: maybeEnableTimelinePreview('entries'),
-        config: createRequestConfig({
-          query: prepareQuery(query),
-        }),
+        config,
       })
 
       return resolveCircular(entries, {
@@ -358,6 +368,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   ) {
     const { withAllLocales } = options
@@ -367,18 +378,32 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAssets<any, Extract<ChainOptions, typeof options>, Query>(localeSpecificQuery)
+    return internalGetAssets<any, Extract<ChainOptions, typeof options>, Query>(
+      localeSpecificQuery,
+      options,
+    )
   }
 
   async function internalGetAsset<Locales extends LocaleCode, Options extends ChainOptions>(
     id: string,
     query: Record<string, any>,
+    options: Options,
   ): Promise<Asset<ModifiersFromOptions<Options>, Locales>> {
+    const { withLocaleBasedPublishing } = options
     try {
+      const baseConfig = createRequestConfig({
+        query: prepareQuery(query),
+      })
+      const config: AxiosRequestConfig = baseConfig
+      if (withLocaleBasedPublishing) {
+        config.headers = {
+          'X-Contentful-Locale-Based-Publishing': true,
+        }
+      }
       return get({
         context: 'environment',
         path: maybeEnableTimelinePreview(`assets/${id}`),
-        config: createRequestConfig({ query: prepareQuery(query) }),
+        config,
       })
     } catch (error) {
       errorHandler(error)
@@ -392,6 +417,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   ) {
     const { withAllLocales } = options
@@ -401,7 +427,11 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
 
     const localeSpecificQuery = withAllLocales ? { ...query, locale: '*' } : query
 
-    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(id, localeSpecificQuery)
+    return internalGetAsset<any, Extract<ChainOptions, typeof options>>(
+      id,
+      localeSpecificQuery,
+      options,
+    )
   }
 
   async function internalGetAssets<
@@ -410,14 +440,23 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
     Query extends Record<string, any>,
   >(
     query: Query,
+    options: Options,
   ): Promise<CollectionForQuery<Asset<ModifiersFromOptions<Options>, Locales>, Query>> {
+    const { withLocaleBasedPublishing } = options
     try {
+      const baseConfig = createRequestConfig({
+        query: prepareQuery(query),
+      })
+      const config: AxiosRequestConfig = baseConfig
+      if (withLocaleBasedPublishing) {
+        config.headers = {
+          'X-Contentful-Locale-Based-Publishing': true,
+        }
+      }
       return get({
         context: 'environment',
         path: maybeEnableTimelinePreview('assets'),
-        config: createRequestConfig({
-          query: prepareQuery(query),
-        }),
+        config,
       })
     } catch (error) {
       errorHandler(error)
@@ -481,6 +520,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   ) {
     validateResolveLinksParam(query)
@@ -508,6 +548,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       withAllLocales: false,
       withoutLinkResolution: false,
       withoutUnresolvableLinks: false,
+      withLocaleBasedPublishing: false,
     },
   ) {
     return internalParseEntries<EntrySkeleton, any, Extract<ChainOptions, typeof options>>(
