@@ -329,6 +329,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const config: AxiosRequestConfig = baseConfig
       if (withLocaleBasedPublishing) {
         config.headers = {
+          ...config.headers,
           'X-Contentful-Locale-Based-Publishing': true,
         }
       }
@@ -397,6 +398,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const config: AxiosRequestConfig = baseConfig
       if (withLocaleBasedPublishing) {
         config.headers = {
+          ...config.headers,
           'X-Contentful-Locale-Based-Publishing': true,
         }
       }
@@ -450,6 +452,7 @@ export default function createContentfulApi<OptionType extends ChainOptions>(
       const config: AxiosRequestConfig = baseConfig
       if (withLocaleBasedPublishing) {
         config.headers = {
+          ...config.headers,
           'X-Contentful-Locale-Based-Publishing': true,
         }
       }
