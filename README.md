@@ -340,12 +340,13 @@ When initialising a client, you will receive an instance of the [`ContentfulClie
 
 #### Entries
 
-| Chain                      | Modifier                                                                                                                                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _none (default)_           | Returns entries in a single locale. Resolvable linked entries will be inlined while unresolvable links will be kept as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
-| `withAllLocales`           | Returns entries in all locales.                                                                                                                                                                  |
-| `withoutLinkResolution`    | All linked entries will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution)                                                                                 |
-| `withoutUnresolvableLinks` | If linked entries are not resolvable, the corresponding link objects are removed from the response.                                                                                              |
+| Chain                       | Modifier                                                                                                                                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _none (default)_            | Returns entries in a single locale. Resolvable linked entries will be inlined while unresolvable links will be kept as link objects. [Read more on link resolution](ADVANCED.md#link-resolution) |
+| `withAllLocales`            | Returns entries in all locales.                                                                                                                                                                  |
+| `withoutLinkResolution`     | All linked entries will be rendered as link objects. [Read more on link resolution](ADVANCED.md#link-resolution)                                                                                 |
+| `withoutUnresolvableLinks`  | If linked entries are not resolvable, the corresponding link objects are removed from the response.                                                                                              |
+| `withLocaleBasedPublishing` | Fetched entries & assets will be returned with only content from published locales.                                                                                                              |
 
 ##### Example
 
