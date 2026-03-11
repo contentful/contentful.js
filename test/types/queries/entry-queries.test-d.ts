@@ -213,6 +213,7 @@ expectAssignable<
   'metadata.tags.sys.id[in]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[in]': mocks.stringArrayValue,
   'sys.updatedAt[in]': mocks.dateArrayValue,
+  'sys.contentType.sys.id[in]': mocks.stringArrayValue,
 })
 expectNotAssignable<
   EntriesQueries<
@@ -405,6 +406,7 @@ expectAssignable<
   'metadata.tags.sys.id[nin]': mocks.stringArrayValue,
   'metadata.concepts.sys.id[nin]': mocks.stringArrayValue,
   'sys.updatedAt[nin]': mocks.dateArrayValue,
+  'sys.contentType.sys.id[nin]': mocks.stringArrayValue,
 })
 expectNotAssignable<
   EntriesQueries<
