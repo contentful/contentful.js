@@ -19,7 +19,7 @@ import type { TimelinePreview } from './types/timeline-preview.js'
 /**
  * @category Client
  */
-export type ClientLogLevel = 'error' | 'warning' | 'info' | string
+export type ClientLogLevel = 'error' | 'warning' | 'info' | 'asdf' | string
 
 /**
  * Client initialization parameters
