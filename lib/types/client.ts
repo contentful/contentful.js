@@ -36,6 +36,7 @@ export type ChainModifiers =
   | 'WITH_ALL_LOCALES'
   | 'WITHOUT_LINK_RESOLUTION'
   | 'WITHOUT_UNRESOLVABLE_LINKS'
+  | 'WITH_LOCALE_BASED_PUBLISHING'
   | undefined
 
 /**
@@ -580,6 +581,10 @@ export interface ContentfulClientApi<Modifiers extends ChainModifiers> {
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
       ? never
       : ContentfulClientApi<AddChainModifier<Modifiers, 'WITHOUT_UNRESOLVABLE_LINKS'>>
+
+  withLocaleBasedPublishing: 'WITH_LOCALE_BASED_PUBLISHING' extends Modifiers
+    ? never
+    : ContentfulClientApi<AddChainModifier<Modifiers, 'WITH_LOCALE_BASED_PUBLISHING'>>
 
   /**
    * The current Contentful.js version

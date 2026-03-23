@@ -16,6 +16,11 @@ export type ChainOption<Modifiers extends ChainModifiers = ChainModifiers> = {
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
       ? true
       : false
+  withLocaleBasedPublishing: ChainModifiers extends Modifiers
+    ? boolean
+    : 'WITH_LOCALE_BASED_PUBLISHING' extends Modifiers
+      ? true
+      : false
 }
 
 export type DefaultChainOption = ChainOption<undefined>
