@@ -1,7 +1,7 @@
 import type { AssetDetails, AssetFile, AssetMimeType, AssetSys } from '../asset.js'
 import type { ChainModifiers } from '../client.js'
 import type { EntrySys } from '../entry.js'
-import type { TagLink, TaxonomyConceptLink } from '../link.js'
+import type { ContentTypeLink, TagLink, TaxonomyConceptLink } from '../link.js'
 import type { Metadata } from '../metadata.js'
 import type { TagSys } from '../tag.js'
 import type {
@@ -72,6 +72,13 @@ export type SysQueries<Sys extends FieldsType> = ExistenceFilter<Sys, 'sys'> &
   RangeFilters<Sys, 'sys'>
 
 /**
+ * All queries applicable to sys contentType field
+ */
+export type SysContentTypeQueries =
+  | ConditionalListQueries<Pick<ContentTypeLink, 'id'>, any, 'sys.contentType.sys', '[in]'>
+  | ConditionalListQueries<Pick<ContentTypeLink, 'id'>, any, 'sys.contentType.sys', '[nin]'>
+
+/**
  * All queries applicable to metadata tags fields
  */
 export type MetadataTagsQueries =
@@ -124,6 +131,7 @@ export type EntriesQueries<
   | (EntryFieldsQueries<EntrySkeleton['fields']> &
       EntryContentTypeQuery<EntrySkeleton['contentTypeId']>)
   | ((SysQueries<Pick<EntrySys, 'createdAt' | 'updatedAt' | 'revision' | 'id' | 'type'>> &
+      SysContentTypeQueries &
       MetadataTagsQueries &
       MetadataConceptsQueries &
       EntrySelectFilter &
