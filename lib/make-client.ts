@@ -7,7 +7,6 @@ import type {
   ModifiersFromOptions,
 } from './utils/client-helpers.js'
 import type { ContentfulClientApi } from './types/index.js'
-import type { ChainModifiers } from './types/client.js'
 
 /**
  * Wraps an async method with error handling to invoke logHandler on errors
@@ -30,9 +29,9 @@ function wrapAsyncMethod(
  * Creates an error boundary around all async API methods in the client
  */
 function withErrorBoundary(
-  client: ContentfulClientApi<any>,
+  client: ContentfulClientApi<undefined>,
   logHandler: (level: string, data: any) => void,
-): ContentfulClientApi<any> {
+): ContentfulClientApi<undefined> {
   // List of all async methods that should be wrapped with error handling
   // Note: parseEntries is NOT async, so it's not included
   const asyncMethods = [
@@ -62,14 +61,14 @@ function withErrorBoundary(
   const wrappedMethods: any = {}
 
   for (const methodName of asyncMethods) {
-    const originalMethod = client[methodName as keyof ContentfulClientApi<any>]
+    const originalMethod = client[methodName as keyof ContentfulClientApi<undefined>]
     if (typeof originalMethod === 'function') {
       wrappedMethods[methodName] = wrapAsyncMethod(originalMethod as any, logHandler)
     }
   }
 
   // Return client with wrapped methods, preserving non-wrapped methods
-  return Object.assign({}, client, wrappedMethods) as ContentfulClientApi<any>
+  return Object.assign({}, client, wrappedMethods) as ContentfulClientApi<undefined>
 }
 
 function create<OptionsType extends ChainOptions>(
