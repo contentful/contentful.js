@@ -1,109 +1,139 @@
-<!-- shared header  START -->
+# Contributing
 
-<p align="center">
-  <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/">
-    <img alt="Contentful Logo" title="Contentful" src="images/contentful-icon.png" width="150">
-  </a>
-</p>
+## Prerequisites
 
-<h1 align='center'>Content Delivery API</h1>
+| Tool | Version | Notes |
+|---|---|---|
+| Node.js | 18+ | CI runs on Node 24; local dev works on 18+ |
+| npm | latest | `npm install -g npm@latest` |
 
-<h3 align="center">Contributing</h3>
+## Getting Started
 
-<p align="center">
-  <a href="README.md">Readme</a> · 
-  <a href="MIGRATION.md">Migration</a> · 
-  <a href="ADVANCED.md">Advanced</a> · 
-  <a href="TYPESCRIPT.md">Typescript</a> · 
-  <a href="CONTRIBUTING.md">Contributing</a>
-</p>
+```bash
+# Clone and install
+git clone git@github.com:contentful/contentful.js.git
+cd contentful.js
+npm ci
 
-<p align="center">
-  <a href="https://www.contentful.com/slack/">
-    <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
-  </a>
-</p>
+# Build (required before running tests)
+npm run build
 
-<!-- shared header  END -->
+# Run all tests
+npm test
+```
 
-<p align="center">
-  <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600" alt="PRs Welcome">
-  </a>
-  &nbsp;
-  <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?maxAge=31557600" alt="Semantic Release">
-  </a>
-  &nbsp;
-  <a href="http://standardjs.com/">
-    <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?maxAge=31557600" alt="JS Standard Style">
-  </a>
-</p>
+## Development Workflow
 
-We appreciate any community contributions to this project, whether in the form of issues or pull requests.
+```bash
+# Build ESM output only (faster iteration)
+npm run build:esm
 
-This document outlines what we'd like you to follow in terms of commit messages and code style.
+# Run unit tests in watch mode
+npm run test:unit:watch
 
-It also explains what to do in case you want to set up the project locally and run tests.
+# Run integration tests in watch mode
+npm run test:integration:watch
 
-**Working on your first Pull Request?** You can learn how from this extensive [list of resources for people who are new to contributing to Open Source](https://github.com/freeCodeCamp/how-to-contribute-to-open-source).
+# Lint
+npm run lint
 
-## Setup
+# Format
+npm run prettier
+```
 
-This project is written in ES2015 and transpiled to ES5 using Babel, to the `dist` directory. This should generally only happen at publishing time, or for testing purposes only.
+### Full build pipeline
 
-Run `npm install` to install all necessary dependencies. When running `npm install` locally, `dist` is not compiled.
+```bash
+npm run build    # clean → tsc → rollup (CJS + browser bundles)
+npm run check    # es-check on all output formats (ES2017/ES2018 compliance)
+```
 
-All necessary dependencies are installed under `node_modules` and any necessary tools can be accessed via npm scripts. There is no need to install anything globally.
+## Testing
 
-When importing local, in development code, via `index.js`, this file checks if `dist` exists and uses that. Otherwise, it uses the code from `lib`.
+- **Framework:** Vitest
+- **Location:** `test/unit/`, `test/integration/`, `test/types/`
+- **Run all:** `npm test` (unit + integration + lint + type tests)
+- **Run unit only:** `npm run test:unit`
+- **Run integration only:** `npm run test:integration`
+- **Watch mode:** `npm run test:unit:watch`
+- **Type tests:** `npm run test:types` (uses `tsd`)
+- **Bundle size:** `npm run test:size` (uses `size-limit`)
+- **Output integration:** `npm run test:demo-projects` (Node + browser demo projects)
 
-If you have a `dist` directory, run `npm run clean`.
+### Test structure
 
-## Useful npm scripts
+```
+test/
+├── unit/           Unit tests (mocked HTTP)
+├── integration/    Integration tests (mocked CDA responses)
+├── types/          Type assertion tests (tsd)
+└── output-integration/
+    ├── node/       Verifies the built package works in a Node project
+    └── browser/    Verifies the built package works in a browser project
+```
 
-- `npm run clean` removes any built files
-- `npm run build:dev` builds vendored files, node package and browser version
-- `npm run build:prod` builds production-ready minified sources
-- `npm run build` combines `clean`, `build:dev` and `build:prod`
-- `npm run build:types` emits type declaration files for js files
+## Commit Convention
 
-## Running tests
+This repo uses [Conventional Commits](https://www.conventionalcommits.org/) enforced by commitizen:
 
-This project has unit and integration tests, as well as tests checking types. All of these run on both Node.js and browser environments.
+```
+type(scope): description
+```
 
-Both of these test environments are setup to deal with Babel and code transpiling, so there's no need to worry about that.
+Valid types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`, `ci`, `build`, `revert`
 
-- `npm run test:unit` runs Node.js unit tests
-- `npm run test:integration` runs the integration tests against the Contentful CDA API
-- `npm run test:types` runs type checking tests
-- `npm test` runs linting on the test code and runs all three kinds of tests
-- `test:demo-node` runs a Node.js demo application and its tests, making sure that Node.js builds are functioning and are bundled correctly
-- `test:demo-browser` runs a browser client demo application and its tests, making sure that browser builds are functioning and are bundled correctly
-- `test:demo-projects` runs both Node.js and browser application tests
+Examples:
+```
+feat: add cursor-based pagination for entries
+fix(deps): bump axios to address CVE-2026-40175
+build(deps): bump contentful-sdk-core and qs deps
+docs: update migration guide for v11
+```
 
-## Documentation
+A pre-commit hook runs lint-staged (prettier + eslint) via husky.
 
-Code is documented using TypeDoc, and reference documentation is published automatically with each new version.
+## Branch Strategy
 
-- `npm run docs:watch` watches code directory, and rebuilds documentation when anything changes. Useful for documentation writing and development
-- `npm run docs:build` builds documentation
-- `npm run docs:publish` builds documentation and publishes it to github pages
+- `master` — production; semantic-release on every push
+- `next` — pre-release channel (when active)
+- Feature branches — `feat/<name>`, `fix/<name>`, `chore/<name>`
 
-## Code style
+## Release Process
 
-This project uses ESLint configuration from [standard](https://github.com/feross/standard). Install a relevant editor plugin if you'd like.
+Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release):
 
-Everywhere where it isn't applicable, follow a style similar to the existing code.
+1. Push/merge to `master`
+2. CI runs build + all checks
+3. If passing, semantic-release determines version from commit history:
+   - `fix` → patch
+   - `feat` → minor
+   - `BREAKING CHANGE` / `feat!` → major
+   - `build(deps)` → patch
+4. Publishes to npm, creates GitHub release, updates CHANGELOG.md
+5. Publishes TypeDoc API documentation
 
-## Commit messages and issues
+**You do not manually bump versions, create tags, or publish.** The commit type determines everything.
 
-This project uses the [Angular JS Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit), via semantic-release. See the semantic-release [commit message format](https://github.com/semantic-release/semantic-release#commit-message-format) section for more details.
+Pre-releases are published from the `next` branch when active.
 
-## Versioning
+## Pull Requests
 
-This project strictly follows [Semantic Versioning](http://semver.org/) by use of [semantic-release](https://github.com/semantic-release/semantic-release).
+- All tests must pass (CI runs on every push and PR)
+- Husky pre-commit hook runs lint-staged (prettier + eslint)
+- Squash merge to master is standard
+- Bundle size is checked in CI via `size-limit`
 
-This means that new versions are released automatically as fixes, features or breaking changes are released.
+## CI/CD
 
-You can check the changelog on the [releases](https://github.com/contentful/contentful.js/releases) page.
+| Job | Trigger | What it does |
+|---|---|---|
+| `build` | Push, PR | `npm ci` → `npm run build` → cache dist/ |
+| `lint` | Push, PR | ESLint |
+| `prettier` | Push, PR | Prettier format check |
+| `test` | Push, PR | Vitest (unit + integration) + demo projects |
+| `test-bundle-size` | Push, PR | size-limit check |
+| `test-types` | Push, PR | tsd type tests + es-check |
+| `release` | Push to master/next | semantic-release → npm publish + docs |
+| `codeql` | Scheduled | Security scanning |
+
+All workflows live in `.github/workflows/`. The main pipeline is orchestrated by `main.yaml` which calls `build.yaml`, `check.yaml`, and `release.yaml` as reusable workflows.
