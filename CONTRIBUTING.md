@@ -122,6 +122,7 @@ Pre-releases are published from the `next` branch when active.
 - Husky pre-commit hook runs lint-staged (prettier + eslint)
 - Squash merge to master is standard
 - Bundle size is checked in CI via `size-limit`
+- Bito automated review runs on every PR using `.bito/guidelines/` as its ruleset
 
 ## CI/CD
 
@@ -134,6 +135,6 @@ Pre-releases are published from the `next` branch when active.
 | `test-bundle-size` | Push, PR | size-limit check |
 | `test-types` | Push, PR | tsd type tests + es-check |
 | `release` | Push to master/next | semantic-release → npm publish + docs |
-| `codeql` | Scheduled | Security scanning |
+| `codeql` | Push/PR (`.github/workflows/**` changes only) | GitHub Actions workflow security scanning |
 
 All workflows live in `.github/workflows/`. The main pipeline is orchestrated by `main.yaml` which calls `build.yaml`, `check.yaml`, and `release.yaml` as reusable workflows.

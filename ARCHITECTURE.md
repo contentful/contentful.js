@@ -103,7 +103,7 @@ createClient({ ..., includeContentSourceMaps: true })
 ```
 client.sync({ initial: true })
     → GET /sync?initial=true
-    → paged-sync.ts handles pagination via nextPageUrl
+    → paged-sync.ts extracts sync_token from nextPageUrl/nextSyncUrl and paginates until complete
     → returns { entries, assets, deletedEntries, deletedAssets, nextSyncToken }
 
 client.sync({ nextSyncToken })
