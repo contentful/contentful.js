@@ -194,8 +194,7 @@ This is a client-side library — there is no server-side infrastructure to moni
 - **GitHub Issues** — primary signal for consumer-reported bugs and regressions
 - **Dependabot alerts** — GitHub security tab on this repo; high/critical alerts should be addressed promptly
 - **CI status** — all merges to `master` and `next` run the full pipeline; a failing release job is the closest equivalent to a prod incident
-
-> [NEEDS TEAM INPUT] — Are there internal dashboards (e.g. Datadog, Grafana) tracking SDK error rates or API call volumes from contentful.js consumers?
+- **Datadog** — internal dashboards for SDK error rates and API call volumes from contentful.js consumers
 
 ### Incident Playbook
 
@@ -207,4 +206,4 @@ For a library, "incidents" are typically bad releases or critical CVEs. First-re
 4. **Publish a fix** — commit a `fix:` (patch) or `fix!:` (major, breaking) and merge to `master`
 5. **Notify consumers** — post in the Contentful Community Slack and update the GitHub release notes
 
-> [NEEDS TEAM INPUT] — Is there an on-call rotation or escalation path for critical SDK regressions? Who owns the npm publish credentials?
+**Escalation:** Reach the on-call engineer via the internal `#prd-ecosystem-developer-experience` Slack channel. For customer-reported issues, raise a customer support request through the standard support process.
