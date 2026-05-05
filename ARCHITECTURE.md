@@ -206,4 +206,4 @@ For a library, "incidents" are typically bad releases or critical CVEs. First-re
 4. **Publish a fix** — commit a `fix:` (patch) or `fix!:` (major, breaking) and merge to `master`
 5. **Notify consumers** — post in the Contentful Community Slack and update the GitHub release notes
 
-**Escalation:** Reach the on-call engineer via the internal `#prd-ecosystem-developer-experience` Slack channel. For customer-reported issues, raise a customer support request through the standard support process.
+**Escalation:** Reach the on-call engineer via the internal [internal-channel] Slack channel. For customer-reported issues, raise a customer support request through the standard support process.
