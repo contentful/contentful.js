@@ -127,6 +127,12 @@
     "typescript-eslint": "^8.55.0",
     "vitest": "^3.2.4"
   },
+  "overrides": {
+    "lodash": ">=4.18.0",
+    "lodash-es": ">=4.18.0",
+    "picomatch": ">=4.0.4",
+    "tmp": ">=0.2.4"
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
