@@ -102,7 +102,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-terser": "^1.0.0",
     "@semantic-release/changelog": "^6.0.1",
     "@size-limit/file": "^11.1.6",
     "@types/json-stringify-safe": "^5.0.0",
