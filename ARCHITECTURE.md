@@ -10,7 +10,7 @@ contentful.js is a typed JavaScript/TypeScript client for the Contentful Content
 graph TD
     App[Customer Application] --> SDK[contentful.js]
     SDK --> CDA[Contentful CDA / CPA]
-    SDK --> CSM[@contentful/content-source-maps]
+    SDK --> CSM["@contentful/content-source-maps"]
     SDK --> Core[contentful-sdk-core]
     SDK --> Resolve[contentful-resolve-response]
     Core --> Axios[axios]
