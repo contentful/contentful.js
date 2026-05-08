@@ -592,3 +592,7 @@ This repository is published under the [MIT](LICENSE) license.
 We want to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status, body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
 
 [Read our full Code of Conduct](https://www.contentful.com/developers/code-of-conduct/).
+
+## For AI Agents
+
+If you are an AI coding agent working in this repository, read [AGENTS.md](./AGENTS.md) first. It tells you where to find architectural context, development setup, decision records, and repo-specific rules.

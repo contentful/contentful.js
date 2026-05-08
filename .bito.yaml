@@ -1,0 +1,17 @@
+suggestion_mode: comprehensive
+post_description: true
+post_changelist: true
+exclude_files: 'package-lock.json'
+exclude_draft_pr: false
+secret_scanner_feedback: true
+linters_feedback: true
+repo_level_guidelines_enabled: true
+sequence_diagram_enabled: true
+custom_guidelines:
+  general:
+    - name: 'Review Posture'
+      path: './.bito/guidelines/review-posture.txt'
+    - name: 'Repo Truth And Alignment'
+      path: './.bito/guidelines/repo-truth-and-boundaries.txt'
+    - name: 'Domain Invariants'
+      path: './.bito/guidelines/domain-invariants.txt'
