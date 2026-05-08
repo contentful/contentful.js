@@ -1,0 +1,7 @@
+Use the repository's written documentation as review context and check whether the change matches the documented intent.
+- Start from README.md, ARCHITECTURE.md, AGENTS.md, CONTRIBUTING.md, and docs/ADRs/ for architectural context.
+- Check whether code, tests, and documentation all tell the same story. Flag mismatches between implementation and the documented architecture or ADRs.
+- Treat AGENTS.md as the authoritative guide for sharp edges and invariants. If a change violates an invariant documented there (e.g., directly modifying the axios instance, referencing dist/esm-raw/ in exports), flag it.
+- If CI or another required check already enforces a merge rule, do not ask for duplicate PR template sections or manual checklists.
+- Ask for an ADR update when a change is architecture-significant (new dependency, new export format, new API surface, new build output).
+- Distinguish the current public API (ContentfulClientApi, CreateClientParams, exported types from lib/types/) from internal implementation details. Public type changes require extra scrutiny — they affect downstream TypeScript consumers.

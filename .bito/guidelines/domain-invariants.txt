@@ -1,0 +1,26 @@
+Focus extra scrutiny on these areas specific to contentful.js:
+
+Bundle size and build output:
+- size-limit enforces 85KB (browser) and 45KB (browser.min) limits. Any new dependency or significant code addition should be evaluated for bundle impact.
+- es-check validates output targets: ES2017 for CJS/ESM, ES2018 for browser bundles. If build config changes, verify es-check still passes.
+- dist/esm-raw/ is intermediate Rollup input. Never reference it in exports, imports, or documentation as a consumable path.
+- The __VERSION__ placeholder is replaced at Rollup build time. Code that reads it at test time without a build will get undefined.
+
+HTTP and networking:
+- All HTTP configuration flows through contentful-sdk-core's createHttpClient. Never construct axios instances directly or modify the shared instance.
+- Rate limiting and retry logic live in contentful-sdk-core, not here. Changes to retry behavior require a sdk-core version bump.
+- axios is a shared dependency across the SDK family. Version changes must be coordinated with contentful-sdk-core.
+
+Type safety:
+- The tsd type tests in test/types/ are the authoritative gate for TypeScript compatibility. Unit tests do not catch type regressions.
+- Public types (ContentfulClientApi, Entry, Asset, Collection, etc.) are consumed by thousands of projects. Breaking changes need major version bumps.
+- Generic type parameters (e.g., Entry<T>) must remain backward-compatible — existing consumers depend on inference behavior.
+
+Link resolution:
+- Link resolution is handled entirely by contentful-resolve-response (a separate package). Do not duplicate resolution logic in this repo.
+- The resolveLinks/removeUnresolved options control whether resolution runs. Both have validation in validate-params.ts.
+
+Content Source Maps:
+- Only works with the Content Preview API (preview.contentful.com). The CDA does not support it.
+- CSM modifies string values by appending hidden characters. Code that does strict string equality or length checks on field values may break if CSM is enabled.
+- The @contentful/content-source-maps package handles encoding/decoding. Changes to CSM behavior likely need changes in that package, not here.
