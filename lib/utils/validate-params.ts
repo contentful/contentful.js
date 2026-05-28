@@ -87,7 +87,10 @@ export function checkEnableTimelinePreviewIsAllowed(
 
   const isValidConfig = isValidTimelinePreviewConfig(timelinePreview)
 
-  const isValidHost = typeof host === 'string' && host.startsWith('preview')
+  // Show error if used outside of CPA.
+  // Opt-out of the error if a custom domain is used and CPA could not be idenfified
+  const isValidHost =
+    typeof host === 'string' && (!host.includes('contentful') || host.startsWith('preview'))
 
   if (isValidConfig && !isValidHost) {
     throw new ValidationError(
