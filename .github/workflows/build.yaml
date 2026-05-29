@@ -26,17 +26,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # required for browser output-integration tests
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v2
-        with:
-          install-chromedriver: true
-
       - name: Build
         run: npm run build
-        env:
-          # required for browser output-integration tests
-          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
 
       - name: Save Build folders
         uses: actions/cache/save@v4
