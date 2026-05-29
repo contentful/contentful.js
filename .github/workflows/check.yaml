@@ -81,8 +81,18 @@ jobs:
       - name: Run tests
         run: npm test
 
+      # required for browser output-integration tests
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v2
+        id: chrome
+        with:
+          install-chromedriver: true
+
       - name: Run demo tests
         run: npm run test:demo-projects
+        env:
+          # required for browser output-integration tests
+          PUPPETEER_EXECUTABLE_PATH: ${{ steps.chrome.outputs.chrome-path }}
 
   test-bundle-size:
     runs-on: ubuntu-latest
