@@ -104,4 +104,13 @@ describe('checkEnableTimelinePreviewIsAllowed', () => {
     expect(checkEnableTimelinePreviewIsAllowed('my-proxy.example.com', validRelease)).toBe(true)
     expect(checkEnableTimelinePreviewIsAllowed('localhost', validTimestamp)).toBe(true)
   })
+
+  it('opts out of host validation for custom proxy hosts whose name contains "contentful" as a substring', () => {
+    expect(
+      checkEnableTimelinePreviewIsAllowed(
+        'pers-api-contentful-proxy-preview.np.gke.telus.digital',
+        validRelease,
+      ),
+    ).toBe(true)
+  })
 })
