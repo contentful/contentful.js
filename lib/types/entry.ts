@@ -165,6 +165,22 @@ export type BaseFieldMap<Field extends EntryFieldType<EntrySkeletonType>> =
                     : never
 
 /**
+ * Resolves a (possibly union) linked-entry skeleton into the corresponding
+ * `Entry` type, distributing over the union so that `EntryLink<A | B>` becomes
+ * `Entry<A> | Entry<B>` instead of collapsing `fields` to the keys common to
+ * every member. `Entry` itself is intentionally non-distributive to remain
+ * inferrable in `getEntry`/`getEntries`, so distribution is applied here at the
+ * link-resolution boundary where the linked skeleton is already known.
+ * @category Entry
+ * @internal
+ */
+export type DistributiveEntry<
+  EntrySkeleton extends EntrySkeletonType,
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+> = EntrySkeleton extends EntrySkeletonType ? Entry<EntrySkeleton, Modifiers, Locales> : never
+
+/**
  * A single resolved link to another entry in the same space
  * If the current client configuration includes `withoutLinkResolution` chain option,
  * the returned type will not resolve linked entities, but keep them as objects
@@ -181,12 +197,12 @@ export type ResolvedEntryLink<
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType,
 > = ChainModifiers extends Modifiers
-  ? Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'> | undefined
+  ? DistributiveEntry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'> | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? UnresolvedLink<'Entry'>
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-      ? Entry<LinkedEntry, Modifiers, Locales> | undefined
-      : Entry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'>
+      ? DistributiveEntry<LinkedEntry, Modifiers, Locales> | undefined
+      : DistributiveEntry<LinkedEntry, Modifiers, Locales> | UnresolvedLink<'Entry'>
 
 /**
  * A single resolved reference link to another entry in a different space
@@ -205,12 +221,12 @@ export type ResolvedEntryResourceLink<
   Locales extends LocaleCode,
   LinkedEntry extends EntrySkeletonType,
 > = ChainModifiers extends Modifiers
-  ? Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink } | undefined
+  ? DistributiveEntry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink } | undefined
   : 'WITHOUT_LINK_RESOLUTION' extends Modifiers
     ? { sys: ResourceLink }
     : 'WITHOUT_UNRESOLVABLE_LINKS' extends Modifiers
-      ? Entry<LinkedEntry, Modifiers, Locales> | undefined
-      : Entry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink }
+      ? DistributiveEntry<LinkedEntry, Modifiers, Locales> | undefined
+      : DistributiveEntry<LinkedEntry, Modifiers, Locales> | { sys: ResourceLink }
 
 /**
  * A single resolved link to another asset
