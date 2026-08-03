@@ -151,6 +151,14 @@
       "limit": "45 Kb"
     }
   ],
+  "overrides": {
+    "lodash": ">= 4.18.0",
+    "serialize-javascript": ">= 7.0.5",
+    "picomatch": ">= 4.0.4",
+    "micromatch": {
+      "picomatch": "2.3.2"
+    }
+  },
   "release": {
     "branches": [
       "master",
