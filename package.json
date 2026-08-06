@@ -118,7 +118,7 @@
     "process": "^0.11.10",
     "rimraf": "^6.0.0",
     "rollup": "^4.13.0",
-    "rollup-plugin-visualizer": "^5.12.0",
+    "rollup-plugin-visualizer": "^7.0.0",
     "semantic-release": "^25.0.3",
     "size-limit": "^11.1.6",
     "tsd": "^0.33.0",
