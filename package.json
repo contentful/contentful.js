@@ -109,7 +109,7 @@
     "@types/node": "^25.0.10",
     "contentful-sdk-jsdoc": "^3.1.2",
     "cz-conventional-changelog": "^3.3.0",
-    "es-check": "^7.0.0",
+    "es-check": "^9.0.0",
     "eslint": "^9.15.0",
     "fast-copy": "^3.0.2",
     "husky": "^9.0.11",
