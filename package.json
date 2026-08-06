@@ -92,8 +92,8 @@
     "type-fest": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.24.7",
-    "@babel/preset-env": "^7.24.3",
+    "@babel/plugin-transform-runtime": "^8.0.0",
+    "@babel/preset-env": "^8.0.0",
     "@eslint/js": "^10.0.0",
     "@optimize-lodash/rollup-plugin": "^6.0.0",
     "@rollup/plugin-alias": "^6.0.0",
