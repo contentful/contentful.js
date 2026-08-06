@@ -103,7 +103,7 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.0",
     "@rollup/plugin-terser": "^1.0.0",
-    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/changelog": "^7.0.0",
     "@size-limit/file": "^11.1.6",
     "@types/json-stringify-safe": "^5.0.0",
     "@types/node": "^25.0.10",
