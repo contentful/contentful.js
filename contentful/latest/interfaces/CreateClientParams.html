@@ -15,7 +15,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">CreateClientParams</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#accesstoken">accessToken</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#adapter">adapter</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AxiosAdapterConfig</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosAdapterConfig</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#alphafeatures">alphaFeatures</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span><br/>        <span class="tsd-kind-property">includeContentSourceMaps</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">timelinePreview</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TimelinePreview</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#application">application</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#basepath">basePath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#environment">environment</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#fetchoptions">fetchOptions</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RequestInit</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">&quot;headers&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;method&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;signal&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;body&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#headers">headers</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#host">host</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#httpagent">httpAgent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#httpsagent">httpsAgent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#includecontentsourcemaps">includeContentSourceMaps</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#insecure">insecure</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#integration">integration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#loghandler">logHandler</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">level</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#proxy">proxy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">false</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosProxyConfig</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#requestlogger">requestLogger</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Error</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#responselogger">responseLogger</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">response</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Error</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retrylimit">retryLimit</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retryonerror">retryOnError</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#space">space</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#timelinepreview">timelinePreview</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TimelinePreview</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#timeout">timeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L28">contentful.ts:28</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L28">contentful.ts:28</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -56,14 +56,14 @@
 <div class="tsd-comment tsd-typography"><p>Contentful CDA Access Token</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L36">contentful.ts:36</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L36">contentful.ts:36</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="adapter"><code class="tsd-tag">Optional</code><span>adapter</span><a href="#adapter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">adapter</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AxiosAdapterConfig</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosAdapterConfig</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Optional axios request adapter (see <a href="https://github.com/mzabriskie/axios#request-config"> axios docs </a>)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L79">contentful.ts:79</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L79">contentful.ts:79</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="alphafeatures"><code class="tsd-tag">Optional</code><span>alpha<wbr/>Features</span><a href="#alphafeatures" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">alphaFeatures</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span><br/>    <span class="tsd-kind-property">includeContentSourceMaps</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-kind-property">timelinePreview</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TimelinePreview</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
@@ -90,21 +90,21 @@
 <h4 class="tsd-anchor-link" id="deprecated-1">Deprecated<a href="#deprecated-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Use the <code>timelinePreview</code> option directly instead.</p>
 </div></div></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L139">contentful.ts:139</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L139">contentful.ts:139</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="application"><code class="tsd-tag">Optional</code><span>application</span><a href="#application" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">application</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>Application name and version e.g myApp/version</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L87">contentful.ts:87</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L87">contentful.ts:87</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="basepath"><code class="tsd-tag">Optional</code><span>base<wbr/>Path</span><a href="#basepath" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">basePath</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>Path appended to the host to support gateways/proxies with custom urls</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L55">contentful.ts:55</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L55">contentful.ts:55</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="environment"><code class="tsd-tag">Optional</code><span>environment</span><a href="#environment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">environment</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -117,21 +117,21 @@
 
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L41">contentful.ts:41</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L41">contentful.ts:41</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="fetchoptions"><code class="tsd-tag">Optional</code><span>fetch<wbr/>Options</span><a href="#fetchoptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fetchOptions</span><span class="tsd-signature-symbol">?:</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RequestInit</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">&quot;headers&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;method&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;signal&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;body&quot;</span><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Axios fetch options</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L83">contentful.ts:83</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L83">contentful.ts:83</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="headers"><code class="tsd-tag">Optional</code><span>headers</span><a href="#headers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">headers</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Optional additional headers</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L75">contentful.ts:75</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L75">contentful.ts:75</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="host"><code class="tsd-tag">Optional</code><span>host</span><a href="#host" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">host</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -144,7 +144,7 @@
 
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L51">contentful.ts:51</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L51">contentful.ts:51</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="httpagent"><code class="tsd-tag">Optional</code><span>http<wbr/>Agent</span><a href="#httpagent" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">httpAgent</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span></div>
@@ -153,7 +153,7 @@
 and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent</a>)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L61">contentful.ts:61</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L61">contentful.ts:61</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="httpsagent"><code class="tsd-tag">Optional</code><span>https<wbr/>Agent</span><a href="#httpsagent" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">httpsAgent</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span></div>
@@ -162,7 +162,7 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent</a>)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L67">contentful.ts:67</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L67">contentful.ts:67</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="includecontentsourcemaps"><code class="tsd-tag">Optional</code><span>include<wbr/>Content<wbr/>Source<wbr/>Maps</span><a href="#includecontentsourcemaps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">includeContentSourceMaps</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -173,7 +173,7 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 <h4 class="tsd-anchor-link" id="remarks-1">Remarks<a href="#remarks-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>This feature is only available when using the Content Preview API.</p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L126">contentful.ts:126</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L126">contentful.ts:126</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="insecure"><code class="tsd-tag">Optional</code><span>insecure</span><a href="#insecure" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">insecure</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -186,14 +186,14 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L46">contentful.ts:46</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L46">contentful.ts:46</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="integration"><code class="tsd-tag">Optional</code><span>integration</span><a href="#integration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">integration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>Integration name and version e.g react/version</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L91">contentful.ts:91</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L91">contentful.ts:91</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="loghandler"><code class="tsd-tag">Optional</code><span>log<wbr/>Handler</span><a href="#loghandler" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logHandler</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">level</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span></div>
@@ -218,28 +218,28 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L103">contentful.ts:103</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L103">contentful.ts:103</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="proxy"><code class="tsd-tag">Optional</code><span>proxy</span><a href="#proxy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">proxy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">false</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosProxyConfig</span></div>
 <div class="tsd-comment tsd-typography"><p>Optional Axios proxy (see <a href="https://github.com/mzabriskie/axios#request-config"> axios docs </a>)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L71">contentful.ts:71</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L71">contentful.ts:71</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="requestlogger"><code class="tsd-tag">Optional</code><span>request<wbr/>Logger</span><a href="#requestlogger" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">requestLogger</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Error</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">unknown</span></div>
 <div class="tsd-comment tsd-typography"><p>Interceptor called on every request. Takes Axios request config as an arg.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L116">contentful.ts:116</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L116">contentful.ts:116</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="responselogger"><code class="tsd-tag">Optional</code><span>response<wbr/>Logger</span><a href="#responselogger" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">responseLogger</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">response</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Error</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AxiosResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">unknown</span></div>
 <div class="tsd-comment tsd-typography"><p>Interceptor called on every response. Takes Axios response object as an arg.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L120">contentful.ts:120</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L120">contentful.ts:120</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="retrylimit"><code class="tsd-tag">Optional</code><span>retry<wbr/>Limit</span><a href="#retrylimit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retryLimit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -252,7 +252,7 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L112">contentful.ts:112</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L112">contentful.ts:112</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="retryonerror"><code class="tsd-tag">Optional</code><span>retry<wbr/>On<wbr/>Error</span><a href="#retryonerror" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retryOnError</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -265,14 +265,14 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L96">contentful.ts:96</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L96">contentful.ts:96</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="space"><span>space</span><a href="#space" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">space</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>Space ID</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L32">contentful.ts:32</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L32">contentful.ts:32</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="timelinepreview"><code class="tsd-tag">Optional</code><span>timeline<wbr/>Preview</span><a href="#timelinepreview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">timelinePreview</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TimelinePreview</span></div>
@@ -283,14 +283,14 @@ and <a href="https://www.npmjs.com/package/https-proxy-agent">https-proxy-agent<
 <h4 class="tsd-anchor-link" id="remarks-2">Remarks<a href="#remarks-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>This feature is only available when using the Content Preview API.</p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L134">contentful.ts:134</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L134">contentful.ts:134</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="timeout"><code class="tsd-tag">Optional</code><span>timeout</span><a href="#timeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">timeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>connection timeout in milliseconds (default:30000)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/e163403186b052c6a0e7a83cef1fb2808f2648ad/lib/contentful.ts#L107">contentful.ts:107</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/contentful/contentful.js/blob/2ad5c7fc6c16304c991c7e5cdf86438ce355d7ad/lib/contentful.ts#L107">contentful.ts:107</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
