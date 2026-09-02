@@ -89,7 +89,7 @@
     "contentful-sdk-core": "^9.4.4",
     "json-stringify-safe": "^5.0.1",
     "tslib": "^2.8.1",
-    "type-fest": "^4.0.0"
+    "type-fest": "^5.0.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.24.7",
