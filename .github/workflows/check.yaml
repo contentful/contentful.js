@@ -71,7 +71,7 @@ jobs:
         run: npm ci
 
       - name: Restore the build folders
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: |
             dist
@@ -114,7 +114,7 @@ jobs:
         run: npm ci
 
       - name: Restore the build folders
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: |
             dist
@@ -144,7 +144,7 @@ jobs:
         run: npm ci
 
       - name: Restore the build folders
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: |
             dist
