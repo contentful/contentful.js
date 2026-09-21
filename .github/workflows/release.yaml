@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: 'Retrieve Secrets from Vault'
         id: vault
-        uses: hashicorp/vault-action@v3.4.0
+        uses: hashicorp/vault-action@892a26828f195e65540a40b4768ae4571f51ebfc # v4.0.0
         with:
           url: ${{ secrets.VAULT_URL }}
           role: ${{ github.event.repository.name }}-github-action
