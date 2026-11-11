@@ -46,7 +46,7 @@
 
 | Tool | Version | Notes |
 |---|---|---|
-| Node.js | 18+ | CI runs on Node 24; local dev works on 18+ |
+| Node.js | 18+ | CI runs on Node 26 and `.nvmrc` pins 26.13.0; local dev works on 18+ |
 | npm | latest | `npm install -g npm@latest` |
 
 ## Getting Started

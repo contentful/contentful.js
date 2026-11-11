@@ -21,7 +21,7 @@ jobs:
           cache: 'npm'
 
       - name: Install latest npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@latest --min-release-age=2
 
       - name: Install dependencies
         run: npm ci
@@ -43,7 +43,7 @@ jobs:
           cache: 'npm'
 
       - name: Install latest npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@latest --min-release-age=2
 
       - name: Install dependencies
         run: npm ci
@@ -65,7 +65,7 @@ jobs:
           cache: 'npm'
 
       - name: Install latest npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@latest --min-release-age=2
 
       - name: Install dependencies
         run: npm ci
@@ -108,7 +108,7 @@ jobs:
           cache: 'npm'
 
       - name: Install latest npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@latest --min-release-age=2
 
       - name: Install dependencies
         run: npm ci
@@ -138,7 +138,7 @@ jobs:
           cache: 'npm'
 
       - name: Install latest npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@latest --min-release-age=2
 
       - name: Install dependencies
         run: npm ci
