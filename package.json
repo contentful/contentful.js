@@ -119,7 +119,7 @@
     "rimraf": "^6.0.0",
     "rollup": "^4.13.0",
     "rollup-plugin-visualizer": "^7.0.0",
-    "semantic-release": "^25.0.3",
+    "semantic-release": "^26.0.0",
     "size-limit": "^14.0.0",
     "tsd": "^0.33.0",
     "typedoc": "^0.28.0",
