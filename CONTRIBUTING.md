@@ -47,7 +47,7 @@
 | Tool | Version | Notes |
 |---|---|---|
 | Node.js | 18+ | CI runs on Node 26 and `.nvmrc` pins 26.13.0; local dev works on 18+ |
-| npm | latest | `npm install -g npm@latest` |
+| npm | 11.10.0+ (latest recommended) | `npm install -g npm@latest --min-release-age=2`. Older npm (including the version bundled with Node 18) silently ignores `.npmrc`'s `min-release-age`, so you get no release-age protection |
 
 ## Getting Started
 
