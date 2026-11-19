@@ -1,0 +1,3 @@
+# Synthetic scanner fixture only; these are fabricated test values.
+name,email,ssn,credit_card
+Example Test User,test@example.com,000-00-0000,4111111111111111
