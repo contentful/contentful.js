@@ -1,6 +1,15 @@
 // Intentional test-only SQL injection pattern. Never execute or deploy.
-function buildUserLookupQuery(userInput) {
-  return "SELECT id, email FROM users WHERE name = '" + userInput + "'";
-}
+const express = require('express');
+const mysql = require('mysql');
+const app = express();
 
-module.exports = { buildUserLookupQuery };
+app.get('/test-user', (req, res) => {
+  const query = "SELECT * FROM users WHERE name = '" + req.query.name + "'";
+  const connection = mysql.createConnection({ host: 'localhost', user: 'test', database: 'test' });
+  connection.query(query, (error, rows) => {
+    if (error) return res.status(500).send('test fixture');
+    res.json(rows);
+  });
+});
+
+module.exports = app;
