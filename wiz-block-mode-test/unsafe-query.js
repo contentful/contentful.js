@@ -1,14 +1,27 @@
-// Intentional test-only SQL injection. Never execute or deploy.
+// Intentional HIGH-severity SAST test fixture. Never execute or deploy.
 const express = require('express');
-const mysql = require('mysql');
+const { exec } = require('child_process');
+const fs = require('fs');
 const app = express();
 
-app.get('/test-user', (req, res) => {
-  const query = "SELECT * FROM users WHERE name = '" + req.query.name + "'";
-  const connection = mysql.createConnection({ host: 'localhost', user: 'test', database: 'test' });
-  connection.query(query, (error, rows) => {
-    if (error) return res.status(500).send('test fixture');
-    res.json(rows);
+// CWE-78: OS Command Injection — HIGH severity
+app.get('/run', (req, res) => {
+  exec(req.query.cmd, (err, stdout) => {
+    res.send(stdout);
+  });
+});
+
+// CWE-22: Path Traversal — HIGH severity
+app.get('/file', (req, res) => {
+  const data = fs.readFileSync('/var/data/' + req.query.path, 'utf8');
+  res.send(data);
+});
+
+// CWE-918: SSRF — HIGH severity
+const http = require('http');
+app.get('/fetch', (req, res) => {
+  http.get(req.query.url, (upstream) => {
+    upstream.pipe(res);
   });
 });
 
