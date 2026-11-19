@@ -1,0 +1,9 @@
+{
+  "name": "wiz-block-mode-test-dependency",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Temporary scanner fixture only; never build or deploy",
+  "dependencies": {
+    "lodash": "4.17.20"
+  }
+}
