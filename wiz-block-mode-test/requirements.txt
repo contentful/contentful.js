@@ -1,0 +1,7 @@
+# Scanner test fixture only — never install or deploy
+# Pillow 9.0.0: CVE-2022-45198 (CRITICAL 9.8), CVE-2022-22815 (HIGH 7.5), CVE-2022-22816 (HIGH 7.5)
+Pillow==9.0.0
+# cryptography 2.0: CVE-2018-10903 (HIGH 7.5)
+cryptography==2.0
+# requests 2.19.1: CVE-2018-18074 (HIGH 7.5)
+requests==2.19.1
